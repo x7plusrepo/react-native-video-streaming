@@ -194,7 +194,7 @@ class SignupScreen extends React.Component {
         if (err !== null) {
           Helper.alertNetworkError();
         } else {
-          if (json.status === 1) {
+          if (json.status === 201) {
             global.me = json.data;
             success(Constants.SUCCESS_TITLE, 'Success to signup');
             this.props.navigation.navigate('signin');

@@ -82,7 +82,7 @@ const Global = {
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status !== 1) {
+        if (json.status !== 204) {
           Helper.alertServerDataError();
         }
       }

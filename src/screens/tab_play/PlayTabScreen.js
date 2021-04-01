@@ -59,14 +59,7 @@ class PlayTabScreen extends Component {
 
   _renderTabBar = () => {
     return (
-      <Tab.Navigator
-        initialRouteName="home_main"
-        tabBarOptions={{
-          style: {height: 0},
-        }}>
-        <Tab.Screen name="home_main" component={PlayMainScreen} />
-        <Tab.Screen name="profile_other" component={ProfileOtherScreen} />
-      </Tab.Navigator>
+      <View />
     );
   };
 }

@@ -100,6 +100,7 @@ class CameraDraftScreen extends React.Component {
 
     global._prevScreen = 'camera_draft';
     this.props.navigation.navigate('camera_preview');
+
   };
 
   onBack = () => {
@@ -190,7 +191,7 @@ class CameraDraftScreen extends React.Component {
                   this.onPressVideo(item);
                 }}>
                 <FastImage
-                  source={{uri: item.thumb}}
+                  source={{uri: item.thumb || ''}}
                   resizeMode={FastImage.resizeMode.stretch}
                   style={{
                     width: CELL_WIDTH,

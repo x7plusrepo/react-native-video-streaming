@@ -1,4 +1,4 @@
-import React, {useState, useRef, forwardRef} from 'react';
+import React, { useState, useRef, forwardRef } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -17,9 +17,13 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
-import {connect} from 'react-redux';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {
+  useNavigation,
+  useRoute,
+  StackActions,
+} from '@react-navigation/native';
+import { connect } from 'react-redux';
 
 import {
   GStyle,
@@ -32,8 +36,8 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import ExploreVideoItem from '../../components/elements/ExploreVideoItem';
 import SearchBarItem from '../../components/elements/SearchBarItem';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
-import {forEach} from 'underscore';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import { forEach } from 'underscore';
 
 const ic_back = require('../../assets/images/ic_back.png');
 
@@ -48,14 +52,13 @@ class HomeVideoScreen extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-
     this.onRefresh('init');
   }
 
   componentDidUpdate(prevProps, prevState) {
     if (prevProps.keyword) {
       if (prevProps.keyword !== this.props.keyword) {
-        this.setState({keyword: this.props.keyword}, () => {
+        this.setState({ keyword: this.props.keyword }, () => {
           this.onRefresh('init');
         });
       }
@@ -82,8 +85,8 @@ class HomeVideoScreen extends React.Component {
   };
 
   onRefresh = (type) => {
-    let {isFetching, totalCount, curPage, itemDatas} = this.state;
-    const {keyword, quickKeyword, isQuickSearch} = this.props;
+    let { isFetching, totalCount, curPage, itemDatas } = this.state;
+    const { keyword, quickKeyword, isQuickSearch } = this.props;
 
     if (isFetching) {
       return;
@@ -99,7 +102,7 @@ class HomeVideoScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    this.setState({curPage});
+    this.setState({ curPage });
 
     let funcGetVideoList = null;
     let searchText = null;
@@ -114,7 +117,7 @@ class HomeVideoScreen extends React.Component {
     if (type == 'init') {
       showPageLoader(true);
     } else {
-      this.setState({isFetching: true});
+      this.setState({ isFetching: true });
     }
     let params = {
       user_id: global.me ? global.me.id : '0',
@@ -127,21 +130,21 @@ class HomeVideoScreen extends React.Component {
         showPageLoader(false);
       } else {
         if (this._isMounted) {
-          this.setState({isFetching: false});
+          this.setState({ isFetching: false });
         }
       }
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({totalCount: json.data.total_count});
+            this.setState({ totalCount: json.data.totalCount });
             if (type == 'more') {
-              let data = itemDatas.concat(json.data.video_list);
-              this.setState({itemDatas: data});
+              let data = itemDatas.concat(json.data.videoList);
+              this.setState({ itemDatas: data });
             } else {
-              this.setState({itemDatas: json.data.video_list});
+              this.setState({ itemDatas: json.data.videoList });
             }
           }
         } else {
@@ -152,8 +155,8 @@ class HomeVideoScreen extends React.Component {
   };
 
   onPressVideo = (value) => {
-    const {itemDatas, curPage, totalCount} = this.state;
-    const {keyword} = this.props;
+    const { itemDatas, curPage, totalCount } = this.state;
+    const { keyword } = this.props;
 
     const selIndex = itemDatas.findIndex((obj) => obj.id === value);
     // let newAfterItemDatas = itemDatas.slice(selIndex);
@@ -172,7 +175,7 @@ class HomeVideoScreen extends React.Component {
     this.props.navigation.dispatch(pushAction);
   };
 
-  onViewableItemsChanged = ({viewableItems, changed}) => {
+  onViewableItemsChanged = ({ viewableItems, changed }) => {
     let minVisibleIndex = 0;
     let maxVisibleIndex = 0;
     if (viewableItems.length > 0) {
@@ -189,18 +192,18 @@ class HomeVideoScreen extends React.Component {
         }
       }
 
-      this.setState({minVisibleIndex, maxVisibleIndex});
+      this.setState({ minVisibleIndex, maxVisibleIndex });
     }
   };
 
   scrollToTop = () => {
-    this.flatListRef.scrollToOffset({animated: false, offset: 0});
+    this.flatListRef.scrollToOffset({ animated: false, offset: 0 });
   };
 
   render() {
     return (
       <>
-        <View style={{flex: 1, backgroundColor: 'white'}}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           {this._renderVideo()}
         </View>
       </>
@@ -208,7 +211,7 @@ class HomeVideoScreen extends React.Component {
   }
 
   _renderVideo = () => {
-    const {isFetching, itemDatas} = this.state;
+    const { isFetching, itemDatas } = this.state;
 
     return (
       <FlatList
@@ -234,23 +237,23 @@ class HomeVideoScreen extends React.Component {
   };
 
   _renderFooter = () => {
-    const {isFetching} = this.state;
+    const { isFetching } = this.state;
 
     if (!isFetching) {
       return null;
     }
 
-    return <ActivityIndicator style={{color: '#000'}} />;
+    return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
-  _renderItem = ({item, index}) => {
+  _renderItem = ({ item, index }) => {
     return <ExploreVideoItem item={item} onPress={this.onPressVideo} />;
   };
 }
 
 const styles = StyleSheet.create({});
 
-THomeVideoScreen = connect(
+HomeVideoScreen = connect(
   (state) => ({
     keyword: state.Home.keyword,
   }),

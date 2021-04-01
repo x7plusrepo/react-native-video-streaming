@@ -17,11 +17,11 @@ import {
   View,
 } from 'react-native';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import ProgressBar from '../../lib/Progress/Bar';
-import {Button, Paragraph, Dialog, Portal} from 'react-native-paper';
-import {createThumbnail} from 'react-native-create-thumbnail';
+import { Button, Paragraph, Dialog, Portal } from 'react-native-paper';
+import { createThumbnail } from 'react-native-create-thumbnail';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import ModalSelector from '../../lib/ModalSelector/index';
 import ImagePicker from 'react-native-image-picker';
@@ -34,7 +34,7 @@ import AntDesign from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {TextField} from '../../lib/MaterialTextField/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import {
   GStyle,
   GStyles,
@@ -76,19 +76,29 @@ class CameraUploadScreen extends React.Component {
     this.eventListener = eventEmitter.addListener(
       'EventUploadProgress',
       (event) => {
+        console.log(event);
         if (!this._isMounted) {
           return;
         }
-        this.setState({percent: event.percent});
+        this.setState({ percent: event.percent });
         if (event.percent == 100 && event.url) {
           const curTimeTick = Helper.getTimeStamp();
           const uploadInterval = curTimeTick - this._timeTick;
           this._timeTick = curTimeTick;
           if (uploadInterval > 5000) {
-            this.uploadVideoToBackend(event.url);
+            if (this.state.uploadMode === 'image') {
+              this.setState({ thumb: event.url });
+              this.uploadVideoToCloudinary();
+            } else {
+              this.uploadVideoToBackend(event.url);
+            }
           }
         } else if (event.percent < 0) {
-          this.setState({isVisibleProgress: false});
+          this.setState({
+            isVisibleProgress: false,
+            uploadMode: 'image',
+            thumb: '',
+          });
           error(Constants.ERROR_TITLE, 'Failed to upload video3');
         }
       },
@@ -126,13 +136,13 @@ class CameraUploadScreen extends React.Component {
 
       tags: [],
       text: '',
-
+      thumb: '',
+      uploadMode: 'image',
       price: '',
       description: '',
     };
 
     this._isMounted = false;
-    this._imageUri = null;
     this._timeTick = 0;
 
     this.initRef();
@@ -141,15 +151,16 @@ class CameraUploadScreen extends React.Component {
   onRefresh = () => {
     if (global._prevScreen != 'camera_preview') {
       showForcePageLoader(true);
-      createThumbnail({url: global._videoUri})
+      createThumbnail({ url: global._videoUri })
         .then((response) => {
           global._thumbUri = response.path;
+          console.log(response.path);
           showPageLoader(false);
 
           this.saveDraft();
         })
         .catch((err) => {
-          console.log({err});
+          console.log({ err });
           showPageLoader(false);
           global._thumbUri = null;
           error(Constants.ERROR_TITLE, 'Failed to create thumbnail');
@@ -189,7 +200,7 @@ class CameraUploadScreen extends React.Component {
 
       const itemDatas = [
         ...videoArray,
-        {video: videoDraftPath, thumb: thumbDraftPath},
+        { video: videoDraftPath, thumb: thumbDraftPath },
       ];
       await Helper.setLocalValue(
         Constants.KEY_VIDEO_DRAFT,
@@ -201,42 +212,85 @@ class CameraUploadScreen extends React.Component {
   };
 
   uploadVideoToCloudinary = () => {
-    this.setState({percent: 0, isVisibleProgress: true});
+    this.setState({ percent: 0, isVisibleProgress: true, uploadMode: 'video' });
+
     if (Platform.OS === 'android') {
+      const split = global._videoUri?.split(':') || [];
+      const videoUrl = split[1]?.substring(2);
       VideoUpload.upload(
-        global._videoUri,
+        videoUrl,
+        'work/',
+        'video',
         (msg) => {
           this.uploadVideoToBackend(msg);
         },
         (msg) => {
           console.log('onError', msg);
-          this.setState({isVisibleProgress: false});
+          this.setState({ isVisibleProgress: false });
           error(Constants.ERROR_TITLE, 'Failed to upload video');
         },
       );
     } else {
-      VideoUpload.upload(global._videoUri, (error, respArray) => {});
+      VideoUpload.upload(
+        global._videoUri,
+        'work/',
+        'video',
+        (error, respArray) => {},
+      );
+    }
+  };
+
+  uploadImageToCloudinary = () => {
+    this.setState({ percent: 0, isVisibleProgress: true, uploadMode: 'image' });
+    if (Platform.OS === 'android') {
+      const split = global._thumbUri?.split(':') || [];
+      const imageUrl = split[1]?.substring(2);
+      VideoUpload.upload(
+        imageUrl,
+        'images/',
+        'image',
+        (msg) => {
+          this.setState({ thumb: msg });
+          this.uploadVideoToCloudinary();
+        },
+        (msg) => {
+          console.log('onError', msg);
+          this.setState({ isVisibleProgress: false, thumb: '' });
+          error(Constants.ERROR_TITLE, 'Failed to upload image');
+        },
+      );
+    } else {
+      VideoUpload.upload(
+        global._videoUri,
+        'images/',
+        'image',
+        (error, respArray) => {},
+      );
     }
   };
 
   uploadVideoToBackend = (cloudinaryUrl) => {
-    const {tags, price, description} = this.state;
+    const { tags, price, description, thumb } = this.state;
 
     showForcePageLoader(true);
     const tagSet = tags.join(',');
     const params = {
       user_id: global.me.id,
       uploaded_url: cloudinaryUrl,
-      image: global._thumbUri,
+      thumb,
       tags: tagSet,
-      price: price,
+      price: parseInt(price) || 0,
       description: description,
-      number: (Number(global.me.upload_count) + 1).toString(),
+      number: (Number(global.me.uploadCount || 0) + 1).toString(),
     };
     RestAPI.add_video(params, async (json, err) => {
       showPageLoader(false);
       if (err !== null) {
-        this.setState({isVisibleProgress: false});
+        this.setState({
+          isVisibleProgress: false,
+          uploadMode: 'image',
+          thumb: '',
+        });
         error(Constants.ERROR_TITLE, 'Failed to upload video1');
         if (global._prevScreen == 'camera_main') {
           this.props.navigation.goBack();
@@ -244,9 +298,13 @@ class CameraUploadScreen extends React.Component {
           this.props.navigation.navigate('camera_draft');
         }
       } else {
-        if (json.status === 1) {
-          this.setState({isVisibleProgress: false});
-          global.me.upload_count = Number(global.me.upload_count) + 1;
+        if (json.status === 201) {
+          this.setState({
+            isVisibleProgress: false,
+            uploadMode: 'image',
+            thumb: '',
+          });
+          global.me.upload_count = Number(global.me.uploadCount || 0) + 1;
           success(Constants.SUCCESS_TITLE, 'Success to upload video');
           await this.deleteVideo();
           if (global._prevScreen == 'camera_main') {
@@ -255,7 +313,11 @@ class CameraUploadScreen extends React.Component {
             this.props.navigation.navigate('camera_draft');
           }
         } else {
-          this.setState({isVisibleProgress: false});
+          this.setState({
+            isVisibleProgress: false,
+            uploadMode: 'image',
+            thumb: '',
+          });
           error(Constants.ERROR_TITLE, 'Failed to upload video2');
           if (global._prevScreen == 'camera_main') {
             this.props.navigation.goBack();
@@ -301,7 +363,7 @@ class CameraUploadScreen extends React.Component {
   };
 
   onChangeTags = (tags) => {
-    this.setState({tags});
+    this.setState({ tags });
   };
 
   onChangeTagText = (text) => {
@@ -314,7 +376,7 @@ class CameraUploadScreen extends React.Component {
       }
     }
 
-    this.setState({text});
+    this.setState({ text });
 
     if (parseWhen.indexOf(lastTyped) > -1) {
       this.setState({
@@ -325,7 +387,7 @@ class CameraUploadScreen extends React.Component {
   };
 
   onBlurTagInput = () => {
-    const {text} = this.state;
+    const { text } = this.state;
 
     const newText = text + ',';
     this.onChangeTagText(newText);
@@ -334,7 +396,7 @@ class CameraUploadScreen extends React.Component {
   labelExtractor = (tag) => tag;
 
   onFocus = () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     for (let name in errors) {
       let ref = this[name];
@@ -344,15 +406,15 @@ class CameraUploadScreen extends React.Component {
       }
     }
 
-    this.setState({errors});
+    this.setState({ errors });
   };
 
   onChangeText = (text) => {
     ['price', 'description']
-      .map((name) => ({name, ref: this[name]}))
-      .forEach(({name, ref}) => {
+      .map((name) => ({ name, ref: this[name] }))
+      .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
-          this.setState({[name]: text});
+          this.setState({ [name]: text });
         }
       });
   };
@@ -371,16 +433,16 @@ class CameraUploadScreen extends React.Component {
   };
 
   onPressUploadVideo = () => {
-    this.setState({isVisibleDialog: false});
-    this.uploadVideoToCloudinary();
+    this.setState({ isVisibleDialog: false });
+    this.uploadImageToCloudinary();
   };
 
   onPressCancelUpload = () => {
-    this.setState({isVisibleDialog: false});
+    this.setState({ isVisibleDialog: false });
   };
 
   onSubmit = () => {
-    const {tags} = this.state;
+    const { tags } = this.state;
     let errors = {};
 
     if (global.me.isGuest) {
@@ -406,16 +468,16 @@ class CameraUploadScreen extends React.Component {
       }
     });
 
-    this.setState({errors});
+    this.setState({ errors });
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      this.setState({isVisibleDialog: true});
+      this.setState({ isVisibleDialog: true });
     }
   };
 
   onBack = () => {
-    const {isVisibleProgress} = this.state;
+    const { isVisibleProgress } = this.state;
 
     if (!isVisibleProgress) {
       this.props.navigation.goBack();
@@ -431,7 +493,8 @@ class CameraUploadScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderTagInput()}
             {this._renderMainInputs()}
             {this._renderButtons()}
@@ -454,7 +517,7 @@ class CameraUploadScreen extends React.Component {
   };
 
   _renderTagInput = () => {
-    const {tags} = this.state;
+    const { tags } = this.state;
 
     return (
       <View
@@ -462,8 +525,9 @@ class CameraUploadScreen extends React.Component {
           ...GStyles.borderBottom,
           flex: 1,
           marginTop: 30,
-        }}>
-        <Text style={{...GStyles.mediumText, marginTop: 20}}>Tags</Text>
+        }}
+      >
+        <Text style={{ ...GStyles.mediumText, marginTop: 20 }}>Tags</Text>
         <View
           style={{
             flexDirection: 'row',
@@ -472,7 +536,8 @@ class CameraUploadScreen extends React.Component {
             borderRadius: 10,
             marginTop: 8,
             paddingHorizontal: 8,
-          }}>
+          }}
+        >
           <TagInput
             value={tags}
             onChange={this.onChangeTags}
@@ -482,7 +547,7 @@ class CameraUploadScreen extends React.Component {
             onBlur={this.onBlurTagInput}
             tagColor="#888888"
             tagTextColor="white"
-            tagContainerStyle={{paddingHorizontal: 4, paddingVertical: 0}}
+            tagContainerStyle={{ paddingHorizontal: 4, paddingVertical: 0 }}
             inputProps={inputProps}
             maxHeight={200}
           />
@@ -492,7 +557,7 @@ class CameraUploadScreen extends React.Component {
   };
 
   _renderMainInputs = () => {
-    const {errors = {}, price, description} = this.state;
+    const { errors = {}, price, description } = this.state;
 
     return (
       <View>
@@ -509,7 +574,7 @@ class CameraUploadScreen extends React.Component {
           label="Price"
           value={price}
           error={errors.price}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
         <TextField
           ref={this.descriptionRef}
@@ -531,24 +596,28 @@ class CameraUploadScreen extends React.Component {
   _renderButtons = () => {
     return (
       <>
-        <View style={{marginTop: 50}}>
+        <View style={{ marginTop: 50 }}>
           <TouchableOpacity onPress={this.onPressPreview}>
             <View style={GStyles.buttonFill}>
               <Text style={GStyles.textFill}>Preview</Text>
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{marginTop: 20}}>
+        <View style={{ marginTop: 20 }}>
           <TouchableOpacity onPress={this.onPressDraft}>
             <View style={GStyles.buttonFill}>
               <Text style={GStyles.textFill}>Draft</Text>
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{marginTop: 20}}>
+        <View style={{ marginTop: 20 }}>
           <TouchableOpacity onPress={this.onSubmit}>
             <View
-              style={{...GStyles.buttonFill, backgroundColor: GStyle.redColor}}>
+              style={{
+                ...GStyles.buttonFill,
+                backgroundColor: GStyle.redColor,
+              }}
+            >
               <Text style={GStyles.textFill}>Upload</Text>
             </View>
           </TouchableOpacity>
@@ -558,7 +627,7 @@ class CameraUploadScreen extends React.Component {
   };
 
   _renderProgress = () => {
-    const {percent, isVisibleProgress} = this.state;
+    const { percent, isVisibleProgress } = this.state;
 
     return (
       <>
@@ -575,7 +644,8 @@ class CameraUploadScreen extends React.Component {
                 opacity: 0.4,
                 zIndex: 100,
                 elevation: 10,
-              }}></View>
+              }}
+            ></View>
             <View
               style={{
                 position: 'absolute',
@@ -587,7 +657,8 @@ class CameraUploadScreen extends React.Component {
                 alignItems: 'center',
                 zIndex: 101,
                 elevation: 11,
-              }}>
+              }}
+            >
               <ProgressBar
                 progress={percent * 0.01}
                 width={WINDOW_WIDTH * 0.5}
@@ -600,7 +671,8 @@ class CameraUploadScreen extends React.Component {
                   ...GStyles.mediumText,
                   color: 'white',
                   marginTop: 10,
-                }}>
+                }}
+              >
                 Uploading: {percent}%
               </Text>
             </View>
@@ -611,15 +683,16 @@ class CameraUploadScreen extends React.Component {
   };
 
   _renderDialog = () => {
-    const {isVisibleDialog} = this.state;
+    const { isVisibleDialog } = this.state;
 
     return (
       <View>
         <Portal>
           <Dialog
             visible={isVisibleDialog}
-            onDismiss={this.onPressCancelUpload}>
-            <View style={{...GStyles.rowContainer}}>
+            onDismiss={this.onPressCancelUpload}
+          >
+            <View style={{ ...GStyles.rowContainer }}>
               <FontAwesome
                 name="warning"
                 style={{
@@ -628,7 +701,9 @@ class CameraUploadScreen extends React.Component {
                   marginLeft: 8,
                 }}
               />
-              <Dialog.Title style={{marginLeft: 4}}>Video Upload</Dialog.Title>
+              <Dialog.Title style={{ marginLeft: 4 }}>
+                Video Upload
+              </Dialog.Title>
             </View>
             <Dialog.Content>
               <Paragraph>

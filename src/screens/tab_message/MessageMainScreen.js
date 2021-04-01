@@ -108,15 +108,15 @@ class MessageMainScreen extends React.Component {
       }
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 1) {
-          this.setState({totalCount: json.data.total_count});
+        if (json.status === 200) {
+          this.setState({totalCount: json.data.totalCount});
           if (type == 'more') {
-            let data = itemDatas.concat(json.data.room_list);
+            let data = itemDatas.concat(json.data.roomList);
             this.setState({itemDatas: data});
           } else {
-            this.setState({itemDatas: json.data.room_list});
+            this.setState({itemDatas: json.data.roomList});
           }
         } else {
           Helper.alertServerDataError();

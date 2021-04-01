@@ -1,4 +1,4 @@
-import React, {Component, isValidElement} from 'react';
+import React, { Component, isValidElement } from 'react';
 import {
   Alert,
   BackHandler,
@@ -22,7 +22,14 @@ import {
 } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global/index';
+import {
+  GStyle,
+  GStyles,
+  Global,
+  Helper,
+  Constants,
+  RestAPI,
+} from '../../utils/Global/index';
 
 const ic_mini_call = require('../../assets/images/ic_mini_call.png');
 const ic_mini_chat = require('../../assets/images/ic_mini_chat.png');
@@ -62,6 +69,7 @@ const Avatar = ({
   const interviewImageMargin = calc_size > 0 ? 0 : calc_size;
   const statusMargin = (icon_size - 56) * 0.1;
 
+  console.log(image)
   return (
     <View
       style={[
@@ -71,13 +79,15 @@ const Avatar = ({
           elevation: 3,
         },
         containerStyle,
-      ]}>
+      ]}
+    >
       <TouchableOpacity
         onPress={onPress ? onPress : defaults.onPress}
-        disabled={onPress ? false : true}>
+        disabled={onPress ? false : true}
+      >
         <FastImage
           source={{
-            ...image,
+            uri: image?.uri?.toString() || '',
             priority: FastImage.priority.normal,
           }}
           resizeMode={FastImage.resizeMode.cover}

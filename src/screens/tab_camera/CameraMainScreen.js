@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -33,13 +33,13 @@ import {
   View,
 } from 'react-native';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import {SearchBar} from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import Swiper from '../../lib/Swiper/index';
 import Video from 'react-native-video';
-import {RNCamera} from 'react-native-camera';
+import { RNCamera } from 'react-native-camera';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/MaterialIcons';
@@ -54,10 +54,10 @@ import {
   Constants,
   RestAPI,
 } from '../../utils/Global/index';
-import {Dropdown} from '../../lib/MaterialDropdown/index';
-import {TextField} from '../../lib/MaterialTextField/index';
+import { Dropdown } from '../../lib/MaterialDropdown/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import Accordion from '../../lib/Collapsible/Accordion';
-import {warning} from 'react-native-gifted-chat/lib/utils';
+import { warning } from 'react-native-gifted-chat/lib/utils';
 
 const ic_close = require('../../assets/images/ic_close.png');
 const ic_camera_flip = require('../../assets/images/ic_camera_flip.png');
@@ -76,7 +76,7 @@ const flashModeOrder = {
 class CameraMainScreen extends Component {
   constructor(props) {
     super(props);
-
+    this.timer = null;
     console.log('CameraMainScreen start');
 
     this.init();
@@ -91,7 +91,7 @@ class CameraMainScreen extends Component {
 
   componentWillUnmount() {
     this.unsubscribe();
-    clearInterval(this.state.timer);
+    clearInterval(this.timer);
   }
 
   init = () => {
@@ -101,7 +101,7 @@ class CameraMainScreen extends Component {
       zoom: 0,
       autoFocus: 'on',
       autoFocusPoint: {
-        normalized: {x: 0.5, y: 0.5}, // normalized values required for autoFocusPointOfInterest
+        normalized: { x: 0.5, y: 0.5 }, // normalized values required for autoFocusPointOfInterest
         drawRectPosition: {
           x: Dimensions.get('window').width * 0.5 - 32,
           y: Dimensions.get('window').height * 0.5 - 32,
@@ -122,7 +122,6 @@ class CameraMainScreen extends Component {
       barcodes: [],
 
       isVisibleTimer: true,
-      timer: null,
       timerProgress: 0,
     };
   };
@@ -132,7 +131,7 @@ class CameraMainScreen extends Component {
   };
 
   onTick = () => {
-    const {timerProgress} = this.state;
+    const { timerProgress } = this.state;
 
     this.setState({
       timerProgress: timerProgress + 1,
@@ -142,7 +141,7 @@ class CameraMainScreen extends Component {
   };
 
   onTakeVideo = (value) => {
-    const {timerProgress} = this.state;
+    const { timerProgress } = this.state;
 
     if (timerProgress < 10) {
       return;
@@ -154,7 +153,7 @@ class CameraMainScreen extends Component {
   };
 
   toggleFacing = () => {
-    const {isRecording} = this.state;
+    const { isRecording } = this.state;
     if (isRecording) {
       return;
     }
@@ -171,7 +170,7 @@ class CameraMainScreen extends Component {
   };
 
   toggleMute = () => {
-    const {isRecording, mute} = this.state;
+    const { isRecording, mute } = this.state;
     if (isRecording) {
       return;
     }
@@ -188,7 +187,7 @@ class CameraMainScreen extends Component {
   }
 
   onPressStartRecord = async () => {
-    const {isRecording, maxDuration, mute, quality} = this.state;
+    const { isRecording, maxDuration, mute, quality } = this.state;
     const recordOptions = {
       maxDuration: maxDuration,
       mute: mute,
@@ -200,12 +199,11 @@ class CameraMainScreen extends Component {
         const promise = this.camera.recordAsync(recordOptions);
 
         if (promise) {
-          this.setState({isRecording: true, timerProgress: 0});
-          const timer = setInterval(this.onTick, 200);
-          this.setState({timer});
+          this.setState({ isRecording: true, timerProgress: 0 });
+          this.timer = setInterval(this.onTick, 200);
           const data = await promise;
-          this.setState({isRecording: false});
-          clearInterval(timer);
+          this.setState({ isRecording: false });
+          clearInterval(this.timer);
           this.onTakeVideo(data.uri);
           console.warn('recoredVideo', data);
         }
@@ -217,7 +215,7 @@ class CameraMainScreen extends Component {
 
   onPressStopRecord = async () => {
     await this.camera.stopRecording();
-    this.setState({isRecording: false});
+    this.setState({ isRecording: false });
   };
 
   render() {
@@ -259,7 +257,8 @@ class CameraMainScreen extends Component {
         onFacesDetected={null}
         onTextRecognized={null}
         onGoogleVisionBarcodesDetected={null}
-        style={{flex: 1}}>
+        style={{ flex: 1 }}
+      >
         {this._renderAll()}
       </RNCamera>
     );
@@ -267,7 +266,7 @@ class CameraMainScreen extends Component {
 
   _renderAll = () => {
     return (
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {this._renderTimer()}
         {this._renderControls()}
         {this._renderRecording()}
@@ -276,7 +275,7 @@ class CameraMainScreen extends Component {
   };
 
   _renderTimer = () => {
-    const {isRecording, timerProgress} = this.state;
+    const { isRecording, timerProgress } = this.state;
 
     return (
       <>
@@ -288,7 +287,8 @@ class CameraMainScreen extends Component {
               height: 40,
               justifyContent: 'center',
               alignItems: 'center',
-            }}>
+            }}
+          >
             <ProgressBar
               progress={timerProgress / 150}
               width={WINDOW_WIDTH * 0.5}
@@ -303,7 +303,7 @@ class CameraMainScreen extends Component {
   };
 
   _renderControls = () => {
-    const {flash, mute} = this.state;
+    const { flash, mute } = this.state;
 
     return (
       <View
@@ -315,31 +315,37 @@ class CameraMainScreen extends Component {
           marginTop: 14,
           paddingHorizontal: 20,
           zIndex: 200,
-        }}>
+        }}
+      >
         <TouchableOpacity
           onPress={this.onBack}
-          style={{...GStyles.centerAlign, width: 40, height: 40}}>
+          style={{ ...GStyles.centerAlign, width: 40, height: 40 }}
+        >
           <Image
             source={ic_close}
-            style={{...GStyles.image, width: 20, tintColor: 'white'}}></Image>
+            style={{ ...GStyles.image, width: 20, tintColor: 'white' }}
+          />
         </TouchableOpacity>
-        <View style={{justifyContent: 'space-between', marginTop: 10}}>
+        <View style={{ justifyContent: 'space-between', marginTop: 10 }}>
           <TouchableOpacity onPress={this.toggleFacing}>
             <Image
               source={ic_camera_flip}
-              style={{...GStyles.image, width: 28}}></Image>
+              style={{ ...GStyles.image, width: 28 }}
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={this.toggleFlash}>
             <Image
               source={
                 flash == 'torch' ? ic_camera_flash_on : ic_camera_flash_off
               }
-              style={{...GStyles.image, width: 32}}></Image>
+              style={{ ...GStyles.image, width: 32 }}
+            />
           </TouchableOpacity>
           <TouchableOpacity onPress={this.toggleMute}>
             <Image
               source={mute ? ic_audio_off : ic_audio_on}
-              style={{...GStyles.image, width: 32}}></Image>
+              style={{ ...GStyles.image, width: 32 }}
+            />
           </TouchableOpacity>
         </View>
       </View>
@@ -347,7 +353,7 @@ class CameraMainScreen extends Component {
   };
 
   _renderRecording = () => {
-    const {isRecording} = this.state;
+    const { isRecording } = this.state;
     const backgroundColor = isRecording ? 'white' : 'darkred';
     const action = isRecording
       ? this.onPressStopRecord
@@ -365,11 +371,13 @@ class CameraMainScreen extends Component {
           bottom: 0,
           justifyContent: 'flex-end',
           zIndex: 100,
-        }}>
-        <View style={{alignItems: 'center', marginBottom: 10}}>
+        }}
+      >
+        <View style={{ alignItems: 'center', marginBottom: 10 }}>
           <TouchableOpacity
-            style={{...styles.recordButton, ...styles.center}}
-            onPress={() => action()}>
+            style={{ ...styles.recordButton, ...styles.center }}
+            onPress={() => action()}
+          >
             {button}
           </TouchableOpacity>
         </View>
@@ -382,7 +390,7 @@ class CameraMainScreen extends Component {
   }
 
   _renderRecBtn() {
-    return <View style={{...styles.record}} />;
+    return <View style={{ ...styles.record }} />;
   }
 }
 

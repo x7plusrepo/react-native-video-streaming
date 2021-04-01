@@ -40,7 +40,7 @@ const WINDOW_HEIGHT = Helper.getWindowHeight();
 const WINDOW_WIDTH = Helper.getWindowWidth();
 
 const ExploreVideoItem = ({item, onPress}) => {
-  const newTagList = item.tag_list.split(',').join(' ');
+    const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
 
   return (
     <View
@@ -59,7 +59,7 @@ const ExploreVideoItem = ({item, onPress}) => {
         }}
         style={{...GStyles.centerAlign, width: '100%'}}>
         <FastImage
-          source={{uri: item.thumb, priority: FastImage.priority.normal}}
+          source={{uri: item.thumb || '', priority: FastImage.priority.normal}}
           resizeMode={FastImage.resizeMode.contain}
           style={{
             width: '100%',

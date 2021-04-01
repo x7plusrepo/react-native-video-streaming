@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   AppState,
   ActivityIndicator,
@@ -30,14 +30,18 @@ import {
   View,
 } from 'react-native';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  StackActions,
+} from '@react-navigation/native';
 import convertToProxyURL from 'react-native-video-cache';
-import Share, {ShareSheet} from 'react-native-share';
+import Share, { ShareSheet } from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import {ShareDialog, MessageDialog} from 'react-native-fbsdk';
+import { ShareDialog, MessageDialog } from 'react-native-fbsdk';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/MaterialIcons';
@@ -45,9 +49,9 @@ import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
-import {LogLevel, RNFFmpeg} from 'react-native-ffmpeg';
+import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg';
 
-import {SearchBar} from 'react-native-elements';
+import { SearchBar } from 'react-native-elements';
 import Swiper from '../../lib/Swiper/index';
 import Video from 'react-native-video';
 import Avatar from '../../components/elements/Avatar';
@@ -63,10 +67,10 @@ import {
   Constants,
   RestAPI,
 } from '../../utils/Global/index';
-import {Dropdown} from '../../lib/MaterialDropdown/index';
-import {TextField} from '../../lib/MaterialTextField/index';
+import { Dropdown } from '../../lib/MaterialDropdown/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import Accordion from '../../lib/Collapsible/Accordion';
-import {forEach} from 'underscore';
+import { forEach } from 'underscore';
 
 const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
 const ic_favorite = require('../../assets/images/ic_favorite.png');
@@ -92,7 +96,7 @@ class ProfileVideoScreen extends Component {
     this._isMounted = true;
 
     this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
-      let {itemDatas} = this.state;
+      let { itemDatas } = this.state;
 
       Helper.setDarkStatusBar();
 
@@ -109,14 +113,14 @@ class ProfileVideoScreen extends Component {
           itemDatas = [];
         }
 
-        this.setState({itemDatas: itemDatas});
+        this.setState({ itemDatas: itemDatas });
       }
 
-      this.setState({isVideoPause: false});
+      this.setState({ isVideoPause: false });
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
       if (this._isMounted) {
-        this.setState({isVideoPause: true});
+        this.setState({ isVideoPause: true });
       }
     });
 
@@ -134,10 +138,10 @@ class ProfileVideoScreen extends Component {
   onChangeAppState = (nextAppState) => {
     if (nextAppState === 'active') {
       if (this.props.navigation.isFocused()) {
-        this.setState({isVideoPause: false});
+        this.setState({ isVideoPause: false });
       }
     } else {
-      this.setState({isVideoPause: true});
+      this.setState({ isVideoPause: true });
     }
   };
 
@@ -162,7 +166,7 @@ class ProfileVideoScreen extends Component {
   };
 
   onRefresh = (type) => {
-    let {isFetching, totalCount, curPage, itemDatas, keyword} = this.state;
+    let { isFetching, totalCount, curPage, itemDatas, keyword } = this.state;
 
     if (isFetching) {
       return;
@@ -178,12 +182,12 @@ class ProfileVideoScreen extends Component {
     } else {
       curPage = 1;
     }
-    this.setState({curPage});
+    this.setState({ curPage });
 
     if (type == 'init') {
       showPageLoader(true);
     } else {
-      this.setState({isFetching: true});
+      this.setState({ isFetching: true });
     }
     let params = {
       user_id: global.me ? global.me.id : '0',
@@ -196,21 +200,21 @@ class ProfileVideoScreen extends Component {
         showPageLoader(false);
       } else {
         if (this._isMounted) {
-          this.setState({isFetching: false});
+          this.setState({ isFetching: false });
         }
       }
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({totalCount: json.data.total_count});
+            this.setState({ totalCount: json.data.totalCount });
             if (type == 'more') {
-              let data = itemDatas.concat(json.data.video_list);
-              this.setState({itemDatas: data});
+              let data = itemDatas.concat(json.data.videoList);
+              this.setState({ itemDatas: data });
             } else {
-              this.setState({itemDatas: json.data.video_list});
+              this.setState({ itemDatas: json.data.videoList });
             }
           }
         } else {
@@ -221,13 +225,13 @@ class ProfileVideoScreen extends Component {
   };
 
   onBack = () => {
-    this.setState({isVideoPause: true});
+    this.setState({ isVideoPause: true });
     this.props.navigation.goBack();
   };
 
   onVideoReadyForDisplay = (item) => {
     console.log('---onVideoReadyForDisplay');
-    this.setState({isVideoLoading: false});
+    this.setState({ isVideoLoading: false });
 
     if (this._curVideoId == item.id) {
       return;
@@ -256,16 +260,16 @@ class ProfileVideoScreen extends Component {
   };
 
   onVideoProgress = (value) => {
-    this.setState({isVideoLoading: false});
+    this.setState({ isVideoLoading: false });
   };
 
   onVideoEnd = () => {};
 
-  onViewableItemsChanged = ({viewableItems, changed}) => {
+  onViewableItemsChanged = ({ viewableItems, changed }) => {
     if (changed.length > 0) {
       const item = changed[0];
       this._curIndex = item.index;
-      this.setState({isVideoLoading: true});
+      this.setState({ isVideoLoading: true });
     }
   };
 
@@ -287,7 +291,7 @@ class ProfileVideoScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
-    let {itemDatas} = this.state;
+    let { itemDatas } = this.state;
 
     if (global.me) {
       if (isChecked) {
@@ -306,9 +310,9 @@ class ProfileVideoScreen extends Component {
         showPageLoader(false);
 
         if (err !== null) {
-          Helper.alertNetworkError();
+          Helper.alertNetworkError(err?.message);
         } else {
-          if (json.status === 1) {
+          if (json.status === 200) {
             item.is_like = isChecked;
             this.setState(itemDatas);
           } else {
@@ -357,7 +361,7 @@ class ProfileVideoScreen extends Component {
       const canShow = await ShareDialog.canShow(SHARE_LINK_CONTENT);
       if (canShow) {
         try {
-          const {isCancelled, postId} = await ShareDialog.show(
+          const { isCancelled, postId } = await ShareDialog.show(
             SHARE_LINK_CONTENT,
           );
           if (isCancelled) {
@@ -398,7 +402,7 @@ class ProfileVideoScreen extends Component {
     const canShow = await MessageDialog.canShow(SHARE_LINK_CONTENT);
     if (canShow) {
       try {
-        const {isCancelled, postId} = await MessageDialog.show(
+        const { isCancelled, postId } = await MessageDialog.show(
           SHARE_LINK_CONTENT,
         );
         if (isCancelled) {
@@ -450,7 +454,7 @@ class ProfileVideoScreen extends Component {
 
     Helper.hasPermissions();
 
-    this.setState({percent: 0, isVisibleProgress: true});
+    this.setState({ percent: 0, isVisibleProgress: true });
 
     RNFetchBlob.config({
       fileCache: true,
@@ -463,10 +467,10 @@ class ProfileVideoScreen extends Component {
       .progress((received, total) => {
         const percent = Math.round((received * 100) / total);
         console.log('progress', percent);
-        this.setState({percent});
+        this.setState({ percent });
       })
       .then((resp) => {
-        this.setState({isVisibleProgress: false});
+        this.setState({ isVisibleProgress: false });
         success(Constants.SUCCESS_TITLE, 'Success to download');
         const originPath = resp.path();
         const newPath = originPath + '.mp4';
@@ -526,7 +530,7 @@ class ProfileVideoScreen extends Component {
   }
 
   _renderVideo = () => {
-    const {isFetching, itemDatas} = this.state;
+    const { isFetching, itemDatas } = this.state;
 
     return (
       <>
@@ -574,13 +578,16 @@ class ProfileVideoScreen extends Component {
             top: 20,
             zIndex: 1,
             elevation: 1,
-          }}>
+          }}
+        >
           <TouchableOpacity
             onPress={this.onBack}
-            style={{...GStyles.centerAlign, width: 50, height: 50}}>
+            style={{ ...GStyles.centerAlign, width: 50, height: 50 }}
+          >
             <Image
               source={ic_back}
-              style={{width: 20, height: 14, tintColor: 'white'}}></Image>
+              style={{ width: 20, height: 14, tintColor: 'white' }}
+            ></Image>
           </TouchableOpacity>
         </View>
       </>
@@ -588,14 +595,14 @@ class ProfileVideoScreen extends Component {
   };
 
   _renderFooter = () => {
-    const {isFetching} = this.state;
+    const { isFetching } = this.state;
 
     if (!isFetching) return null;
-    return <ActivityIndicator style={{color: '#000'}} />;
+    return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
-  _renderItem = ({item, index}) => {
-    const {isVideoLoading, isVideoPause} = this.state;
+  _renderItem = ({ item, index }) => {
+    const { isVideoLoading, isVideoPause } = this.state;
 
     if (this._curIndex != index || isVideoPause) {
       return (
@@ -605,11 +612,12 @@ class ProfileVideoScreen extends Component {
             height: VIDEO_HEIGHT,
             borderWidth: 1,
             borderColor: 'black',
-          }}></View>
+          }}
+        ></View>
       );
     } else {
-      const isLike = item.is_like ? true : false;
-      const newTagList = item.tag_list.split(',').join(' ');
+      const isLike = item.isLike ? true : false;
+      const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
 
       return (
         <View
@@ -618,9 +626,10 @@ class ProfileVideoScreen extends Component {
             height: VIDEO_HEIGHT,
             borderWidth: 1,
             borderColor: 'black',
-          }}>
+          }}
+        >
           <Video
-            source={{uri: convertToProxyURL(item.url)}}
+            source={{ uri: convertToProxyURL(item.url) }}
             ref={(ref) => {
               this.player = ref;
             }}
@@ -663,7 +672,8 @@ class ProfileVideoScreen extends Component {
                 position: 'absolute',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <ActivityIndicator size="large" color="lightgray" />
             </View>
           )}
@@ -674,19 +684,22 @@ class ProfileVideoScreen extends Component {
               right: 12,
               alignItems: 'flex-end',
               zIndex: 100,
-            }}>
-            <View style={{alignItems: 'center'}}>
+            }}
+          >
+            <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressLike(!isLike, item);
-                }}>
+                }}
+              >
                 <Image
                   source={ic_favorite}
                   style={{
                     ...GStyles.image,
                     width: 32,
                     tintColor: isLike ? GStyle.redColor : GStyle.activeColor,
-                  }}></Image>
+                  }}
+                ></Image>
               </TouchableOpacity>
               <Text
                 style={{
@@ -697,30 +710,34 @@ class ProfileVideoScreen extends Component {
                   paddingTop: 2,
                   paddingBottom: 1,
                   paddingHorizontal: 2,
-                }}>
+                }}
+              >
                 {item.like_count}
               </Text>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressMessage(item);
                 }}
-                style={{marginTop: 18}}>
+                style={{ marginTop: 18 }}
+              >
                 <Image
                   source={ic_message}
                   style={{
                     ...GStyles.image,
                     width: 32,
                     tintColor: GStyle.activeColor,
-                  }}></Image>
+                  }}
+                ></Image>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressShare(item);
                 }}
-                style={{marginTop: 32}}>
+                style={{ marginTop: 32 }}
+              >
                 <FontAwesome
                   name="share"
-                  style={{fontSize: 30, color: GStyle.activeColor}}
+                  style={{ fontSize: 30, color: GStyle.activeColor }}
                 />
               </TouchableOpacity>
               <View
@@ -728,7 +745,8 @@ class ProfileVideoScreen extends Component {
                   alignItems: 'center',
                   marginTop: 128,
                   marginBottom: 12,
-                }}>
+                }}
+              >
                 <Text
                   style={{
                     ...GStyles.regularText,
@@ -738,7 +756,8 @@ class ProfileVideoScreen extends Component {
                     paddingTop: 2,
                     paddingBottom: 1,
                     paddingHorizontal: 2,
-                  }}>
+                  }}
+                >
                   {item.left_days} days left
                 </Text>
                 <Text
@@ -749,7 +768,8 @@ class ProfileVideoScreen extends Component {
                     marginTop: 4,
                     paddingVertical: 2,
                     paddingHorizontal: 4,
-                  }}>
+                  }}
+                >
                   #{item.number}
                 </Text>
                 <Avatar
@@ -762,14 +782,15 @@ class ProfileVideoScreen extends Component {
                   onPress={() => {
                     this.onPressAvatar(item);
                   }}
-                  containerStyle={{marginTop: 4}}
+                  containerStyle={{ marginTop: 4 }}
                 />
                 <Text
                   style={{
                     ...GStyles.regularText,
                     maxWidth: 80,
                     color: 'white',
-                  }}>
+                  }}
+                >
                   {item.user_name}
                 </Text>
               </View>
@@ -781,14 +802,18 @@ class ProfileVideoScreen extends Component {
               bottom: 62,
               left: 12,
               justifyContent: 'flex-end',
-            }}>
+            }}
+          >
             <View
               style={{
                 alignItems: 'flex-start',
                 marginTop: 128,
                 marginBottom: 12,
-              }}>
-              <View style={{...GStyles.rowContainer, justifyContent: 'center'}}>
+              }}
+            >
+              <View
+                style={{ ...GStyles.rowContainer, justifyContent: 'center' }}
+              >
                 <Text
                   style={{
                     ...GStyles.mediumText,
@@ -796,7 +821,8 @@ class ProfileVideoScreen extends Component {
                     backgroundColor: 'white',
                     padding: 2,
                     paddingBottom: 1,
-                  }}>
+                  }}
+                >
                   ৳{item.price}
                 </Text>
                 <Text
@@ -807,10 +833,11 @@ class ProfileVideoScreen extends Component {
                     marginLeft: 8,
                     paddingVertical: 2,
                     paddingHorizontal: 4,
-                  }}>
+                  }}
+                >
                   {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
                 </Text>
-                <View style={{flex: 1}}></View>
+                <View style={{ flex: 1 }}></View>
               </View>
               <Text
                 numberOfLines={3}
@@ -823,7 +850,8 @@ class ProfileVideoScreen extends Component {
                   marginTop: 8,
                   padding: 2,
                   paddingBottom: 1,
-                }}>
+                }}
+              >
                 {newTagList}
               </Text>
               <Text
@@ -839,7 +867,8 @@ class ProfileVideoScreen extends Component {
                   paddingTop: 2,
                   paddingBottom: 1,
                   paddingHorizontal: 2,
-                }}>
+                }}
+              >
                 {item.description}
               </Text>
             </View>
@@ -851,7 +880,7 @@ class ProfileVideoScreen extends Component {
 
   _renderShare = () => {
     return (
-      <View style={{...GStyles.centerAlign, ...GStyles.absoluteContainer}}>
+      <View style={{ ...GStyles.centerAlign, ...GStyles.absoluteContainer }}>
         <RBSheet
           ref={(ref) => {
             this.Scrollable = ref;
@@ -864,10 +893,12 @@ class ProfileVideoScreen extends Component {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
             },
-          }}>
+          }}
+        >
           {this._renderShareTitle()}
           <View
-            style={{...GStyles.rowContainer, justifyContent: 'space-around'}}>
+            style={{ ...GStyles.rowContainer, justifyContent: 'space-around' }}
+          >
             {this._renderShareFacebook()}
             {this._renderShareFacebookMessenger()}
             {this._renderShareWhatsApp()}
@@ -880,8 +911,8 @@ class ProfileVideoScreen extends Component {
 
   _renderShareTitle = () => {
     return (
-      <View style={{...GStyles.centerAlign}}>
-        <Text style={{...GStyles.regularText}}>Share to</Text>
+      <View style={{ ...GStyles.centerAlign }}>
+        <Text style={{ ...GStyles.regularText }}>Share to</Text>
       </View>
     );
   };
@@ -894,7 +925,8 @@ class ProfileVideoScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -903,10 +935,14 @@ class ProfileVideoScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#3b5998',
-          }}>
-          <FontAwesome name="facebook" style={{fontSize: 30, color: 'white'}} />
+          }}
+        >
+          <FontAwesome
+            name="facebook"
+            style={{ fontSize: 30, color: 'white' }}
+          />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           Facebook
         </Text>
       </TouchableOpacity>
@@ -921,7 +957,8 @@ class ProfileVideoScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -930,10 +967,11 @@ class ProfileVideoScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#006fff',
-          }}>
-          <Fontisto name="messenger" style={{fontSize: 30, color: 'white'}} />
+          }}
+        >
+          <Fontisto name="messenger" style={{ fontSize: 30, color: 'white' }} />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           Messenger
         </Text>
       </TouchableOpacity>
@@ -948,7 +986,8 @@ class ProfileVideoScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -957,10 +996,14 @@ class ProfileVideoScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#25D366',
-          }}>
-          <FontAwesome name="whatsapp" style={{fontSize: 30, color: 'white'}} />
+          }}
+        >
+          <FontAwesome
+            name="whatsapp"
+            style={{ fontSize: 30, color: 'white' }}
+          />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           WhatsApp
         </Text>
       </TouchableOpacity>
@@ -975,7 +1018,8 @@ class ProfileVideoScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -984,10 +1028,14 @@ class ProfileVideoScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: GStyle.grayBackColor,
-          }}>
-          <FontAwesome name="download" style={{fontSize: 30, color: '#333'}} />
+          }}
+        >
+          <FontAwesome
+            name="download"
+            style={{ fontSize: 30, color: '#333' }}
+          />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           Save video
         </Text>
       </TouchableOpacity>
@@ -995,12 +1043,13 @@ class ProfileVideoScreen extends Component {
   };
 
   _renderProgress = () => {
-    const {percent, isVisibleProgress} = this.state;
+    const { percent, isVisibleProgress } = this.state;
 
     return (
       <ProgressModal
         percent={percent}
-        isVisible={isVisibleProgress}></ProgressModal>
+        isVisible={isVisibleProgress}
+      ></ProgressModal>
     );
   };
 

@@ -88,12 +88,12 @@ class ProfileLikedVideoScreen extends React.Component {
       showPageLoader(false);
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({itemDatas: json.data.video_list});
-            this.props.setSavedCount(json.data.video_list.length);
+            this.setState({itemDatas: json?.data?.videoList});
+            this.props.setSavedCount(json?.data?.videoList?.length);
           }
         } else {
           Helper.alertServerDataError();
@@ -166,7 +166,7 @@ class ProfileLikedVideoScreen extends React.Component {
                 style={{marginTop: 2}}>
                 <FastImage
                   source={{
-                    uri: item.thumb,
+                    uri: item.thumb || '',
                     priority: FastImage.priority.normal,
                   }}
                   resizeMode={FastImage.resizeMode.stretch}

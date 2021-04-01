@@ -28,6 +28,7 @@
     "@react-navigation/native": "^5.7.3",
     "@react-navigation/stack": "^5.9.0",
     "@reduxjs/toolkit": "^1.5.0",
+    "axios": "^0.21.1",
     "create-react-class": "^15.6.3",
     "lodash.findindex": "^4.6.0",
     "lodash.map": "^4.6.0",

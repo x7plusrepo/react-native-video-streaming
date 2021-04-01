@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import {
   createStackNavigator,
   CardStyleInterpolators,
@@ -27,7 +27,7 @@ import ProfileEditScreen from '../screens/tab_profile/ProfileEditScreen';
 import ProfileVideoScreen from '../screens/tab_profile/ProfileVideoScreen';
 import ProfileOtherScreen from '../screens/tab_profile/ProfileOtherScreen';
 
-import {GStyle, GStyles, Global, Helper} from '../utils/Global/index';
+import { GStyle, GStyles, Global, Helper } from '../utils/Global/index';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';
 // import WorkScreen from '../screens/auth/FCAccountStep1Screen';
@@ -50,12 +50,13 @@ const config = {
 
 export default function App() {
   return (
-    <NavigationContainer theme={{colors: {background: 'black'}}}>
+    <NavigationContainer theme={{ colors: { background: 'black' } }}>
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
           gestureEnabled: false,
-        }}>
+        }}
+      >
         {/* <Stack.Screen name="test" component={TestScreen} /> */}
         {/* <Stack.Screen name="temp" component={TempScreen} /> */}
         {/* <Stack.Screen name="work" component={WorkScreen} /> */}
@@ -87,7 +88,7 @@ export default function App() {
           options={{
             gestureEnabled: true,
             gestureDirection: 'horizontal',
-            gestureResponseDistance: {horizontal: WINDOW_HEIGHT},
+            gestureResponseDistance: { horizontal: WINDOW_HEIGHT },
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         />

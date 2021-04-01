@@ -206,13 +206,14 @@ class SigninScreen extends React.Component {
         showPageLoader(false);
 
         if (err !== null) {
-          Helper.alertNetworkError();
+          Helper.alertNetworkError(err?.message);
         } else {
-          if (json.status === 1) {
-            global.me = json.data;
+          if (json.status === 200) {
+            const user = json.data?.user || {}
+            global.me = user;
 
             params = {
-              user_id: json.data.id,
+              user_id: user.id,
               one_signal_id: global._pushAppId,
               token: global._pushToken,
               device_id: global._deviceId,
@@ -225,7 +226,7 @@ class SigninScreen extends React.Component {
               if (err !== null) {
                 Helper.alertNetworkError();
               } else {
-                if (json.status !== 1) {
+                if (json.status !== 204) {
                   Helper.alertServerDataError();
                 }
               }

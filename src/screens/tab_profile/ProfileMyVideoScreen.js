@@ -98,12 +98,12 @@ class ProfileMyVideoScreen extends React.Component {
       showPageLoader(false);
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({itemDatas: json.data.video_list});
-            this.props.setMyPostCount(json.data.video_list.length);
+            this.setState({itemDatas: json.data.videoList});
+            this.props.setMyPostCount(json.data.videoList.length);
           }
         } else {
           Helper.alertServerDataError();
@@ -276,7 +276,7 @@ class ProfileMyVideoScreen extends React.Component {
                   this.bottomMenu.open();
                 }}>
                 <FastImage
-                  source={{uri: item.thumb}}
+                  source={{uri: item.thumb || ''}}
                   resizeMode={FastImage.resizeMode.stretch}
                   style={{
                     width: CELL_WIDTH,

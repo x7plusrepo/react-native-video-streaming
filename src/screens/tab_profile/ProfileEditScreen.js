@@ -6,6 +6,7 @@ import {
   Dimensions,
   Image,
   Linking,
+  NativeEventEmitter,
   PermissionsAndroid,
   Platform,
   SafeAreaView,
@@ -17,12 +18,12 @@ import {
   View,
 } from 'react-native';
 
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import ModalSelector from '../../lib/ModalSelector/index';
 import ImagePicker from 'react-native-image-picker';
 
-import {TextField} from '../../lib/MaterialTextField/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import {
   GStyle,
   GStyles,
@@ -33,6 +34,7 @@ import {
 } from '../../utils/Global/index';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
+import VideoUpload from '../../utils/NativeModule/NativePackage';
 
 const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
 
@@ -45,20 +47,47 @@ class ProfileEditScreen extends React.Component {
     this.init();
   }
 
-  componentDidMount() {}
+  componentDidMount() {
+    const eventEmitter = new NativeEventEmitter(VideoUpload);
+    this.eventListener = eventEmitter.addListener(
+      'EventUploadProgress',
+      (event) => {
+        console.log(event);
+        if (parseInt(event.percent) === 100 && event.url) {
+          const curTimeTick = Helper.getTimeStamp();
+          const uploadInterval = curTimeTick - this._timeTick;
+          this._timeTick = curTimeTick;
+          if (uploadInterval > 5000) {
+            this.setState({ photo: event.url });
+            this.onSubmit();
+          }
+        } else if (event.percent < 0) {
+          showForcePageLoader(false);
+          error(Constants.ERROR_TITLE, 'Failed to upload image');
+        }
+      },
+    );
+  }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    if (Platform.OS === 'android') {
+      this.eventListener.remove(); //Removes the listener
+    }
+  }
 
   init = () => {
+    console.log(global.me);
     this.state = {
       secureTextEntry: global.debug ? false : true,
       userName: global.me.username,
       phoneNumber: global.me.phone,
       password: '',
       profilePhotoUri: global.me.photo,
-      profilePhotoSelUri: null,
+      profilePhotoSelSource: null,
       profilePhotoSelPath: '',
+      photo: null,
     };
+    this._timeTick = 0;
 
     this.initRef();
   };
@@ -76,7 +105,7 @@ class ProfileEditScreen extends React.Component {
   };
 
   onFocus = () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     for (let name in errors) {
       let ref = this[name];
@@ -86,15 +115,15 @@ class ProfileEditScreen extends React.Component {
       }
     }
 
-    this.setState({errors});
+    this.setState({ errors });
   };
 
   onChangeText = (text) => {
     ['userName', 'phoneNumber', 'password']
-      .map((name) => ({name, ref: this[name]}))
-      .forEach(({name, ref}) => {
+      .map((name) => ({ name, ref: this[name] }))
+      .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
-          this.setState({[name]: text});
+          this.setState({ [name]: text });
         }
       });
   };
@@ -112,11 +141,13 @@ class ProfileEditScreen extends React.Component {
   };
 
   onAccessoryPress = () => {
-    this.setState(({secureTextEntry}) => ({secureTextEntry: !secureTextEntry}));
+    this.setState(({ secureTextEntry }) => ({
+      secureTextEntry: !secureTextEntry,
+    }));
   };
 
   renderPasswordAccessory = () => {
-    let {secureTextEntry} = this.state;
+    let { secureTextEntry } = this.state;
 
     let name = secureTextEntry ? 'visibility' : 'visibility-off';
 
@@ -131,13 +162,69 @@ class ProfileEditScreen extends React.Component {
     );
   };
 
+  uploadImageToCloudinary = () => {
+    const { profilePhotoSelSource, photo } = this.state;
+    if (!profilePhotoSelSource || photo) {
+      this.onSubmit();
+      return;
+    }
+    showForcePageLoader(true);
+
+    const data = new FormData();
+    data.append('file', profilePhotoSelSource);
+    data.append('upload_preset', 'dmljgqvn');
+    data.append('cloud_name', 'snaplist');
+    fetch('https://api.cloudinary.com/v1_1/snaplist/upload', {
+      method: 'post',
+      body: data,
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        this.setState({ photo: data.secure_url });
+        this.onSubmit();
+      })
+      .catch((err) => {
+        Alert.alert('An Error Occured While Uploading');
+        showForcePageLoader(false);
+      });
+
+    // return;
+    // const { profilePhotoSelPath, photo } = this.state;
+    // if (!profilePhotoSelPath || photo) {
+    //   this.onSubmit();
+    //   return;
+    // }
+    //
+    // showForcePageLoader(true);
+    //
+    // if (Platform.OS === 'android') {
+    //   VideoUpload.upload(
+    //     profilePhotoSelPath,
+    //     'images/',
+    //     'image',
+    //     (photo) => {
+    //       this.setState({ photo });
+    //       this.onSubmit();
+    //     },
+    //     (msg) => {
+    //       console.log('onError', msg);
+    //       showForcePageLoader(false);
+    //       error(Constants.ERROR_TITLE, 'Failed to upload image');
+    //     },
+    //   );
+    // } else {
+    //   VideoUpload.upload(
+    //     profilePhotoSelPath,
+    //     'images/',
+    //     'image',
+    //     (error, respArray) => {},
+    //   );
+    // }
+  };
   onSubmit = () => {
-    const {userName, phoneNumber, password, profilePhotoSelPath} = this.state;
+    const { userName, phoneNumber, password, photo } = this.state;
+
     let errors = {};
-    const filePath =
-      Platform.OS === 'android'
-        ? profilePhotoSelPath
-        : profilePhotoSelPath.slice(7);
 
     ['userName', 'phoneNumber'].forEach((name) => {
       let value = this[name].value();
@@ -154,11 +241,11 @@ class ProfileEditScreen extends React.Component {
       }
     });
 
-    if (password.length > 0 && password.length != 4) {
+    if (password.length > 0 && password.length !== 4) {
       errors['password'] = 'Should be 4 digits';
     }
 
-    this.setState({errors});
+    this.setState({ errors });
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
@@ -167,7 +254,7 @@ class ProfileEditScreen extends React.Component {
         username: userName,
         phone: phoneNumber,
         password: password,
-        image: filePath,
+        photo,
       };
 
       showForcePageLoader(true);
@@ -177,7 +264,7 @@ class ProfileEditScreen extends React.Component {
         if (err !== null) {
           error(Constants.ERROR_TITLE, 'Failed to update your profile');
         } else {
-          if (json.status === 1) {
+          if (json.status === 200) {
             global.me = json.data;
             success(Constants.SUCCESS_TITLE, 'Success to update your profile');
           } else {
@@ -214,12 +301,18 @@ class ProfileEditScreen extends React.Component {
       } else if (response.customButton) {
         console.log('User tapped custom button: ', response.customButton);
       } else {
-        const source = {uri: response.uri};
+        const source = {
+          uri: response.uri,
+          type: response.type,
+          name: response.fileName,
+        };
 
+        console.log(response);
         this.setState({
-          profilePhotoSelUri: source,
-          // profilePhotoSelPath: response.path,
-          profilePhotoSelPath: response.uri,
+          profilePhotoSelSource: source,
+          profilePhotoSelPath: response.path,
+          //profilePhotoSelPath: response.uri,
+          photo: null,
         });
       }
     });
@@ -247,7 +340,8 @@ class ProfileEditScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderAvartar()}
             {this._renderMainInputs()}
             {this._renderButton()}
@@ -269,11 +363,15 @@ class ProfileEditScreen extends React.Component {
   };
 
   _renderAvartar = () => {
-    const {profilePhotoUri, profilePhotoSelUri} = this.state;
-    const isProfilePhotoSelected = profilePhotoSelUri == null ? false : true;
-
+    const { profilePhotoUri, profilePhotoSelSource } = this.state;
+    const isProfilePhotoSelected = !!profilePhotoSelSource;
+    const image = isProfilePhotoSelected
+      ? profilePhotoSelSource
+      : profilePhotoUri
+      ? { uri: profilePhotoUri }
+      : img_default_avatar;
     return (
-      <View style={{alignItems: 'center', marginTop: 50}}>
+      <View style={{ alignItems: 'center', marginTop: 50 }}>
         <TouchableOpacity onPress={this.onPressProfilePhoto}>
           <Image
             source={img_default_avatar}
@@ -283,15 +381,10 @@ class ProfileEditScreen extends React.Component {
               top: 0,
               width: 106,
               height: 106,
-            }}></Image>
+            }}
+          />
           <Avatar
-            image={
-              isProfilePhotoSelected
-                ? profilePhotoSelUri
-                : profilePhotoUri
-                ? {uri: profilePhotoUri}
-                : img_default_avatar
-            }
+            image={image}
             size={106}
             // borderRadius={53}
             // borderWidth={2}
@@ -301,8 +394,9 @@ class ProfileEditScreen extends React.Component {
           <Text
             style={[
               GStyles.regularText,
-              {fontSize: 13, color: GStyle.linkColor, marginTop: 16},
-            ]}>
+              { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
+            ]}
+          >
             Edit photo
           </Text>
         </TouchableOpacity>
@@ -320,7 +414,7 @@ class ProfileEditScreen extends React.Component {
     } = this.state;
 
     return (
-      <View style={{marginTop: 50}}>
+      <View style={{ marginTop: 50 }}>
         <TextField
           ref={this.userNameRef}
           autoCapitalize="none"
@@ -347,7 +441,7 @@ class ProfileEditScreen extends React.Component {
           label="Phone Number"
           value={phoneNumber}
           error={errors.phoneNumber}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
         <TextField
           ref={this.passwordRef}
@@ -366,7 +460,7 @@ class ProfileEditScreen extends React.Component {
           error={errors.password}
           renderRightAccessory={this.renderPasswordAccessory}
           maxLength={4}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
       </View>
     );
@@ -374,15 +468,15 @@ class ProfileEditScreen extends React.Component {
 
   _renderButton = () => {
     return (
-      <View style={{...GStyles.centerAlign}}>
-        <View style={{marginTop: 50}}>
-          <TouchableOpacity onPress={this.onSubmit}>
+      <View style={{ ...GStyles.centerAlign }}>
+        <View style={{ marginTop: 50 }}>
+          <TouchableOpacity onPress={this.uploadImageToCloudinary}>
             <View style={GStyles.buttonFill}>
               <Text style={GStyles.textFill}>Save</Text>
             </View>
           </TouchableOpacity>
         </View>
-        <View style={{marginTop: 20, marginBottom: 50}}>
+        <View style={{ marginTop: 20, marginBottom: 50 }}>
           <TouchableOpacity onPress={this.onSignout}>
             <View style={styles.buttonFill}>
               <Text style={styles.textFill}>Sign Out</Text>
@@ -395,7 +489,7 @@ class ProfileEditScreen extends React.Component {
 
   _renderBottom = () => {
     return (
-      <View style={{height: 50}}>
+      <View style={{ height: 50 }}>
         <View style={GStyles.rowCenterContainer}>
           <TouchableOpacity onPress={this.onTerm}>
             <Text
@@ -405,7 +499,8 @@ class ProfileEditScreen extends React.Component {
                 lineHeight: 22,
                 color: GStyle.linkColor,
                 paddingLeft: 5,
-              }}>
+              }}
+            >
               Term of Service
             </Text>
           </TouchableOpacity>
@@ -416,7 +511,8 @@ class ProfileEditScreen extends React.Component {
               lineHeight: 22,
               color: GStyle.grayColor,
               paddingLeft: 5,
-            }}>
+            }}
+          >
             and
           </Text>
           <TouchableOpacity onPress={this.onPrivacy}>
@@ -427,7 +523,8 @@ class ProfileEditScreen extends React.Component {
                 lineHeight: 22,
                 color: GStyle.linkColor,
                 paddingLeft: 5,
-              }}>
+              }}
+            >
               Privacy Policy
             </Text>
           </TouchableOpacity>

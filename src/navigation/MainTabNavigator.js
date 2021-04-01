@@ -78,11 +78,11 @@ class MainTabNavigator extends Component {
       showPageLoader(false);
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           const unreadCount =
-            json.data.unread_count > 0 ? json.data.unread_count : null;
+            json.data.unReadCounts > 0 ? json.data.unReadCounts : null;
           this.props.setUnreadCount(unreadCount);
         } else {
           Helper.alertServerDataError();
@@ -110,7 +110,7 @@ class MainTabNavigator extends Component {
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           global.me = json.data;
 
           if (global.me.username.indexOf('guest_') > -1) {
@@ -191,7 +191,7 @@ class MainTabNavigator extends Component {
                   source={ic_tab_top}
                   style={{...GStyles.image, width: 20, tintColor: color}}
                 />
-              ),              
+              ),
             }}
             listeners={({navigation, route}) => ({
               tabPress: (e) => {

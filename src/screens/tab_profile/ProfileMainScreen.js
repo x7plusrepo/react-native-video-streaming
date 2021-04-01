@@ -17,7 +17,7 @@ import {
   View,
 } from 'react-native';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 import {
   Menu,
@@ -26,9 +26,9 @@ import {
   MenuTrigger,
 } from 'react-native-popup-menu';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import ScrollableTabView, {DefaultTabBar} from 'rn-collapsing-tab-bar';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import ScrollableTabView, { DefaultTabBar } from 'rn-collapsing-tab-bar';
 
 import {
   GStyle,
@@ -66,9 +66,9 @@ class ProfileMainScreen extends React.Component {
     });
 
     const curMonth = Helper.getCurMonthString();
-    this.setState({curMonth});
+    this.setState({ curMonth });
     const lastMonths = Helper.getLastMonthList();
-    this.setState({lastMonths});
+    this.setState({ lastMonths });
   }
 
   componentWillUnmount() {}
@@ -89,7 +89,7 @@ class ProfileMainScreen extends React.Component {
   };
 
   onRefresh = () => {
-    this.setState({profilePhotoUri: global.me ? global.me.photo : null});
+    this.setState({ profilePhotoUri: global.me ? global.me.photo : null });
 
     let params = {
       user_id: global.me.id,
@@ -97,16 +97,17 @@ class ProfileMainScreen extends React.Component {
     showPageLoader(true);
     RestAPI.get_user_profile(params, (json, err) => {
       showPageLoader(false);
-
+      console.log(err);
+      console.log(json);
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 1) {
-          global.me.photo = json.data.user_photo;
+        if (json.status === 200) {
+          global.me.photo = json.data.photo;
           this.setState({
-            profilePhotoUri: json.data.user_photo,
-            allViewCount: json.data.all_view_count,
-            monthViewCountList: json.data.month_view_count_list,
+            profilePhotoUri: json.data.photo,
+            allViewCount: json.data.allViewCount,
+            monthViewCountList: json.data.monthViews,
           });
         } else {
           Helper.alertServerDataError();
@@ -120,7 +121,7 @@ class ProfileMainScreen extends React.Component {
   };
 
   onPressViewCount = () => {
-    const {allViewCount} = this.state;
+    const { allViewCount } = this.state;
 
     if (allViewCount > 0) {
       console.log('--- crn_dev --- allViewCount:', allViewCount);
@@ -133,7 +134,7 @@ class ProfileMainScreen extends React.Component {
 
   onPressSignin = () => {
     global._prevScreen = 'profile_edit';
-    this.props.navigation.navigate('signin');
+    this.props.navigation.navigate('signup');
   };
 
   onPressCamera = () => {
@@ -173,76 +174,79 @@ class ProfileMainScreen extends React.Component {
     console.log('--- crn_dev --- global.me.isGuest:', global.me.isGuest);
 
     return (
-      <View style={{...GStyles.rowCenterContainer, marginVertical: 20}}>
-        <View style={{flex: 1, ...GStyles.centerAlign}}>
+      <View style={{ ...GStyles.rowCenterContainer, marginVertical: 20 }}>
+        <View style={{ flex: 1, ...GStyles.centerAlign }}>
           {!global.me.isGuest && (
             <Menu>
               <MenuTrigger disabled={allViewCount > 0 ? false : true}>
-                <Text style={{...GStyles.mediumText, fontSize: 13}}>Total</Text>
-                <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
+                  Total
+                </Text>
+                <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                   {allViewCount}
                 </Text>
                 <Text
-                  style={{...GStyles.mediumText, fontSize: 13, marginTop: 4}}>
+                  style={{ ...GStyles.mediumText, fontSize: 13, marginTop: 4 }}
+                >
                   {curMonth}
                 </Text>
-                <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                   {monthViewCountList[0]}
                 </Text>
               </MenuTrigger>
               <MenuOptions>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[0]} : {monthViewCountList[1]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[1]} : {monthViewCountList[2]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[2]} : {monthViewCountList[3]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[3]} : {monthViewCountList[4]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[4]} : {monthViewCountList[5]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[5]} : {monthViewCountList[6]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[6]} : {monthViewCountList[7]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[7]} : {monthViewCountList[8]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[8]} : {monthViewCountList[9]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[9]} : {monthViewCountList[10]}
                   </Text>
                 </MenuOption>
                 <MenuOption>
-                  <Text style={{...GStyles.mediumText, fontSize: 13}}>
+                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
                     {lastMonths[10]} : {monthViewCountList[11]}
                   </Text>
                 </MenuOption>
@@ -250,11 +254,12 @@ class ProfileMainScreen extends React.Component {
             </Menu>
           )}
         </View>
-        <View style={{flex: 1, alignItems: 'center'}}>
+        <View style={{ flex: 1, alignItems: 'center' }}>
           <TouchableOpacity
             onPress={this.onPressProfile}
             disabled={global.me.isGuest}
-            style={{...GStyles.centerAlign}}>
+            style={{ ...GStyles.centerAlign }}
+          >
             <Image
               source={img_default_avatar}
               style={{
@@ -263,10 +268,11 @@ class ProfileMainScreen extends React.Component {
                 top: 0,
                 width: 106,
                 height: 106,
-              }}></Image>
+              }}
+            />
             <Avatar
               image={
-                profilePhotoUri ? {uri: profilePhotoUri} : img_default_avatar
+                profilePhotoUri ? { uri: profilePhotoUri } : img_default_avatar
               }
               size={106}
               // borderRadius={0}
@@ -276,8 +282,9 @@ class ProfileMainScreen extends React.Component {
               <Text
                 style={[
                   GStyles.regularText,
-                  {fontSize: 13, color: GStyle.linkColor, marginTop: 16},
-                ]}>
+                  { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
+                ]}
+              >
                 {global.me.username}
               </Text>
             )}
@@ -285,38 +292,43 @@ class ProfileMainScreen extends React.Component {
               <Text
                 style={[
                   GStyles.regularText,
-                  {fontSize: 13, color: GStyle.linkColor, marginTop: 16},
-                ]}>
+                  { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
+                ]}
+              >
                 Edit profile
               </Text>
             )}
           </TouchableOpacity>
         </View>
-        <View style={{flex: 1, ...GStyles.centerAlign}}>
+        <View style={{ flex: 1, ...GStyles.centerAlign }}>
           {global.me.isGuest && (
             <TouchableOpacity
               onPress={this.onPressSignin}
-              style={{...styles.buttonFill, height: 30}}>
-              <Text style={{...styles.textFill}}>Signin</Text>
+              style={{ ...styles.buttonFill, height: 30 }}
+            >
+              <Text style={{ ...styles.textFill }}>Signin</Text>
             </TouchableOpacity>
           )}
           {!global.me.isGuest && (
             <TouchableOpacity
               onPress={this.onPressCamera}
-              style={{...styles.buttonFill, height: 30}}>
-              <Text style={{...styles.textFill}}>Camera</Text>
+              style={{ ...styles.buttonFill, height: 30 }}
+            >
+              <Text style={{ ...styles.textFill }}>Camera</Text>
             </TouchableOpacity>
           )}
           <TouchableOpacity
             onPress={this.onPressCustomerSupport}
-            style={{...styles.buttonFill, marginTop: 8}}>
-            <Text style={{...styles.textFill}}>Customer</Text>
-            <Text style={{...styles.textFill}}>Support</Text>
+            style={{ ...styles.buttonFill, marginTop: 8 }}
+          >
+            <Text style={{ ...styles.textFill }}>Customer</Text>
+            <Text style={{ ...styles.textFill }}>Support</Text>
           </TouchableOpacity>
           <TouchableOpacity
             onPress={this.onPressDraft}
-            style={{...styles.buttonFill, height: 30, marginTop: 8}}>
-            <Text style={{...styles.textFill}}>Draft</Text>
+            style={{ ...styles.buttonFill, height: 30, marginTop: 8 }}
+          >
+            <Text style={{ ...styles.textFill }}>Draft</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -332,7 +344,7 @@ class ProfileMainScreen extends React.Component {
   };
 
   _renderTabBar = () => {
-    const {savedCount, myPostCount} = this.props;
+    const { savedCount, myPostCount } = this.props;
     const tabOneHeight =
       140 * (Math.floor(savedCount / 3) + Math.ceil(savedCount % 3)) + 100;
     const tabTwoHeight =
@@ -347,14 +359,15 @@ class ProfileMainScreen extends React.Component {
         prerenderingSiblingsNumber={Infinity}
         tabBarBackgroundColor={GStyle.snowColor}
         tabBarActiveTextColor={GStyle.activeColor}
-        tabBarUnderlineStyle={{backgroundColor: GStyle.activeColor}}
+        tabBarUnderlineStyle={{ backgroundColor: GStyle.activeColor }}
         renderTabBar={() => (
           <DefaultTabBar
             inactiveTextColor={GStyle.fontColor}
             activeTextColor={GStyle.fontColor}
             backgroundColor={GStyle.grayBackColor}
           />
-        )}>
+        )}
+      >
         <ProfileLikedVideoScreen
           // onLayoutView={this.measureTabOne}
           tabLabel="Saved"
@@ -382,7 +395,7 @@ const styles = StyleSheet.create({
   },
 });
 
-TProfileMainScreen = function (props) {
+ProfileMainScreen = function (props) {
   let navigation = useNavigation();
   let route = useRoute();
   return <ProfileMainScreen {...props} navigation={navigation} route={route} />;
@@ -394,4 +407,4 @@ export default connect(
     myPostCount: state.Me.myPostCount,
   }),
   {},
-)(TProfileMainScreen);
+)(ProfileMainScreen);

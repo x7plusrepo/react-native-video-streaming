@@ -16,8 +16,12 @@ import {
   View,
 } from 'react-native';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import {
+  useNavigation,
+  useRoute,
+  StackActions,
+} from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
 import SwitchSelector from 'react-native-switch-selector';
 
@@ -90,17 +94,17 @@ class ProfileOtherScreen extends React.Component {
       showPageLoader(false);
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           if (this._isMounted) {
             this.setState({
               type: json.data.type,
-              viewCount: json.data.view_count,
-              saveCount: json.data.save_count,
-              likeCount: json.data.like_count,
-              dislikeCount: json.data.dislike_count,
-              itemDatas: json.data.video_list,
+              viewCount: json.data.viewCount,
+              saveCount: json.data.saveCount,
+              likeCount: json.data.likeCount,
+              dislikeCount: json.data.dislikeCount,
+              itemDatas: json.data.videoList,
             });
           }
         } else {
@@ -111,7 +115,7 @@ class ProfileOtherScreen extends React.Component {
   };
 
   onPressVideo = (value) => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
     const selIndex = itemDatas.findIndex((obj) => obj.id === value);
 
     global._selIndex = selIndex;
@@ -132,11 +136,11 @@ class ProfileOtherScreen extends React.Component {
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           if (this._isMounted) {
             this.setState({
-              likeCount: json.data.like_count,
-              dislikeCount: json.data.dislike_count,
+              likeCount: json.data.likeCount,
+              dislikeCount: json.data.dislikeCount,
             });
           }
         } else {
@@ -151,7 +155,7 @@ class ProfileOtherScreen extends React.Component {
   };
 
   render() {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     return (
       <>
@@ -160,7 +164,8 @@ class ProfileOtherScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderAvartar()}
             {this._renderLike()}
             {this._renderVideo()}
@@ -181,40 +186,43 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderAvartar = () => {
-    const {viewCount, saveCount} = this.state;
+    const { viewCount, saveCount } = this.state;
 
     return (
       <View>
-        <View style={{alignItems: 'center', marginVertical: 20}}>
+        <View style={{ alignItems: 'center', marginVertical: 20 }}>
           <View>
             <Avatar
-              image={{uri: global._opponentPhoto}}
+              image={{ uri: global._opponentPhoto }}
               size={106}
               // borderRadius={53}
               // borderWidth={2}
             />
           </View>
-          <Text style={{...GStyles.regularText, marginTop: 8}}>
+          <Text style={{ ...GStyles.regularText, marginTop: 8 }}>
             {global._opponentName}
           </Text>
         </View>
-        <View style={{position: 'absolute', marginTop: 24}}>
-          <Text style={{...GStyles.regularText}}>Views : {viewCount}</Text>
+        <View style={{ position: 'absolute', marginTop: 24 }}>
+          <Text style={{ ...GStyles.regularText }}>Views : {viewCount}</Text>
           <View
-            style={{flexDirection: 'row', alignItems: 'center', marginTop: 4}}>
+            style={{ flexDirection: 'row', alignItems: 'center', marginTop: 4 }}
+          >
             <Image
               source={ic_favorite}
               style={{
                 ...GStyles.image,
                 width: 20,
                 tintColor: GStyle.redColor,
-              }}></Image>
+              }}
+            ></Image>
             <Text
               style={{
                 ...GStyles.regularText,
                 marginRight: 10,
                 marginLeft: 4,
-              }}>
+              }}
+            >
               {saveCount}
             </Text>
           </View>
@@ -224,15 +232,15 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderLike = () => {
-    const {type, likeCount, dislikeCount} = this.state;
+    const { type, likeCount, dislikeCount } = this.state;
     const options = [
       {
         label: 'Dislike (' + dislikeCount + ')',
         value: '0',
         imageIcon: ic_dislike,
       },
-      {label: 'Neutral', value: '1'},
-      {label: 'Like (' + likeCount + ')', value: '2', imageIcon: ic_like},
+      { label: 'Neutral', value: '1' },
+      { label: 'Like (' + likeCount + ')', value: '2', imageIcon: ic_like },
     ];
 
     return (
@@ -254,14 +262,14 @@ class ProfileOtherScreen extends React.Component {
             resizeMode: 'contain',
             marginRight: 4,
           }}
-          textStyle={{fontSize: 14}}
+          textStyle={{ fontSize: 14 }}
         />
       </View>
     );
   };
 
   _renderVideo = () => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     return (
       <View
@@ -270,7 +278,8 @@ class ProfileOtherScreen extends React.Component {
           flexDirection: 'row',
           flexWrap: 'wrap',
           marginVertical: 50,
-        }}>
+        }}
+      >
         {itemDatas.map((item, i) => {
           return (
             <View
@@ -279,7 +288,8 @@ class ProfileOtherScreen extends React.Component {
                 alignItems: 'center',
                 borderWidth: 1,
                 borderColor: 'white',
-              }}>
+              }}
+            >
               <View
                 style={{
                   ...GStyles.centerAlign,
@@ -288,16 +298,18 @@ class ProfileOtherScreen extends React.Component {
                   borderRadius: 10,
                   backgroundColor: 'lightgray',
                   marginVertical: 4,
-                }}>
-                <Text style={{...GStyles.mediumText}}>{item.number}</Text>
+                }}
+              >
+                <Text style={{ ...GStyles.mediumText }}>{item.number}</Text>
               </View>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressVideo(item.id);
-                }}>
+                }}
+              >
                 <FastImage
                   source={{
-                    uri: item.thumb,
+                    uri: item.thumb || '',
                     priority: FastImage.priority.normal,
                   }}
                   resizeMode={FastImage.resizeMode.stretch}

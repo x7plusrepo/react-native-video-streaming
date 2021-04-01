@@ -69,9 +69,7 @@ public class VideoUpload extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void upload(String uri, Callback successCallback, Callback errorCallback) {
-        final String[] split = uri.split(":");//split the path.
-        String originFilePath = split[1].substring(2);//assign it to a string(your choice).
+    public void upload(String uri, String folder, String resource_type, Callback successCallback, Callback errorCallback) {
 
 //        File originFile = new File(originFilePath);
 //        String dirPath = originFile.getParent();
@@ -97,11 +95,11 @@ public class VideoUpload extends ReactContextBaseJavaModule {
         String curTimeStampString = String.format("%015d", curTimeStamp);
         long unit = 100 * 1000;
         curSent = 0;
-        MediaManager.get().upload(originFilePath)
-                .option("resource_type", "video")
-                .option("folder", "work/")
+        MediaManager.get().upload(uri)
+                .option("resource_type", resource_type)
+                //.unsigned("dmljgqvn")
+                .option("folder", folder)
                 .option("public_id", curTimeStampString)
-                .option("overwrite", true)
                 .callback(new UploadCallback() {
                     @Override
                     public void onStart(String requestId) {
@@ -132,7 +130,7 @@ public class VideoUpload extends ReactContextBaseJavaModule {
                     @Override
                     public void onError(String requestId, ErrorInfo error) {
                         Log.d("014 =------------", "error: " + error.getDescription());
-                        errorCallback.invoke("Error");
+                        errorCallback.invoke(error.getDescription());
                     }
 
                     @Override

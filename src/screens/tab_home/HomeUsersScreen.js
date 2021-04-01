@@ -114,13 +114,13 @@ class HomeUsersScreen extends React.Component {
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 1) {
-          this.setState({totalCount: json.data.total_count});
+        if (json.status === 200) {
+          this.setState({totalCount: json.data?.totalCount});
           if (type == 'more') {
-            let data = itemDatas.concat(json.data.user_list);
+            let data = itemDatas.concat(json.data?.userList);
             this.setState({itemDatas: data});
           } else {
-            this.setState({itemDatas: json.data.user_list});
+            this.setState({itemDatas: json.data?.userList});
           }
         } else {
           Helper.alertServerDataError();

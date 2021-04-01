@@ -107,7 +107,7 @@ class FCVerifyEmailScreen extends React.Component {
         console.error(err);
         return;
       }
-
+      // TODO - hook up resend email verification
       if (json.status === 1) {
         Toast.show('Verification email is sent successfully.');
       } else {

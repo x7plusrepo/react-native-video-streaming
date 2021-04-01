@@ -1,4 +1,4 @@
-import React, {useState, useRef, forwardRef} from 'react';
+import React, { useState, useRef, forwardRef } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -16,8 +16,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import {
   GStyle,
@@ -67,7 +67,7 @@ class TopUsersScreen extends React.Component {
   };
 
   onRefresh = (type) => {
-    let {isFetching, totalCount, curPage, itemDatas} = this.state;
+    let { isFetching, totalCount, curPage, itemDatas } = this.state;
 
     if (isFetching) {
       return;
@@ -83,12 +83,12 @@ class TopUsersScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    this.setState({curPage});
+    this.setState({ curPage });
 
     if (type == 'init') {
       showPageLoader(true);
     } else {
-      this.setState({isFetching: true});
+      this.setState({ isFetching: true });
     }
     let params = {
       page_number: type == 'more' ? curPage : '1',
@@ -98,19 +98,19 @@ class TopUsersScreen extends React.Component {
       if (type == 'init') {
         showPageLoader(false);
       } else {
-        this.setState({isFetching: false});
+        this.setState({ isFetching: false });
       }
 
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 1) {
-          this.setState({totalCount: json.data.total_count});
+        if (json.status === 200) {
+          this.setState({ totalCount: json.data.totalCount });
           if (type == 'more') {
-            let data = itemDatas.concat(json.data.user_list);
-            this.setState({itemDatas: data});
+            let data = itemDatas.concat(json.data.userList);
+            this.setState({ itemDatas: data });
           } else {
-            this.setState({itemDatas: json.data.user_list});
+            this.setState({ itemDatas: json.data.userList });
           }
         } else {
           Helper.alertServerDataError();
@@ -135,7 +135,7 @@ class TopUsersScreen extends React.Component {
   };
 
   scrollToTop = () => {
-    this.flatListRef.scrollToOffset({animated: false, offset: 0});
+    this.flatListRef.scrollToOffset({ animated: false, offset: 0 });
   };
 
   onLogo = () => {};
@@ -151,7 +151,8 @@ class TopUsersScreen extends React.Component {
               flex: 1,
               width: '100%',
               backgroundColor: 'white',
-            }}>
+            }}
+          >
             {this._renderUserList()}
           </View>
         </SafeAreaView>
@@ -170,7 +171,7 @@ class TopUsersScreen extends React.Component {
   };
 
   _renderUserList = () => {
-    const {isFetching, itemDatas} = this.state;
+    const { isFetching, itemDatas } = this.state;
 
     return (
       <FlatList
@@ -195,13 +196,13 @@ class TopUsersScreen extends React.Component {
   };
 
   _renderFooter = () => {
-    const {isFetching} = this.state;
+    const { isFetching } = this.state;
 
     if (!isFetching) return null;
-    return <ActivityIndicator style={{color: '#000'}} />;
+    return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
-  _renderItem = ({item, index}) => {
+  _renderItem = ({ item, index }) => {
     return <TopUserItem index={index} item={item} onPress={this.onPressUser} />;
   };
 }

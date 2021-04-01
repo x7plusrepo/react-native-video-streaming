@@ -66,8 +66,8 @@ const Helper = {
     changeNavigationBarColor('white', true);
   },
 
-  alertNetworkError: function () {
-    Alert.alert('Error', 'Network error.');
+  alertNetworkError: function (message ='Network error.') {
+    Alert.alert('Error', message);
     console.log('--- crn_dev --- :', global._url);
   },
 

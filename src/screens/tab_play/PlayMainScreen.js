@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   AppState,
   ActivityIndicator,
@@ -30,18 +30,22 @@ import {
   View,
 } from 'react-native';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  StackActions,
+} from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 
 import convertToProxyURL from 'react-native-video-cache';
-import Share, {ShareSheet} from 'react-native-share';
+import Share, { ShareSheet } from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import {ShareDialog, MessageDialog} from 'react-native-fbsdk';
+import { ShareDialog, MessageDialog } from 'react-native-fbsdk';
 
-import {LogLevel, RNFFmpeg} from 'react-native-ffmpeg';
+import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import AntDesign from 'react-native-vector-icons/MaterialIcons';
@@ -92,7 +96,7 @@ class PlayMainScreen extends Component {
       Helper.setDarkStatusBar();
       // this.onRefresh('init');
       this.checkSignin();
-      this.setState({isVideoPause: false});
+      this.setState({ isVideoPause: false });
 
       if (this.props.navigation.canGoBack()) {
         BackHandler.removeEventListener('hardwareBackPress', this.onBack);
@@ -106,7 +110,7 @@ class PlayMainScreen extends Component {
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
       if (this._isMounted) {
-        this.setState({isVideoPause: true});
+        this.setState({ isVideoPause: true });
       }
     });
 
@@ -125,10 +129,10 @@ class PlayMainScreen extends Component {
   onChangeAppState = (nextAppState) => {
     if (nextAppState === 'active') {
       if (this.props.navigation.isFocused()) {
-        this.setState({isVideoPause: false});
+        this.setState({ isVideoPause: false });
       }
     } else {
-      this.setState({isVideoPause: true});
+      this.setState({ isVideoPause: true });
     }
   };
 
@@ -144,6 +148,7 @@ class PlayMainScreen extends Component {
       totalCount: 0,
       curPage: 1,
       itemDatas: [],
+      onEndReachedCalledDuringMomentum: true,
     };
 
     this._isMounted = false;
@@ -159,7 +164,8 @@ class PlayMainScreen extends Component {
   };
 
   onRefresh = async (type) => {
-    let {isFetching, totalCount, curPage, itemDatas} = this.state;
+    console.log(type)
+    let { isFetching, totalCount, curPage, itemDatas } = this.state;
 
     if (isFetching) {
       return;
@@ -175,7 +181,7 @@ class PlayMainScreen extends Component {
     } else {
       curPage = 1;
     }
-    this.setState({curPage});
+    this.setState({ curPage });
 
     if (type == 'init') {
       showForcePageLoader(true);
@@ -183,10 +189,10 @@ class PlayMainScreen extends Component {
       this.username = await Helper.getLocalValue(Constants.KEY_USERNAME);
       this.password = await Helper.getLocalValue(Constants.KEY_PASSWORD);
     } else {
-      this.setState({isFetching: true});
+      this.setState({ isFetching: true });
     }
     let params = {
-      user_id: global.me ? global.me.id : '0',
+      user_id: global.me ? global.me.id : '',
       page_number: type == 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
       username: this.username ? this.username : 'guest_' + global._devId,
@@ -197,38 +203,32 @@ class PlayMainScreen extends Component {
         showPageLoader(false);
       } else {
         if (this._isMounted) {
-          this.setState({isFetching: false});
+          this.setState({ isFetching: false });
         }
       }
 
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 1) {
+        if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({totalCount: json.data.total_count});
+            this.setState({ totalCount: json.data.totalCounts });
             if (type == 'more') {
-              let data = itemDatas.concat(json.data.video_list);
-              this.setState({itemDatas: data});
+              let data = itemDatas.concat(json.data.videoList);
+              this.setState({ itemDatas: data });
             } else {
-              this.setState({itemDatas: json.data.video_list});
+              this.setState({ itemDatas: json.data.videoList });
               if (!global.me) {
-                if (json.data.login_data.status == 1) {
-                  global.me = json.data.login_data.data;
-                  console.log(
-                    '--- crn_dev --- json.data.login_data.data:',
-                    json.data.login_data.data,
-                  );
+                global.me = json.data.loginResult.user;
 
-                  if (global.me.username.indexOf('guest_') > -1) {
-                    global.me.isGuest = true;
-                  } else {
-                    global.me.isGuest = false;
-                  }
-
-                  Helper.callFunc(global.onSetUnreadCount);
-                  Global.registerPushToken();
+                if (global.me.username.indexOf('guest_') > -1) {
+                  global.me.isGuest = true;
+                } else {
+                  global.me.isGuest = false;
                 }
+
+                Helper.callFunc(global.onSetUnreadCount);
+                Global.registerPushToken();
               }
             }
           }
@@ -247,7 +247,7 @@ class PlayMainScreen extends Component {
           onPress: () => null,
           style: 'cancel',
         },
-        {text: 'YES', onPress: () => BackHandler.exitApp()},
+        { text: 'YES', onPress: () => BackHandler.exitApp() },
       ]);
     }
 
@@ -256,7 +256,7 @@ class PlayMainScreen extends Component {
 
   onVideoReadyForDisplay = (item) => {
     console.log('---onVideoReadyForDisplay');
-    this.setState({isVideoLoading: false});
+    this.setState({ isVideoLoading: false });
 
     if (this._curVideoId == item.id) {
       return;
@@ -284,16 +284,16 @@ class PlayMainScreen extends Component {
   };
 
   onVideoProgress = (value) => {
-    this.setState({isVideoLoading: false});
+    this.setState({ isVideoLoading: false });
   };
 
   onVideoEnd = () => {};
 
-  onViewableItemsChanged = ({viewableItems, changed}) => {
+  onViewableItemsChanged = ({ viewableItems, changed }) => {
     if (changed.length > 0) {
       const item = changed[0];
       this._curIndex = item.index;
-      this.setState({isVideoLoading: true});
+      this.setState({ isVideoLoading: true });
     }
   };
 
@@ -313,13 +313,13 @@ class PlayMainScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
-    let {itemDatas} = this.state;
+    let { itemDatas } = this.state;
 
     if (global.me) {
       if (isChecked) {
-        item.like_count++;
+        item.likeCount++;
       } else {
-        item.like_count--;
+        item.likeCount--;
       }
 
       const params = {
@@ -332,9 +332,9 @@ class PlayMainScreen extends Component {
         showPageLoader(false);
 
         if (err !== null) {
-          Helper.alertNetworkError();
+          Helper.alertNetworkError(err?.message);
         } else {
-          if (json.status === 1) {
+          if (json.status === 200) {
             item.is_like = isChecked;
             this.setState(itemDatas);
           } else {
@@ -383,7 +383,7 @@ class PlayMainScreen extends Component {
       const canShow = await ShareDialog.canShow(SHARE_LINK_CONTENT);
       if (canShow) {
         try {
-          const {isCancelled, postId} = await ShareDialog.show(
+          const { isCancelled, postId } = await ShareDialog.show(
             SHARE_LINK_CONTENT,
           );
           if (isCancelled) {
@@ -424,7 +424,7 @@ class PlayMainScreen extends Component {
     const canShow = await MessageDialog.canShow(SHARE_LINK_CONTENT);
     if (canShow) {
       try {
-        const {isCancelled, postId} = await MessageDialog.show(
+        const { isCancelled, postId } = await MessageDialog.show(
           SHARE_LINK_CONTENT,
         );
         if (isCancelled) {
@@ -476,7 +476,7 @@ class PlayMainScreen extends Component {
 
     Helper.hasPermissions();
 
-    this.setState({percent: 0, isVisibleProgress: true});
+    this.setState({ percent: 0, isVisibleProgress: true });
 
     RNFetchBlob.config({
       fileCache: true,
@@ -489,10 +489,10 @@ class PlayMainScreen extends Component {
       .progress((received, total) => {
         const percent = Math.round((received * 100) / total);
         console.log('progress', percent);
-        this.setState({percent});
+        this.setState({ percent });
       })
       .then((resp) => {
-        this.setState({isVisibleProgress: false});
+        this.setState({ isVisibleProgress: false });
         success(Constants.SUCCESS_TITLE, 'Success to download');
         const originPath = resp.path();
         const newPath = originPath + '.mp4';
@@ -558,8 +558,8 @@ class PlayMainScreen extends Component {
   }
 
   _renderVideo = () => {
-    const {isFetching, itemDatas} = this.state;
-
+    const { isFetching, itemDatas } = this.state;
+    //console.log(itemDatas, '------');
     return (
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -571,8 +571,13 @@ class PlayMainScreen extends Component {
         refreshing={isFetching}
         ListFooterComponent={this._renderFooter}
         onEndReachedThreshold={0.4}
+        onMomentumScrollBegin={() => {
+          this.setState({ onEndReachedCalledDuringMomentum: false });
+        }}
         onEndReached={() => {
-          this.onRefresh('more');
+          if (!this.state.onEndReachedCalledDuringMomentum) {
+            this.onRefresh('more');
+          }
         }}
         data={itemDatas}
         renderItem={this._renderItem}
@@ -597,14 +602,14 @@ class PlayMainScreen extends Component {
   };
 
   _renderFooter = () => {
-    const {isFetching} = this.state;
+    const { isFetching } = this.state;
 
     if (!isFetching) return null;
-    return <ActivityIndicator style={{color: '#000'}} />;
+    return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
-  _renderItem = ({item, index}) => {
-    const {isVideoLoading, isVideoPause} = this.state;
+  _renderItem = ({ item, index }) => {
+    const { isVideoLoading, isVideoPause } = this.state;
 
     if (this._curIndex != index || isVideoPause) {
       return (
@@ -614,11 +619,12 @@ class PlayMainScreen extends Component {
             height: VIDEO_HEIGHT,
             borderWidth: 1,
             borderColor: 'black',
-          }}></View>
+          }}
+        ></View>
       );
     } else {
-      const isLike = item.is_like ? true : false;
-      const newTagList = item.tag_list.split(',').join(' ');
+      const isLike = item.isLike ? true : false;
+      const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
 
       if (this._curIndex == index) {
         global._opponentId = item.user_id;
@@ -633,9 +639,10 @@ class PlayMainScreen extends Component {
             height: VIDEO_HEIGHT,
             borderWidth: 1,
             borderColor: 'black',
-          }}>
+          }}
+        >
           <Video
-            source={{uri: convertToProxyURL(item.url)}}
+            source={{ uri: convertToProxyURL(item.url) }}
             ref={(ref) => {
               this.player = ref;
             }}
@@ -678,7 +685,8 @@ class PlayMainScreen extends Component {
                 position: 'absolute',
                 justifyContent: 'center',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <ActivityIndicator size="large" color="lightgray" />
             </View>
           )}
@@ -689,19 +697,22 @@ class PlayMainScreen extends Component {
               right: 12,
               alignItems: 'flex-end',
               zIndex: 100,
-            }}>
-            <View style={{alignItems: 'center'}}>
+            }}
+          >
+            <View style={{ alignItems: 'center' }}>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressLike(!isLike, item);
-                }}>
+                }}
+              >
                 <Image
                   source={ic_favorite}
                   style={{
                     ...GStyles.image,
                     width: 32,
                     tintColor: isLike ? GStyle.redColor : GStyle.activeColor,
-                  }}></Image>
+                  }}
+                ></Image>
               </TouchableOpacity>
               <Text
                 style={{
@@ -712,30 +723,34 @@ class PlayMainScreen extends Component {
                   paddingTop: 2,
                   paddingBottom: 1,
                   paddingHorizontal: 2,
-                }}>
+                }}
+              >
                 {item.like_count}
               </Text>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressMessage(item);
                 }}
-                style={{marginTop: 18}}>
+                style={{ marginTop: 18 }}
+              >
                 <Image
                   source={ic_message}
                   style={{
                     ...GStyles.image,
                     width: 32,
                     tintColor: GStyle.activeColor,
-                  }}></Image>
+                  }}
+                ></Image>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressShare(item);
                 }}
-                style={{marginTop: 32}}>
+                style={{ marginTop: 32 }}
+              >
                 <FontAwesome
                   name="share"
-                  style={{fontSize: 30, color: GStyle.activeColor}}
+                  style={{ fontSize: 30, color: GStyle.activeColor }}
                 />
               </TouchableOpacity>
               <View
@@ -743,7 +758,8 @@ class PlayMainScreen extends Component {
                   alignItems: 'center',
                   marginTop: 128,
                   marginBottom: 12,
-                }}>
+                }}
+              >
                 <Text
                   style={{
                     ...GStyles.regularText,
@@ -753,7 +769,8 @@ class PlayMainScreen extends Component {
                     paddingTop: 2,
                     paddingBottom: 1,
                     paddingHorizontal: 2,
-                  }}>
+                  }}
+                >
                   {item.left_days} days left
                 </Text>
                 <Text
@@ -764,7 +781,8 @@ class PlayMainScreen extends Component {
                     marginTop: 4,
                     paddingVertical: 2,
                     paddingHorizontal: 4,
-                  }}>
+                  }}
+                >
                   #{item.number}
                 </Text>
                 <Avatar
@@ -777,14 +795,15 @@ class PlayMainScreen extends Component {
                   onPress={() => {
                     this.onPressAvatar(item);
                   }}
-                  containerStyle={{marginTop: 4}}
+                  containerStyle={{ marginTop: 4 }}
                 />
                 <Text
                   style={{
                     ...GStyles.regularText,
                     maxWidth: 80,
                     color: 'white',
-                  }}>
+                  }}
+                >
                   {item.user_name}
                 </Text>
               </View>
@@ -796,14 +815,18 @@ class PlayMainScreen extends Component {
               bottom: 62,
               left: 12,
               justifyContent: 'flex-end',
-            }}>
+            }}
+          >
             <View
               style={{
                 alignItems: 'flex-start',
                 marginTop: 128,
                 marginBottom: 12,
-              }}>
-              <View style={{...GStyles.rowContainer, justifyContent: 'center'}}>
+              }}
+            >
+              <View
+                style={{ ...GStyles.rowContainer, justifyContent: 'center' }}
+              >
                 <Text
                   style={{
                     ...GStyles.mediumText,
@@ -811,7 +834,8 @@ class PlayMainScreen extends Component {
                     backgroundColor: 'white',
                     padding: 2,
                     paddingBottom: 1,
-                  }}>
+                  }}
+                >
                   ৳{item.price}
                 </Text>
                 <Text
@@ -822,10 +846,11 @@ class PlayMainScreen extends Component {
                     marginLeft: 8,
                     paddingVertical: 2,
                     paddingHorizontal: 4,
-                  }}>
+                  }}
+                >
                   {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
                 </Text>
-                <View style={{flex: 1}}></View>
+                <View style={{ flex: 1 }}></View>
               </View>
               <Text
                 numberOfLines={3}
@@ -838,7 +863,8 @@ class PlayMainScreen extends Component {
                   marginTop: 8,
                   padding: 2,
                   paddingBottom: 1,
-                }}>
+                }}
+              >
                 {newTagList}
               </Text>
               <Text
@@ -854,7 +880,8 @@ class PlayMainScreen extends Component {
                   paddingTop: 2,
                   paddingBottom: 1,
                   paddingHorizontal: 2,
-                }}>
+                }}
+              >
                 {item.description}
               </Text>
             </View>
@@ -866,7 +893,7 @@ class PlayMainScreen extends Component {
 
   _renderShare = () => {
     return (
-      <View style={{...GStyles.centerAlign, ...GStyles.absoluteContainer}}>
+      <View style={{ ...GStyles.centerAlign, ...GStyles.absoluteContainer }}>
         <RBSheet
           ref={(ref) => {
             this.Scrollable = ref;
@@ -879,10 +906,12 @@ class PlayMainScreen extends Component {
               borderTopLeftRadius: 10,
               borderTopRightRadius: 10,
             },
-          }}>
+          }}
+        >
           {this._renderShareTitle()}
           <View
-            style={{...GStyles.rowContainer, justifyContent: 'space-around'}}>
+            style={{ ...GStyles.rowContainer, justifyContent: 'space-around' }}
+          >
             {this._renderShareFacebook()}
             {this._renderShareFacebookMessenger()}
             {this._renderShareWhatsApp()}
@@ -895,8 +924,8 @@ class PlayMainScreen extends Component {
 
   _renderShareTitle = () => {
     return (
-      <View style={{...GStyles.centerAlign}}>
-        <Text style={{...GStyles.regularText}}>Share to</Text>
+      <View style={{ ...GStyles.centerAlign }}>
+        <Text style={{ ...GStyles.regularText }}>Share to</Text>
       </View>
     );
   };
@@ -909,7 +938,8 @@ class PlayMainScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -918,10 +948,14 @@ class PlayMainScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#3b5998',
-          }}>
-          <FontAwesome name="facebook" style={{fontSize: 30, color: 'white'}} />
+          }}
+        >
+          <FontAwesome
+            name="facebook"
+            style={{ fontSize: 30, color: 'white' }}
+          />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           Facebook
         </Text>
       </TouchableOpacity>
@@ -936,7 +970,8 @@ class PlayMainScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -945,10 +980,11 @@ class PlayMainScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#006fff',
-          }}>
-          <Fontisto name="messenger" style={{fontSize: 30, color: 'white'}} />
+          }}
+        >
+          <Fontisto name="messenger" style={{ fontSize: 30, color: 'white' }} />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           Messenger
         </Text>
       </TouchableOpacity>
@@ -963,7 +999,8 @@ class PlayMainScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -972,10 +1009,14 @@ class PlayMainScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: '#25D366',
-          }}>
-          <FontAwesome name="whatsapp" style={{fontSize: 30, color: 'white'}} />
+          }}
+        >
+          <FontAwesome
+            name="whatsapp"
+            style={{ fontSize: 30, color: 'white' }}
+          />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           WhatsApp
         </Text>
       </TouchableOpacity>
@@ -990,7 +1031,8 @@ class PlayMainScreen extends Component {
           marginTop: 20,
           justifyContent: 'center',
           alignItems: 'center',
-        }}>
+        }}
+      >
         <View
           style={{
             width: 50,
@@ -999,10 +1041,14 @@ class PlayMainScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             backgroundColor: GStyle.grayBackColor,
-          }}>
-          <FontAwesome name="download" style={{fontSize: 30, color: '#333'}} />
+          }}
+        >
+          <FontAwesome
+            name="download"
+            style={{ fontSize: 30, color: '#333' }}
+          />
         </View>
-        <Text style={{fontSize: 14, paddingTop: 10, color: '#333'}}>
+        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
           Save video
         </Text>
       </TouchableOpacity>
@@ -1010,12 +1056,13 @@ class PlayMainScreen extends Component {
   };
 
   _renderProgress = () => {
-    const {percent, isVisibleProgress} = this.state;
+    const { percent, isVisibleProgress } = this.state;
 
     return (
       <ProgressModal
         percent={percent}
-        isVisible={isVisibleProgress}></ProgressModal>
+        isVisible={isVisibleProgress}
+      ></ProgressModal>
     );
   };
 

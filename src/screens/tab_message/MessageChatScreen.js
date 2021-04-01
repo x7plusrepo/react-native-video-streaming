@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   ActivityIndicator,
   Alert,
@@ -30,7 +30,7 @@ import {
 } from 'react-native';
 
 import GHeaderBar from '../../components/GHeaderBar';
-import {IconButton} from 'react-native-paper';
+import { IconButton } from 'react-native-paper';
 var Sound = require('react-native-sound');
 
 import {
@@ -41,14 +41,14 @@ import {
   Constants,
   RestAPI,
 } from '../../utils/Global/index';
-import {Dropdown} from '../../lib/MaterialDropdown/index';
-import {TextField} from '../../lib/MaterialTextField/index';
+import { Dropdown } from '../../lib/MaterialDropdown/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import Accordion from '../../lib/Collapsible/Accordion';
 import Video from 'react-native-video';
 
 const ic_send = require('../../assets/images/ic_send.png');
 
-import {GiftedChat, Actions, Send, Bubble} from 'react-native-gifted-chat';
+import { GiftedChat, Actions, Send, Bubble } from 'react-native-gifted-chat';
 import CustomActions from '../../components/elements/MessageActions';
 import CustomView from '../../components/elements/MessageView';
 
@@ -102,7 +102,7 @@ class MessageChatScreen extends Component {
   };
 
   onRefresh = (type) => {
-    let {isFetching, totalCount, messages} = this.state;
+    let { isFetching, totalCount, messages } = this.state;
 
     if (isFetching) {
       return;
@@ -126,10 +126,10 @@ class MessageChatScreen extends Component {
         showPageLoader(true);
 
         if (err !== null) {
-          Helper.alertNetworkError();
+          Helper.alertNetworkError(err?.message);
         } else {
-          if (json.status === 1) {
-            this.setState({chatTitle: json.data.chat_title});
+          if (json.status === 200) {
+            this.setState({ chatTitle: json.data.chatTitle });
           } else {
             Helper.alertServerDataError();
           }
@@ -142,13 +142,13 @@ class MessageChatScreen extends Component {
         count_per_page: Constants.COUNT_PER_PAGE,
       };
 
-      this.setState({isFetching: true});
+      this.setState({ isFetching: true });
       RestAPI.get_message_list(params, (error) => {
         if (error !== null) {
           if (type == 'init') {
             showPageLoader(false);
           } else {
-            this.setState({isFetching: false});
+            this.setState({ isFetching: false });
           }
           Helper.alertNetworkError();
         }
@@ -158,17 +158,17 @@ class MessageChatScreen extends Component {
 
   onSocketError = () => {
     showPageLoader(false);
-    this.setState({isFetching: false});
+    this.setState({ isFetching: false });
 
     Helper.alertNetworkError();
   };
 
   onFetchMessageList = () => {
     showPageLoader(false);
-    this.setState({isFetching: false});
+    this.setState({ isFetching: false });
 
     const json = global._fetchedMessageList;
-    this.setState({totalCount: json.data.total_count});
+    this.setState({ totalCount: json.data.total_count });
     this.onLoadMore(json.data.message_list);
   };
 
@@ -176,7 +176,7 @@ class MessageChatScreen extends Component {
     showPageLoader(false);
 
     const json = global._receivedMessageList;
-    this.setState({totalCount: json.data.total_count});
+    this.setState({ totalCount: json.data.total_count });
     this.onReceive(json.data.message_list);
   };
 
@@ -284,7 +284,7 @@ class MessageChatScreen extends Component {
     return (
       <>
         <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={{...GStyles.container}}>
+        <SafeAreaView style={{ ...GStyles.container }}>
           {this._renderHeader()}
           {this._renderNotification()}
           {this._renderChat()}
@@ -304,11 +304,11 @@ class MessageChatScreen extends Component {
   };
 
   _renderNotification = () => {
-    const {chatTitle} = this.state;
+    const { chatTitle } = this.state;
 
     return (
-      <View style={{width: '88.1%'}}>
-        <Text style={{...GStyles.regularText, fontSize: 13, marginBottom: 4}}>
+      <View style={{ width: '88.1%' }}>
+        <Text style={{ ...GStyles.regularText, fontSize: 13, marginBottom: 4 }}>
           {chatTitle}
         </Text>
       </View>
@@ -316,7 +316,7 @@ class MessageChatScreen extends Component {
   };
 
   _renderChat = () => {
-    const {messages, isFetching, totalCount} = this.state;
+    const { messages, isFetching, totalCount } = this.state;
 
     let isLoadEarlier = messages.length > 0 ? true : false;
     if (isLoadEarlier) {
@@ -328,7 +328,8 @@ class MessageChatScreen extends Component {
         style={{
           flex: 1,
           width: '95%',
-        }}>
+        }}
+      >
         <GiftedChat
           messages={messages}
           onSend={this.onSend}
@@ -337,7 +338,7 @@ class MessageChatScreen extends Component {
             this.onRefresh('more');
           }}
           isLoadingEarlier={isFetching}
-          user={{_id: 1, name: 'Dick Arnold'}}
+          user={{ _id: 1, name: 'Dick Arnold' }}
           renderBubble={this._renderBubble}
           placeholder="Type your message here..."
           showUserAvatar
@@ -385,8 +386,12 @@ class MessageChatScreen extends Component {
             justifyContent: 'center',
             alignItems: 'center',
             paddingHorizontal: 14,
-          }}>
-          <Image source={ic_send} style={{...GStyles.image, width: 24}}></Image>
+          }}
+        >
+          <Image
+            source={ic_send}
+            style={{ ...GStyles.image, width: 24 }}
+          ></Image>
         </View>
       </Send>
     );
@@ -397,7 +402,7 @@ class MessageChatScreen extends Component {
   }
 
   _renderMessageVideo = (props) => {
-    const {currentMessage} = props;
+    const { currentMessage } = props;
     return (
       <View
         style={{
@@ -408,9 +413,10 @@ class MessageChatScreen extends Component {
           margin: 3,
           borderWidth: 1,
           borderColor: 'red',
-        }}>
+        }}
+      >
         <Video
-          source={{uri: currentMessage.video, cache: true}} // Can be a URL or a local file.
+          source={{ uri: currentMessage.video, cache: true }} // Can be a URL or a local file.
           ref={(ref) => {
             this.player = ref;
           }} // Store reference
@@ -430,7 +436,7 @@ class MessageChatScreen extends Component {
   };
 
   _renderMessageAudio = (props) => {
-    const {currentMessage} = props;
+    const { currentMessage } = props;
     return (
       <View
         style={{
@@ -442,11 +448,13 @@ class MessageChatScreen extends Component {
           alignItems: 'center',
           borderWidth: 1,
           borderColor: 'red',
-        }}>
+        }}
+      >
         <TouchableOpacity
           onPress={() => {
             this.onPlaySound(currentMessage.audio);
-          }}>
+          }}
+        >
           <Text>Play</Text>
         </TouchableOpacity>
       </View>
