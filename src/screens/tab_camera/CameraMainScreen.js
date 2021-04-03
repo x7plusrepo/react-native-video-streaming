@@ -1,63 +1,25 @@
 import React, { Component } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  BallIndicator,
-  BackHandler,
-  Button,
-  Clipboard,
   Dimensions,
-  FlatList,
   Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  LayoutAnimation,
-  Linking,
-  Modal,
-  NativeEventEmitter,
-  NativeModules,
   Platform,
   SafeAreaView,
-  ScrollView,
-  Slider,
-  StatusBar,
   StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  TouchableWithoutFeedback,
-  useColorScheme,
   View,
 } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import { SearchBar } from 'react-native-elements';
-import Swiper from '../../lib/Swiper/index';
-import Video from 'react-native-video';
 import { RNCamera } from 'react-native-camera';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import {
-  GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
-  RestAPI,
 } from '../../utils/Global/index';
-import { Dropdown } from '../../lib/MaterialDropdown/index';
-import { TextField } from '../../lib/MaterialTextField/index';
-import Accordion from '../../lib/Collapsible/Accordion';
-import { warning } from 'react-native-gifted-chat/lib/utils';
 
 const ic_close = require('../../assets/images/ic_close.png');
 const ic_camera_flip = require('../../assets/images/ic_camera_flip.png');

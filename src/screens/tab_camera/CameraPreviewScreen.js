@@ -1,57 +1,28 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  ActivityIndicator,
   Alert,
-  Animated,
-  BallIndicator,
-  BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
-  FlatList,
   Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  LayoutAnimation,
-  Linking,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 
-import {SearchBar} from 'react-native-elements';
-import Swiper from '../../lib/Swiper/index';
 import Video from 'react-native-video';
-import Avatar from '../../components/elements/Avatar';
-import CheckBox from '../../lib/Checkbox/index';
 
 import {
   GStyle,
   GStyles,
-  Global,
   Helper,
   Constants,
 } from '../../utils/Global/index';
-import {TextField} from '../../lib/MaterialTextField/index';
-import Accordion from '../../lib/Collapsible/Accordion';
-import {forEach} from 'underscore';
-
 const ic_close = require('../../assets/images/ic_close.png');
-
-const WINDOW_HEIGHT = Helper.getWindowHeight();
 
 class CameraPreviewScreen extends Component {
   constructor(props) {
@@ -73,7 +44,7 @@ class CameraPreviewScreen extends Component {
   init = () => {
     this.state = {
       videoUri:
-        global._prevScreen == 'camera_draft'
+        global._prevScreen === 'camera_draft'
           ? global._draftVideoUri
           : global._videoUri,
     };
@@ -117,9 +88,9 @@ class CameraPreviewScreen extends Component {
           text: 'Cancel',
           style: 'cancel',
         },
-        {text: 'Yes', onPress: () => this.deleteVideo()},
+        { text: 'Yes', onPress: () => this.deleteVideo() },
       ],
-      {cancelable: true},
+      { cancelable: true },
     );
   };
 
@@ -169,12 +140,12 @@ class CameraPreviewScreen extends Component {
   }
 
   _renderPreview = () => {
-    const {videoUri} = this.state;
+    const { videoUri } = this.state;
 
     return (
-      <View style={{width: '100%', height: '100%'}}>
+      <View style={{ width: '100%', height: '100%' }}>
         <Video
-          source={{uri: videoUri}}
+          source={{ uri: videoUri }}
           resizeMode="contain"
           repeat
           paused={false}
@@ -199,7 +170,7 @@ class CameraPreviewScreen extends Component {
   };
 
   _renderControls = () => {
-    const {flash} = this.state;
+    const { flash } = this.state;
 
     return (
       <View
@@ -211,7 +182,8 @@ class CameraPreviewScreen extends Component {
           paddingHorizontal: 10,
           zIndex: 1,
           elevation: 1,
-        }}>
+        }}
+      >
         <TouchableOpacity
           onPress={this.onBack}
           style={{
@@ -219,10 +191,12 @@ class CameraPreviewScreen extends Component {
             width: 40,
             height: 40,
             marginTop: 20,
-          }}>
+          }}
+        >
           <Image
             source={ic_close}
-            style={{...GStyles.image, width: 20, tintColor: 'white'}}></Image>
+            style={{ ...GStyles.image, width: 20, tintColor: 'white' }}
+          ></Image>
         </TouchableOpacity>
       </View>
     );
@@ -242,14 +216,16 @@ class CameraPreviewScreen extends Component {
               paddingHorizontal: 10,
               zIndex: 1,
               elevation: 1,
-            }}>
+            }}
+          >
             <View
               style={{
                 width: '88%',
                 flexDirection: 'row',
                 justifyContent: 'space-around',
                 alignItems: 'center',
-              }}>
+              }}
+            >
               <TouchableOpacity onPress={this.onPressUpload}>
                 <View style={styles.buttonBlank}>
                   <Text style={styles.textBlank}>Upload</Text>

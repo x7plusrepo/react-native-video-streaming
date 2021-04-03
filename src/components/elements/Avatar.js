@@ -1,36 +1,7 @@
-import React, { Component, isValidElement } from 'react';
-import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
-  LayoutAnimation,
-  ListView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global/index';
-
 const ic_mini_call = require('../../assets/images/ic_mini_call.png');
 const ic_mini_chat = require('../../assets/images/ic_mini_chat.png');
 
@@ -69,7 +40,6 @@ const Avatar = ({
   const interviewImageMargin = calc_size > 0 ? 0 : calc_size;
   const statusMargin = (icon_size - 56) * 0.1;
 
-  console.log(image)
   return (
     <View
       style={[
@@ -83,7 +53,7 @@ const Avatar = ({
     >
       <TouchableOpacity
         onPress={onPress ? onPress : defaults.onPress}
-        disabled={onPress ? false : true}
+        disabled={!!!onPress}
       >
         <FastImage
           source={{

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Alert,
   BackHandler,
@@ -32,10 +32,10 @@ import TopUsersScreen from '../screens/tab_top/TopUsersScreen';
 import HomeMainScreen from '../screens/tab_home/HomeMainScreen';
 import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
 import ProfileMainScreen from '../screens/tab_profile/ProfileMainScreen';
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {connect} from 'react-redux';
-import {setUnreadCount} from '../redux/message/actions';
+import { connect } from 'react-redux';
+import { setUnreadCount } from '../redux/message/actions';
 
 const ic_tab_play = require('../assets/images/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/ic_tab_home.png');
@@ -65,7 +65,7 @@ class MainTabNavigator extends Component {
     global.onGotoMessageTab = this.onGotoMessageTab;
 
     global.setBottomTabName = (curTabName) => {
-      this.setState({curTabName});
+      this.setState({ curTabName });
     };
   };
 
@@ -129,28 +129,28 @@ class MainTabNavigator extends Component {
   };
 
   render() {
-    const {curTabName} = this.state;
-    const {unreadCount} = this.props;
+    const { curTabName } = this.state;
+    const { unreadCount } = this.props;
 
     return (
       <>
         <SafeAreaView
           style={{
             flex: 0,
-            backgroundColor: curTabName == 'play' ? 'transparent' : 'white',
+            backgroundColor: curTabName === 'play' ? 'transparent' : 'white',
           }}
         />
         <Tab.Navigator
           initialRouteName="play"
           tabBarOptions={{
-            activeTintColor: curTabName == 'play' ? 'white' : GStyle.blackColor,
+            activeTintColor: curTabName === 'play' ? 'white' : GStyle.blackColor,
             inactiveTintColor:
-              curTabName == 'play' ? 'white' : GStyle.grayColor,
+              curTabName === 'play' ? 'white' : GStyle.grayColor,
             style: {
               height: BOTTOM_TAB_HEIGHT,
-              backgroundColor: curTabName == 'play' ? 'transparent' : 'white',
+              backgroundColor: curTabName === 'play' ? 'transparent' : 'white',
               position:
-                curTabName == 'play' || curTabName == 'profile_other'
+                curTabName === 'play' || curTabName === 'profile_other'
                   ? 'absolute'
                   : 'relative',
               elevation: 0,
@@ -186,14 +186,14 @@ class MainTabNavigator extends Component {
             component={TopUsersScreen}
             options={{
               tabBarLabel: 'Top',
-              tabBarIcon: ({color, size}) => (
+              tabBarIcon: ({ color, size }) => (
                 <Image
                   source={ic_tab_top}
-                  style={{...GStyles.image, width: 20, tintColor: color}}
+                  style={{ ...GStyles.image, width: 20, tintColor: color }}
                 />
               ),
             }}
-            listeners={({navigation, route}) => ({
+            listeners={({ navigation, route }) => ({
               tabPress: (e) => {
                 Global.registerPushToken();
               },
@@ -204,15 +204,15 @@ class MainTabNavigator extends Component {
             component={PlayTabScreen}
             options={{
               tabBarLabel: 'Play',
-              tabBarIcon: ({color, size}) => (
+              tabBarIcon: ({ color, size }) => (
                 <Image
                   source={ic_tab_play}
-                  style={{...GStyles.image, width: 20, tintColor: color}}
+                  style={{ ...GStyles.image, width: 20, tintColor: color }}
                 />
               ),
               tabBarVisible: curTabName == 'profile_other' ? false : true,
             }}
-            listeners={({navigation, route}) => ({
+            listeners={({ navigation, route }) => ({
               tabPress: (e) => {
                 Global.registerPushToken();
               },
@@ -223,14 +223,14 @@ class MainTabNavigator extends Component {
             component={HomeMainScreen}
             options={{
               tabBarLabel: 'Home',
-              tabBarIcon: ({color, size}) => (
+              tabBarIcon: ({ color, size }) => (
                 <Image
                   source={ic_tab_home}
-                  style={{...GStyles.image, width: 20, tintColor: color}}
+                  style={{ ...GStyles.image, width: 20, tintColor: color }}
                 />
               ),
             }}
-            listeners={({navigation, route}) => ({
+            listeners={({ navigation, route }) => ({
               tabPress: (e) => {
                 Global.registerPushToken();
               },
@@ -241,16 +241,16 @@ class MainTabNavigator extends Component {
             component={MessageMainScreen}
             options={{
               tabBarLabel: 'Message',
-              tabBarIcon: ({color, size}) => (
+              tabBarIcon: ({ color, size }) => (
                 <Image
                   source={ic_tab_messages}
-                  style={{...GStyles.image, width: 20, tintColor: color}}
+                  style={{ ...GStyles.image, width: 20, tintColor: color }}
                 />
               ),
               tabBarBadge: unreadCount,
-              tabBarBadgeStyle: {backgroundColor: 'red'},
+              tabBarBadgeStyle: { backgroundColor: 'red' },
             }}
-            listeners={({navigation, route}) => ({
+            listeners={({ navigation, route }) => ({
               tabPress: (e) => {
                 if (!global.me) {
                   e.preventDefault();
@@ -265,14 +265,14 @@ class MainTabNavigator extends Component {
             component={ProfileMainScreen}
             options={{
               tabBarLabel: 'Me',
-              tabBarIcon: ({color, size}) => (
+              tabBarIcon: ({ color, size }) => (
                 <Image
                   source={ic_tab_profile}
-                  style={{...GStyles.image, width: 20, tintColor: color}}
+                  style={{ ...GStyles.image, width: 20, tintColor: color }}
                 />
               ),
             }}
-            listeners={({navigation, route}) => ({
+            listeners={({ navigation, route }) => ({
               tabPress: (e) => {
                 if (!global.me) {
                   e.preventDefault();
@@ -290,7 +290,7 @@ class MainTabNavigator extends Component {
 
 export default connect(
   (state) => ({
-    unreadCount: state.Message.unreadCount,
+    unreadCount: state.message.unreadCount,
   }),
-  {setUnreadCount},
+  { setUnreadCount },
 )(MainTabNavigator);

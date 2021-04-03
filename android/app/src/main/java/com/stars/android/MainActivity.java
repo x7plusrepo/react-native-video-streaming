@@ -1,20 +1,13 @@
 package com.stars.android;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.os.Bundle;
-import android.widget.Toast;
-
 import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 
 import com.facebook.react.ReactActivity;
-import com.stars.android.R;
-
 import org.devio.rn.splashscreen.SplashScreen;
-import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -28,7 +21,7 @@ public class MainActivity extends ReactActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        SplashScreen.show(this, R.style.SplashScreenTheme);
+        //SplashScreen.show(this, R.style.SplashScreenTheme);
         super.onCreate(savedInstanceState);
 
         String watermarkPath = getApplicationContext().getFilesDir() + "/watermark.png";

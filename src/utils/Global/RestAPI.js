@@ -231,6 +231,7 @@ const RestAPI = {
   },
 
   update_video_view: (params, callBack) => {
+    console.log(params)
     const data = {
       videoId: params.video_id,
       ownerId: params.owner_id,

@@ -63,6 +63,7 @@ class TopUsersScreen extends React.Component {
       curPage: 1,
 
       itemDatas: [],
+      onEndReachedCalledDuringMomentum: true,
     };
   };
 
@@ -83,7 +84,7 @@ class TopUsersScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    this.setState({ curPage });
+    this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
     if (type == 'init') {
       showPageLoader(true);
@@ -126,7 +127,7 @@ class TopUsersScreen extends React.Component {
       } else {
         global._opponentId = item.id;
         global._opponentName = item.user_name;
-        global._opponentPhoto = item.user_photo;
+        global._opponentPhoto = item.photo;
         this.props.navigation.navigate('profile_other');
       }
     } else {
@@ -184,9 +185,15 @@ class TopUsersScreen extends React.Component {
         }}
         refreshing={isFetching}
         ListFooterComponent={this._renderFooter}
+        onMomentumScrollBegin={() => {
+          this.setState({ onEndReachedCalledDuringMomentum: false });
+        }}
         onEndReachedThreshold={0.4}
         onEndReached={() => {
-          this.onRefresh('more');
+          if (!this.state.onEndReachedCalledDuringMomentum) {
+            this.setState({ onEndReachedCalledDuringMomentum: true });
+            this.onRefresh('more');
+          }
         }}
         data={itemDatas}
         renderItem={this._renderItem}

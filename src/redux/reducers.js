@@ -1,12 +1,12 @@
 import {combineReducers} from 'redux';
-import Home from './home/reducer';
-import Message from './message/reducer';
-import Me from './me/reducer';
+import home from './home/reducer';
+import message from './message/reducer';
+import me from './me/reducer';
 
 const appReducer = combineReducers({
-  Home,
-  Message,
-  Me,
+  home,
+  message,
+  me,
 });
 
 const rootReducer = (state, action) => {

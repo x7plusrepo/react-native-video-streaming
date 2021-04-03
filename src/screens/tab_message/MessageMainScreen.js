@@ -206,7 +206,7 @@ TMessageMainScreen = function (props) {
 };
 export default connect(
   (state) => ({
-    unreadCount: state.Message.unreadCount,
+    unreadCount: state.message.unreadCount,
   }),
   {},
 )(TMessageMainScreen);

@@ -134,7 +134,7 @@ class ProfileMainScreen extends React.Component {
 
   onPressSignin = () => {
     global._prevScreen = 'profile_edit';
-    this.props.navigation.navigate('signup');
+    this.props.navigation.navigate('signin');
   };
 
   onPressCamera = () => {
@@ -372,7 +372,7 @@ class ProfileMainScreen extends React.Component {
           // onLayoutView={this.measureTabOne}
           tabLabel="Saved"
         />
-        <ProfileMyVideoScreen tabLabel="My Posts"></ProfileMyVideoScreen>
+        <ProfileMyVideoScreen tabLabel="My Posts" />
       </ScrollableTabView>
     );
   };
@@ -395,7 +395,7 @@ const styles = StyleSheet.create({
   },
 });
 
-ProfileMainScreen = function (props) {
+const TProfileMainScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return <ProfileMainScreen {...props} navigation={navigation} route={route} />;
@@ -403,8 +403,8 @@ ProfileMainScreen = function (props) {
 
 export default connect(
   (state) => ({
-    savedCount: state.Me.savedCount,
-    myPostCount: state.Me.myPostCount,
+    savedCount: state.me.savedCount,
+    myPostCount: state.me.myPostCount,
   }),
   {},
-)(ProfileMainScreen);
+)(TProfileMainScreen);

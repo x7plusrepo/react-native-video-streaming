@@ -16,13 +16,17 @@ import {
   View,
 } from 'react-native';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+  StackActions,
+} from '@react-navigation/native';
 
-import {connect} from 'react-redux';
-import {setMyPostCount} from '../../redux/me/actions';
+import { connect } from 'react-redux';
+import { setMyPostCount } from '../../redux/me/actions';
 
-import {NavigationContext} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import { NavigationContext } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Animated from 'react-native-reanimated';
@@ -32,7 +36,7 @@ import AntDesign from 'react-native-vector-icons/MaterialIcons';
 import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {TextField} from '../../lib/MaterialTextField/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import {
   GStyle,
   GStyles,
@@ -102,7 +106,7 @@ class ProfileMyVideoScreen extends React.Component {
       } else {
         if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({itemDatas: json.data.videoList});
+            this.setState({ itemDatas: json.data.videoList });
             this.props.setMyPostCount(json.data.videoList.length);
           }
         } else {
@@ -113,7 +117,7 @@ class ProfileMyVideoScreen extends React.Component {
   };
 
   onPressVideo = (value) => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
     const selIndex = itemDatas.findIndex((obj) => obj.id === value);
 
     global._selIndex = selIndex;
@@ -124,41 +128,41 @@ class ProfileMyVideoScreen extends React.Component {
   };
 
   onPressOutStock = () => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     this._selItem.sticker = 1;
     this.bottomMenu.close();
-    this.setState({itemDatas});
+    this.setState({ itemDatas });
 
     this.updateVideoSticker();
   };
 
   onPressSpecialOffer = () => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     this._selItem.sticker = 2;
     this.bottomMenu.close();
-    this.setState({itemDatas});
+    this.setState({ itemDatas });
 
     this.updateVideoSticker();
   };
 
   onPressFreeDelivery = () => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     this._selItem.sticker = 3;
     this.bottomMenu.close();
-    this.setState({itemDatas});
+    this.setState({ itemDatas });
 
     this.updateVideoSticker();
   };
 
   onPressNoSticker = () => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     this._selItem.sticker = 0;
     this.bottomMenu.close();
-    this.setState({itemDatas});
+    this.setState({ itemDatas });
 
     this.updateVideoSticker();
   };
@@ -172,16 +176,17 @@ class ProfileMyVideoScreen extends React.Component {
   };
 
   render() {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     return (
       <>
-        <View style={{...GStyles.centerAlign}}>
+        <View style={{ ...GStyles.centerAlign }}>
           <View
             style={{
               width: '88%',
               height: '100%',
-            }}>
+            }}
+          >
             {this._renderVideo()}
 
             <RBSheet
@@ -196,12 +201,14 @@ class ProfileMyVideoScreen extends React.Component {
                   borderTopLeftRadius: 10,
                   borderTopRightRadius: 10,
                 },
-              }}>
+              }}
+            >
               <View
                 style={{
                   ...GStyles.rowContainer,
                   justifyContent: 'space-around',
-                }}>
+                }}
+              >
                 {this._renderBottomMenu()}
               </View>
             </RBSheet>
@@ -212,32 +219,36 @@ class ProfileMyVideoScreen extends React.Component {
   }
 
   _renderBottomMenu = () => (
-    <View style={{width: '100%'}}>
+    <View style={{ width: '100%' }}>
       <TouchableOpacity
         onPress={this.onPressOutStock}
-        style={{...styles.panelButton}}>
+        style={{ ...styles.panelButton }}
+      >
         <Text style={styles.panelButtonTitle}>Out of stock</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={this.onPressSpecialOffer}
-        style={styles.panelButton}>
+        style={styles.panelButton}
+      >
         <Text style={styles.panelButtonTitle}>Special offer</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={this.onPressFreeDelivery}
-        style={styles.panelButton}>
+        style={styles.panelButton}
+      >
         <Text style={styles.panelButtonTitle}>Free delivery</Text>
       </TouchableOpacity>
       <TouchableOpacity
         onPress={this.onPressNoSticker}
-        style={styles.panelButton}>
+        style={styles.panelButton}
+      >
         <Text style={styles.panelButtonTitle}>No Sticker</Text>
       </TouchableOpacity>
     </View>
   );
 
   _renderVideo = () => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     return (
       <View
@@ -246,7 +257,8 @@ class ProfileMyVideoScreen extends React.Component {
           flexDirection: 'row',
           flexWrap: 'wrap',
           marginVertical: 50,
-        }}>
+        }}
+      >
         {itemDatas.map((item, i) => {
           return (
             <View
@@ -255,7 +267,8 @@ class ProfileMyVideoScreen extends React.Component {
                 alignItems: 'center',
                 borderWidth: 1,
                 borderColor: 'white',
-              }}>
+              }}
+            >
               <View
                 style={{
                   ...GStyles.centerAlign,
@@ -264,8 +277,9 @@ class ProfileMyVideoScreen extends React.Component {
                   borderRadius: 10,
                   backgroundColor: 'lightgray',
                   marginVertical: 4,
-                }}>
-                <Text style={{...GStyles.mediumText}}>{item.number}</Text>
+                }}
+              >
+                <Text style={{ ...GStyles.mediumText }}>{item.number}</Text>
               </View>
               <TouchableOpacity
                 onPress={() => {
@@ -274,9 +288,10 @@ class ProfileMyVideoScreen extends React.Component {
                 onLongPress={() => {
                   this._selItem = item;
                   this.bottomMenu.open();
-                }}>
+                }}
+              >
                 <FastImage
-                  source={{uri: item.thumb || ''}}
+                  source={{ uri: item.thumb || '' }}
                   resizeMode={FastImage.resizeMode.stretch}
                   style={{
                     width: CELL_WIDTH,
@@ -289,7 +304,8 @@ class ProfileMyVideoScreen extends React.Component {
                     position: 'absolute',
                     right: 12,
                     bottom: 32,
-                  }}>
+                  }}
+                >
                   <Text
                     style={{
                       ...GStyles.regularText,
@@ -298,7 +314,8 @@ class ProfileMyVideoScreen extends React.Component {
                       backgroundColor:
                         item.sticker > 0 ? 'white' : 'transparent',
                       padding: 2,
-                    }}>
+                    }}
+                  >
                     {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
                   </Text>
                 </View>
@@ -311,10 +328,11 @@ class ProfileMyVideoScreen extends React.Component {
                     backgroundColor: 'white',
                     paddingVertical: 2,
                     paddingHorizontal: 4,
-                  }}>
+                  }}
+                >
                   <FontAwesome
                     name="group"
-                    style={{fontSize: 16, color: 'black'}}
+                    style={{ fontSize: 16, color: 'black' }}
                   />
                   <Text
                     style={{
@@ -322,8 +340,9 @@ class ProfileMyVideoScreen extends React.Component {
                       fontSize: 13,
                       color: 'black',
                       marginLeft: 4,
-                    }}>
-                    {item.view_count}
+                    }}
+                  >
+                    {item.viewCount}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -350,7 +369,7 @@ const styles = StyleSheet.create({
   },
 });
 
-TProfileMyVideoScreen = function (props) {
+const TProfileMyVideoScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (

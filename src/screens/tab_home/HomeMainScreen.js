@@ -1,56 +1,37 @@
 import React from 'react';
 import {
-  ActivityIndicator,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
   Keyboard,
-  Platform,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 
-import {connect} from 'react-redux';
-import {setKeyword} from '../../redux/home/actions';
+import { connect } from 'react-redux';
+import { setKeyword } from '../../redux/home/actions';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
+import {
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import ScrollableTabView, {
   ScrollableTabBar,
-  DefaultTabBar,
 } from 'react-native-scrollable-tab-view';
 
 import {
   GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
-  RestAPI,
 } from '../../utils/Global/index';
-import GHeaderBar from '../../components/GHeaderBar';
 import SearchBarItem from '../../components/elements/SearchBarItem';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 
 import HomeVideoScreen from './HomeVideoScreen';
-
-const image_search = require('../../assets/images/ic_search.png');
-const ic_back = require('../../assets/images/ic_back.png');
 
 class HomeMainScreen extends React.Component {
   constructor(props) {
     super(props);
-
     console.log('HomeMainScreen start');
-
     this.init();
   }
 
@@ -82,10 +63,9 @@ class HomeMainScreen extends React.Component {
   };
 
   onChangeSearchText = (text) => {
-    const lastTyped = text.charAt(text.length - 1);
     const parseWhen = [',', ' ', ';', '\n'];
 
-    if (text.length == 1) {
+    if (text.length === 1) {
       if (parseWhen.indexOf(text.charAt(0)) > -1) {
         return;
       }
@@ -99,7 +79,7 @@ class HomeMainScreen extends React.Component {
       }
     }
 
-    this.setState({searchText: text});
+    this.setState({ searchText: text });
   };
 
   onSubmitSearchText = () => {
@@ -108,7 +88,7 @@ class HomeMainScreen extends React.Component {
     //   this.videoListRef.scrollToTop();
     // }
 
-    const {searchText} = this.state;
+    const { searchText } = this.state;
 
     const lastTyped = searchText.charAt(searchText.length - 1);
     const parseWhen = [',', ' ', ';', '\n'];
@@ -124,7 +104,7 @@ class HomeMainScreen extends React.Component {
       keyword = '';
     }
 
-    this.setState({searchText: ''});
+    this.setState({ searchText: '' });
     if (keyword == '') {
       return;
     }
@@ -134,17 +114,18 @@ class HomeMainScreen extends React.Component {
   };
 
   render() {
-    const {keyword} = this.props;
+    const { keyword } = this.props;
 
     return (
-      <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
         {this._renderSearch()}
         <ScrollableTabView
           initialPage={0}
           tabBarBackgroundColor={GStyle.snowColor}
           tabBarActiveTextColor={GStyle.activeColor}
-          tabBarUnderlineStyle={{backgroundColor: GStyle.activeColor}}
-          renderTabBar={() => <ScrollableTabBar />}>
+          tabBarUnderlineStyle={{ backgroundColor: GStyle.activeColor }}
+          renderTabBar={() => <ScrollableTabBar />}
+        >
           <HomeVideoScreen
             tabLabel="Gifts"
             quickKeyword={'gift,gifts'}
@@ -201,23 +182,26 @@ class HomeMainScreen extends React.Component {
   }
 
   _renderSearch = () => {
-    const {searchText} = this.state;
+    const { searchText } = this.state;
 
     return (
-      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-        <View style={{flex: 1, marginVertical: 4, marginHorizontal: 8}}>
+      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
+        <View style={{ flex: 1, marginVertical: 4, marginHorizontal: 8 }}>
           <SearchBarItem
             searchText={searchText}
             onChangeText={this.onChangeSearchText}
             onSubmitText={this.onSubmitSearchText}
           />
         </View>
-        {searchText != '' && (
-          <View style={{...GStyles.centerAlign, marginRight: 12}}>
+        {searchText !== '' && (
+          <View style={{ ...GStyles.centerAlign, marginRight: 12 }}>
             <TouchableNativeFeedback
               onPress={this.onSubmitSearchText}
-              style={{...GStyles.centerAlign, height: 50}}>
-              <Text style={{...GStyles.regularText, color: 'red'}}>Search</Text>
+              style={{ ...GStyles.centerAlign, height: 50 }}
+            >
+              <Text style={{ ...GStyles.regularText, color: 'red' }}>
+                Search
+              </Text>
             </TouchableNativeFeedback>
           </View>
         )}
@@ -228,14 +212,14 @@ class HomeMainScreen extends React.Component {
 
 const styles = StyleSheet.create({});
 
-THomeMainScreen = function (props) {
+const THomeMainScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return <HomeMainScreen {...props} navigation={navigation} route={route} />;
 };
 export default connect(
   (state) => ({
-    keyword: state.Home.keyword,
+    keyword: state.home.keyword,
   }),
-  {setKeyword},
+  { setKeyword },
 )(THomeMainScreen);

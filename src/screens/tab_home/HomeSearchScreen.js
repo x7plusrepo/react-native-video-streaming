@@ -224,14 +224,14 @@ class HomeSearchScreen extends React.Component {
 
 const styles = StyleSheet.create({});
 
-THomeSearchScreen = function (props) {
+const THomeSearchScreen = function (props) {
   let navigation = useNavigation();
   let route = useRoute();
   return <HomeSearchScreen {...props} navigation={navigation} route={route} />;
 };
 export default connect(
   (state) => ({
-    keyword: state.Home.keyword,
+    keyword: state.home.keyword,
   }),
   {setKeyword},
 )(THomeSearchScreen);

@@ -1,69 +1,43 @@
-import React, {Component} from 'react';
-import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
-  LayoutAnimation,
-  ListView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, { Component } from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import FastImage from 'react-native-fast-image';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global/index';
+import { GStyle, GStyles, Constants } from '../../utils/Global/index';
 
-const WINDOW_HEIGHT = Helper.getWindowHeight();
-const WINDOW_WIDTH = Helper.getWindowWidth();
-
-const ExploreVideoItem = ({item, onPress}) => {
-    const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
-
+const ExploreVideoItem = ({ item, onPress }) => {
+  const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
+  const user = item.userId || {};
   return (
     <View
       style={{
         flex: 1,
         maxWidth: '50%',
         alignItems: 'center',
+        paddingVertical: 8,
+        marginHorizontal: 8,
+        marginVertical: 8,
         borderWidth: 1,
         borderColor: GStyle.grayBackColor,
-        marginVertical: 8,
-        marginHorizontal: 1,
-      }}>
+      }}
+    >
       <TouchableOpacity
         onPress={() => {
           onPress(item.id);
         }}
-        style={{...GStyles.centerAlign, width: '100%'}}>
+        style={{ ...GStyles.centerAlign, width: '100%' }}
+      >
         <FastImage
-          source={{uri: item.thumb || '', priority: FastImage.priority.normal}}
-          resizeMode={FastImage.resizeMode.contain}
+          source={{
+            uri: item.thumb || '',
+            priority: FastImage.priority.normal,
+          }}
+          resizeMode={FastImage.resizeMode.cover}
           style={{
             width: '100%',
-            height: WINDOW_WIDTH * 0.7,
+            //height: WINDOW_WIDTH * 0.7,
+            aspectRatio: 1,
             marginTop: 2,
           }}
         />
@@ -82,7 +56,8 @@ const ExploreVideoItem = ({item, onPress}) => {
             position: 'absolute',
             left: 8,
             bottom: 20,
-          }}>
+          }}
+        >
           <Text
             style={{
               ...GStyles.regularText,
@@ -90,7 +65,8 @@ const ExploreVideoItem = ({item, onPress}) => {
               backgroundColor: item.sticker > 0 ? 'white' : 'transparent',
               marginLeft: 8,
               padding: 2,
-            }}>
+            }}
+          >
             {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
           </Text>
         </View>
@@ -103,29 +79,32 @@ const ExploreVideoItem = ({item, onPress}) => {
             backgroundColor: 'white',
             paddingVertical: 2,
             paddingHorizontal: 4,
-          }}>
-          <FontAwesome name="group" style={{fontSize: 18, color: 'black'}} />
+          }}
+        >
+          <FontAwesome name="group" style={{ fontSize: 18, color: 'black' }} />
           <Text
             style={{
               ...GStyles.regularText,
               color: 'black',
               marginLeft: 8,
-            }}>
-            {item.view_count}
+            }}
+          >
+            {item.viewCount || 0}
           </Text>
         </View>
       </TouchableOpacity>
       {newTagList.length > 0 && (
         <Text
           numberOfLines={1}
-          style={{...GStyles.regularText, fontSize: 13, marginTop: 4}}>
+          style={{ ...GStyles.regularText, fontSize: 13, marginTop: 4 }}
+        >
           {newTagList}
         </Text>
       )}
-      <Text style={{...GStyles.regularText, marginTop: 2}}>
-        {item.user_name}
+      <Text style={{ ...GStyles.regularText, marginTop: 2 }}>
+        {user.username}
       </Text>
-      <Text style={{...GStyles.regularText, color: 'green'}}>
+      <Text style={{ ...GStyles.regularText, color: 'green' }}>
         ৳{item.price}
       </Text>
     </View>

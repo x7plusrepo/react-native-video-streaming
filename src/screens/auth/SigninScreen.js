@@ -257,6 +257,7 @@ class SigninScreen extends React.Component {
             {this._renderTitle()}
             {this._renderInput()}
             {this._renderButton()}
+            {this.___renderBottom()}
           </KeyboardAwareScrollView>
           {/* {this._renderBottom()} */}
         </SafeAreaView>

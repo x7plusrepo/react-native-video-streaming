@@ -1,23 +1,5 @@
 import React, { useState, useRef, forwardRef } from 'react';
-import {
-  ActivityIndicator,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
-  Keyboard,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import { ActivityIndicator, FlatList, StyleSheet, View } from 'react-native';
 import {
   useNavigation,
   useRoute,
@@ -25,21 +7,8 @@ import {
 } from '@react-navigation/native';
 import { connect } from 'react-redux';
 
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global/index';
-import GHeaderBar from '../../components/GHeaderBar';
+import { Helper, Constants, RestAPI } from '../../utils/Global/index';
 import ExploreVideoItem from '../../components/elements/ExploreVideoItem';
-import SearchBarItem from '../../components/elements/SearchBarItem';
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
-import { forEach } from 'underscore';
-
-const ic_back = require('../../assets/images/ic_back.png');
 
 class HomeVideoScreen extends React.Component {
   constructor(props) {
@@ -79,6 +48,7 @@ class HomeVideoScreen extends React.Component {
 
       minVisibleIndex: 0,
       maxVisibleIndex: 0,
+      onEndReachedCalledDuringMomentum: true,
     };
 
     this._isMounted = false;
@@ -92,7 +62,7 @@ class HomeVideoScreen extends React.Component {
       return;
     }
 
-    if (type == 'more') {
+    if (type === 'more') {
       curPage += 1;
       const maxPage =
         (totalCount + Constants.COUNT_PER_PAGE - 1) / Constants.COUNT_PER_PAGE;
@@ -102,7 +72,7 @@ class HomeVideoScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    this.setState({ curPage });
+    this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
     let funcGetVideoList = null;
     let searchText = null;
@@ -114,19 +84,19 @@ class HomeVideoScreen extends React.Component {
       searchText = keyword;
     }
 
-    if (type == 'init') {
+    if (type === 'init') {
       showPageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
     let params = {
-      user_id: global.me ? global.me.id : '0',
-      page_number: type == 'more' ? curPage : '1',
+      user_id: global.me ? global.me.id : '',
+      page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
       keyword: searchText,
     };
     funcGetVideoList(params, (json, err) => {
-      if (type == 'init') {
+      if (type === 'init') {
         showPageLoader(false);
       } else {
         if (this._isMounted) {
@@ -140,7 +110,7 @@ class HomeVideoScreen extends React.Component {
         if (json.status === 200) {
           if (this._isMounted) {
             this.setState({ totalCount: json.data.totalCount });
-            if (type == 'more') {
+            if (type === 'more') {
               let data = itemDatas.concat(json.data.videoList);
               this.setState({ itemDatas: data });
             } else {
@@ -156,7 +126,7 @@ class HomeVideoScreen extends React.Component {
 
   onPressVideo = (value) => {
     const { itemDatas, curPage, totalCount } = this.state;
-    const { keyword } = this.props;
+    const { keyword, quickKeyword, isQuickSearch } = this.props;
 
     const selIndex = itemDatas.findIndex((obj) => obj.id === value);
     // let newAfterItemDatas = itemDatas.slice(selIndex);
@@ -165,11 +135,10 @@ class HomeVideoScreen extends React.Component {
 
     global._curPage = curPage;
     global._totalCount = totalCount;
-    global._keyword = keyword;
+    global._keyword = isQuickSearch ? quickKeyword : keyword;
     global._selIndex = selIndex;
     global._exploreMainVideoDatas = itemDatas;
     global._prevScreen = 'home_main_video';
-
     // this.props.navigation.navigate('profile_video');
     const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);
@@ -226,8 +195,14 @@ class HomeVideoScreen extends React.Component {
         refreshing={isFetching}
         ListFooterComponent={this._renderFooter}
         onEndReachedThreshold={0.4}
+        onMomentumScrollBegin={() => {
+          this.setState({ onEndReachedCalledDuringMomentum: false });
+        }}
         onEndReached={() => {
-          this.onRefresh('more');
+          if (!this.state.onEndReachedCalledDuringMomentum) {
+            this.setState({ onEndReachedCalledDuringMomentum: true });
+            this.onRefresh('more');
+          }
         }}
         data={itemDatas}
         renderItem={this._renderItem}
@@ -255,7 +230,7 @@ const styles = StyleSheet.create({});
 
 HomeVideoScreen = connect(
   (state) => ({
-    keyword: state.Home.keyword,
+    keyword: state.home.keyword,
   }),
   {},
 )(HomeVideoScreen);

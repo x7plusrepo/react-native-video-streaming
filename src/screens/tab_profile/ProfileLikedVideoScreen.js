@@ -1,44 +1,17 @@
 import React from 'react';
-import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  Image,
-  PermissionsAndroid,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
-import {connect} from 'react-redux';
-import {setSavedCount} from '../../redux/me/actions';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/MaterialIcons';
+import { connect } from 'react-redux';
+import { setSavedCount } from '../../redux/me/actions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-import {TextField} from '../../lib/MaterialTextField/index';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global/index';
-import GHeaderBar from '../../components/GHeaderBar';
-import Avatar from '../../components/elements/Avatar';
+import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global/index';
 
 const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
 
@@ -92,7 +65,7 @@ class ProfileLikedVideoScreen extends React.Component {
       } else {
         if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({itemDatas: json?.data?.videoList});
+            this.setState({ itemDatas: json?.data?.videoList });
             this.props.setSavedCount(json?.data?.videoList?.length);
           }
         } else {
@@ -103,10 +76,8 @@ class ProfileLikedVideoScreen extends React.Component {
   };
 
   onPressVideo = (value) => {
-    const {itemDatas} = this.state;
-    const selIndex = itemDatas.findIndex((obj) => obj.id === value);
-
-    global._selIndex = selIndex;
+    const { itemDatas } = this.state;
+    global._selIndex = itemDatas.findIndex((obj) => obj.id === value);
     global._profileLikedVideoDatas = itemDatas;
     global._prevScreen = 'profile_liked_video';
     const pushAction = StackActions.push('profile_video', null);
@@ -114,16 +85,17 @@ class ProfileLikedVideoScreen extends React.Component {
   };
 
   render() {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
     return (
       <>
-        <View style={{...GStyles.centerAlign}}>
+        <View style={{ ...GStyles.centerAlign }}>
           <View
             style={{
               width: '88%',
               height: '100%',
-            }}>
+            }}
+          >
             {this._renderVideo()}
           </View>
         </View>
@@ -132,8 +104,9 @@ class ProfileLikedVideoScreen extends React.Component {
   }
 
   _renderVideo = () => {
-    const {itemDatas} = this.state;
+    const { itemDatas } = this.state;
 
+    console.log(itemDatas);
     return (
       <View
         style={{
@@ -141,7 +114,8 @@ class ProfileLikedVideoScreen extends React.Component {
           flexDirection: 'row',
           flexWrap: 'wrap',
           marginVertical: 40,
-        }}>
+        }}
+      >
         {itemDatas.map((item, i) => {
           return (
             <View
@@ -151,19 +125,22 @@ class ProfileLikedVideoScreen extends React.Component {
                 borderWidth: 1,
                 borderColor: 'white',
                 marginTop: 2,
-              }}>
+              }}
+            >
               <Text
                 style={{
                   ...GStyles.regularText,
                   color: 'black',
-                }}>
-                {item.left_days} days left
+                }}
+              >
+                {item.left_days || 30} days left
               </Text>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressVideo(item.id);
                 }}
-                style={{marginTop: 2}}>
+                style={{ marginTop: 2 }}
+              >
                 <FastImage
                   source={{
                     uri: item.thumb || '',
@@ -181,7 +158,8 @@ class ProfileLikedVideoScreen extends React.Component {
                     position: 'absolute',
                     right: 12,
                     bottom: 32,
-                  }}>
+                  }}
+                >
                   <Text
                     style={{
                       ...GStyles.regularText,
@@ -190,7 +168,8 @@ class ProfileLikedVideoScreen extends React.Component {
                       backgroundColor:
                         item.sticker > 0 ? 'white' : 'transparent',
                       padding: 2,
-                    }}>
+                    }}
+                  >
                     {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
                   </Text>
                 </View>
@@ -203,10 +182,11 @@ class ProfileLikedVideoScreen extends React.Component {
                     backgroundColor: 'white',
                     paddingVertical: 2,
                     paddingHorizontal: 4,
-                  }}>
+                  }}
+                >
                   <FontAwesome
                     name="group"
-                    style={{fontSize: 16, color: 'black'}}
+                    style={{ fontSize: 16, color: 'black' }}
                   />
                   <Text
                     style={{
@@ -214,8 +194,9 @@ class ProfileLikedVideoScreen extends React.Component {
                       fontSize: 13,
                       color: 'black',
                       marginLeft: 4,
-                    }}>
-                    {item.view_count}
+                    }}
+                  >
+                    {item.viewCount}
                   </Text>
                 </View>
               </TouchableOpacity>
@@ -229,7 +210,7 @@ class ProfileLikedVideoScreen extends React.Component {
 
 const styles = StyleSheet.create({});
 
-TProfileLikedVideoScreen = function (props) {
+const TProfileLikedVideoScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (

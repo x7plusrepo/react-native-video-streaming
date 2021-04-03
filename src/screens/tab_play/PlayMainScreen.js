@@ -3,38 +3,19 @@ import {
   AppState,
   ActivityIndicator,
   Alert,
-  Animated,
-  BallIndicator,
   BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
   FlatList,
   Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  LayoutAnimation,
   Linking,
-  Modal,
   Platform,
-  SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {
-  useNavigation,
-  useRoute,
-  StackActions,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
 
 import convertToProxyURL from 'react-native-video-cache';
@@ -45,11 +26,8 @@ import CameraRoll from '@react-native-community/cameraroll';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import { ShareDialog, MessageDialog } from 'react-native-fbsdk';
 
-import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg';
+import { RNFFmpeg } from 'react-native-ffmpeg';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
@@ -69,7 +47,6 @@ import {
 const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
 const ic_favorite = require('../../assets/images/ic_favorite.png');
 const ic_message = require('../../assets/images/ic_message.png');
-const ic_logo = require('../../assets/images/ic_logo.png');
 
 const WINDOW_HEIGHT = Helper.getWindowHeight();
 const STATUS_BAR_HEIGHT = Helper.getStatusBarHeight();
@@ -86,8 +63,8 @@ class PlayMainScreen extends Component {
     this.init();
   }
 
-  async componentDidMount() {
-    this._isMounted = true;
+  componentDidMount() {
+    this.setState({ isMounted: true });
 
     this.onRefresh('init');
 
@@ -109,7 +86,7 @@ class PlayMainScreen extends Component {
       }
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
-      if (this._isMounted) {
+      if (this.state.isMounted) {
         this.setState({ isVideoPause: true });
       }
     });
@@ -123,7 +100,7 @@ class PlayMainScreen extends Component {
     BackHandler.removeEventListener('hardwareBackPress', this.onBack);
     AppState.removeEventListener('change', this.onChangeAppState);
 
-    this._isMounted = false;
+    this.setState({ isMounted: false });
   }
 
   onChangeAppState = (nextAppState) => {
@@ -148,14 +125,13 @@ class PlayMainScreen extends Component {
       totalCount: 0,
       curPage: 1,
       itemDatas: [],
+      item: {},
       onEndReachedCalledDuringMomentum: true,
+      curIndex: null,
+      isMounted: false,
+      username: null,
+      password: null,
     };
-
-    this._isMounted = false;
-    this._curIndex = null;
-    this._curVideoId = -1;
-    this.username = null;
-    this.password = null;
 
     await Helper.setDeviceId();
     Helper.hasPermissions();
@@ -164,14 +140,13 @@ class PlayMainScreen extends Component {
   };
 
   onRefresh = async (type) => {
-    console.log(type)
     let { isFetching, totalCount, curPage, itemDatas } = this.state;
 
     if (isFetching) {
       return;
     }
 
-    if (type == 'more') {
+    if (type === 'more') {
       curPage += 1;
       const maxPage =
         (totalCount + Constants.COUNT_PER_PAGE - 1) / Constants.COUNT_PER_PAGE;
@@ -181,28 +156,31 @@ class PlayMainScreen extends Component {
     } else {
       curPage = 1;
     }
-    this.setState({ curPage });
+    this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
-    if (type == 'init') {
+    if (type === 'init') {
       showForcePageLoader(true);
 
-      this.username = await Helper.getLocalValue(Constants.KEY_USERNAME);
-      this.password = await Helper.getLocalValue(Constants.KEY_PASSWORD);
+      const username = await Helper.getLocalValue(Constants.KEY_USERNAME);
+      const password = await Helper.getLocalValue(Constants.KEY_PASSWORD);
+      this.setState({ username, password });
     } else {
       this.setState({ isFetching: true });
     }
     let params = {
       user_id: global.me ? global.me.id : '',
-      page_number: type == 'more' ? curPage : '1',
+      page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
-      username: this.username ? this.username : 'guest_' + global._devId,
-      password: this.password ? this.password : '',
+      username: this.state.username
+        ? this.state.username
+        : 'guest_' + global._devId,
+      password: this.state.password ? this.state.password : '',
     };
     RestAPI.get_all_video_list(params, (json, err) => {
-      if (type == 'init') {
+      if (type === 'init') {
         showPageLoader(false);
       } else {
-        if (this._isMounted) {
+        if (this.state.isMounted) {
           this.setState({ isFetching: false });
         }
       }
@@ -211,9 +189,9 @@ class PlayMainScreen extends Component {
         Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
-          if (this._isMounted) {
+          if (this.state.isMounted) {
             this.setState({ totalCount: json.data.totalCounts });
-            if (type == 'more') {
+            if (type === 'more') {
               let data = itemDatas.concat(json.data.videoList);
               this.setState({ itemDatas: data });
             } else {
@@ -257,20 +235,6 @@ class PlayMainScreen extends Component {
   onVideoReadyForDisplay = (item) => {
     console.log('---onVideoReadyForDisplay');
     this.setState({ isVideoLoading: false });
-
-    if (this._curVideoId == item.id) {
-      return;
-    }
-    this._curVideoId = item.id;
-
-    let params = {
-      video_id: item.id,
-      owner_id: item.user_id,
-      viewer_id: global.me ? global.me.id : 0,
-      device_type: Platform.OS === 'ios' ? '1' : '0',
-      device_identifier: global._deviceId,
-    };
-    RestAPI.update_video_view(params, (json, err) => {});
   };
 
   onVideoBuffer = () => {};
@@ -280,31 +244,46 @@ class PlayMainScreen extends Component {
   };
 
   onVideoLoad = () => {
+    //this.setState({ isVideoLoading: false });
     console.log('---onVideoLoad');
   };
 
-  onVideoProgress = (value) => {
-    this.setState({ isVideoLoading: false });
-  };
+  onVideoProgress = (value) => {};
 
   onVideoEnd = () => {};
 
-  onViewableItemsChanged = ({ viewableItems, changed }) => {
+  onViewableItemsChanged = ({ changed }) => {
     if (changed.length > 0) {
-      const item = changed[0];
-      this._curIndex = item.index;
-      this.setState({ isVideoLoading: true });
+      const focused = changed[0];
+      const item = focused?.item || {};
+      this.setState({ curIndex: focused.index });
+
+      if (this.state.item?.id === item.id) {
+        return;
+      }
+
+      this.setState({ item });
+
+      let params = {
+        video_id: item.id,
+        owner_id: item.userId?.id,
+        viewer_id: global.me ? global.me.id : 0,
+        device_type: Platform.OS === 'ios' ? '1' : '0',
+        device_identifier: global._deviceId,
+      };
+      RestAPI.update_video_view(params, (json, err) => {});
     }
   };
 
   onPressAvatar = (item) => {
+    const user = item?.userId || {};
     if (global.me) {
-      if (item.user_id == global.me.id) {
+      if (user.id === global.me.id) {
         this.props.navigation.navigate('profile');
       } else {
-        global._opponentId = item.user_id;
-        global._opponentName = item.user_name;
-        global._opponentPhoto = item.user_photo;
+        global._opponentId = user.id;
+        global._opponentName = user.username;
+        global._opponentPhoto = user.photo;
         this.props.navigation.navigate('profile_other');
       }
     } else {
@@ -348,12 +327,14 @@ class PlayMainScreen extends Component {
   };
 
   onPressMessage = (item) => {
+    const user = item?.userId || {};
+
     if (global.me) {
-      if (item.user_id == global.me.id) {
+      if (user.id === global.me.id) {
         return;
       } else {
-        global._roomId = item.user_id;
-        global._opponentName = item.user_name;
+        global._roomId = user.id;
+        global._opponentName = user.username;
         this.props.navigation.navigate('message_chat');
       }
     } else {
@@ -363,7 +344,7 @@ class PlayMainScreen extends Component {
 
   onPressShare = (item) => {
     if (global.me) {
-      this._item = item;
+      this.setState({ item })
       this.Scrollable.open();
     } else {
       this.props.navigation.navigate('signin');
@@ -372,12 +353,13 @@ class PlayMainScreen extends Component {
 
   onShareFacebook = async () => {
     this.Scrollable.close();
+    const user = this.state.item?.userId || {};
 
     if (Platform.OS === 'android') {
       const SHARE_LINK_CONTENT = {
         contentType: 'link',
         contentUrl: Constants.GOOGLE_PLAY_URL,
-        quote: '@' + this._item.user_name + ' #' + this._item.number,
+        quote: '@' + user.username + ' #' + this.state.item?.number,
       };
 
       const canShow = await ShareDialog.canShow(SHARE_LINK_CONTENT);
@@ -398,7 +380,7 @@ class PlayMainScreen extends Component {
     } else {
       const shareOptions = {
         title: 'Share to Facebook',
-        message: '@' + this._item.user_name + ' #' + this._item.number,
+        message: '@' + user.username + ' #' + this.state.item.number,
         url: Constants.GOOGLE_PLAY_URL,
         social: Share.Social.FACEBOOK,
       };
@@ -414,11 +396,12 @@ class PlayMainScreen extends Component {
 
   onShareFacebookMessenger = async () => {
     this.Scrollable.close();
+    const user = this.state.item?.userId || {};
 
     const SHARE_LINK_CONTENT = {
       contentType: 'link',
       contentUrl: Constants.GOOGLE_PLAY_URL,
-      quote: '@' + this._item.user_name + ' #' + this._item.number,
+      quote: '@' + user.username + ' #' + this.state.item?.number,
     };
 
     const canShow = await MessageDialog.canShow(SHARE_LINK_CONTENT);
@@ -444,7 +427,7 @@ class PlayMainScreen extends Component {
     if (Platform.OS === 'android') {
       const shareOptions = {
         title: 'Share to WhatsApp',
-        // message: '@' + this._item.user_name + ' #' + this._item.number,
+        // message: '@' + this.state.item?.username + ' #' + this.state.item?.number,
         url: Constants.GOOGLE_PLAY_URL,
         social: Share.Social.WHATSAPP,
       };
@@ -469,6 +452,8 @@ class PlayMainScreen extends Component {
 
   onDownloadVideo = async () => {
     this.Scrollable.close();
+    const item = this.state.item || {}
+    const user = item?.userId || {};
 
     if (!global.me) {
       return;
@@ -482,7 +467,7 @@ class PlayMainScreen extends Component {
       fileCache: true,
       appendExt: 'mp4',
     })
-      .fetch('GET', this._item.url, {})
+      .fetch('GET', item.url, {})
       .uploadProgress((written, total) => {
         console.log('uploaded', written / total);
       })
@@ -498,13 +483,13 @@ class PlayMainScreen extends Component {
         const newPath = originPath + '.mp4';
         const watermarkText =
           '@' +
-          this._item.user_name +
+          user.username +
           '\n#' +
-          this._item.number +
+          item.number +
           '\n' +
-          this._item.price +
+          item.price +
           '\n' +
-          this._item.description;
+          item.description;
         const fontPath =
           Platform.OS === 'android'
             ? '/system/fonts/Roboto-Bold.ttf'
@@ -542,7 +527,7 @@ class PlayMainScreen extends Component {
   };
 
   checkSignin = () => {
-    if (!global.me && global._prevScreen == 'profile_edit') {
+    if (!global.me && global._prevScreen === 'profile_edit') {
       this.onRefresh();
     }
   };
@@ -559,7 +544,6 @@ class PlayMainScreen extends Component {
 
   _renderVideo = () => {
     const { isFetching, itemDatas } = this.state;
-    //console.log(itemDatas, '------');
     return (
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -576,6 +560,7 @@ class PlayMainScreen extends Component {
         }}
         onEndReached={() => {
           if (!this.state.onEndReachedCalledDuringMomentum) {
+            this.setState({ onEndReachedCalledDuringMomentum: true });
             this.onRefresh('more');
           }
         }}
@@ -585,8 +570,7 @@ class PlayMainScreen extends Component {
         viewabilityConfig={{
           itemVisiblePercentThreshold: 60,
         }}
-        keyExtractor={(item, index) => String(index)}
-        // keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => index.toString()}
         style={{
           width: '100%',
           height: VIDEO_HEIGHT,
@@ -610,8 +594,9 @@ class PlayMainScreen extends Component {
 
   _renderItem = ({ item, index }) => {
     const { isVideoLoading, isVideoPause } = this.state;
-
-    if (this._curIndex != index || isVideoPause) {
+    const paused = isVideoPause || this.state.curIndex !== index;
+    const user = item.userId || {};
+    if (Math.abs(this.state.curIndex - index) > 2) {
       return (
         <View
           style={{
@@ -620,16 +605,16 @@ class PlayMainScreen extends Component {
             borderWidth: 1,
             borderColor: 'black',
           }}
-        ></View>
+        />
       );
     } else {
-      const isLike = item.isLike ? true : false;
+      const isLike = !!item.isLike;
       const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
 
-      if (this._curIndex == index) {
-        global._opponentId = item.user_id;
-        global._opponentName = item.user_name;
-        global._opponentPhoto = item.user_photo;
+      if (this.state.curIndex === index) {
+        global._opponentId = user?.id;
+        global._opponentName = user.username;
+        global._opponentPhoto = user.photo;
       }
 
       return (
@@ -646,13 +631,13 @@ class PlayMainScreen extends Component {
             ref={(ref) => {
               this.player = ref;
             }}
-            resizeMode="contain"
+            //resizeMode="contain"
             repeat
-            paused={isVideoPause}
+            paused={paused}
             playWhenInactive={false}
             playInBackground={false}
             poster={item.thumb}
-            posterResizeMode="contain"
+            //posterResizeMode="contain"
             onReadyForDisplay={() => {
               this.onVideoReadyForDisplay(item);
             }}
@@ -676,7 +661,7 @@ class PlayMainScreen extends Component {
               backgroundColor: 'black',
             }}
           />
-          {isVideoLoading && (
+          {isVideoLoading === 'loading' && ( // TODO - review later
             <View
               style={{
                 marginTop: 16,
@@ -712,7 +697,7 @@ class PlayMainScreen extends Component {
                     width: 32,
                     tintColor: isLike ? GStyle.redColor : GStyle.activeColor,
                   }}
-                ></Image>
+                />
               </TouchableOpacity>
               <Text
                 style={{
@@ -725,7 +710,7 @@ class PlayMainScreen extends Component {
                   paddingHorizontal: 2,
                 }}
               >
-                {item.like_count}
+                {item.likeCount}
               </Text>
               <TouchableOpacity
                 onPress={() => {
@@ -740,7 +725,7 @@ class PlayMainScreen extends Component {
                     width: 32,
                     tintColor: GStyle.activeColor,
                   }}
-                ></Image>
+                />
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -787,7 +772,7 @@ class PlayMainScreen extends Component {
                 </Text>
                 <Avatar
                   image={{
-                    uri: item.user_photo ? item.user_photo : img_default_avatar,
+                    uri: user.photo ? user.photo : img_default_avatar,
                   }}
                   size={48}
                   // borderRadius={29}
@@ -804,7 +789,7 @@ class PlayMainScreen extends Component {
                     color: 'white',
                   }}
                 >
-                  {item.user_name}
+                  {user.username}
                 </Text>
               </View>
             </View>
@@ -850,7 +835,7 @@ class PlayMainScreen extends Component {
                 >
                   {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
                 </Text>
-                <View style={{ flex: 1 }}></View>
+                <View style={{ flex: 1 }} />
               </View>
               <Text
                 numberOfLines={3}
@@ -1058,12 +1043,7 @@ class PlayMainScreen extends Component {
   _renderProgress = () => {
     const { percent, isVisibleProgress } = this.state;
 
-    return (
-      <ProgressModal
-        percent={percent}
-        isVisible={isVisibleProgress}
-      ></ProgressModal>
-    );
+    return <ProgressModal percent={percent} isVisible={isVisibleProgress} />;
   };
 
   ___renderStatusBar = () => {

@@ -1,29 +1,10 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  Image,
-  LayoutAnimation,
   LogBox,
-  Modal,
-  Platform,
-  SafeAreaView,
   StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-  ScrollView,
 } from 'react-native';
 
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-
-import GHeaderBar from '../../components/GHeaderBar';
-
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global/index';
+import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import PlayMainScreen from './PlayMainScreen';
 import ProfileOtherScreen from '../tab_profile/ProfileOtherScreen';
@@ -51,17 +32,17 @@ class PlayTabScreen extends Component {
 
   render() {
     return (
-      <>
-        <SafeAreaView style={{flex: 1}}>{this._renderTabBar()}</SafeAreaView>
-      </>
+        <Tab.Navigator
+            initialRouteName="home_main"
+            tabBarOptions={{
+              style: { height: 0 },
+            }}
+        >
+          <Tab.Screen name="home_main" component={PlayMainScreen} />
+          <Tab.Screen name="profile_other" component={ProfileOtherScreen} />
+        </Tab.Navigator>
     );
   }
-
-  _renderTabBar = () => {
-    return (
-      <View />
-    );
-  };
 }
 
 const styles = StyleSheet.create({});
