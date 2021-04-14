@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   Modal,
   StyleSheet,
@@ -11,8 +11,8 @@ import {
 import PropTypes from 'prop-types';
 
 import Geolocation from '@react-native-community/geolocation';
-import ImagePicker from 'react-native-image-picker';
-import {GStyle} from '../../utils/Global';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { GStyle } from '../../utils/Global';
 
 class MessageActions extends Component {
   constructor(props) {
@@ -42,18 +42,35 @@ class MessageActions extends Component {
       (buttonIndex) => {
         switch (buttonIndex) {
           case 0:
-            ImagePicker.launchImageLibrary(options, (response) => {
-              this.props.onSend({
-                image: response.uri,
-              });
-            });
+            launchImageLibrary(
+              {
+                height: 300,
+                width: 300,
+                mediaType: 'photo',
+                cameraType: 'front',
+              },
+              (response) => {
+                this.props.onSend({
+                  image: response.uri,
+                });
+              },
+            );
+
             break;
           case 1:
-            ImagePicker.launchCamera(options, (response) => {
-              this.props.onSend({
-                image: response.uri,
-              });
-            });
+            launchCamera(
+              {
+                height: 300,
+                width: 300,
+                mediaType: 'photo',
+                cameraType: 'front',
+              },
+              (response) => {
+                this.props.onSend({
+                  image: response.uri,
+                });
+              },
+            );
             break;
           case 2:
             Geolocation.getCurrentPosition(
@@ -66,7 +83,7 @@ class MessageActions extends Component {
                 });
               },
               (error) => alert(error.message),
-              {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000},
+              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
             );
             break;
           default:
@@ -80,8 +97,9 @@ class MessageActions extends Component {
     return (
       <>
         <TouchableOpacity
-          style={{...styles.container, ...this.props.containerStyle}}
-          onPress={this.onPressActions}>
+          style={{ ...styles.container, ...this.props.containerStyle }}
+          onPress={this.onPressActions}
+        >
           {this._renderIcon()}
         </TouchableOpacity>
       </>
@@ -100,7 +118,8 @@ class MessageActions extends Component {
           borderColor: GStyle.activeColor,
           borderWidth: 2,
           ...this.props.wrapperStyle,
-        }}>
+        }}
+      >
         <Text
           style={{
             fontSize: 16,
@@ -108,7 +127,8 @@ class MessageActions extends Component {
             textAlign: 'center',
             color: GStyle.activeColor,
             ...this.props.iconTextStyle,
-          }}>
+          }}
+        >
           +
         </Text>
       </View>

@@ -23,17 +23,6 @@ import {NavigationContext} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
 
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/MaterialIcons';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {FlatGrid} from 'react-native-super-grid';
-import ModalSelector from '../../lib/ModalSelector/index';
-import ImagePicker from 'react-native-image-picker';
-
-import {TextField} from '../../lib/MaterialTextField/index';
 import {
   GStyle,
   GStyles,

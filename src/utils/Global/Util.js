@@ -1,24 +1,10 @@
-import {
-  Alert,
-  Dimensions,
-  PermissionsAndroid,
-  Platform,
-  StatusBar,
-} from 'react-native';
+import {Alert, Dimensions, PermissionsAndroid, Platform, StatusBar} from 'react-native';
 
-import {
-  checkMultiple,
-  requestMultiple,
-  PERMISSIONS,
-  RESULTS,
-} from 'react-native-permissions';
+import {PERMISSIONS, requestMultiple, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
 import Moment from 'moment';
 import io from 'socket.io-client';
-import changeNavigationBarColor, {
-  hideNavigationBar,
-  showNavigationBar,
-} from 'react-native-navigation-bar-color';
+import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import RNFS from 'react-native-fs';
 import DeviceInfo from 'react-native-device-info';
@@ -45,9 +31,7 @@ const Helper = {
   },
 
   getBottomBarHeight: function () {
-    const bottomBarHeight =
-      Platform.OS === 'ios' ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0;
-    return bottomBarHeight;
+    return Platform.OS === 'ios' ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0;
   },
 
   setDarkStatusBar: function () {
@@ -176,7 +160,7 @@ const Helper = {
   },
 
   getTimeString: (date, isShowSecond = false) => {
-    const h = date.getHours();
+    let h = date.getHours();
     let m = date.getMinutes();
     let s = date.getSeconds();
 
@@ -268,16 +252,16 @@ const Helper = {
   },
 
   getYear4DateString: function (monthYearString) {
-    stringArray = monthYearString.split('/');
-    if (stringArray.length == 2) {
+    const stringArray = monthYearString.split('/');
+    if (stringArray.length === 2) {
       return stringArray[1];
     }
     return '';
   },
 
   getMonth4DateString: function (monthYearString) {
-    stringArray = monthYearString.split('/');
-    if (stringArray.length == 2) {
+    const stringArray = monthYearString.split('/');
+    if (stringArray.length === 2) {
       return stringArray[0];
     }
     return '';

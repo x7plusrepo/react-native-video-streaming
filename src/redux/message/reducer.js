@@ -1,5 +1,5 @@
-import {handleActions} from 'redux-actions';
-import {UNREAD_COUNT} from './types';
+import { handleActions } from 'redux-actions';
+import { UNREAD_COUNT } from './types';
 
 const INITIAL_STATE = {
   unreadCount: null,
@@ -7,7 +7,7 @@ const INITIAL_STATE = {
 
 const actionMap = {};
 
-actionMap[UNREAD_COUNT] = (state, {payload}) => ({
+actionMap[UNREAD_COUNT] = (state, { payload }) => ({
   ...state,
   unreadCount: payload,
 });

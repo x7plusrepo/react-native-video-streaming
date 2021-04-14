@@ -6,9 +6,6 @@ import {
   CardStyleInterpolators,
 } from '@react-navigation/stack';
 
-import TestScreen from '../screens/test/TestScreen';
-import TempScreen from '../screens/test/TempScreen';
-
 import MainTabNavigator from './MainTabNavigator';
 
 import SigninScreen from '../screens/auth/SigninScreen';
@@ -26,8 +23,10 @@ import HomeSearchScreen from '../screens/tab_home/HomeSearchScreen';
 import ProfileEditScreen from '../screens/tab_profile/ProfileEditScreen';
 import ProfileVideoScreen from '../screens/tab_profile/ProfileVideoScreen';
 import ProfileOtherScreen from '../screens/tab_profile/ProfileOtherScreen';
+import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
 
 import { GStyle, GStyles, Global, Helper } from '../utils/Global/index';
+import SavedProductsScreen from '../screens/tab_profile/SavedProductsScreen';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';
 // import WorkScreen from '../screens/auth/FCAccountStep1Screen';
@@ -57,10 +56,6 @@ export default function App() {
           gestureEnabled: false,
         }}
       >
-        {/* <Stack.Screen name="test" component={TestScreen} /> */}
-        {/* <Stack.Screen name="temp" component={TempScreen} /> */}
-        {/* <Stack.Screen name="work" component={WorkScreen} /> */}
-
         {/* --- start --- */}
         <Stack.Screen name="main_tab_navigator" component={MainTabNavigator} />
 
@@ -75,6 +70,7 @@ export default function App() {
         <Stack.Screen name="camera_draft" component={CameraDraftScreen} />
 
         {/* --- message tab --- */}
+        <Stack.Screen name="message" component={MessageMainScreen} />
         <Stack.Screen name="message_chat" component={MessageChatScreen} />
 
         {/* --- home tab --- */}
@@ -93,6 +89,8 @@ export default function App() {
           }}
         />
         <Stack.Screen name="profile_other" component={ProfileOtherScreen} />
+        <Stack.Screen name="saved_products" component={SavedProductsScreen} />
+        <Stack.Screen name="my_posts" component={SavedProductsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

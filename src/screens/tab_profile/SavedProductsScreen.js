@@ -13,16 +13,15 @@ import { setSavedCount } from '../../redux/me/actions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global/index';
 
-const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 3;
 
-class ProfileLikedVideoScreen extends React.Component {
+class SavedProductsScreen extends React.Component {
   constructor(props) {
     super(props);
 
-    console.log('ProfileLikedVideoScreen start');
+    console.log('SavedProductsScreen start');
 
     this.init();
   }
@@ -214,7 +213,7 @@ const TProfileLikedVideoScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
-    <ProfileLikedVideoScreen {...props} navigation={navigation} route={route} />
+    <SavedProductsScreen {...props} navigation={navigation} route={route} />
   );
 };
 

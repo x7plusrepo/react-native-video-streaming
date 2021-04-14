@@ -1,13 +1,13 @@
-import {handleActions} from 'redux-actions';
-import {KEYWORD} from './types';
+import { handleActions } from 'redux-actions';
+import { KEYWORD } from './types';
 
 const INITIAL_STATE = {
-  keyword: "",
+  keyword: '',
 };
 
 const actionMap = {};
 
-actionMap[KEYWORD] = (state, {payload}) => ({
+actionMap[KEYWORD] = (state, { payload }) => ({
   ...state,
   keyword: payload,
 });

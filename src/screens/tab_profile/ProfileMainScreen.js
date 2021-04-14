@@ -1,57 +1,85 @@
 import React from 'react';
 import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
+  Animated,
   Image,
-  PermissionsAndroid,
-  Platform,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
 
 import { connect } from 'react-redux';
-
-import {
-  Menu,
-  MenuOptions,
-  MenuOption,
-  MenuTrigger,
-} from 'react-native-popup-menu';
-
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
-import ScrollableTabView, { DefaultTabBar } from 'rn-collapsing-tab-bar';
 
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global/index';
-import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
+import avatars from '../../assets/avatars';
 
-import ProfileMyVideoScreen from './ProfileMyVideoScreen';
-import ProfileLikedVideoScreen from './ProfileLikedVideoScreen';
+import { setMyUserAction } from '../../redux/me/actions';
 
-const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
+import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global/index';
 
-const WINDOW_WIDTH = Helper.getWindowWidth();
+import ic_menu_goLive from '../../assets/images/ic_menu_goLive.png';
+import ic_tab_play from '../../assets/images/ic_tab_play.png';
+import ic_chevron_right from '../../assets/images/ic_chevron_right.png';
+import ic_menu_messages from '../../assets/images/ic_menu_messages.png';
+import ic_menu_fans from '../../assets/images/ic_menu_fans.png';
+import ic_menu_drafts from '../../assets/images/ic_menu_drafts.png';
+import ic_tab_top from '../../assets/images/ic_tab_top.png';
+import ic_menu_downloads from '../../assets/images/ic_menu_downloads.png';
+import ic_menu_saved_products from '../../assets/images/ic_menu_saved_products.png';
+
+const getMenuItems = () => {
+  return [
+    {
+      icon: ic_menu_goLive,
+      title: 'Go Live',
+      onPress: () => {},
+    },
+    {
+      icon: ic_tab_play,
+      title: 'Release Reels',
+      onPress: () => {},
+    },
+    {
+      icon: ic_menu_messages,
+      title: 'Messages',
+      onPress: () => {},
+    },
+    {
+      icon: ic_menu_fans,
+      title: 'Fans',
+      onPress: () => {},
+    },
+    {
+      icon: ic_menu_downloads,
+      title: 'Download',
+      onPress: () => {},
+    },
+    {
+      icon: ic_menu_drafts,
+      title: 'Drafts',
+      onPress: () => {},
+    },
+    {
+      icon: ic_tab_top,
+      title: 'Top',
+      onPress: () => {},
+    },
+    {
+      icon: ic_menu_saved_products,
+      title: 'Saved Products',
+      onPress: () => {},
+    },
+  ];
+};
+
 const WINDOW_HEIGHT = Helper.getWindowHeight();
 
 class ProfileMainScreen extends React.Component {
   constructor(props) {
     super(props);
+    this.scrollAnimatedValue = new Animated.Value(0);
 
     console.log('ProfileMainScreen start');
 
@@ -71,26 +99,24 @@ class ProfileMainScreen extends React.Component {
     this.setState({ lastMonths });
   }
 
-  componentWillUnmount() {}
+  componentWillUnmount() {
+    this.unsubscribe();
+  }
 
   init = () => {
     this.state = {
-      profilePhotoUri: global.me ? global.me.photo : null,
       allViewCount: 0,
       monthViewCountList: [],
 
       tabOneHeight: WINDOW_HEIGHT,
       tabTwoHeight: WINDOW_HEIGHT,
 
-      itemDatas: [],
       curMonth: '',
       lastMonths: [],
     };
   };
 
   onRefresh = () => {
-    this.setState({ profilePhotoUri: global.me ? global.me.photo : null });
-
     let params = {
       user_id: global.me.id,
     };
@@ -103,11 +129,11 @@ class ProfileMainScreen extends React.Component {
         Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
+          this.props.setMyUserAction(json.data || {});
           global.me.photo = json.data.photo;
           this.setState({
-            profilePhotoUri: json.data.photo,
-            allViewCount: json.data.allViewCount,
-            monthViewCountList: json.data.monthViews,
+            allViewCount: json.data?.allViewCount,
+            monthViewCountList: json.data?.monthViews,
           });
         } else {
           Helper.alertServerDataError();
@@ -118,14 +144,6 @@ class ProfileMainScreen extends React.Component {
 
   onBack = () => {
     this.props.navigation.goBack();
-  };
-
-  onPressViewCount = () => {
-    const { allViewCount } = this.state;
-
-    if (allViewCount > 0) {
-      console.log('--- crn_dev --- allViewCount:', allViewCount);
-    }
   };
 
   onPressProfile = () => {
@@ -153,232 +171,121 @@ class ProfileMainScreen extends React.Component {
   };
 
   render() {
+    const { user } = this.props;
+    const randomNumber = Math.floor(Math.random() * avatars.length);
+    const randomImageUrl = avatars[randomNumber];
+    const avatarImage = {
+      uri: user?.photo ?? randomImageUrl,
+    };
+
+    const translateY = this.scrollAnimatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: [0, -280],
+      extrapolate: 'clamp',
+    });
+
+    const opacity = this.scrollAnimatedValue.interpolate({
+      inputRange: [0, 180],
+      outputRange: [1, 0],
+      extrapolate: 'clamp',
+    });
+
+    const topAnimatedStyle = [
+      {
+        transform: [{ translateY }],
+        opacity,
+      },
+      styles.topContainer,
+    ];
+
     return (
-      <>
-        <SafeAreaView style={GStyles.container}>
-          {this._renderTabBar()}
-        </SafeAreaView>
-      </>
+      <SafeAreaView style={GStyles.container}>
+        <View style={styles.container}>
+          <Animated.View style={topAnimatedStyle}>
+            <TouchableOpacity
+              onPress={this.onPressProfile}
+              disabled={global.me.isGuest}
+              style={{ ...GStyles.centerAlign }}
+            >
+              <Avatar image={avatarImage} size={106} />
+              <Text
+                style={[GStyles.regularText, { fontSize: 13, marginTop: 16 }]}
+              >
+                {user.username}
+              </Text>
+              {!global.me.isGuest && (
+                <Text
+                  style={[
+                    GStyles.regularText,
+                    { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
+                  ]}
+                >
+                  Edit profile
+                </Text>
+              )}
+            </TouchableOpacity>
+            {!global.me.isGuest && (
+              <View style={styles.detailContainer}>
+                <View>
+                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={GStyles.elementLabel}>Views</Text>
+                </View>
+                <View>
+                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={GStyles.elementLabel}>Views</Text>
+                </View>
+                <View>
+                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={GStyles.elementLabel}>Views</Text>
+                </View>
+                <View>
+                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={GStyles.elementLabel}>Views</Text>
+                </View>
+              </View>
+            )}
+          </Animated.View>
+          <Animated.ScrollView
+            contentContainerStyle={styles.scrollViewContainer}
+            scrollEventThrottle={16}
+            onScroll={Animated.event(
+              [
+                {
+                  nativeEvent: {
+                    contentOffset: { y: this.scrollAnimatedValue },
+                  },
+                },
+              ],
+              { useNativeDriver: true },
+            )}
+          >
+            <View style={styles.menuContainer}>
+              {getMenuItems().map((menu, index) => (
+                <TouchableOpacity style={styles.menuItem}>
+                  <Image source={menu.icon} style={styles.menuIcon} />
+
+                  <View style={styles.menuRight}>
+                    <Text style={GStyles.regularText}>{menu.title}</Text>
+                    <Image
+                      source={ic_chevron_right}
+                      style={styles.chevronRight}
+                    />
+                  </View>
+                </TouchableOpacity>
+              ))}
+            </View>
+          </Animated.ScrollView>
+        </View>
+      </SafeAreaView>
     );
   }
-
-  _renderAvartar = () => {
-    const {
-      profilePhotoUri,
-      allViewCount,
-      monthViewCountList,
-      curMonth,
-      lastMonths,
-    } = this.state;
-
-    console.log('--- crn_dev --- global.me.isGuest:', global.me.isGuest);
-
-    return (
-      <View style={{ ...GStyles.rowCenterContainer, marginVertical: 20 }}>
-        <View style={{ flex: 1, ...GStyles.centerAlign }}>
-          {!global.me.isGuest && (
-            <Menu>
-              <MenuTrigger disabled={allViewCount > 0 ? false : true}>
-                <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                  Total
-                </Text>
-                <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                  {allViewCount}
-                </Text>
-                <Text
-                  style={{ ...GStyles.mediumText, fontSize: 13, marginTop: 4 }}
-                >
-                  {curMonth}
-                </Text>
-                <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                  {monthViewCountList[0]}
-                </Text>
-              </MenuTrigger>
-              <MenuOptions>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[0]} : {monthViewCountList[1]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[1]} : {monthViewCountList[2]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[2]} : {monthViewCountList[3]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[3]} : {monthViewCountList[4]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[4]} : {monthViewCountList[5]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[5]} : {monthViewCountList[6]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[6]} : {monthViewCountList[7]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[7]} : {monthViewCountList[8]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[8]} : {monthViewCountList[9]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[9]} : {monthViewCountList[10]}
-                  </Text>
-                </MenuOption>
-                <MenuOption>
-                  <Text style={{ ...GStyles.mediumText, fontSize: 13 }}>
-                    {lastMonths[10]} : {monthViewCountList[11]}
-                  </Text>
-                </MenuOption>
-              </MenuOptions>
-            </Menu>
-          )}
-        </View>
-        <View style={{ flex: 1, alignItems: 'center' }}>
-          <TouchableOpacity
-            onPress={this.onPressProfile}
-            disabled={global.me.isGuest}
-            style={{ ...GStyles.centerAlign }}
-          >
-            <Image
-              source={img_default_avatar}
-              style={{
-                position: 'absolute',
-                left: 0,
-                top: 0,
-                width: 106,
-                height: 106,
-              }}
-            />
-            <Avatar
-              image={
-                profilePhotoUri ? { uri: profilePhotoUri } : img_default_avatar
-              }
-              size={106}
-              // borderRadius={0}
-              // borderWidth={2}
-            />
-            {global.me.isGuest && (
-              <Text
-                style={[
-                  GStyles.regularText,
-                  { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
-                ]}
-              >
-                {global.me.username}
-              </Text>
-            )}
-            {!global.me.isGuest && (
-              <Text
-                style={[
-                  GStyles.regularText,
-                  { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
-                ]}
-              >
-                Edit profile
-              </Text>
-            )}
-          </TouchableOpacity>
-        </View>
-        <View style={{ flex: 1, ...GStyles.centerAlign }}>
-          {global.me.isGuest && (
-            <TouchableOpacity
-              onPress={this.onPressSignin}
-              style={{ ...styles.buttonFill, height: 30 }}
-            >
-              <Text style={{ ...styles.textFill }}>Signin</Text>
-            </TouchableOpacity>
-          )}
-          {!global.me.isGuest && (
-            <TouchableOpacity
-              onPress={this.onPressCamera}
-              style={{ ...styles.buttonFill, height: 30 }}
-            >
-              <Text style={{ ...styles.textFill }}>Camera</Text>
-            </TouchableOpacity>
-          )}
-          <TouchableOpacity
-            onPress={this.onPressCustomerSupport}
-            style={{ ...styles.buttonFill, marginTop: 8 }}
-          >
-            <Text style={{ ...styles.textFill }}>Customer</Text>
-            <Text style={{ ...styles.textFill }}>Support</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            onPress={this.onPressDraft}
-            style={{ ...styles.buttonFill, height: 30, marginTop: 8 }}
-          >
-            <Text style={{ ...styles.textFill }}>Draft</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-    );
-  };
-
-  ___measureTabOne = (event) => {
-    if (event.nativeEvent.layout.height > WINDOW_HEIGHT) {
-      this.setState({
-        tabOneHeight: event.nativeEvent.layout.height,
-      });
-    }
-  };
-
-  _renderTabBar = () => {
-    const { savedCount, myPostCount } = this.props;
-    const tabOneHeight =
-      140 * (Math.floor(savedCount / 3) + Math.ceil(savedCount % 3)) + 100;
-    const tabTwoHeight =
-      140 * (Math.floor(myPostCount / 3) + Math.ceil(myPostCount % 3)) + 100;
-
-    return (
-      <ScrollableTabView
-        collapsableBar={this._renderAvartar()}
-        initialPage={0}
-        tabContentHeights={[tabOneHeight, tabTwoHeight]}
-        scrollEnabled
-        prerenderingSiblingsNumber={Infinity}
-        tabBarBackgroundColor={GStyle.snowColor}
-        tabBarActiveTextColor={GStyle.activeColor}
-        tabBarUnderlineStyle={{ backgroundColor: GStyle.activeColor }}
-        renderTabBar={() => (
-          <DefaultTabBar
-            inactiveTextColor={GStyle.fontColor}
-            activeTextColor={GStyle.fontColor}
-            backgroundColor={GStyle.grayBackColor}
-          />
-        )}
-      >
-        <ProfileLikedVideoScreen
-          // onLayoutView={this.measureTabOne}
-          tabLabel="Saved"
-        />
-        <ProfileMyVideoScreen tabLabel="My Posts" />
-      </ScrollableTabView>
-    );
-  };
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+  },
   buttonFill: {
     width: '70%',
     height: 40,
@@ -386,12 +293,57 @@ const styles = StyleSheet.create({
     backgroundColor: GStyle.activeColor,
     borderRadius: 12,
   },
-
+  topContainer: {
+    width: '100%',
+    position: 'absolute',
+    height: 300,
+    justifyContent: 'space-around',
+    alignItems: 'center',
+    zIndex: 10,
+    borderBottomWidth: 0.2,
+    borderBottomColor: 'rgba(0, 0, 0, 0.5)',
+  },
   textFill: {
     fontFamily: 'GothamPro-Medium',
     fontSize: 13,
     textAlign: 'center',
     color: 'white',
+  },
+  detailContainer: {
+    width: '100%',
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+  },
+  scrollViewContainer: {
+    paddingTop: 330,
+    paddingBottom: 120,
+  },
+  menuContainer: {
+    paddingHorizontal: 16,
+  },
+  menuItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  menuRight: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 24,
+    marginLeft: 24,
+    borderBottomColor: '#C4C4C4',
+    borderBottomWidth: 0.4,
+  },
+  menuIcon: {
+    width: 28,
+    height: 28,
+    resizeMode: 'contain',
+  },
+  chevronRight: {
+    width: 5.5,
+    height: 9.62,
   },
 });
 
@@ -405,6 +357,7 @@ export default connect(
   (state) => ({
     savedCount: state.me.savedCount,
     myPostCount: state.me.myPostCount,
+    user: state.me.user,
   }),
-  {},
+  { setMyUserAction },
 )(TProfileMainScreen);

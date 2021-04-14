@@ -43,10 +43,10 @@ const Avatar = ({
   return (
     <View
       style={[
+        styles.container,
         {
           width: size ? size : defaults.width,
           height: size ? size : defaults.height,
-          elevation: 3,
         },
         containerStyle,
       ]}
@@ -101,6 +101,12 @@ const Avatar = ({
   );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  container: {
+    elevation: 3,
+    borderRadius: 56,
+    overflow: 'hidden',
+  },
+});
 
 export default Avatar;

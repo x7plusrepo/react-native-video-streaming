@@ -74,7 +74,7 @@ class CameraMainScreen extends Component {
       whiteBalance: 'auto',
       ratio: '16:9',
       maxDuration: 30,
-      quality: RNCamera.Constants.VideoQuality['480p'],
+      quality: RNCamera.Constants.VideoQuality['1080p'],
       isRecording: false,
       canDetectFaces: false,
       canDetectText: false,

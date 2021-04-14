@@ -23,7 +23,6 @@ const GStyle = {
   snowColor: '#FAFAFA',
   orangeColor: '#E98123',
   // orangeColor: '#FE9870',
-  greenColor: '#0EAD69',
   redColor: '#FF0000',
   // redColor: '#bd0008',
   // redColor: '#ff4444',
@@ -218,10 +217,9 @@ const GStyles = StyleSheet.create({
   image: {
     width: 56,
     height: undefined,
-    aspectRatio: 1 / 1,
+    aspectRatio: 1,
     resizeMode: 'contain',
   },
-
   buttonFill: {
     justifyContent: 'center',
     backgroundColor: GStyle.activeColor,

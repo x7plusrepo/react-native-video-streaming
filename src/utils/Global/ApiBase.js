@@ -3,7 +3,7 @@ import Constants from './Constants';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 
-const host = 'http://107.180.73.164:3000';
+const host = 'http://192.168.1.107:3000';
 
 export const api = axios.create({
   baseURL: `${host}`,
@@ -99,32 +99,32 @@ const formDataCall = (subUrl, body, headers, callBack, method = 'post') => {
     });
 };
 
-const formFileDataCall = (subUrl, body, callBack) => {
-  RNFetchBlob.fetch(
-    'POST',
-    Constants.HOST_URL + subUrl,
-    {
-      'Content-Type': 'multipart/form-data',
-    },
-    body,
-  )
-    .then((resJson) => {
-      console.log('formDataCall response from server === >>>');
-      try {
-        // console.log('before parsing: ', resJson.data.substring(0, 100));
-        console.log('before parsing: ', resJson.data);
-        const res = JSON.parse(resJson.data);
-        console.log('after parsing: ', res);
-        callBack(res, null);
-      } catch (exception) {
-        console.error('exception:', exception);
-        callBack(null, exception);
-      }
-    })
-    .catch((err) => {
-      console.error('parsing err: ', err);
-      callBack(null, err);
-    });
-};
+// const formFileDataCall = (subUrl, body, callBack) => {
+//   RNFetchBlob.fetch(
+//     'POST',
+//     Constants.HOST_URL + subUrl,
+//     {
+//       'Content-Type': 'multipart/form-data',
+//     },
+//     body,
+//   )
+//     .then((resJson) => {
+//       console.log('formDataCall response from server === >>>');
+//       try {
+//         // console.log('before parsing: ', resJson.data.substring(0, 100));
+//         console.log('before parsing: ', resJson.data);
+//         const res = JSON.parse(resJson.data);
+//         console.log('after parsing: ', res);
+//         callBack(res, null);
+//       } catch (exception) {
+//         console.error('exception:', exception);
+//         callBack(null, exception);
+//       }
+//     })
+//     .catch((err) => {
+//       console.error('parsing err: ', err);
+//       callBack(null, err);
+//     });
+// };
 
-export { formDataCall, formFileDataCall };
+export { formDataCall };

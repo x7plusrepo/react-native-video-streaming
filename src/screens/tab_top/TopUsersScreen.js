@@ -54,6 +54,7 @@ class TopUsersScreen extends React.Component {
 
   componentWillUnmount() {
     this._isMounted = false;
+    this.unsubscribe();
   }
 
   init = () => {

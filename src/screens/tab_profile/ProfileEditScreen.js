@@ -21,7 +21,7 @@ import {
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 import ModalSelector from '../../lib/ModalSelector/index';
-import ImagePicker from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import { TextField } from '../../lib/MaterialTextField/index';
 import {
@@ -35,8 +35,11 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import VideoUpload from '../../utils/NativeModule/NativePackage';
+import avatars from '../../assets/avatars';
 
 const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
+const randomNumber = Math.floor(Math.random() * avatars.length);
+const randomImageUrl = avatars[randomNumber];
 
 class ProfileEditScreen extends React.Component {
   constructor(props) {
@@ -285,37 +288,34 @@ class ProfileEditScreen extends React.Component {
   };
 
   onPressProfilePhoto = () => {
-    const options = {
-      title: 'Select Profile Photo',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
+    launchCamera(
+      {
+        height: 300,
+        width: 300,
+        mediaType: 'photo',
+        cameraType: 'front',
       },
-    };
-
-    ImagePicker.showImagePicker(options, (response) => {
-      if (response.didCancel) {
-        console.log('User cancelled image picker');
-      } else if (response.error) {
-        console.log('ImagePicker Error: ', response.error);
-      } else if (response.customButton) {
-        console.log('User tapped custom button: ', response.customButton);
-      } else {
-        const source = {
-          uri: response.uri,
-          type: response.type,
-          name: response.fileName,
-        };
-
+      (response) => {
         console.log(response);
-        this.setState({
-          profilePhotoSelSource: source,
-          profilePhotoSelPath: response.path,
-          //profilePhotoSelPath: response.uri,
-          photo: null,
-        });
-      }
-    });
+        if (response.didCancel) {
+          console.log('User cancelled image picker');
+        } else if (response.errorMessage) {
+          console.log('ImagePicker Error: ', response.error);
+        } else {
+          const source = {
+            uri: response.uri,
+            type: response.type,
+            name: response.fileName,
+          };
+          this.setState({
+            profilePhotoSelSource: source,
+            profilePhotoSelPath: response.path,
+            //profilePhotoSelPath: response.uri,
+            photo: null,
+          });
+        }
+      },
+    );
   };
 
   onBack = () => {

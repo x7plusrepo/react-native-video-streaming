@@ -314,7 +314,7 @@ class PlayMainScreen extends Component {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 200) {
-            item.is_like = isChecked;
+            item.isLike = isChecked;
             this.setState(itemDatas);
           } else {
             Helper.alertServerDataError();

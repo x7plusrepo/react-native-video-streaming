@@ -1,4 +1,4 @@
-import {Dimensions, Alert, Platform, StatusBar} from 'react-native';
+import { Dimensions, Alert, Platform, StatusBar } from 'react-native';
 
 const Constants = {
   //** key */
@@ -15,11 +15,10 @@ const Constants = {
 
   //** url */
   // crn_dev
-  HOST_URL: 'http://107.180.73.164/stars/',
-  SOCKET_URL: 'http://107.180.73.164:5000/ChatStream',
-  // HOST_URL: 'http://192.168.1.77/',
-  // SOCKET_URL: 'http://192.168.1.77:5000/ChatStream',
-  BASE_URL: 'http://wichz.com/api/',
+  //HOST_URL: 'http://107.180.73.164:3000',
+  HOST_URL: 'http://192.168.1.107:3000',
+  SOCKET_URL: 'http://192.168.1.107:5000/ChatStream',
+  //SOCKET_URL: 'http://107.180.73.164:5000/ChatStream',
   GOOGLE_PLAY_URL:
     'https://play.google.com/store/apps/details?id=com.stars.android',
   APPSTORE_URL: 'https://apps.apple.com/us/app/stars/id1543058540',

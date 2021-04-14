@@ -1,68 +1,26 @@
 import React from 'react';
-import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  Image,
-  PermissionsAndroid,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import {
-  useNavigation,
-  useRoute,
-  StackActions,
-} from '@react-navigation/native';
+import {NavigationContext, StackActions, useNavigation, useRoute} from '@react-navigation/native';
 
-import { connect } from 'react-redux';
-import { setMyPostCount } from '../../redux/me/actions';
-
-import { NavigationContext } from '@react-navigation/native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {connect} from 'react-redux';
+import {setMyPostCount} from '../../redux/me/actions';
 import FastImage from 'react-native-fast-image';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import Animated from 'react-native-reanimated';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { TextField } from '../../lib/MaterialTextField/index';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global/index';
-import GHeaderBar from '../../components/GHeaderBar';
-import Avatar from '../../components/elements/Avatar';
-
-import ProfileEditScreen from './ProfileEditScreen';
-import ProfileEditScreen1 from './ProfileEditScreen';
-
-const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
+import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global/index';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 3;
 
-class ProfileMyVideoScreen extends React.Component {
+class MyVideoScreen extends React.Component {
   static contextType = NavigationContext;
 
   constructor(props) {
     super(props);
 
-    console.log('ProfileMyVideoScreen start');
+    console.log('MyVideoScreen start');
 
     this.init();
   }
@@ -118,9 +76,7 @@ class ProfileMyVideoScreen extends React.Component {
 
   onPressVideo = (value) => {
     const { itemDatas } = this.state;
-    const selIndex = itemDatas.findIndex((obj) => obj.id === value);
-
-    global._selIndex = selIndex;
+    global._selIndex = itemDatas.findIndex((obj) => obj.id === value);
     global._profileMyVideoDatas = itemDatas;
     global._prevScreen = 'profile_my_video';
     const pushAction = StackActions.push('profile_video', null);
@@ -373,7 +329,7 @@ const TProfileMyVideoScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
-    <ProfileMyVideoScreen {...props} navigation={navigation} route={route} />
+    <MyVideoScreen {...props} navigation={navigation} route={route} />
   );
 };
 

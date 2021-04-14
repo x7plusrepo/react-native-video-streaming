@@ -1,7 +1,7 @@
 import RNFetchBlob from 'rn-fetch-blob';
 import Helper from './Util';
 import Constants from './Constants';
-import { formDataCall, formFileDataCall } from './ApiBase';
+import { formDataCall } from './ApiBase';
 
 const RestAPI = {
   ErrCode: {
@@ -59,25 +59,6 @@ const RestAPI = {
   },
 
   add_video: (params, callBack) => {
-    const fileName = Helper.getFileName4Uri(params.image);
-    const fileType = Helper.getFileExt4Uri(params.image);
-
-    // TODO - image upload
-    // const data = [
-    //   { name: 'user_id', data: params.user_id },
-    //   { name: 'uploaded_url', data: params.uploaded_url },
-    //   { name: 'tags', data: params.tags },
-    //   { name: 'price', data: params.price },
-    //   { name: 'description', data: params.description },
-    //   { name: 'number', data: params.number },
-    //   {
-    //     name: 'image',
-    //     filename: fileName,
-    //     type: fileType,
-    //     data: RNFetchBlob.wrap(params.image),
-    //   },
-    // ];
-
     const data = {
       userId: params.user_id,
       url: params.uploaded_url,
@@ -152,7 +133,7 @@ const RestAPI = {
       amount: params.count_per_page,
     };
 
-    formDataCall('api/message/roomList', data, {}, callBack, 'get');
+    formDataCall('api/productChat/roomList', data, {}, callBack, 'get');
   },
 
   get_unread_count: (params, callBack) => {
@@ -160,7 +141,7 @@ const RestAPI = {
       userId: params.user_id,
     };
 
-    formDataCall('api/message/unReadCounts', data, {}, callBack, 'get');
+    formDataCall('api/productChat/unReadCounts', data, {}, callBack, 'get');
   },
 
   set_read_status: (params, callBack) => {
@@ -169,7 +150,7 @@ const RestAPI = {
       otherId: params.other_id,
     };
 
-    formDataCall('api/message/readStatus', data, {}, callBack, 'patch');
+    formDataCall('api/productChat/readStatus', data, {}, callBack, 'patch');
   },
 
   get_message_list: (params, callBack) => {
