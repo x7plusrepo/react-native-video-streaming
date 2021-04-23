@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import {
   StackActions,
@@ -12,6 +12,7 @@ import { connect } from 'react-redux';
 import { setSavedCount } from '../../redux/me/actions';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global/index';
+import GHeaderBar from '../../components/GHeaderBar';
 
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
@@ -84,21 +85,24 @@ class SavedProductsScreen extends React.Component {
   };
 
   render() {
-    const { itemDatas } = this.state;
+    const { navigation } = this.props;
 
     return (
-      <>
-        <View style={{ ...GStyles.centerAlign }}>
+        <SafeAreaView style={GStyles.container}>
+          <GHeaderBar
+              headerTitle="Saved Products"
+              leftType="back"
+              navigation={navigation}
+          />
           <View
-            style={{
-              width: '88%',
-              height: '100%',
-            }}
+              style={{
+                width: '88%',
+                height: '100%',
+              }}
           >
             {this._renderVideo()}
           </View>
-        </View>
-      </>
+        </SafeAreaView>
     );
   }
 

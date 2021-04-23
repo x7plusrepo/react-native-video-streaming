@@ -1,6 +1,16 @@
-import {Alert, Dimensions, PermissionsAndroid, Platform, StatusBar} from 'react-native';
+import {
+  Alert,
+  Dimensions,
+  PermissionsAndroid,
+  Platform,
+  StatusBar,
+} from 'react-native';
 
-import {PERMISSIONS, requestMultiple, RESULTS} from 'react-native-permissions';
+import {
+  PERMISSIONS,
+  requestMultiple,
+  RESULTS,
+} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
 import Moment from 'moment';
 import io from 'socket.io-client';
@@ -31,7 +41,9 @@ const Helper = {
   },
 
   getBottomBarHeight: function () {
-    return Platform.OS === 'ios' ? StaticSafeAreaInsets.safeAreaInsetsBottom : 0;
+    return Platform.OS === 'ios'
+      ? StaticSafeAreaInsets.safeAreaInsetsBottom
+      : 0;
   },
 
   setDarkStatusBar: function () {
@@ -50,7 +62,7 @@ const Helper = {
     changeNavigationBarColor('white', true);
   },
 
-  alertNetworkError: function (message ='Network error.') {
+  alertNetworkError: function (message = 'Network error.') {
     Alert.alert('Error', message);
     console.log('--- crn_dev --- :', global._url);
   },
@@ -316,7 +328,7 @@ const Helper = {
 
   //** sockect */
   connectToServer: function () {
-    const socket = io(Constants.SOCKET_URL);
+    const socket = io(Constants.CHAT_SOCKET_URL, { reconnectionAttempts: 3 });
     global.socket = socket;
 
     socket.on('connect', () => {

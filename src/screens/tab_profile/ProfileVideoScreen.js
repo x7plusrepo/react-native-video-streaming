@@ -633,7 +633,6 @@ class ProfileVideoScreen extends Component {
               this.onVideoReadyForDisplay(item);
             }}
             onBuffer={this.onVideoBuffer}
-            onError={this.onVideoError}
             onLoad={this.onVideoLoad}
             onProgress={this.onVideoProgress}
             onEnd={this.onVideoEnd}

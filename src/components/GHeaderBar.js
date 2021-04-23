@@ -22,7 +22,13 @@ import {
 } from 'react-native-elements';
 
 import PropTypes from 'prop-types';
-import {GStyle, GStyles, Global, Helper, Constants} from '../utils/Global/index';
+import {
+  GStyle,
+  GStyles,
+  Global,
+  Helper,
+  Constants,
+} from '../utils/Global/index';
 
 const HeaderBarHeight = 46;
 
@@ -113,9 +119,9 @@ class GHeaderBar extends React.Component {
     return (
       <ThemeProvider theme={{}}>
         <View style={styles.headerView}>
-          <View style={{...styles.headerContainer}}>
+          <View style={{ ...styles.headerContainer }}>
             {this._renderLeftPart()}
-            <Text style={{...styles.titleHeader}}>
+            <Text style={{ ...styles.titleHeader }}>
               {this.props.headerTitle}
             </Text>
             {this._renderRightPart()}
@@ -126,42 +132,40 @@ class GHeaderBar extends React.Component {
   }
 
   _renderLeftPart = () => {
-    const {leftType} = this.props;
-
-    if (this.props.hasOwnProperty('onPressLeftButton')) {
-      return (
-        <TouchableOpacity
-          onPress={() => {
-            if (this.props.onPressLeftButton) {
-              this.props.onPressLeftButton();
-            }
-          }}
-          style={{...GStyles.centerAlign, width: 50, height: '100%'}}>
-          <Image
-            source={LEFT_TYPES[leftType].image}
-            style={
-              leftType == 'logo'
-                ? {
-                    width: 24,
-                    height: 26,
-                    resizeMode: 'contain',
-                  }
-                : {
-                    width: 18,
-                    height: 18,
-                    resizeMode: 'contain',
-                  }
-            }
-          />
-        </TouchableOpacity>
-      );
-    } else {
-      return <View style={{flex: 1}} />;
-    }
+    const { leftType, navigation } = this.props;
+    return (
+      <TouchableOpacity
+        onPress={() => {
+          if (this.props.onPressLeftButton) {
+            this.props.onPressLeftButton();
+          } else {
+            navigation.pop();
+          }
+        }}
+        style={{ ...GStyles.centerAlign, width: 50, height: '100%' }}
+      >
+        <Image
+          source={LEFT_TYPES[leftType].image}
+          style={
+            leftType == 'logo'
+              ? {
+                  width: 24,
+                  height: 26,
+                  resizeMode: 'contain',
+                }
+              : {
+                  width: 18,
+                  height: 18,
+                  resizeMode: 'contain',
+                }
+          }
+        />
+      </TouchableOpacity>
+    );
   };
 
   _renderRightPart = () => {
-    const {rightType} = this.props;
+    const { rightType } = this.props;
     if (this.props.hasOwnProperty('onPressRightButton')) {
       return (
         <TouchableOpacity
@@ -169,14 +173,16 @@ class GHeaderBar extends React.Component {
             if (this.props.onPressLeftButton) {
               this.props.onPressRightButton();
             }
-          }}>
+          }}
+        >
           {RIGHT_TYPES[rightType].isText ? (
             <Text
               style={{
                 color: GStyle.activeColor,
                 fontFamily: 'GothamPro-Medium',
                 fontSize: 14,
-              }}>
+              }}
+            >
               {RIGHT_TYPES[rightType].text}
             </Text>
           ) : (
@@ -199,7 +205,7 @@ class GHeaderBar extends React.Component {
         </View>
       );
     }
-    return <View style={{flex: 1}} />;
+    return <View style={{ flex: 1 }} />;
   };
 }
 

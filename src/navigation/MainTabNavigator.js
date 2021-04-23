@@ -154,7 +154,7 @@ class MainTabNavigator extends Component {
             tabBarIcon: ({ color, size }) => (
               <Image
                 source={ic_tab_play}
-                style={[styles.tabIconImage, { tintColor: color }]}
+                style={styles.tabIconImage}
               />
             ),
             tabBarVisible: curTabName !== 'profile_other',
@@ -188,7 +188,7 @@ class MainTabNavigator extends Component {
             tabBarIcon: ({ color, size }) => (
               <Image
                 source={ic_tab_liveStream}
-                style={[styles.tabIconImage, { width: 36, tintColor: color }]}
+                style={styles.tabIconImage}
               />
             ),
             tabBarBadge: unreadCount,

@@ -1,33 +1,26 @@
 import React from 'react';
 import {
   Alert,
-  BackHandler,
-  Button,
-  Dimensions,
   Image,
   Linking,
   NativeEventEmitter,
-  PermissionsAndroid,
   Platform,
   SafeAreaView,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
+import { connect } from 'react-redux';
 
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import ModalSelector from '../../lib/ModalSelector/index';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchCamera } from 'react-native-image-picker';
 
 import { TextField } from '../../lib/MaterialTextField/index';
 import {
   GStyle,
   GStyles,
-  Global,
   Helper,
   Constants,
   RestAPI,
@@ -36,10 +29,8 @@ import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import VideoUpload from '../../utils/NativeModule/NativePackage';
 import avatars from '../../assets/avatars';
+import { setMyUserAction } from '../../redux/me/actions';
 
-const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
-const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
 
 class ProfileEditScreen extends React.Component {
   constructor(props) {
@@ -80,12 +71,12 @@ class ProfileEditScreen extends React.Component {
 
   init = () => {
     console.log(global.me);
+    const { user } = this.props;
     this.state = {
-      secureTextEntry: global.debug ? false : true,
-      userName: global.me.username,
-      phoneNumber: global.me.phone,
+      secureTextEntry: !global.debug,
+      userName: user.username,
+      phoneNumber: user.phone,
       password: '',
-      profilePhotoUri: global.me.photo,
       profilePhotoSelSource: null,
       profilePhotoSelPath: '',
       photo: null,
@@ -268,7 +259,8 @@ class ProfileEditScreen extends React.Component {
           error(Constants.ERROR_TITLE, 'Failed to update your profile');
         } else {
           if (json.status === 200) {
-            global.me = json.data;
+            global.me = json.data || {};
+            this.props.setMyUserAction(json.data || {});
             success(Constants.SUCCESS_TITLE, 'Success to update your profile');
           } else {
             error(Constants.ERROR_TITLE, 'Failed to update your profile');
@@ -310,7 +302,6 @@ class ProfileEditScreen extends React.Component {
           this.setState({
             profilePhotoSelSource: source,
             profilePhotoSelPath: response.path,
-            //profilePhotoSelPath: response.uri,
             photo: null,
           });
         }
@@ -333,7 +324,6 @@ class ProfileEditScreen extends React.Component {
   };
 
   render() {
-    let index = 0;
     return (
       <>
         <SafeAreaView style={GStyles.container}>
@@ -363,32 +353,21 @@ class ProfileEditScreen extends React.Component {
   };
 
   _renderAvartar = () => {
-    const { profilePhotoUri, profilePhotoSelSource } = this.state;
-    const isProfilePhotoSelected = !!profilePhotoSelSource;
-    const image = isProfilePhotoSelected
+    const { profilePhotoSelSource } = this.state;
+    const { user } = this.props;
+
+    const randomNumber = Math.floor(Math.random() * avatars.length);
+    const randomImageUrl = avatars[randomNumber];
+    const avatarImage = !!profilePhotoSelSource
       ? profilePhotoSelSource
-      : profilePhotoUri
-      ? { uri: profilePhotoUri }
-      : img_default_avatar;
+      : {
+          uri: user?.photo ?? randomImageUrl,
+        };
+
     return (
       <View style={{ alignItems: 'center', marginTop: 50 }}>
         <TouchableOpacity onPress={this.onPressProfilePhoto}>
-          <Image
-            source={img_default_avatar}
-            style={{
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              width: 106,
-              height: 106,
-            }}
-          />
-          <Avatar
-            image={image}
-            size={106}
-            // borderRadius={53}
-            // borderWidth={2}
-          />
+          <Avatar image={avatarImage} size={106} />
         </TouchableOpacity>
         <TouchableOpacity onPress={this.onPressProfilePhoto}>
           <Text
@@ -552,4 +531,9 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ProfileEditScreen;
+export default connect(
+  (state) => ({
+    user: state.me.user,
+  }),
+  { setMyUserAction },
+)(ProfileEditScreen);

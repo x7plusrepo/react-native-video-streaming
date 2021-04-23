@@ -56,7 +56,6 @@ class HomeMainScreen extends React.Component {
       totalCount: 0,
 
       searchText: '',
-      itemDatas: [],
     };
 
     this._isMounted = false;

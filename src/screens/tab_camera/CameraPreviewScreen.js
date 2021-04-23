@@ -153,7 +153,6 @@ class CameraPreviewScreen extends Component {
           playInBackground={false}
           onReadyForDisplay={this.onVideoReadyForDisplay}
           onBuffer={this.onVideoBuffer}
-          onError={this.onVideoError}
           onLoad={this.onVideoLoad}
           onProgress={this.onVideoProgress}
           style={{

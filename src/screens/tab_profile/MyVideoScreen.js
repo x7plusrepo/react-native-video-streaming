@@ -1,15 +1,33 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import {NavigationContext, StackActions, useNavigation, useRoute} from '@react-navigation/native';
+import {
+  NavigationContext,
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 
-import {connect} from 'react-redux';
-import {setMyPostCount} from '../../redux/me/actions';
+import { connect } from 'react-redux';
+import { setMyPostCount } from '../../redux/me/actions';
 import FastImage from 'react-native-fast-image';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global/index';
+import {
+  Constants,
+  GStyle,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global/index';
+import GHeaderBar from '../../components/GHeaderBar';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 3;
@@ -132,45 +150,47 @@ class MyVideoScreen extends React.Component {
   };
 
   render() {
-    const { itemDatas } = this.state;
-
+    const { navigation } = this.props;
     return (
-      <>
-        <View style={{ ...GStyles.centerAlign }}>
-          <View
-            style={{
-              width: '88%',
-              height: '100%',
+      <SafeAreaView style={GStyles.container}>
+        <GHeaderBar
+          headerTitle="My Posts"
+          leftType="back"
+          navigation={navigation}
+        />
+        <View
+          style={{
+            width: '88%',
+            height: '100%',
+          }}
+        >
+          {this._renderVideo()}
+
+          <RBSheet
+            ref={(ref) => {
+              this.bottomMenu = ref;
+            }}
+            height={200}
+            closeOnDragDown
+            openDuration={250}
+            customStyles={{
+              container: {
+                borderTopLeftRadius: 10,
+                borderTopRightRadius: 10,
+              },
             }}
           >
-            {this._renderVideo()}
-
-            <RBSheet
-              ref={(ref) => {
-                this.bottomMenu = ref;
-              }}
-              height={200}
-              closeOnDragDown
-              openDuration={250}
-              customStyles={{
-                container: {
-                  borderTopLeftRadius: 10,
-                  borderTopRightRadius: 10,
-                },
+            <View
+              style={{
+                ...GStyles.rowContainer,
+                justifyContent: 'space-around',
               }}
             >
-              <View
-                style={{
-                  ...GStyles.rowContainer,
-                  justifyContent: 'space-around',
-                }}
-              >
-                {this._renderBottomMenu()}
-              </View>
-            </RBSheet>
-          </View>
+              {this._renderBottomMenu()}
+            </View>
+          </RBSheet>
         </View>
-      </>
+      </SafeAreaView>
     );
   }
 
@@ -328,11 +348,9 @@ const styles = StyleSheet.create({
 const TProfileMyVideoScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
-  return (
-    <MyVideoScreen {...props} navigation={navigation} route={route} />
-  );
+  return <MyVideoScreen {...props} navigation={navigation} route={route} />;
 };
 
-export default connect((state) => ({}), {setMyPostCount})(
+export default connect((state) => ({}), { setMyPostCount })(
   TProfileMyVideoScreen,
 );

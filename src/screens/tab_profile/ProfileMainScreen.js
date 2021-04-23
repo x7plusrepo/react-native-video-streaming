@@ -28,13 +28,24 @@ import ic_menu_drafts from '../../assets/images/ic_menu_drafts.png';
 import ic_tab_top from '../../assets/images/ic_tab_top.png';
 import ic_menu_downloads from '../../assets/images/ic_menu_downloads.png';
 import ic_menu_saved_products from '../../assets/images/ic_menu_saved_products.png';
+import ic_menu_my_posts from '../../assets/images/ic_menu_my_posts.png';
 
-const getMenuItems = () => {
-  return [
+const getMenuItems = (navigation) => {
+  let menu = [
     {
       icon: ic_menu_goLive,
       title: 'Go Live',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('go_live');
+      },
+    },
+    {
+      icon: ic_menu_goLive,
+      title: 'Upload Products',
+      onPress: () => {
+        global._prevScreen = 'profile';
+        navigation.navigate('camera_main');
+      },
     },
     {
       icon: ic_tab_play,
@@ -59,7 +70,9 @@ const getMenuItems = () => {
     {
       icon: ic_menu_drafts,
       title: 'Drafts',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('camera_draft');
+      },
     },
     {
       icon: ic_tab_top,
@@ -69,9 +82,46 @@ const getMenuItems = () => {
     {
       icon: ic_menu_saved_products,
       title: 'Saved Products',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('saved_products');
+      },
+    },
+    {
+      icon: ic_menu_my_posts,
+      title: 'My Posts',
+      onPress: () => {
+        navigation.navigate('my_posts');
+      },
+    },
+    {
+      icon: ic_menu_my_posts,
+      title: 'Customer Support',
+      onPress: () => {
+        global._roomId = '1';
+        global._opponentName = 'Stars';
+        navigation.navigate('message_chat');
+      },
     },
   ];
+
+  menu.push(
+    global.me.isGuest
+      ? {
+          icon: ic_menu_my_posts,
+          title: 'Sign In',
+          onPress: () => {
+            global._prevScreen = 'profile_edit';
+            navigation.navigate('signin');
+          },
+        }
+      : {
+          icon: ic_menu_my_posts,
+          title: 'Sign Out',
+          onPress: () => {},
+        },
+  );
+
+  return menu;
 };
 
 const WINDOW_HEIGHT = Helper.getWindowHeight();
@@ -150,28 +200,8 @@ class ProfileMainScreen extends React.Component {
     this.props.navigation.navigate('profile_edit');
   };
 
-  onPressSignin = () => {
-    global._prevScreen = 'profile_edit';
-    this.props.navigation.navigate('signin');
-  };
-
-  onPressCamera = () => {
-    // global._prevScreen = 'profile_edit';
-    this.props.navigation.navigate('camera_main');
-  };
-
-  onPressCustomerSupport = () => {
-    global._roomId = '1';
-    global._opponentName = 'Stars';
-    this.props.navigation.navigate('message_chat');
-  };
-
-  onPressDraft = () => {
-    this.props.navigation.navigate('camera_draft');
-  };
-
   render() {
-    const { user } = this.props;
+    const { user, navigation } = this.props;
     const randomNumber = Math.floor(Math.random() * avatars.length);
     const randomImageUrl = avatars[randomNumber];
     const avatarImage = {
@@ -260,8 +290,12 @@ class ProfileMainScreen extends React.Component {
             )}
           >
             <View style={styles.menuContainer}>
-              {getMenuItems().map((menu, index) => (
-                <TouchableOpacity style={styles.menuItem}>
+              {getMenuItems(navigation).map((menu, index) => (
+                <TouchableOpacity
+                  style={styles.menuItem}
+                  onPress={menu.onPress}
+                  key={index.toString()}
+                >
                   <Image source={menu.icon} style={styles.menuIcon} />
 
                   <View style={styles.menuRight}>
@@ -355,8 +389,6 @@ const TProfileMainScreen = (props) => {
 
 export default connect(
   (state) => ({
-    savedCount: state.me.savedCount,
-    myPostCount: state.me.myPostCount,
     user: state.me.user,
   }),
   { setMyUserAction },

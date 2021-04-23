@@ -22,16 +22,9 @@ import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scr
 import ProgressBar from '../../lib/Progress/Bar';
 import { Button, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { createThumbnail } from 'react-native-create-thumbnail';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import ModalSelector from '../../lib/ModalSelector/index';
-import ImagePicker from 'react-native-image-picker';
 import TagInput from '../../lib/react-native-tag-input/index';
 import VideoUpload from '../../utils/NativeModule/NativePackage';
 import RNFS from 'react-native-fs';
-
-import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import AntDesign from 'react-native-vector-icons/MaterialIcons';
-import Feather from 'react-native-vector-icons/MaterialIcons';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import { TextField } from '../../lib/MaterialTextField/index';

@@ -24,9 +24,12 @@ import ProfileEditScreen from '../screens/tab_profile/ProfileEditScreen';
 import ProfileVideoScreen from '../screens/tab_profile/ProfileVideoScreen';
 import ProfileOtherScreen from '../screens/tab_profile/ProfileOtherScreen';
 import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
-
-import { GStyle, GStyles, Global, Helper } from '../utils/Global/index';
 import SavedProductsScreen from '../screens/tab_profile/SavedProductsScreen';
+import MyVideoScreen from '../screens/tab_profile/MyVideoScreen';
+import GoLive from '../screens/go_live/GoLive';
+import ViewLive from '../screens/view_live';
+
+import { Helper } from '../utils/Global/index';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';
 // import WorkScreen from '../screens/auth/FCAccountStep1Screen';
@@ -90,7 +93,9 @@ export default function App() {
         />
         <Stack.Screen name="profile_other" component={ProfileOtherScreen} />
         <Stack.Screen name="saved_products" component={SavedProductsScreen} />
-        <Stack.Screen name="my_posts" component={SavedProductsScreen} />
+        <Stack.Screen name="my_posts" component={MyVideoScreen} />
+        <Stack.Screen name="go_live" component={GoLive} />
+        <Stack.Screen name="view_live" component={ViewLive} />
       </Stack.Navigator>
     </NavigationContainer>
   );

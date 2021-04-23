@@ -2,9 +2,10 @@ import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
+import GStyle from '../../utils/Global/Styles';
+
 const ic_mini_call = require('../../assets/images/ic_mini_call.png');
 const ic_mini_chat = require('../../assets/images/ic_mini_chat.png');
-
 const Avatar = ({
   image,
   size,
@@ -106,6 +107,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     borderRadius: 56,
     overflow: 'hidden',
+    backgroundColor: GStyle.lineColor,
   },
 });
 

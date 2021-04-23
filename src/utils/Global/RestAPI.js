@@ -136,6 +136,16 @@ const RestAPI = {
     formDataCall('api/productChat/roomList', data, {}, callBack, 'get');
   },
 
+  get_liveStream_list: (params, callBack) => {
+    const data = {
+      userId: params.user_id,
+      page: params.page_number,
+      amount: params.count_per_page,
+    };
+
+    formDataCall('api/liveStream', data, {}, callBack, 'get');
+  },
+
   get_unread_count: (params, callBack) => {
     const data = {
       userId: params.user_id,
@@ -212,7 +222,7 @@ const RestAPI = {
   },
 
   update_video_view: (params, callBack) => {
-    console.log(params)
+    console.log(params);
     const data = {
       videoId: params.video_id,
       ownerId: params.owner_id,
