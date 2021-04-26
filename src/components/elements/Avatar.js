@@ -4,8 +4,8 @@ import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
 import FastImage from 'react-native-fast-image';
 import GStyle from '../../utils/Global/Styles';
 
-const ic_mini_call = require('../../assets/images/ic_mini_call.png');
-const ic_mini_chat = require('../../assets/images/ic_mini_chat.png');
+const ic_mini_call = require('../../assets/images/Icons/ic_mini_call.png');
+const ic_mini_chat = require('../../assets/images/Icons/ic_mini_chat.png');
 const Avatar = ({
   image,
   size,

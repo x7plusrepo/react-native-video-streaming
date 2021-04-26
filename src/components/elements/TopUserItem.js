@@ -11,7 +11,7 @@ import {
 } from '../../utils/Global/index';
 import Avatar from './Avatar';
 
-const ic_favorite = require('../../assets/images/ic_favorite.png');
+const ic_favorite = require('../../assets/images/Icons/ic_favorite.png');
 
 const TopUserItem = ({index, item, onPress}) =>{
   console.log(item)

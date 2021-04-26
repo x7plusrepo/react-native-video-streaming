@@ -15,9 +15,8 @@ import {
   View,
 } from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
 import SplashScreen from 'react-native-splash-screen';
-
+import { connect } from 'react-redux';
 import convertToProxyURL from 'react-native-video-cache';
 import Share, { ShareSheet } from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
@@ -32,6 +31,8 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
 import Video from 'react-native-video';
+import { setMyUserAction } from '../../redux/me/actions';
+
 import Avatar from '../../components/elements/Avatar';
 import ProgressModal from '../../components/ProgressModal';
 
@@ -44,9 +45,14 @@ import {
   RestAPI,
 } from '../../utils/Global/index';
 
-const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
-const ic_favorite = require('../../assets/images/ic_favorite.png');
-const ic_message = require('../../assets/images/ic_message.png');
+import avatars from '../../assets/avatars';
+const randomNumber = Math.floor(Math.random() * avatars.length);
+const randomImageUrl = avatars[randomNumber];
+
+const ic_eye = require('../../assets/images/Icons/ic_eye.png');
+const ic_menu_saved_products = require('../../assets/images/Icons/ic_menu_saved_products.png');
+const ic_menu_messages = require('../../assets/images/Icons/ic_menu_messages.png');
+const ic_share = require('../../assets/images/Icons/ic_share.png');
 
 const WINDOW_HEIGHT = Helper.getWindowHeight();
 const STATUS_BAR_HEIGHT = Helper.getStatusBarHeight();
@@ -197,13 +203,15 @@ class PlayMainScreen extends Component {
             } else {
               this.setState({ itemDatas: json.data.videoList });
               if (!global.me) {
-                global.me = json.data.loginResult.user;
+                global.me = json.data.loginResult.user || {};
 
                 if (global.me.username.indexOf('guest_') > -1) {
                   global.me.isGuest = true;
                 } else {
                   global.me.isGuest = false;
                 }
+
+                this.props.setMyUserAction(global.me);
 
                 Helper.callFunc(global.onSetUnreadCount);
                 Global.registerPushToken();
@@ -344,7 +352,7 @@ class PlayMainScreen extends Component {
 
   onPressShare = (item) => {
     if (global.me) {
-      this.setState({ item })
+      this.setState({ item });
       this.Scrollable.open();
     } else {
       this.props.navigation.navigate('signin');
@@ -452,7 +460,7 @@ class PlayMainScreen extends Component {
 
   onDownloadVideo = async () => {
     this.Scrollable.close();
-    const item = this.state.item || {}
+    const item = this.state.item || {};
     const user = item?.userId || {};
 
     if (!global.me) {
@@ -593,7 +601,7 @@ class PlayMainScreen extends Component {
   };
 
   _renderItem = ({ item, index }) => {
-    const { isVideoLoading, isVideoPause } = this.state;
+    const { isVideoPause } = this.state;
     const paused = isVideoPause || this.state.curIndex !== index;
     const user = item.userId || {};
     if (Math.abs(this.state.curIndex - index) > 2) {
@@ -660,214 +668,113 @@ class PlayMainScreen extends Component {
               backgroundColor: 'black',
             }}
           />
-          {isVideoLoading === 'loading' && ( // TODO - review later
-            <View
-              style={{
-                marginTop: 16,
-                height: '100%',
-                alignSelf: 'center',
-                position: 'absolute',
-                justifyContent: 'center',
-                alignItems: 'center',
-              }}
-            >
-              <ActivityIndicator size="large" color="lightgray" />
+          <View style={GStyles.playInfoWrapper}>
+            <View>
+              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+                <View style={GStyles.rowContainer}>
+                  <View style={GStyles.playInfoTextWrapper}>
+                    <Text style={GStyles.playInfoText}>৳{item.price}</Text>
+                  </View>
+                  {!!item.sticker && (
+                    <View
+                      style={[GStyles.playInfoTextWrapper, { marginLeft: 4 }]}
+                    >
+                      <Text style={GStyles.playInfoText}>
+                        {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+                <View style={GStyles.playInfoTextWrapper}>
+                  <Text style={GStyles.playInfoText}>lorem ipsum</Text>
+                </View>
+              </View>
+              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+                <View style={GStyles.playInfoTextWrapper}>
+                  <Text numberOfLines={3} style={GStyles.playInfoText}>
+                    {newTagList}
+                  </Text>
+                </View>
+
+                <View style={GStyles.playInfoTextWrapper}>
+                  <Text style={GStyles.playInfoText}>#{item.number}</Text>
+                </View>
+              </View>
+              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+                {!!item?.description ? (
+                  <View style={GStyles.playInfoTextWrapper}>
+                    <Text numberOfLines={5} style={GStyles.playInfoText}>
+                      {item.description}
+                    </Text>
+                  </View>
+                ) : (
+                  <View />
+                )}
+
+                <View style={GStyles.centerAlign}>
+                  <Avatar
+                    image={{
+                      uri: user.photo ? user.photo : randomImageUrl,
+                    }}
+                    size={48}
+                    onPress={() => {
+                      this.onPressAvatar(item);
+                    }}
+                    containerStyle={{ marginBottom: 4 }}
+                  />
+                  <Text style={GStyles.textSmall}>{user.username}</Text>
+                </View>
+              </View>
             </View>
-          )}
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 50,
-              right: 12,
-              alignItems: 'flex-end',
-              zIndex: 100,
-            }}
-          >
-            <View style={{ alignItems: 'center' }}>
+
+            <View style={GStyles.rowEndContainer}>
+              <View style={GStyles.videoActionButton}>
+                <Image
+                  source={ic_eye}
+                  style={{
+                    ...GStyles.videoActionIcon,
+                    tintColor: isLike ? GStyle.redColor : 'white',
+                  }}
+                />
+                <Text style={GStyles.textSmall}>{100}</Text>
+              </View>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressLike(!isLike, item);
                 }}
+                style={GStyles.videoActionButton}
               >
                 <Image
-                  source={ic_favorite}
+                  source={ic_menu_saved_products}
                   style={{
-                    ...GStyles.image,
-                    width: 32,
-                    tintColor: isLike ? GStyle.redColor : GStyle.activeColor,
+                    ...GStyles.videoActionIcon,
+                    tintColor: isLike ? GStyle.redColor : 'white',
                   }}
                 />
+                <Text style={GStyles.textSmall}>{item.likeCount}k</Text>
               </TouchableOpacity>
-              <Text
-                style={{
-                  ...GStyles.regularText,
-                  color: 'white',
-                  // backgroundColor: 'white',
-                  marginTop: 2,
-                  paddingTop: 2,
-                  paddingBottom: 1,
-                  paddingHorizontal: 2,
-                }}
-              >
-                {item.likeCount}
-              </Text>
+
               <TouchableOpacity
                 onPress={() => {
                   this.onPressMessage(item);
                 }}
-                style={{ marginTop: 18 }}
+                style={GStyles.videoActionButton}
               >
                 <Image
-                  source={ic_message}
-                  style={{
-                    ...GStyles.image,
-                    width: 32,
-                    tintColor: GStyle.activeColor,
-                  }}
+                  source={ic_menu_messages}
+                  style={GStyles.videoActionIcon}
                 />
+                <Text style={GStyles.textSmall}>Chat</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
                   this.onPressShare(item);
                 }}
-                style={{ marginTop: 32 }}
+                style={GStyles.videoActionButton}
               >
-                <FontAwesome
-                  name="share"
-                  style={{ fontSize: 30, color: GStyle.activeColor }}
-                />
+                <Image source={ic_share} style={GStyles.videoActionIcon} />
+                <Text style={GStyles.textSmall}>Share</Text>
               </TouchableOpacity>
-              <View
-                style={{
-                  alignItems: 'center',
-                  marginTop: 128,
-                  marginBottom: 12,
-                }}
-              >
-                <Text
-                  style={{
-                    ...GStyles.regularText,
-                    color: 'black',
-                    backgroundColor: 'white',
-                    marginTop: 2,
-                    paddingTop: 2,
-                    paddingBottom: 1,
-                    paddingHorizontal: 2,
-                  }}
-                >
-                  {item.left_days} days left
-                </Text>
-                <Text
-                  style={{
-                    ...GStyles.regularText,
-                    color: 'black',
-                    backgroundColor: 'white',
-                    marginTop: 4,
-                    paddingVertical: 2,
-                    paddingHorizontal: 4,
-                  }}
-                >
-                  #{item.number}
-                </Text>
-                <Avatar
-                  image={{
-                    uri: user.photo ? user.photo : img_default_avatar,
-                  }}
-                  size={48}
-                  // borderRadius={29}
-                  // borderWidth={1}
-                  onPress={() => {
-                    this.onPressAvatar(item);
-                  }}
-                  containerStyle={{ marginTop: 4 }}
-                />
-                <Text
-                  style={{
-                    ...GStyles.regularText,
-                    maxWidth: 80,
-                    color: 'white',
-                  }}
-                >
-                  {user.username}
-                </Text>
-              </View>
-            </View>
-          </View>
-          <View
-            style={{
-              position: 'absolute',
-              bottom: 62,
-              left: 12,
-              justifyContent: 'flex-end',
-            }}
-          >
-            <View
-              style={{
-                alignItems: 'flex-start',
-                marginTop: 128,
-                marginBottom: 12,
-              }}
-            >
-              <View
-                style={{ ...GStyles.rowContainer, justifyContent: 'center' }}
-              >
-                <Text
-                  style={{
-                    ...GStyles.mediumText,
-                    color: 'black',
-                    backgroundColor: 'white',
-                    padding: 2,
-                    paddingBottom: 1,
-                  }}
-                >
-                  ৳{item.price}
-                </Text>
-                <Text
-                  style={{
-                    ...GStyles.regularText,
-                    color: 'black',
-                    backgroundColor: item.sticker > 0 ? 'white' : 'transparent',
-                    marginLeft: 8,
-                    paddingVertical: 2,
-                    paddingHorizontal: 4,
-                  }}
-                >
-                  {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
-                </Text>
-                <View style={{ flex: 1 }} />
-              </View>
-              <Text
-                numberOfLines={3}
-                style={{
-                  ...GStyles.mediumText,
-                  lineHeight: 18,
-                  color: 'black',
-                  backgroundColor:
-                    newTagList.length > 0 ? 'white' : 'transparent',
-                  marginTop: 8,
-                  padding: 2,
-                  paddingBottom: 1,
-                }}
-              >
-                {newTagList}
-              </Text>
-              <Text
-                numberOfLines={5}
-                style={{
-                  ...GStyles.mediumText,
-                  maxWidth: '80%',
-                  lineHeight: 18,
-                  color: 'black',
-                  backgroundColor:
-                    item.description.length > 0 ? 'white' : 'transparent',
-                  marginTop: 8,
-                  paddingTop: 2,
-                  paddingBottom: 1,
-                  paddingHorizontal: 2,
-                }}
-              >
-                {item.description}
-              </Text>
             </View>
           </View>
         </View>
@@ -882,7 +789,7 @@ class PlayMainScreen extends Component {
           ref={(ref) => {
             this.Scrollable = ref;
           }}
-          height={180}
+          //height={180}
           closeOnDragDown
           openDuration={250}
           customStyles={{
@@ -1052,8 +959,9 @@ class PlayMainScreen extends Component {
 
 const styles = StyleSheet.create({});
 
-export default function (props) {
-  let navigation = useNavigation();
-  let route = useRoute();
-  return <PlayMainScreen {...props} navigation={navigation} route={route} />;
-}
+export default connect(
+  (state) => ({
+    user: state.me.user,
+  }),
+  { setMyUserAction },
+)(PlayMainScreen);

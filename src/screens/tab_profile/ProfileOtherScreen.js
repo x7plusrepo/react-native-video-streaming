@@ -36,9 +36,9 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 
-const ic_like = require('../../assets/images/ic_like.png');
-const ic_dislike = require('../../assets/images/ic_dislike.png');
-const ic_favorite = require('../../assets/images/ic_favorite.png');
+const ic_like = require('../../assets/images/Icons/ic_like.png');
+const ic_dislike = require('../../assets/images/Icons/ic_dislike.png');
+const ic_favorite = require('../../assets/images/Icons/ic_favorite.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 2;

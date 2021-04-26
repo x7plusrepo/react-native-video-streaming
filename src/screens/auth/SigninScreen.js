@@ -29,8 +29,8 @@ import {
 } from 'react-native';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import {TextField} from '../../lib/MaterialTextField/index';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import { TextField } from '../../lib/MaterialTextField/index';
 
 import {
   GStyle,
@@ -42,11 +42,13 @@ import {
 } from '../../utils/Global/index';
 
 import GHeaderBar from '../../components/GHeaderBar';
+import { connect } from 'react-redux';
+import { setMyUserAction } from '../../redux/me/actions';
 
-const image_logo = require('../../assets/images/ic_logo.png');
-const image_google = require('../../assets/images/ic_google.png');
-const image_facebook = require('../../assets/images/ic_facebook.png');
-const image_twitter = require('../../assets/images/ic_twitter.png');
+const image_logo = require('../../assets/images/Icons/ic_logo.png');
+const image_google = require('../../assets/images/Icons/ic_google.png');
+const image_facebook = require('../../assets/images/Icons/ic_facebook.png');
+const image_twitter = require('../../assets/images/Icons/ic_twitter.png');
 
 class SigninScreen extends React.Component {
   constructor(props) {
@@ -87,7 +89,7 @@ class SigninScreen extends React.Component {
             onPress: () => null,
             style: 'cancel',
           },
-          {text: 'YES', onPress: () => BackHandler.exitApp()},
+          { text: 'YES', onPress: () => BackHandler.exitApp() },
         ]);
         return true;
       } else {
@@ -108,7 +110,7 @@ class SigninScreen extends React.Component {
   };
 
   onFocus = () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     for (let name in errors) {
       let ref = this[name];
@@ -118,15 +120,15 @@ class SigninScreen extends React.Component {
       }
     }
 
-    this.setState({errors});
+    this.setState({ errors });
   };
 
   onChangeText = (text) => {
     ['userName', 'password']
-      .map((name) => ({name, ref: this[name]}))
-      .forEach(({name, ref}) => {
+      .map((name) => ({ name, ref: this[name] }))
+      .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
-          this.setState({[name]: text});
+          this.setState({ [name]: text });
         }
       });
   };
@@ -140,11 +142,13 @@ class SigninScreen extends React.Component {
   };
 
   onAccessoryPress = () => {
-    this.setState(({secureTextEntry}) => ({secureTextEntry: !secureTextEntry}));
+    this.setState(({ secureTextEntry }) => ({
+      secureTextEntry: !secureTextEntry,
+    }));
   };
 
   renderPasswordAccessory = () => {
-    let {secureTextEntry} = this.state;
+    let { secureTextEntry } = this.state;
 
     let name = secureTextEntry ? 'visibility' : 'visibility-off';
 
@@ -169,7 +173,7 @@ class SigninScreen extends React.Component {
   };
 
   onSubmit = async () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     ['userName', 'password'].forEach((name) => {
       let value = this[name].value();
@@ -188,11 +192,11 @@ class SigninScreen extends React.Component {
       }
     });
 
-    this.setState({errors});
+    this.setState({ errors });
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      const {userName, password} = this.state;
+      const { userName, password } = this.state;
 
       await Helper.setLocalValue(Constants.KEY_USERNAME, userName);
       await Helper.setLocalValue(Constants.KEY_PASSWORD, password);
@@ -209,8 +213,10 @@ class SigninScreen extends React.Component {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 200) {
-            const user = json.data?.user || {}
+            const user = json.data?.user || {};
             global.me = user;
+            global.me.isGuest = false;
+            this.props.setMyUserAction(global.me);
 
             params = {
               user_id: user.id,
@@ -253,7 +259,8 @@ class SigninScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderTitle()}
             {this._renderInput()}
             {this._renderButton()}
@@ -280,12 +287,12 @@ class SigninScreen extends React.Component {
       <>
         <Image
           source={image_logo}
-          style={[GStyles.image, {width: 54, marginTop: 40}]}
+          style={[GStyles.image, { width: 54, marginTop: 40 }]}
         />
-        <Text style={[GStyles.titleText, {fontSize: 30, lineHeight: 36}]}>
+        <Text style={[GStyles.titleText, { fontSize: 30, lineHeight: 36 }]}>
           Welcome back!
         </Text>
-        <Text style={{...GStyles.titleDescription}}>
+        <Text style={{ ...GStyles.titleDescription }}>
           Login to manage your account
         </Text>
       </>
@@ -293,7 +300,7 @@ class SigninScreen extends React.Component {
   };
 
   _renderInput = () => {
-    let {userName, password, errors = {}, secureTextEntry} = this.state;
+    let { userName, password, errors = {}, secureTextEntry } = this.state;
 
     return (
       <>
@@ -310,7 +317,7 @@ class SigninScreen extends React.Component {
           label="Phone Number"
           value={userName}
           error={errors.userName}
-          containerStyle={{marginTop: 24}}
+          containerStyle={{ marginTop: 24 }}
         />
         <TextField
           ref={this.passwordRef}
@@ -329,7 +336,7 @@ class SigninScreen extends React.Component {
           error={errors.password}
           renderRightAccessory={this.renderPasswordAccessory}
           maxLength={4}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
       </>
     );
@@ -337,7 +344,7 @@ class SigninScreen extends React.Component {
 
   _renderButton = () => {
     return (
-      <View style={{marginVertical: 50}}>
+      <View style={{ marginVertical: 50 }}>
         <TouchableOpacity onPress={this.onSubmit}>
           <View style={GStyles.buttonFill}>
             <Text style={GStyles.textFill}>Log In</Text>
@@ -349,39 +356,46 @@ class SigninScreen extends React.Component {
 
   ___renderSocial = () => {
     return (
-      <View style={{marginTop: 32}}>
+      <View style={{ marginTop: 32 }}>
         <Text
           style={[
             GStyles.regularText,
-            {fontSize: 14, color: GStyle.grayColor, marginVertical: 10},
-          ]}>
+            { fontSize: 14, color: GStyle.grayColor, marginVertical: 10 },
+          ]}
+        >
           Or Sign in with
         </Text>
-        <View style={[GStyles.rowContainer, {marginTop: 20}]}>
+        <View style={[GStyles.rowContainer, { marginTop: 20 }]}>
           <TouchableOpacity
             onPress={() => {
               Alert.alert('Google Login is clicked.');
-            }}>
-            <Image source={image_google} style={[GStyles.image, {width: 45}]} />
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={{marginLeft: 15}}
-            onPress={() => {
-              Alert.alert('Facebook Login is clicked.');
-            }}>
+            }}
+          >
             <Image
-              source={image_facebook}
-              style={[GStyles.image, {width: 45}]}
+              source={image_google}
+              style={[GStyles.image, { width: 45 }]}
             />
           </TouchableOpacity>
           <TouchableOpacity
-            style={{marginLeft: 15}}
+            style={{ marginLeft: 15 }}
+            onPress={() => {
+              Alert.alert('Facebook Login is clicked.');
+            }}
+          >
+            <Image
+              source={image_facebook}
+              style={[GStyles.image, { width: 45 }]}
+            />
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={{ marginLeft: 15 }}
             onPress={() => {
               Alert.alert('Twitter Login is clicked.');
-            }}>
+            }}
+          >
             <Image
               source={image_twitter}
-              style={[GStyles.image, {width: 45}]}
+              style={[GStyles.image, { width: 45 }]}
             />
           </TouchableOpacity>
         </View>
@@ -391,13 +405,14 @@ class SigninScreen extends React.Component {
 
   ___renderBottom = () => {
     return (
-      <View style={[GStyles.rowContainer, {marginBottom: 10}]}>
+      <View style={[GStyles.rowContainer, { marginBottom: 10 }]}>
         <Text
           style={{
             fontFamily: 'GothamPro',
             color: GStyle.grayColor,
             fontSize: 13,
-          }}>
+          }}
+        >
           Don`t have an account?
         </Text>
         <TouchableOpacity onPress={this.onSignup}>
@@ -407,7 +422,8 @@ class SigninScreen extends React.Component {
               fontSize: 13,
               color: GStyle.linkColor,
               paddingLeft: 5,
-            }}>
+            }}
+          >
             Sign up
           </Text>
         </TouchableOpacity>
@@ -418,4 +434,9 @@ class SigninScreen extends React.Component {
 
 const styles = StyleSheet.create({});
 
-export default SigninScreen;
+export default connect(
+    (state) => ({
+      user: state.me.user,
+    }),
+    { setMyUserAction },
+)(SigninScreen);

@@ -4,8 +4,6 @@ const Constants = {
   //** key */
   PAY_STACK_PUB_KEY: 'pk_test_dbd30ba86e6fe5dd0cf839208fff9be36b36e260',
   MAP_API_KEY: 'AIzaSyDUNFhK6gsWN2V-A5E69R5e7vXQhLExrFw',
-  DEFAULT_CAR: require('../../assets/default_car_avatar.png'),
-  IMAGE_URL_PREFIX: 'https://pictostorage.s3.amazonaws.com/',
   GOOGLE_API_KEY: 'AIzaSyBYWssWxa3wRKMeazm2maDJnGNF0RRf0o8',
 
   //** local save key */
@@ -16,13 +14,13 @@ const Constants = {
   //** url */
   // crn_dev
   //HOST_URL: 'http://107.180.73.164:3000',
-  HOST_URL: 'http://192.168.1.110:3000',
-  CHAT_SOCKET_URL: 'http://192.168.1.110:3000/ChatStream',
+  HOST_URL: 'http://192.168.1.109:3000',
+  CHAT_SOCKET_URL: 'http://192.168.1.109:3000/ChatStream',
   //CHAT_SOCKET_URL: 'http://107.180.73.164:3000/ChatStream',
   //STREAM_SOCKET_URL: 'http://107.180.73.164:3000/LiveStream',
-  STREAM_SOCKET_URL: 'http://192.168.1.110:3000/LiveStream',
+  STREAM_SOCKET_URL: 'http://192.168.1.109:3000/LiveStream',
   //RTMP_SERVER: 'rtmp://107.180.73.164',
-  RTMP_SERVER: 'rtmp://192.168.1.110',
+  RTMP_SERVER: 'rtmp://192.168.1.109',
   GOOGLE_PLAY_URL:
     'https://play.google.com/store/apps/details?id=com.stars.android',
   APPSTORE_URL: 'https://apps.apple.com/us/app/stars/id1543058540',

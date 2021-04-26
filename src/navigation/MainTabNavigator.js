@@ -20,15 +20,16 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 import { setUnreadCount } from '../redux/message/actions';
 import avatars from '../assets/avatars';
+import { setMyUserAction } from '../redux/me/actions';
 
-const ic_tab_play = require('../assets/images/ic_tab_play.png');
-const ic_tab_home = require('../assets/images/ic_tab_home.png');
-const ic_tab_top = require('../assets/images/ic_tab_top.png');
-const ic_tab_liveStream = require('../assets/images/ic_tab_liveStream.png');
+const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
+const ic_tab_home = require('../assets/images/Icons/ic_tab_home.png');
+const ic_tab_top = require('../assets/images/Icons/ic_tab_top.png');
+const ic_tab_liveStream = require('../assets/images/Icons/ic_tab_liveStream.png');
 
 const Tab = createBottomTabNavigator();
 
-let BOTTOM_TAB_HEIGHT = 84 + Helper.getBottomBarHeight();
+let BOTTOM_TAB_HEIGHT = 50 + Helper.getBottomBarHeight();
 
 class MainTabNavigator extends Component {
   constructor(props) {
@@ -94,10 +95,9 @@ class MainTabNavigator extends Component {
         Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
-          global.me = json.data;
-
+          global.me = json.data || [];
           global.me.isGuest = global.me.username.indexOf('guest_') > -1;
-
+          this.props.setMyUserAction(global.me);
           Global.registerPushToken();
           this.props.navigation.navigate('message');
         } else {
@@ -152,10 +152,7 @@ class MainTabNavigator extends Component {
           options={{
             tabBarLabel: 'Play',
             tabBarIcon: ({ color, size }) => (
-              <Image
-                source={ic_tab_play}
-                style={styles.tabIconImage}
-              />
+              <Image source={ic_tab_play} style={styles.tabIconImage} />
             ),
             tabBarVisible: curTabName !== 'profile_other',
           }}
@@ -186,10 +183,7 @@ class MainTabNavigator extends Component {
           options={{
             tabBarLabel: 'LiveStream',
             tabBarIcon: ({ color, size }) => (
-              <Image
-                source={ic_tab_liveStream}
-                style={styles.tabIconImage}
-              />
+              <Image source={ic_tab_liveStream} style={styles.tabIconImage} />
             ),
             tabBarBadge: unreadCount,
             tabBarBadgeStyle: { backgroundColor: 'red' },
@@ -214,7 +208,12 @@ class MainTabNavigator extends Component {
               const randomImageUrl = avatars[randomNumber];
 
               const avatarImage = { uri: global?.me?.photo ?? randomImageUrl };
-              return <Image source={avatarImage} style={[styles.tabIconImage, styles.profileIcon]} />;
+              return (
+                <Image
+                  source={avatarImage}
+                  style={[styles.tabIconImage, styles.profileIcon]}
+                />
+              );
             },
           }}
           listeners={({ navigation, route }) => ({
@@ -236,7 +235,7 @@ export default connect(
   (state) => ({
     unreadCount: state.message.unreadCount,
   }),
-  { setUnreadCount },
+  { setUnreadCount, setMyUserAction },
 )(MainTabNavigator);
 
 const styles = StyleSheet.create({

@@ -1,44 +1,34 @@
 import { StyleSheet, Dimensions } from 'react-native';
+import {GStyles} from '../../../utils/Global/Styles';
 
 const { width: screenWidth } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   wrapListMessages: {
-    position: 'absolute',
-    bottom: 100,
-    left: 0,
-    right: 0,
     height: screenWidth / 1.5,
     width: screenWidth,
+    paddingHorizontal: 16,
     zIndex: 2,
   },
   chatItem: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    marginHorizontal: 15,
-    marginVertical: 5,
+    marginBottom: 8,
   },
   messageItem: {
     flexDirection: 'column',
-    marginHorizontal: 10,
-    backgroundColor: 'rgba(255, 255, 255, 0.4)',
-    paddingVertical: 8,
-    paddingHorizontal: 15,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    paddingVertical: 6,
+    paddingHorizontal: 12,
     borderRadius: 8,
   },
-  avatar: {
-    width: 45,
-    height: 45,
-  },
   name: {
-    fontSize: 15,
-    fontWeight: '600',
+    ...GStyles.liveStreamSender,
   },
   content: {
-    fontSize: 14,
-    fontWeight: '500',
     marginTop: 3,
+    ...GStyles.liveStreamChatText
   },
 });
 

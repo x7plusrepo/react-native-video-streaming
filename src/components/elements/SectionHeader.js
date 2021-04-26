@@ -1,18 +1,5 @@
 import React, {Component} from 'react';
 import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
-  LayoutAnimation,
-  ListView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Switch,
   Text,
@@ -30,15 +17,6 @@ import {
   RestAPI,
 } from '../../utils/Global/index';
 import CheckBox from '../../lib/Checkbox/index';
-
-const ic_mini_money = require('../../assets/images/ic_mini_money.png');
-const ic_star = require('../../assets/images/ic_star_active.png');
-const image_search = require('../../assets/images/ic_search.png');
-const img_avatar1 = require('../../assets/images/img_avatar1.png');
-const img_avatar2 = require('../../assets/images/img_avatar2.png');
-const img_avatar3 = require('../../assets/images/img_avatar3.png');
-const img_avatar4 = require('../../assets/images/img_avatar4.png');
-const img_avatar5 = require('../../assets/images/img_avatar5.png');
 
 export default SectionHeader = ({title, count, onPress}) => (
   <View style={styles.titleContainer}>

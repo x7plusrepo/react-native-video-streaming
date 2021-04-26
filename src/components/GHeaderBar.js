@@ -32,14 +32,14 @@ import {
 
 const HeaderBarHeight = 46;
 
-const ic_logo = require('../assets/images/ic_logo.png');
-const img_back = require('../assets/images/ic_back.png');
-const img_filter = require('../assets/images/ic_filter.png');
-const img_more = require('../assets/images/ic_more.png');
-const img_edit = require('../assets/images/ic_edit.png');
-const ic_plus = require('../assets/images/ic_plus_1.png');
-const img_edit_c = require('../assets/images/ic_edit_2.png');
-const img_close = require('../assets/images/ic_close.png');
+const ic_logo = require('../assets/images/Icons/ic_logo.png');
+const img_back = require('../assets/images/Icons/ic_back.png');
+const img_filter = require('../assets/images/Icons/ic_filter.png');
+const img_more = require('../assets/images/Icons/ic_more.png');
+const img_edit = require('../assets/images/Icons/ic_edit.png');
+const ic_plus = require('../assets/images/Icons/ic_plus_1.png');
+const img_edit_c = require('../assets/images/Icons/ic_edit_2.png');
+const img_close = require('../assets/images/Icons/ic_close.png');
 
 const LEFT_TYPES = {
   back: {

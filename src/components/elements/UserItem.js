@@ -33,12 +33,12 @@ const ic_mini_location = require('../../assets/images/ic_mini_location_1.png');
 const ic_mini_star = require('../../assets/images/ic_mini_star.png');
 const ic_mini_hourly_rate = require('../../assets/images/ic_mini_hourly_rate.png');
 const img_avatar1 = require('../../assets/images/img_avatar1.png');
-const ic_membership_free = require('../../assets/images/ic_membership_free.png');
-const ic_membership_basic = require('../../assets/images/ic_membership_basic.png');
-const ic_membership_professional = require('../../assets/images/ic_membership_professional.png');
-const ic_membership_business = require('../../assets/images/ic_membership_business.png');
-const ic_membership_executive = require('../../assets/images/ic_membership_executive.png');
-const ic_default_avatar = require('../../assets/images/ic_default_avatar.png');
+const ic_membership_free = require('../../assets/images/Icons/ic_membership_free.png');
+const ic_membership_basic = require('../../assets/images/Icons/ic_membership_basic.png');
+const ic_membership_professional = require('../../assets/images/Icons/ic_membership_professional.png');
+const ic_membership_business = require('../../assets/images/Icons/ic_membership_business.png');
+const ic_membership_executive = require('../../assets/images/Icons/ic_membership_executive.png');
+const ic_default_avatar = require('../../assets/images/Icons/ic_default_avatar.png');
 
 const itemTypeColor = {
   Completed: '#0EAD69',

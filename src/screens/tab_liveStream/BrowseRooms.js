@@ -3,10 +3,12 @@ import { SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScrollableTabView, {
   ScrollableTabBar,
+  DefaultTabBar,
 } from 'react-native-scrollable-tab-view';
 import LiveStreamRooms from './LiveStreamRooms';
 
 import { GStyle, Helper } from '../../utils/Global/index';
+import styles from './styles';
 
 class BrowseRooms extends React.Component {
   constructor(props) {
@@ -36,12 +38,21 @@ class BrowseRooms extends React.Component {
         <ScrollableTabView
           initialPage={0}
           tabBarBackgroundColor={GStyle.snowColor}
-          tabBarActiveTextColor={GStyle.lightBlueColor}
+          tabBarTextStyle={styles.tabBarTextStyle}
+          tabBarInactiveTextColor={'black'}
+          tabBarActiveTextColor={GStyle.activeColor}
           tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
-          renderTabBar={() => <ScrollableTabBar />}
+          renderTabBar={() => (
+            <DefaultTabBar
+              style={{
+                borderWidth: 0,
+                backgroundColor: 'white',
+              }}
+            />
+          )}
         >
-          <LiveStreamRooms tabLabel="Popular" quickKeyword={'popular'} />
-          <LiveStreamRooms tabLabel="NearBy" quickKeyword={'nearby'} />
+          <LiveStreamRooms tabLabel="Popular" keyword={'popular'} />
+          <LiveStreamRooms tabLabel="NearBy" keyword={'nearby'} />
         </ScrollableTabView>
       </SafeAreaView>
     );

@@ -13,9 +13,9 @@ import { NodePlayerView } from 'react-native-nodemediaclient';
 import moment from 'moment';
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import styles from './styles';
-import ChatInputGroup from '../../components/ChatInputGroup';
-import MessagesList from '../../components/MessagesList/MessagesList';
-import FloatingHearts from '../../components/FloatingHearts';
+import LiveStreamActionsGroup from '../../components/LiveStream/LiveStreamActionsGroup';
+import MessagesList from '../../components/LiveStream/MessagesList/MessagesList';
+import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
 import { Constants, Logger } from '../../utils/Global';
 import { connect } from 'react-redux';
@@ -42,8 +42,8 @@ class ViewLive extends Component {
 
   componentDidMount() {
     const { navigation, user } = this.props;
-    const userId = user?.id
-    const streamerId = this.streamerId
+    const userId = user?.id;
+    const streamerId = this.streamerId;
     /**
      * Just for replay
      */
@@ -83,8 +83,11 @@ class ViewLive extends Component {
           countHeart: prevState.countHeart + 1,
         }));
       });
-      SocketManager.instance.listenSendMessage((data) => {
-        this.setState({ messages: data });
+      SocketManager.instance.listenSendMessage((message) => {
+        if (message?.sender?.id !== this.props.user?.id) {
+          const messages = this.state.messages || [];
+          this.setState({ messages: [message].concat(messages) });
+        }
       });
       SocketManager.instance.listenFinishLiveStream(() => {
         Alert.alert(
@@ -104,13 +107,13 @@ class ViewLive extends Component {
   }
 
   componentWillUnmount() {
-      const streamerId = this.streamerId;
-      const userId = this.props.user?.id
+    const streamerId = this.streamerId;
+    const userId = this.props.user?.id;
 
     if (this.nodePlayerView) this.nodePlayerView.stop();
     SocketManager.instance.emitLeaveRoom({
       streamerId,
-        userId,
+      userId,
     });
     this.setState({
       messages: [],
@@ -143,6 +146,15 @@ class ViewLive extends Component {
       streamerId: this.streamerId,
       userId: this.props.user?.id,
       message,
+    });
+    const messages = this.state.messages || [];
+    this.setState({
+      isVisibleMessages: true,
+      messages: [{
+        message,
+        sender: this.props.user,
+        type: 1,
+      }].concat(messages),
     });
     this.setState({ isVisibleMessages: true });
   };
@@ -202,7 +214,7 @@ class ViewLive extends Component {
 
   renderChatGroup = () => {
     return (
-      <ChatInputGroup
+      <LiveStreamActionsGroup
         onPressHeart={this.onPressHeart}
         onPressSend={this.onPressSend}
         onFocus={this.onFocusChatGroup}
@@ -230,7 +242,7 @@ class ViewLive extends Component {
           <TouchableOpacity style={styles.btnClose} onPress={this.onPressClose}>
             <Image
               style={styles.icoClose}
-              source={require('../../assets/images/ic_close.png')}
+              source={require('../../assets/images/Icons/ic_close.png')}
               tintColor="white"
             />
           </TouchableOpacity>
@@ -250,7 +262,7 @@ class ViewLive extends Component {
         <TouchableOpacity style={styles.btnClose} onPress={this.onPressClose}>
           <Image
             style={styles.icoClose}
-            source={require('../../assets/images/ic_close.png')}
+            source={require('../../assets/images/Icons/ic_close.png')}
             tintColor="white"
           />
         </TouchableOpacity>

@@ -33,10 +33,10 @@ import {
   RestAPI,
 } from '../../utils/Global/index';
 
-const ic_google = require('../../assets/images/ic_google.png');
-const ic_facebook = require('../../assets/images/ic_facebook.png');
-const ic_twitter = require('../../assets/images/ic_twitter.png');
-const ic_linkedin = require('../../assets/images/ic_linkedin.png');
+const ic_google = require('../../assets/images/Icons/ic_google.png');
+const ic_facebook = require('../../assets/images/Icons/ic_facebook.png');
+const ic_twitter = require('../../assets/images/Icons/ic_twitter.png');
+const ic_linkedin = require('../../assets/images/Icons/ic_linkedin.png');
 
 class SignupScreen extends React.Component {
   constructor(props) {

@@ -19,28 +19,32 @@ import { setMyUserAction } from '../../redux/me/actions';
 
 import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global/index';
 
-import ic_menu_goLive from '../../assets/images/ic_menu_goLive.png';
-import ic_tab_play from '../../assets/images/ic_tab_play.png';
-import ic_chevron_right from '../../assets/images/ic_chevron_right.png';
-import ic_menu_messages from '../../assets/images/ic_menu_messages.png';
-import ic_menu_fans from '../../assets/images/ic_menu_fans.png';
-import ic_menu_drafts from '../../assets/images/ic_menu_drafts.png';
-import ic_tab_top from '../../assets/images/ic_tab_top.png';
-import ic_menu_downloads from '../../assets/images/ic_menu_downloads.png';
-import ic_menu_saved_products from '../../assets/images/ic_menu_saved_products.png';
-import ic_menu_my_posts from '../../assets/images/ic_menu_my_posts.png';
+import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
+import ic_upload from '../../assets/images/Icons/ic_upload.png';
+import ic_tab_play from '../../assets/images/Icons/ic_tab_play.png';
+import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
+import ic_menu_messages from '../../assets/images/Icons/ic_menu_messages.png';
+import ic_menu_fans from '../../assets/images/Icons/ic_menu_fans.png';
+import ic_menu_drafts from '../../assets/images/Icons/ic_menu_drafts.png';
+import ic_tab_top from '../../assets/images/Icons/ic_tab_top.png';
+import ic_menu_downloads from '../../assets/images/Icons/ic_menu_downloads.png';
+import ic_menu_saved_products from '../../assets/images/Icons/ic_menu_saved_products.png';
+import ic_my_posts from '../../assets/images/Icons/ic_my_posts.png';
+import ic_support from '../../assets/images/Icons/ic_support.png';
+import ic_signIn from '../../assets/images/Icons/ic_signin.png';
+import ic_signOut from '../../assets/images/Icons/ic_signout.png';
 
 const getMenuItems = (navigation) => {
   let menu = [
     {
-      icon: ic_menu_goLive,
+      icon: ic_tab_liveStream,
       title: 'Go Live',
       onPress: () => {
         navigation.navigate('go_live');
       },
     },
     {
-      icon: ic_menu_goLive,
+      icon: ic_upload,
       title: 'Upload Products',
       onPress: () => {
         global._prevScreen = 'profile';
@@ -87,14 +91,14 @@ const getMenuItems = (navigation) => {
       },
     },
     {
-      icon: ic_menu_my_posts,
+      icon: ic_my_posts,
       title: 'My Posts',
       onPress: () => {
         navigation.navigate('my_posts');
       },
     },
     {
-      icon: ic_menu_my_posts,
+      icon: ic_support,
       title: 'Customer Support',
       onPress: () => {
         global._roomId = '1';
@@ -107,7 +111,7 @@ const getMenuItems = (navigation) => {
   menu.push(
     global.me.isGuest
       ? {
-          icon: ic_menu_my_posts,
+          icon: ic_signIn,
           title: 'Sign In',
           onPress: () => {
             global._prevScreen = 'profile_edit';
@@ -115,7 +119,7 @@ const getMenuItems = (navigation) => {
           },
         }
       : {
-          icon: ic_menu_my_posts,
+          icon: ic_signOut,
           title: 'Sign Out',
           onPress: () => {},
         },
@@ -179,7 +183,8 @@ class ProfileMainScreen extends React.Component {
         Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
-          this.props.setMyUserAction(json.data || {});
+          const user = json.data || {};
+          this.props.setMyUserAction({ ...user, isGuest: global.me?.isGuest });
           global.me.photo = json.data.photo;
           this.setState({
             allViewCount: json.data?.allViewCount,
@@ -207,6 +212,7 @@ class ProfileMainScreen extends React.Component {
     const avatarImage = {
       uri: user?.photo ?? randomImageUrl,
     };
+    console.log(user);
 
     const translateY = this.scrollAnimatedValue.interpolate({
       inputRange: [0, 180],
@@ -226,6 +232,7 @@ class ProfileMainScreen extends React.Component {
         opacity,
       },
       styles.topContainer,
+      user.isGuest && { height: 250 },
     ];
 
     return (
@@ -239,7 +246,7 @@ class ProfileMainScreen extends React.Component {
             >
               <Avatar image={avatarImage} size={106} />
               <Text
-                style={[GStyles.regularText, { fontSize: 13, marginTop: 16 }]}
+                style={[GStyles.textSmall, { color: 'black', marginTop: 16 }]}
               >
                 {user.username}
               </Text>
@@ -276,7 +283,10 @@ class ProfileMainScreen extends React.Component {
             )}
           </Animated.View>
           <Animated.ScrollView
-            contentContainerStyle={styles.scrollViewContainer}
+            contentContainerStyle={[
+              styles.scrollViewContainer,
+              user.isGuest && { paddingTop: 270 },
+            ]}
             scrollEventThrottle={16}
             onScroll={Animated.event(
               [
@@ -330,7 +340,7 @@ const styles = StyleSheet.create({
   topContainer: {
     width: '100%',
     position: 'absolute',
-    height: 300,
+    height: 280,
     justifyContent: 'space-around',
     alignItems: 'center',
     zIndex: 10,
@@ -349,7 +359,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   scrollViewContainer: {
-    paddingTop: 330,
+    paddingTop: 300,
     paddingBottom: 120,
   },
   menuContainer: {

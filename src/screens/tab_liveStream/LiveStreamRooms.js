@@ -4,6 +4,7 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 import LiveStreamRoom from './LiveStreamRoom';
 
 import { Helper, Constants, RestAPI } from '../../utils/Global/index';
+import styles from './styles';
 
 class LiveStreamRooms extends React.Component {
   constructor(props) {
@@ -50,7 +51,7 @@ class LiveStreamRooms extends React.Component {
 
   onRefresh = (type) => {
     let { isFetching, totalCount, curPage, itemDatas } = this.state;
-    const { keyword} = this.props;
+    const { keyword } = this.props;
 
     if (isFetching) {
       return;
@@ -79,7 +80,7 @@ class LiveStreamRooms extends React.Component {
       count_per_page: Constants.COUNT_PER_PAGE,
       keyword,
     };
-      RestAPI.get_liveStream_list(params, (json, err) => {
+    RestAPI.get_liveStream_list(params, (json, err) => {
       if (type === 'init') {
         showPageLoader(false);
       } else {
@@ -113,16 +114,6 @@ class LiveStreamRooms extends React.Component {
   };
 
   render() {
-    return (
-      <>
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
-          {this._renderVideo()}
-        </View>
-      </>
-    );
-  }
-
-  _renderVideo = () => {
     const { isFetching, itemDatas } = this.state;
 
     return (
@@ -131,7 +122,7 @@ class LiveStreamRooms extends React.Component {
           this.flatListRef = ref;
         }}
         showsVerticalScrollIndicator={false}
-        numColumns={1}
+        numColumns={2}
         onRefresh={() => {
           this.onRefresh('pull');
         }}
@@ -147,12 +138,13 @@ class LiveStreamRooms extends React.Component {
             this.onRefresh('more');
           }
         }}
-        data={itemDatas}
+        data={[...itemDatas, ...itemDatas]}
         renderItem={this._renderItem}
-        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.flatListContentContainer}
+        keyExtractor={(item, index) => `${item.id}-${index}`}
       />
     );
-  };
+  }
 
   _renderFooter = () => {
     const { isFetching } = this.state;
@@ -164,10 +156,9 @@ class LiveStreamRooms extends React.Component {
     return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
-  _renderItem = ({ item }) => {
-    return <LiveStreamRoom room={item} />;
+  _renderItem = ({ item, index }) => {
+    return <LiveStreamRoom room={item} index={index} />;
   };
 }
 
-
-export default LiveStreamRooms
+export default LiveStreamRooms;

@@ -21,12 +21,12 @@ import {
   Helper,
 } from '../../utils/Global/index';
 
-const ic_close = require('../../assets/images/ic_close.png');
-const ic_camera_flip = require('../../assets/images/ic_camera_flip.png');
-const ic_camera_flash_on = require('../../assets/images/ic_camera_flash_on.png');
-const ic_camera_flash_off = require('../../assets/images/ic_camera_flash_off.png');
-const ic_audio_on = require('../../assets/images/ic_audio_on.png');
-const ic_audio_off = require('../../assets/images/ic_audio_off.png');
+const ic_close = require('../../assets/images/Icons/ic_close.png');
+const ic_camera_flip = require('../../assets/images/Icons/ic_camera_flip.png');
+const ic_camera_flash_on = require('../../assets/images/Icons/ic_camera_flash_on.png');
+const ic_camera_flash_off = require('../../assets/images/Icons/ic_camera_flash_off.png');
+const ic_audio_on = require('../../assets/images/Icons/ic_audio_on.png');
+const ic_audio_off = require('../../assets/images/Icons/ic_audio_off.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 

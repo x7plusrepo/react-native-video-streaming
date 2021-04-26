@@ -1,23 +1,13 @@
 import React from 'react';
 import {
-  ActivityIndicator,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
   Image,
   Keyboard,
-  Platform,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
 
 import {connect} from 'react-redux';
@@ -28,21 +18,15 @@ import ScrollableTabView, {DefaultTabBar} from 'rn-collapsing-tab-bar';
 import {
   GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
-  RestAPI,
 } from '../../utils/Global/index';
-import GHeaderBar from '../../components/GHeaderBar';
 import SearchBarItem from '../../components/elements/SearchBarItem';
 import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 
 import HomeVideoScreen from './HomeVideoScreen';
 import HomeUsersScreen from './HomeUsersScreen';
 
-const ic_back = require('../../assets/images/ic_back.png');
-
-const WINDOW_WIDTH = Helper.getWindowWidth();
+const ic_back = require('../../assets/images/Icons/ic_back.png');
 
 class HomeSearchScreen extends React.Component {
   constructor(props) {

@@ -39,7 +39,7 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 
-const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
+const img_default_avatar = require('../../assets/images/Icons/ic_default_avatar.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 
@@ -438,10 +438,10 @@ class CameraUploadScreen extends React.Component {
     const { tags } = this.state;
     let errors = {};
 
-    if (global.me.isGuest) {
-      warning(Constants.WARNING_TITLE, 'Guest can not upload video.');
-      return;
-    }
+    // if (global.me.isGuest) {
+    //   warning(Constants.WARNING_TITLE, 'Guest can not upload video.');
+    //   return;
+    // }
 
     if (!global.me) {
       this.props.navigation.navigate('signin');

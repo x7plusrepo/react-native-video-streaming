@@ -19,14 +19,6 @@ import React from 'react';
         <Text style={{ ...styles.textFill }}>Signin</Text>
       </TouchableOpacity>
     )}
-    {!global.me.isGuest && (
-      <TouchableOpacity
-        onPress={this.onPressCamera}
-        style={{ ...styles.buttonFill, height: 30 }}
-      >
-        <Text style={{ ...styles.textFill }}>Upload Product</Text>
-      </TouchableOpacity>
-    )}
     <TouchableOpacity
       onPress={this.onPressCustomerSupport}
       style={{ ...styles.buttonFill, marginTop: 8 }}

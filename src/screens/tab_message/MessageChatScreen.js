@@ -46,7 +46,7 @@ import { TextField } from '../../lib/MaterialTextField/index';
 import Accordion from '../../lib/Collapsible/Accordion';
 import Video from 'react-native-video';
 
-const ic_send = require('../../assets/images/ic_send.png');
+const ic_send = require('../../assets/images/Icons/ic_send.png');
 
 import { GiftedChat, Actions, Send, Bubble } from 'react-native-gifted-chat';
 import CustomActions from '../../components/elements/MessageActions';

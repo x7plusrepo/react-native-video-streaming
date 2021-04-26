@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 import Helper from './Util';
 
@@ -7,8 +7,10 @@ const BUTTON_WIDTH = WINDOW_WIDTH * 0.88;
 
 const GStyle = {
   //** color */
-  activeColor: '#800080',
-  inactiveColor: '#2574FF',
+  primaryColor: '#1BF2DD',
+  secondaryColor: '#9CFDFF',
+  activeColor: '#1BF2DD',
+  inactiveColor: '#9CFDFF',
   fontColor: '#272755',
   linkColor: '#0C4682',
   grayColor: '#9393AA',
@@ -77,7 +79,6 @@ const GStyles = StyleSheet.create({
     flex: 0,
     backgroundColor: GStyle.snowColor,
   },
-
   container: {
     flex: 1,
     alignItems: 'center',
@@ -241,7 +242,69 @@ const GStyles = StyleSheet.create({
     resizeMode: 'contain',
     marginHorizontal: 4,
   },
+  liveStreamChatText: {
+    fontFamily: 'GothamPro',
+    color: '#FDFFA5',
+    fontSize: 12,
+    fontWeight: '500',
+  },
+  liveStreamSender: {
+    fontFamily: 'GothamPro',
+    color: 'white',
+    fontSize: 12,
+    fontWeight: '700',
+  },
+  liveStreamActionButtons: {
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    height: 36,
+    paddingHorizontal: 15,
+    borderRadius: 32,
+  },
+  textSmall: {
+    fontFamily: 'GothamPro',
+    fontWeight: '500',
+    fontSize: 12,
+    color: 'white',
+  },
+  textExtraSmall: {
+    fontFamily: 'GothamPro',
+    fontWeight: '400',
+    fontSize: 10,
+    color: 'white',
+  },
+  videoActionButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    backgroundColor: GStyle.primaryColor,
+    height: 36,
+    paddingHorizontal: 15,
+    borderRadius: 32,
+  },
+  playInfoTextWrapper: {
+    backgroundColor: 'white',
+    padding: 6,
+    borderRadius: 4,
+  },
+  playInfoText: {
+    fontFamily: 'GothamPro',
+    fontWeight: '500',
+    fontSize: 12,
+    color: 'black',
+  },
+  videoActionIcon: {
+    width: 16,
+    height: 16,
+    marginRight: 6,
+  },
+  playInfoWrapper: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 66 + Helper.getBottomBarHeight(),
+    left: 0,
+    paddingHorizontal: 16,
+  },
 });
 
 export default GStyle;
-export {GStyles};
+export { GStyles };

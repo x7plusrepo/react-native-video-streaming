@@ -22,7 +22,7 @@ import {
   Helper,
   Constants,
 } from '../../utils/Global/index';
-const ic_close = require('../../assets/images/ic_close.png');
+const ic_close = require('../../assets/images/Icons/ic_close.png');
 
 class CameraPreviewScreen extends Component {
   constructor(props) {

@@ -125,7 +125,10 @@ function App() {
           </MenuProvider>
         </PaperProvider>
         <FlashMessage position="top" />
-        <PageLoaderIndicator isPageLoader={isShowPageLoader} />
+        {/*<PageLoaderIndicator isPageLoader={isShowPageLoader} />*/}
+        {/*<View style={{flex: 1, backgroundColor: 'white', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
+
+        </View>*/}
       </View>
     </Provider>
   );

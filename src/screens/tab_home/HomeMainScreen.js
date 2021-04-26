@@ -185,7 +185,7 @@ class HomeMainScreen extends React.Component {
 
     return (
       <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        <View style={{ flex: 1, marginVertical: 4, marginHorizontal: 8 }}>
+        <View style={{ flex: 1, marginVertical: 8, marginHorizontal: 16}}>
           <SearchBarItem
             searchText={searchText}
             onChangeText={this.onChangeSearchText}

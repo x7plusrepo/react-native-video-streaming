@@ -6,14 +6,20 @@ import MessageItem from './MessageItem';
 
 export default class MessagesList extends Component {
   renderItem = ({ item }) => <MessageItem message={item} />;
+  flatList = React.createRef();
 
   render() {
-
     const { messages } = this.props;
 
     return (
       <View style={styles.wrapListMessages}>
-        <FlatList data={messages.reverse()} renderItem={this.renderItem} inverted />
+        <FlatList
+          ref={this.flatList}
+          data={messages}
+          renderItem={this.renderItem}
+          keyExtractor={(item, index) => index.toString()}
+          inverted
+        />
       </View>
     );
   }

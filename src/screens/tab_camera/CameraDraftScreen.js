@@ -33,7 +33,7 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 
-const img_default_avatar = require('../../assets/images/ic_default_avatar.png');
+const img_default_avatar = require('../../assets/images/Icons/ic_default_avatar.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 3;
