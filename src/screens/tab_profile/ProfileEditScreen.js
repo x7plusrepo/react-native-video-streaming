@@ -253,7 +253,7 @@ class ProfileEditScreen extends React.Component {
 
       showForcePageLoader(true);
       RestAPI.update_profile_with_image(params, (json, err) => {
-        showPageLoader(false);
+        showForcePageLoader(false);
 
         if (err !== null) {
           error(Constants.ERROR_TITLE, 'Failed to update your profile');

@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
   },
   name: {
-    ...GStyles.liveStreamSender,
+    ...GStyles.liveStreamChatSender,
   },
   content: {
     marginTop: 3,

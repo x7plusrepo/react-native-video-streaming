@@ -69,7 +69,7 @@ class MessageChatScreen extends Component {
   componentDidMount() {
     this._isMounted = true;
     this.onRefresh('init');
-    showPageLoader(true);
+    showForcePageLoader(true);
     global.onSocketError = this.onSocketError;
     global.onFetchMessageList = this.onFetchMessageList;
     global.onReceiveMessageList = this.onReceiveMessageList;
@@ -123,7 +123,7 @@ class MessageChatScreen extends Component {
       };
 
       RestAPI.get_chat_title(params, (json, err) => {
-        showPageLoader(true);
+        showForcePageLoader(true);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);
@@ -146,7 +146,7 @@ class MessageChatScreen extends Component {
       RestAPI.get_message_list(params, (error) => {
         if (error !== null) {
           if (type == 'init') {
-            showPageLoader(false);
+            showForcePageLoader(false);
           } else {
             this.setState({ isFetching: false });
           }
@@ -157,14 +157,14 @@ class MessageChatScreen extends Component {
   };
 
   onSocketError = () => {
-    showPageLoader(false);
+    showForcePageLoader(false);
     this.setState({ isFetching: false });
 
     Helper.alertNetworkError();
   };
 
   onFetchMessageList = () => {
-    showPageLoader(false);
+    showForcePageLoader(false);
     this.setState({ isFetching: false });
 
     const json = global._fetchedMessageList;
@@ -173,7 +173,7 @@ class MessageChatScreen extends Component {
   };
 
   onReceiveMessageList = () => {
-    showPageLoader(false);
+    showForcePageLoader(false);
 
     const json = global._receivedMessageList;
     this.setState({ totalCount: json.data.total_count });
@@ -200,10 +200,10 @@ class MessageChatScreen extends Component {
         type: Constants.MESSAGE_TYPE_TEXT,
         message: messages[0].text,
       };
-      // showPageLoader(true);
+      // showForcePageLoader(true);
       RestAPI.send_message(params, (error) => {
         if (error !== null) {
-          showPageLoader(false);
+          showForcePageLoader(false);
           Helper.alertNetworkError();
         }
       });

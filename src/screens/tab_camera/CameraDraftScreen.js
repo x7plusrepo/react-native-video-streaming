@@ -124,7 +124,7 @@ class CameraDraftScreen extends React.Component {
 
     this.setState({itemDatas});
 
-    showPageLoader(false);
+    showForcePageLoader(false);
   };
 
   render() {

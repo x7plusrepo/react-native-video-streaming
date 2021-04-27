@@ -205,9 +205,9 @@ class SigninScreen extends React.Component {
         username: userName,
         password: password,
       };
-      showPageLoader(true);
+      showForcePageLoader(true);
       RestAPI.login(params, (json, err) => {
-        showPageLoader(false);
+        showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);
@@ -225,9 +225,9 @@ class SigninScreen extends React.Component {
               device_id: global._deviceId,
               device_type: Platform.OS === 'ios' ? '1' : '0',
             };
-            showPageLoader(true);
+            showForcePageLoader(true);
             RestAPI.register_push_token(params, (json, err) => {
-              showPageLoader(false);
+              showForcePageLoader(false);
 
               if (err !== null) {
                 Helper.alertNetworkError();

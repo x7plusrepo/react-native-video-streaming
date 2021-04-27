@@ -68,16 +68,16 @@ const Global = {
       return;
     }
 
-    params = {
+    const params = {
       user_id: global.me.id,
       one_signal_id: global._pushAppId,
       token: global._pushToken,
       device_id: global._deviceId,
       device_type: Platform.OS === 'ios' ? '1' : '0',
     };
-    showPageLoader(true);
+    //showForcePageLoader(true);
     RestAPI.register_push_token(params, (json, err) => {
-      showPageLoader(false);
+      showForcePageLoader(false);
 
       if (err !== null) {
         Helper.alertNetworkError();

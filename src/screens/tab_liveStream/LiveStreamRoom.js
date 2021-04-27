@@ -5,7 +5,6 @@ import stream_thumbnail from '../../assets/images/stream_thumbnail.png';
 import ic_speaker from '../../assets/images/Icons/ic_speaker.png';
 import ic_eye from '../../assets/images/Icons/ic_eye.png';
 import ic_group from '../../assets/images/Icons/ic_group.png';
-import get from 'lodash/get';
 import { Helper, GStyle } from '../../utils/Global';
 import { GStyles } from '../../utils/Global/Styles';
 
@@ -13,10 +12,9 @@ const WINDOW_WIDTH = Helper.getWindowWidth();
 const ITEM_WIDTH = (WINDOW_WIDTH - 16 - 8) / 2;
 const LiveStreamRoom = (props) => {
   const { room, index } = props;
-  const streamer = room?.user;
   const navigation = useNavigation();
   const onPress = () => {
-    navigation.navigate('view_live', { room });
+    navigation.navigate('view_live', { roomId: room?.id });
   };
 
   const image = room.thumbnail ? { uri: room.thumbnail } : stream_thumbnail;
@@ -60,7 +58,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: GStyle.primaryColor,
     borderRadius: 8,
-    marginBottom: 15,
+    marginTop: 16,
     overflow: 'hidden',
   },
   thumbnail: {

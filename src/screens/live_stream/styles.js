@@ -1,11 +1,16 @@
-import { StyleSheet } from 'react-native';
+import {Dimensions, StyleSheet} from 'react-native';
 import { Helper } from '../../utils/Global';
 import { GStyles } from '../../utils/Global/Styles';
+
+const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#3498db',
+  },
+  backgroundContainer: {
+    flex: 1,
   },
   contentWrapper: {
     flex: 1,
@@ -19,8 +24,13 @@ const styles = StyleSheet.create({
     bottom: 16,
     zIndex: 9,
   },
-  center: {
-    flex: 1,
+  playerView: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    height,
+    width,
+    backgroundColor: 'black',
   },
   streamerView: {
     position: 'absolute',
@@ -54,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.25)',
     justifyContent: 'center',
     alignItems: 'center',
-    //zIndex: 999,
+    zIndex: 999,
   },
   topicInput: {
     ...GStyles.regularText,

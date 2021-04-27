@@ -143,6 +143,14 @@ const RestAPI = {
       amount: params.count_per_page,
     };
 
+    formDataCall('api/liveStream/all', data, {}, callBack, 'get');
+  },
+
+  get_liveStream: (params, callBack) => {
+    const data = {
+      id: params.roomId,
+    };
+
     formDataCall('api/liveStream', data, {}, callBack, 'get');
   },
 
@@ -209,7 +217,7 @@ const RestAPI = {
       keyword: params.keyword,
     };
 
-    formDataCall('api/user', data, {}, callBack, 'get');
+    formDataCall('api/user/all', data, {}, callBack, 'get');
   },
 
   get_top_user_list: (params, callBack) => {

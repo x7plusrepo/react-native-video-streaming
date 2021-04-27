@@ -6,8 +6,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
   giftIcon: {
-    width: 48,
-    height: 48,
+    width: 36,
+    height: 36,
   },
 });
 

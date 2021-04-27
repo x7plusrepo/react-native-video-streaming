@@ -248,7 +248,7 @@ const GStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '500',
   },
-  liveStreamSender: {
+  liveStreamChatSender: {
     fontFamily: 'GothamPro',
     color: 'white',
     fontSize: 12,

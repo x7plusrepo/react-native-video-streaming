@@ -165,7 +165,7 @@ class PlayMainScreen extends Component {
     this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
     if (type === 'init') {
-      showForcePageLoader(true);
+      //showForcePageLoader(true);
 
       const username = await Helper.getLocalValue(Constants.KEY_USERNAME);
       const password = await Helper.getLocalValue(Constants.KEY_PASSWORD);
@@ -184,7 +184,8 @@ class PlayMainScreen extends Component {
     };
     RestAPI.get_all_video_list(params, (json, err) => {
       if (type === 'init') {
-        showPageLoader(false);
+        showForcePageLoader(false);
+        setIsInitLoading(false);
       } else {
         if (this.state.isMounted) {
           this.setState({ isFetching: false });
@@ -314,9 +315,9 @@ class PlayMainScreen extends Component {
         video_id: item.id,
         is_like: isChecked,
       };
-      showPageLoader(true);
+      //showForcePageLoader(true);
       RestAPI.update_like_video(params, (json, err) => {
-        showPageLoader(false);
+        showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);
@@ -521,15 +522,15 @@ class PlayMainScreen extends Component {
           CameraRoll.save(newPath, 'video')
             .then((gallery) => {
               resp.flush();
-              showPageLoader(false);
+              showForcePageLoader(false);
             })
             .catch((err) => {
-              showPageLoader(false);
+              showForcePageLoader(false);
             });
         });
       })
       .catch((err) => {
-        showPageLoader(false);
+        showForcePageLoader(false);
         error(Constants.ERROR_TITLE, 'Failed to download');
       });
   };

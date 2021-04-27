@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import {
   View,
-  SafeAreaView,
   TouchableOpacity,
   Image,
   Keyboard,
@@ -13,7 +12,7 @@ import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import styles from './styles';
 import { GStyles } from '../../../utils/Global/Styles';
 
-export default class LiveStreamActionsGroup extends Component {
+export default class BottomActionsGroup extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -33,6 +32,10 @@ export default class LiveStreamActionsGroup extends Component {
 
   renderContent() {
     const { message } = this.state;
+    const { mode, isJoined, onPressJoin, onExit } = this.props;
+    const joinButtonText = isJoined ? 'Leave' : 'Join';
+    const onPressJoinButton = isJoined ? onExit : onPressJoin;
+
     return (
       <View style={GStyles.rowContainer}>
         <View style={styles.messageInput}>
@@ -57,21 +60,18 @@ export default class LiveStreamActionsGroup extends Component {
             />
           </TouchableOpacity>
         </View>
-
-        <TouchableOpacity style={styles.shareButton}>
-          <Image
-            source={require('../../../assets/images/Icons/ic_join.png')}
-            style={styles.iconAction}
-          />
-          <Text style={GStyles.textSmall}>Share</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.joinButton}>
-          <Image
-            source={require('../../../assets/images/Icons/ic_share.png')}
-            style={styles.iconAction}
-          />
-          <Text style={GStyles.textSmall}>Join</Text>
-        </TouchableOpacity>
+        {mode === 'viewer' && (
+          <TouchableOpacity
+            style={styles.joinButton}
+            onPress={onPressJoinButton}
+          >
+            <Image
+              source={require('../../../assets/images/Icons/ic_join.png')}
+              style={styles.iconAction}
+            />
+            <Text style={GStyles.textSmall}>{joinButtonText}</Text>
+          </TouchableOpacity>
+        )}
       </View>
     );
   }

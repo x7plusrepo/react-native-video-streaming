@@ -85,7 +85,7 @@ class HomeVideoScreen extends React.Component {
     }
 
     if (type === 'init') {
-      showPageLoader(true);
+      //showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -97,7 +97,7 @@ class HomeVideoScreen extends React.Component {
     };
     funcGetVideoList(params, (json, err) => {
       if (type === 'init') {
-        showPageLoader(false);
+        showForcePageLoader(false);
       } else {
         if (this._isMounted) {
           this.setState({ isFetching: false });

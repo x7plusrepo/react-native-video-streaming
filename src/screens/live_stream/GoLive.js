@@ -14,10 +14,10 @@ import { createThumbnail } from 'react-native-create-thumbnail';
 import get from 'lodash/get';
 
 import StartPanel from './StartPanel';
-import LiveStreamActionsGroup from '../../components/LiveStream/LiveStreamActionsGroup';
+import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
 import MessagesList from '../../components/LiveStream/MessagesList/MessagesList';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
-import Controllers from '../../components/LiveStream/Controllers/Controllers';
+import Controllers from '../../components/LiveStream/SideActionsGroup/SideActionsGroup';
 import Gifts from '../../components/LiveStream/Gifts';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
@@ -27,7 +27,7 @@ import {
   videoConfig,
   audioConfig,
 } from '../../utils/LiveStream/Constants';
-import { Constants, GStyles, Logger } from '../../utils/Global';
+import { Constants, Logger } from '../../utils/Global';
 import styles from './styles';
 import Header from '../../components/LiveStream/Header';
 
@@ -48,6 +48,7 @@ class GoLive extends React.Component {
     this.requestCameraPermission();
     const user = this.props.user || {};
     const { id: streamerId, username: roomName } = user;
+    SocketManager.instance.connect();
     SocketManager.instance.emitPrepareLiveStream({
       streamerId,
       roomName,
@@ -83,9 +84,15 @@ class GoLive extends React.Component {
     const user = this.props.user || {};
     const { id: streamerId } = user;
     if (this.nodeCameraViewRef) this.nodeCameraViewRef.stop();
+    SocketManager.instance.removeBeginLiveStream();
+    SocketManager.instance.removeFinishLiveStream();
+    SocketManager.instance.removeSendHeart();
+    SocketManager.instance.removeSendMessage();
+    SocketManager.instance.emitFinishLiveStream({ streamerId });
     SocketManager.instance.emitLeaveRoom({
       streamerId,
     });
+    SocketManager.instance.disconnect();
   }
 
   onPressGiftAction = () => {
@@ -141,7 +148,6 @@ class GoLive extends React.Component {
         roomName,
         topic,
       });
-      SocketManager.instance.emitJoinRoom({ streamerId, roomName });
       if (this.nodeCameraViewRef) this.nodeCameraViewRef.start();
     } else if (Number(currentLiveStatus) === Number(LIVE_STATUS.ON_LIVE)) {
       /**
@@ -232,16 +238,20 @@ class GoLive extends React.Component {
         )}
         <View style={styles.contentWrapper}>
           <View style={styles.header}>
-            <Header />
+            <Header streamer={user} liveStatus={currentLiveStatus} />
           </View>
           <View style={styles.footer}>
             <MessagesList messages={messages} />
-            <LiveStreamActionsGroup onPressSend={this.onPressSend} />
+            <BottomActionsGroup
+              onPressSend={this.onPressSend}
+              mode="streamer"
+            />
           </View>
           <View style={styles.controllers}>
             <Controllers
               onPressGiftAction={this.onPressGiftAction}
               onPressSwitchCamera={this.onPressSwitchCamera}
+              mode="streamer"
             />
           </View>
         </View>

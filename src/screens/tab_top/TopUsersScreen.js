@@ -1,22 +1,11 @@
-import React, { useState, useRef, forwardRef } from 'react';
+import React, { forwardRef } from 'react';
 import {
   ActivityIndicator,
-  BackHandler,
-  Button,
-  Dimensions,
   FlatList,
-  Image,
-  Platform,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import {
@@ -29,8 +18,6 @@ import {
 } from '../../utils/Global/index';
 import GHeaderBar from '../../components/GHeaderBar';
 import TopUserItem from '../../components/elements/TopUserItem';
-
-const FLATLIST_WIDTH = Helper.getContentWidth();
 
 class TopUsersScreen extends React.Component {
   constructor(props) {
@@ -75,7 +62,7 @@ class TopUsersScreen extends React.Component {
       return;
     }
 
-    if (type == 'more') {
+    if (type === 'more') {
       curPage += 1;
       const maxPage =
         (totalCount + Constants.COUNT_PER_PAGE - 1) / Constants.COUNT_PER_PAGE;
@@ -87,18 +74,18 @@ class TopUsersScreen extends React.Component {
     }
     this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
-    if (type == 'init') {
-      showPageLoader(true);
+    if (type === 'init') {
+      //showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
     let params = {
-      page_number: type == 'more' ? curPage : '1',
+      page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
     RestAPI.get_top_user_list(params, (json, err) => {
-      if (type == 'init') {
-        showPageLoader(false);
+      if (type === 'init') {
+        showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
       }
@@ -108,7 +95,7 @@ class TopUsersScreen extends React.Component {
       } else {
         if (json.status === 200) {
           this.setState({ totalCount: json.data.totalCount });
-          if (type == 'more') {
+          if (type === 'more') {
             let data = itemDatas.concat(json.data.userList);
             this.setState({ itemDatas: data });
           } else {
@@ -123,7 +110,7 @@ class TopUsersScreen extends React.Component {
 
   onPressUser = (item) => {
     if (global.me) {
-      if (item.id == global.me.id) {
+      if (item.id === global.me.id) {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentId = item.id;

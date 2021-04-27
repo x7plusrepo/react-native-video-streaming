@@ -26,8 +26,8 @@ import ProfileOtherScreen from '../screens/tab_profile/ProfileOtherScreen';
 import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
 import SavedProductsScreen from '../screens/tab_profile/SavedProductsScreen';
 import MyVideoScreen from '../screens/tab_profile/MyVideoScreen';
-import GoLive from '../screens/go_live/GoLive';
-import ViewLive from '../screens/view_live';
+import GoLive from '../screens/live_stream/GoLive';
+import ViewLive from '../screens/live_stream/ViewLive';
 
 import { Helper } from '../utils/Global/index';
 

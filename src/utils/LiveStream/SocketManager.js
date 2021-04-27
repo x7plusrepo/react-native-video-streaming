@@ -20,10 +20,16 @@ class SocketManager {
       return SocketManager.instance;
     }
     SocketManager.instance = this;
-    this.socket = io(Constants.STREAM_SOCKET_URL, { reconnectionAttempts: 3 });
+    this.socket = io(Constants.STREAM_SOCKET_URL);
     this.setupListenDefaultEvents();
     return this;
   }
+
+  connect = () => {
+    if (this.socket?.disconnected) {
+      this.socket?.connect();
+    }
+  };
 
   setupListenDefaultEvents() {
     this.socket.on('connect', () => {
@@ -84,6 +90,10 @@ class SocketManager {
   // ──────────────────────────────────────────────────────────────────────────
   //
 
+  disconnect = () => {
+    this.socket.disconnect();
+  };
+
   listenPrepareLiveStream(callback = () => null) {
     this.socket.on(EVENT_PREPARE_LIVE_STREAM, () => {
       Logger.instance.log(`${EVENT_PREPARE_LIVE_STREAM} :`);
@@ -91,11 +101,19 @@ class SocketManager {
     });
   }
 
+  removePrepareLiveStream = () => {
+    this.socket.removeAllListeners(EVENT_PREPARE_LIVE_STREAM);
+  };
+
   listenBeginLiveStream(callback = () => null) {
     this.socket.on(EVENT_BEGIN_LIVE_STREAM, (data) => {
       Logger.instance.log(`${EVENT_BEGIN_LIVE_STREAM} :`, data);
       return callback(data);
     });
+  }
+
+  removeBeginLiveStream = () => {
+    this.socket.removeAllListeners(EVENT_BEGIN_LIVE_STREAM)
   }
 
   listenFinishLiveStream(callback = () => null) {
@@ -105,11 +123,19 @@ class SocketManager {
     });
   }
 
+  removeFinishLiveStream = () => {
+    this.socket.removeAllListeners(EVENT_FINISH_LIVE_STREAM)
+  };
+
   listenListLiveStream(callback = () => null) {
     this.socket.on(EVENT_LIST_LIVE_STREAM, (data) => {
       Logger.instance.log(`${EVENT_LIST_LIVE_STREAM} :`, data);
       return callback(data);
     });
+  }
+
+  removeListLiveStream = () => {
+    this.socket.removeAllListeners(EVENT_LIST_LIVE_STREAM)
   }
 
   listenSendHeart(callback = () => null) {
@@ -119,6 +145,10 @@ class SocketManager {
     });
   }
 
+  removeSendHeart = () => {
+    this.socket.removeAllListeners(EVENT_SEND_HEART);
+  };
+
   listenSendMessage(callback = () => null) {
     this.socket.on(EVENT_SEND_MESSAGE, (data) => {
       Logger.instance.log(`${EVENT_SEND_MESSAGE} :`);
@@ -126,11 +156,19 @@ class SocketManager {
     });
   }
 
+  removeSendMessage = () => {
+    this.socket.removeAllListeners(EVENT_SEND_MESSAGE);
+  };
+
   listenReplay(callback = () => null) {
     this.socket.on(EVENT_SEND_REPLAY, (data) => {
       Logger.instance.log(`${EVENT_SEND_REPLAY} :`);
       return callback(data);
     });
+  }
+
+  removeReplay = () => {
+    this.socket.removeAllListeners(EVENT_SEND_MESSAGE);
   }
 
   //

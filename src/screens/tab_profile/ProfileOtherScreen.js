@@ -89,9 +89,9 @@ class ProfileOtherScreen extends React.Component {
       page_number: '1',
       count_per_page: '1000',
     };
-    showPageLoader(true);
+    showForcePageLoader(true);
     RestAPI.get_user_video_list(params, (json, err) => {
-      showPageLoader(false);
+      showForcePageLoader(false);
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);

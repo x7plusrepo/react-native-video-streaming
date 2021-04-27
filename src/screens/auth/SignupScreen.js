@@ -187,9 +187,9 @@ class SignupScreen extends React.Component {
         phone: phoneNumber,
         password: password,
       };
-      showPageLoader(true);
+      showForcePageLoader(true);
       RestAPI.signup(params, (json, err) => {
-        showPageLoader(false);
+        showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError();

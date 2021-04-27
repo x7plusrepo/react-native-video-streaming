@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     left: 0,
-    transform: [{translateX: 0}, {translateY: -16}],
+    transform: [{ translateX: 0 }, { translateY: -16 }],
   },
   decorationImage: {
     width: 56,
@@ -38,7 +38,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: 0,
     top: '50%',
-    transform: [{translateX: -12}, {translateY: -28}],
+    transform: [{ translateX: -12 }, { translateY: -28 }],
   },
   textWrapper: {
     marginHorizontal: 48,
@@ -85,6 +85,16 @@ const styles = StyleSheet.create({
     width: 12,
     height: 12,
     marginRight: 6,
+  },
+  badgeWrapper: {
+    marginTop: 6,
+    borderRadius: 4,
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+  },
+  badgeText: {
+    ...GStyles.textSmall,
+    fontWeight: '700',
   },
 });
 

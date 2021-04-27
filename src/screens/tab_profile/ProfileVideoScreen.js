@@ -160,7 +160,7 @@ class ProfileVideoScreen extends Component {
     this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
     if (type === 'init') {
-      showPageLoader(true);
+      showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -172,7 +172,7 @@ class ProfileVideoScreen extends Component {
     };
     RestAPI.get_filtered_video_list(params, (json, err) => {
       if (type === 'init') {
-        showPageLoader(false);
+        showForcePageLoader(false);
       } else {
         if (this.state.isMounted) {
           this.setState({ isFetching: false });
@@ -284,9 +284,9 @@ class ProfileVideoScreen extends Component {
         video_id: item.id,
         is_like: isChecked,
       };
-      showPageLoader(true);
+      showForcePageLoader(true);
       RestAPI.update_like_video(params, (json, err) => {
-        showPageLoader(false);
+        showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);
@@ -491,15 +491,15 @@ class ProfileVideoScreen extends Component {
           CameraRoll.save(newPath, 'video')
             .then((gallery) => {
               resp.flush();
-              showPageLoader(false);
+              showForcePageLoader(false);
             })
             .catch((err) => {
-              showPageLoader(false);
+              showForcePageLoader(false);
             });
         });
       })
       .catch((err) => {
-        showPageLoader(false);
+        showForcePageLoader(false);
         error(Constants.ERROR_TITLE, 'Failed to download');
       });
   };

@@ -18,11 +18,6 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     ...GStyles.liveStreamActionButtons,
   },
-  shareButton: {
-    ...GStyles.rowEndContainer,
-    marginLeft: 10,
-    ...GStyles.liveStreamActionButtons,
-  },
   wrapIconSend: {
     justifyContent: 'center',
     alignItems: 'center',

@@ -148,13 +148,13 @@ class CameraUploadScreen extends React.Component {
         .then((response) => {
           global._thumbUri = response.path;
           console.log(response.path);
-          showPageLoader(false);
+          showForcePageLoader(false);
 
           this.saveDraft();
         })
         .catch((err) => {
           console.log({ err });
-          showPageLoader(false);
+          showForcePageLoader(false);
           global._thumbUri = null;
           error(Constants.ERROR_TITLE, 'Failed to create thumbnail');
         });
@@ -277,7 +277,7 @@ class CameraUploadScreen extends React.Component {
       number: (Number(global.me.uploadCount || 0) + 1).toString(),
     };
     RestAPI.add_video(params, async (json, err) => {
-      showPageLoader(false);
+      showForcePageLoader(false);
       if (err !== null) {
         this.setState({
           isVisibleProgress: false,

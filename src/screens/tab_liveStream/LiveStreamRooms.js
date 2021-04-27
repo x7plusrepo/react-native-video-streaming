@@ -70,7 +70,7 @@ class LiveStreamRooms extends React.Component {
     this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
     if (type === 'init') {
-      showPageLoader(true);
+      showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -82,7 +82,7 @@ class LiveStreamRooms extends React.Component {
     };
     RestAPI.get_liveStream_list(params, (json, err) => {
       if (type === 'init') {
-        showPageLoader(false);
+        showForcePageLoader(false);
       } else {
         if (this._isMounted) {
           this.setState({ isFetching: false });
@@ -138,7 +138,7 @@ class LiveStreamRooms extends React.Component {
             this.onRefresh('more');
           }
         }}
-        data={[...itemDatas, ...itemDatas]}
+        data={itemDatas}
         renderItem={this._renderItem}
         contentContainerStyle={styles.flatListContentContainer}
         keyExtractor={(item, index) => `${item.id}-${index}`}

@@ -57,9 +57,9 @@ class MainTabNavigator extends Component {
     let params = {
       user_id: global.me.id,
     };
-    showPageLoader(true);
+    //showForcePageLoader(true);
     RestAPI.get_unread_count(params, (json, err) => {
-      showPageLoader(false);
+      showForcePageLoader(false);
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
@@ -89,7 +89,7 @@ class MainTabNavigator extends Component {
       password: password ? password : '',
     };
     RestAPI.signin_or_signup(params, (json, err) => {
-      showPageLoader(false);
+      showForcePageLoader(false);
 
       if (err !== null) {
         Helper.alertNetworkError();
@@ -185,6 +185,7 @@ class MainTabNavigator extends Component {
             tabBarIcon: ({ color, size }) => (
               <Image source={ic_tab_liveStream} style={styles.tabIconImage} />
             ),
+            /*TODO - move to profile screen*/
             tabBarBadge: unreadCount,
             tabBarBadgeStyle: { backgroundColor: 'red' },
           }}

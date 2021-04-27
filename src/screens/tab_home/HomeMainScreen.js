@@ -104,7 +104,7 @@ class HomeMainScreen extends React.Component {
     }
 
     this.setState({ searchText: '' });
-    if (keyword == '') {
+    if (keyword === '') {
       return;
     }
 

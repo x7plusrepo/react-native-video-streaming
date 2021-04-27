@@ -7,8 +7,8 @@ import {
   ScrollView,
   Modal,
 } from 'react-native';
-import {ThemeProvider, Image, Button} from 'react-native-elements';
-import {BallIndicator} from 'react-native-indicators';
+import { ThemeProvider, Image, Button } from 'react-native-elements';
+import { BallIndicator } from 'react-native-indicators';
 import PropTypes from 'prop-types';
 import {
   GStyle,
@@ -18,7 +18,7 @@ import {
   Constants,
 } from '../utils/Global/index';
 
-const PageLoaderIndicator = ({isPageLoader = false}) => {
+const PageLoaderIndicator = ({ isPageLoader = false }) => {
   if (!isPageLoader) {
     return null;
   }
@@ -31,8 +31,9 @@ const PageLoaderIndicator = ({isPageLoader = false}) => {
         width: Constants.WINDOW_WIDTH,
         height: Constants.WINDOW_HEIGHT,
         backgroundColor: 'rgba(13,13,13,0.4)',
-        zIndex: 9999999,
-      }}>
+        zIndex: 99999,
+      }}
+    >
       <BallIndicator color={'white'} />
     </View>
   );

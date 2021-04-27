@@ -174,9 +174,9 @@ class ProfileMainScreen extends React.Component {
     let params = {
       user_id: global.me.id,
     };
-    showPageLoader(true);
+    //showForcePageLoader(true);
     RestAPI.get_user_profile(params, (json, err) => {
-      showPageLoader(false);
+      showForcePageLoader(false);
       console.log(err);
       console.log(json);
       if (err !== null) {
@@ -212,7 +212,6 @@ class ProfileMainScreen extends React.Component {
     const avatarImage = {
       uri: user?.photo ?? randomImageUrl,
     };
-    console.log(user);
 
     const translateY = this.scrollAnimatedValue.interpolate({
       inputRange: [0, 180],

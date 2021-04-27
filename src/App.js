@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, View } from 'react-native';
+import { Image, StatusBar, StyleSheet, View } from 'react-native';
 
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
@@ -24,9 +24,11 @@ import FlashMessage, {
   hideMessage,
 } from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
+import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
 
 function App() {
   const [isShowPageLoader, setIsShowPageLoader] = useState(false);
+  const [initLoading, setInitLoading] = useState(true);
 
   useEffect(() => {
     OneSignal.setLogLevel(6, 0);
@@ -112,8 +114,8 @@ function App() {
     setIsShowPageLoader(isShow);
   };
 
-  global.showPageLoader = (isShow) => {
-    setIsShowPageLoader(false);
+  global.setIsInitLoading = (isLoading) => {
+    setInitLoading(isLoading);
   };
 
   return (
@@ -125,10 +127,13 @@ function App() {
           </MenuProvider>
         </PaperProvider>
         <FlashMessage position="top" />
-        {/*<PageLoaderIndicator isPageLoader={isShowPageLoader} />*/}
-        {/*<View style={{flex: 1, backgroundColor: 'white', position: 'absolute', top: 0, left: 0, width: '100%', height: '100%'}}>
-
-        </View>*/}
+        <PageLoaderIndicator isPageLoader={isShowPageLoader} />
+        {initLoading && (
+          <View style={styles.splashContainer}>
+            <StatusBar hidden={true} />
+            <Image source={ic_logo_01} style={styles.logo} />
+          </View>
+        )}
       </View>
     </Provider>
   );
@@ -142,6 +147,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'black',
+  },
+  splashContainer: {
+    flex: 1,
+    backgroundColor: 'white',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: Constants.WINDOW_WIDTH,
+    height: Constants.WINDOW_HEIGHT,
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 999999,
+  },
+  logo: {
+    width: 120,
+    height: 120,
   },
 });
 
