@@ -217,6 +217,7 @@ dependencies {
 
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.0.0"
     implementation group: 'com.cloudinary', name: 'cloudinary-android', version: '1.30.0'
+    implementation project(':react-native-branch')
 
     debugImplementation("com.facebook.flipper:flipper:${FLIPPER_VERSION}") {
       exclude group:'com.facebook.fbjni'

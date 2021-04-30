@@ -1,16 +1,17 @@
 import React, { Component } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Image,
-  Keyboard,
-  Platform,
-  Text,
-  TextInput,
-} from 'react-native';
+import { View, Platform } from 'react-native';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import styles from './styles';
 import { GStyles } from '../../../utils/Global/Styles';
+import GradientBackgroundIconButton from './GradientBackgroundIconButton';
+
+import { LIVE_STATUS } from '../../../utils/LiveStream/Constants';
+
+import ic_switch_camera from '../../../assets/images/Icons/ic_switch_camera.png';
+import ic_menu_messages from '../../../assets/images/Icons/ic_menu_messages.png';
+import ic_share from '../../../assets/images/Icons/ic_share.png';
+import ic_gift from '../../../assets/images/Icons/ic_gift.png';
+import ic_join from '../../../assets/images/Icons/ic_join.png';
+import ic_signOut from '../../../assets/images/Icons/ic_signout.png';
 
 export default class BottomActionsGroup extends Component {
   constructor(props) {
@@ -20,58 +21,62 @@ export default class BottomActionsGroup extends Component {
     };
   }
 
-  onPressSend = () => {
-    const { message } = this.state;
-    const { onPressSend } = this.props;
-    onPressSend(message);
-    Keyboard.dismiss();
-    this.setState({ message: '' });
+  onPressGiftAction = () => {
+    const { onPressGiftAction } = this.props;
+    onPressGiftAction && onPressGiftAction();
   };
 
-  onChangeMessageText = (text) => [this.setState({ message: text })];
+  onPressMessageAction = () => {
+    const { onPressMessageAction } = this.props;
+    onPressMessageAction && onPressMessageAction();
+  };
+
+  onPressShareAction = () => {
+    const { onPressShareAction } = this.props;
+    onPressShareAction && onPressShareAction();
+  }
+
+  onPressSwitchCamera = () => {
+    const { onPressSwitchCamera } = this.props;
+    onPressSwitchCamera && onPressSwitchCamera();
+  };
 
   renderContent() {
-    const { message } = this.state;
     const { mode, isJoined, onPressJoin, onExit } = this.props;
-    const joinButtonText = isJoined ? 'Leave' : 'Join';
     const onPressJoinButton = isJoined ? onExit : onPressJoin;
+    const joinLeaveIcon = isJoined ? ic_signOut : ic_join;
 
     return (
-      <View style={GStyles.rowContainer}>
-        <View style={styles.messageInput}>
-          <TextInput
-            style={styles.textInput}
-            placeholder="Write a comment"
-            underlineColorAndroid="transparent"
-            onChangeText={this.onChangeMessageText}
-            value={message}
-            autoCapitalize="none"
-            autoCorrect={false}
-            placeholderTextColor="white"
+      <View style={GStyles.rowBetweenContainer}>
+        <View style={GStyles.rowContainer}>
+          <GradientBackgroundIconButton
+            onPress={this.onPressMessageAction}
+            icon={ic_menu_messages}
           />
-          <TouchableOpacity
-            style={styles.wrapIconSend}
-            onPress={this.onPressSend}
-            activeOpacity={0.6}
-          >
-            <Image
-              source={require('../../../assets/images/Icons/ico_send.png')}
-              style={styles.iconSend}
+          {mode === 'streamer' && (
+            <GradientBackgroundIconButton
+              onPress={this.onPressSwitchCamera}
+              icon={ic_switch_camera}
+              iconStyle={{ tintColor: 'white' }}
             />
-          </TouchableOpacity>
+          )}
+          <GradientBackgroundIconButton icon={ic_share} onPress={this.onPressShareAction} />
         </View>
-        {mode === 'viewer' && (
-          <TouchableOpacity
-            style={styles.joinButton}
-            onPress={onPressJoinButton}
-          >
-            <Image
-              source={require('../../../assets/images/Icons/ic_join.png')}
-              style={styles.iconAction}
+
+        <View style={GStyles.rowContainer}>
+          <GradientBackgroundIconButton
+            onPress={this.onPressGiftAction}
+            icon={ic_gift}
+            containerStyle={{ marginLeft: 8, marginRight: 0 }}
+          />
+          {mode === 'viewer' && (
+            <GradientBackgroundIconButton
+              onPress={onPressJoinButton}
+              icon={joinLeaveIcon}
+              containerStyle={{ marginLeft: 8, marginRight: 0 }}
             />
-            <Text style={GStyles.textSmall}>{joinButtonText}</Text>
-          </TouchableOpacity>
-        )}
+          )}
+        </View>
       </View>
     );
   }

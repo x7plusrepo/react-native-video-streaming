@@ -14,13 +14,13 @@ const Constants = {
   //** url */
   // crn_dev
   //HOST_URL: 'http://107.180.73.164:3000',
-  HOST_URL: 'http://192.168.1.109:3000',
-  CHAT_SOCKET_URL: 'http://192.168.1.109:3000/ChatStream',
+  HOST_URL: 'http://192.168.1.110:3000',
+  CHAT_SOCKET_URL: 'http://192.168.1.110:3000/ChatStream',
   //CHAT_SOCKET_URL: 'http://107.180.73.164:3000/ChatStream',
   //STREAM_SOCKET_URL: 'http://107.180.73.164:3000/LiveStream',
-  STREAM_SOCKET_URL: 'http://192.168.1.109:3000/LiveStream',
+  STREAM_SOCKET_URL: 'http://192.168.1.110:3000/LiveStream',
   //RTMP_SERVER: 'rtmp://107.180.73.164',
-  RTMP_SERVER: 'rtmp://192.168.1.109',
+  RTMP_SERVER: 'rtmp://192.168.1.110',
   GOOGLE_PLAY_URL:
     'https://play.google.com/store/apps/details?id=com.stars.android',
   APPSTORE_URL: 'https://apps.apple.com/us/app/stars/id1543058540',

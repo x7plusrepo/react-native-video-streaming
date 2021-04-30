@@ -14,15 +14,15 @@ export default class Gifts extends Component {
     };
   }
 
-  onPressGift = () => {
-    const { onPressGift } = this.props;
-    onPressGift && onPressGift();
+  onPressSendGift = () => {
+    const { onPressSendGift } = this.props;
+    onPressSendGift && onPressSendGift();
   };
 
   render() {
     return (
       <View style={styles.container}>
-        <TouchableOpacity onPress={this.onPressGift}>
+        <TouchableOpacity onPress={this.onPressSendGift}>
           <Image
             source={require('../../../assets/images/Icons/ico_heart.png')}
             style={styles.giftIcon}

@@ -11,6 +11,7 @@ import com.geektime.rnonesignalandroid.ReactNativeOneSignalPackage;
 import com.facebook.react.ReactInstanceManager;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
+import io.branch.rnbranch.RNBranchModule;
 
 import org.devio.rn.splashscreen.SplashScreenReactPackage;
 
@@ -54,6 +55,7 @@ public class MainApplication extends Application implements ReactApplication {
         super.onCreate();
         SoLoader.init(this, /* native exopackage */ false);
         initializeFlipper(this, getReactNativeHost().getReactInstanceManager());
+        RNBranchModule.getAutoInstance(this);
 
 //        crn_dev
         Map config = new HashMap();

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Image, StatusBar, StyleSheet, View } from 'react-native';
+import branch, { BranchEvent } from 'react-native-branch';
 
 import { Provider } from 'react-redux';
 import { store } from './redux/store';
@@ -7,9 +8,6 @@ import { store } from './redux/store';
 // import RestAPI from './DB/RestAPI';
 // import Constants from './DB/Constants';
 import {
-  GStyle,
-  GStyles,
-  Global,
   Helper,
   Constants,
 } from './utils/Global/index';
@@ -18,6 +16,7 @@ import OneSignal from 'react-native-onesignal'; // Import package from node modu
 import AppNavigator from './navigation/AppNavigator';
 import { MenuProvider } from 'react-native-popup-menu';
 import { Provider as PaperProvider } from 'react-native-paper';
+import * as RootNavigation from './utils/Global/RootNavigation';
 
 import FlashMessage, {
   showMessage,
@@ -25,6 +24,40 @@ import FlashMessage, {
 } from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
+
+const subscribeDeepLink = () => {
+  branch.subscribe(({ error, params, uri }) => {
+    if (error) {
+      console.error('Error from Branch: ' + error);
+      return;
+    }
+
+    // params will never be null if error is null
+
+    if (params['+non_branch_link']) {
+      const nonBranchUrl = params['+non_branch_link'];
+      // Route non-Branch URL if appropriate.
+      return;
+    }
+
+    if (!params['+clicked_branch_link']) {
+      // Indicates initialization success and some other conditions.
+      // No link was opened.
+      return;
+    }
+
+    // A Branch link was opened.
+    // Route link based on data in params, e.g.
+
+    // Get title and url for route
+    // const title = params.$og_title;
+    // const url = params.$canonical_url;
+    // const image = params.$og_image_url;
+    // const inviterId = params.inviterId;
+    const roomId = params.roomId;
+    RootNavigation.navigate('view_live', { roomId })
+  });
+};
 
 function App() {
   const [isShowPageLoader, setIsShowPageLoader] = useState(false);
@@ -47,6 +80,8 @@ function App() {
     OneSignal.addEventListener('received', onReceived);
     OneSignal.addEventListener('opened', onOpened);
     OneSignal.addEventListener('ids', onIds);
+
+    subscribeDeepLink();
 
     return () => {
       OneSignal.removeEventListener('received', onReceived);

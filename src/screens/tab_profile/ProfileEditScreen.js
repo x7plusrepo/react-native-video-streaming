@@ -27,10 +27,8 @@ import {
 } from '../../utils/Global/index';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
-import VideoUpload from '../../utils/NativeModule/NativePackage';
 import avatars from '../../assets/avatars';
 import { setMyUserAction } from '../../redux/me/actions';
-
 
 class ProfileEditScreen extends React.Component {
   constructor(props) {
@@ -39,34 +37,6 @@ class ProfileEditScreen extends React.Component {
     console.log('ProfileEditScreen start');
 
     this.init();
-  }
-
-  componentDidMount() {
-    const eventEmitter = new NativeEventEmitter(VideoUpload);
-    this.eventListener = eventEmitter.addListener(
-      'EventUploadProgress',
-      (event) => {
-        console.log(event);
-        if (parseInt(event.percent) === 100 && event.url) {
-          const curTimeTick = Helper.getTimeStamp();
-          const uploadInterval = curTimeTick - this._timeTick;
-          this._timeTick = curTimeTick;
-          if (uploadInterval > 5000) {
-            this.setState({ photo: event.url });
-            this.onSubmit();
-          }
-        } else if (event.percent < 0) {
-          showForcePageLoader(false);
-          error(Constants.ERROR_TITLE, 'Failed to upload image');
-        }
-      },
-    );
-  }
-
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      this.eventListener.remove(); //Removes the listener
-    }
   }
 
   init = () => {
@@ -156,67 +126,13 @@ class ProfileEditScreen extends React.Component {
     );
   };
 
-  uploadImageToCloudinary = () => {
-    const { profilePhotoSelSource, photo } = this.state;
-    if (!profilePhotoSelSource || photo) {
-      this.onSubmit();
-      return;
-    }
-    showForcePageLoader(true);
-
-    const data = new FormData();
-    data.append('file', profilePhotoSelSource);
-    data.append('upload_preset', 'dmljgqvn');
-    data.append('cloud_name', 'snaplist');
-    fetch('https://api.cloudinary.com/v1_1/snaplist/upload', {
-      method: 'post',
-      body: data,
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        this.setState({ photo: data.secure_url });
-        this.onSubmit();
-      })
-      .catch((err) => {
-        Alert.alert('An Error Occured While Uploading');
-        showForcePageLoader(false);
-      });
-
-    // return;
-    // const { profilePhotoSelPath, photo } = this.state;
-    // if (!profilePhotoSelPath || photo) {
-    //   this.onSubmit();
-    //   return;
-    // }
-    //
-    // showForcePageLoader(true);
-    //
-    // if (Platform.OS === 'android') {
-    //   VideoUpload.upload(
-    //     profilePhotoSelPath,
-    //     'images/',
-    //     'image',
-    //     (photo) => {
-    //       this.setState({ photo });
-    //       this.onSubmit();
-    //     },
-    //     (msg) => {
-    //       console.log('onError', msg);
-    //       showForcePageLoader(false);
-    //       error(Constants.ERROR_TITLE, 'Failed to upload image');
-    //     },
-    //   );
-    // } else {
-    //   VideoUpload.upload(
-    //     profilePhotoSelPath,
-    //     'images/',
-    //     'image',
-    //     (error, respArray) => {},
-    //   );
-    // }
-  };
-  onSubmit = () => {
-    const { userName, phoneNumber, password, photo } = this.state;
+  onSubmit = async () => {
+    const {
+      userName,
+      phoneNumber,
+      password,
+      profilePhotoSelSource,
+    } = this.state;
 
     let errors = {};
 
@@ -243,15 +159,22 @@ class ProfileEditScreen extends React.Component {
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
+      showForcePageLoader(true);
+      let uploadedUrl;
+      if (profilePhotoSelSource) {
+        uploadedUrl = await Helper.uploadImageToCloudinary(
+          profilePhotoSelSource,
+        );
+      }
+      this.setState({ photo: uploadedUrl });
       const params = {
         user_id: global.me.id,
         username: userName,
         phone: phoneNumber,
         password: password,
-        photo,
+        photo: uploadedUrl,
       };
 
-      showForcePageLoader(true);
       RestAPI.update_profile_with_image(params, (json, err) => {
         showForcePageLoader(false);
 
@@ -268,15 +191,6 @@ class ProfileEditScreen extends React.Component {
         }
       });
     }
-  };
-
-  onSignout = async () => {
-    global.me = null;
-    await Helper.removeLocalValue(Constants.KEY_USERNAME);
-    await Helper.removeLocalValue(Constants.KEY_PASSWORD);
-
-    global._prevScreen = 'profile_edit';
-    this.props.navigation.navigate('play');
   };
 
   onPressProfilePhoto = () => {
@@ -449,16 +363,9 @@ class ProfileEditScreen extends React.Component {
     return (
       <View style={{ ...GStyles.centerAlign }}>
         <View style={{ marginTop: 50 }}>
-          <TouchableOpacity onPress={this.uploadImageToCloudinary}>
+          <TouchableOpacity onPress={this.onSubmit}>
             <View style={GStyles.buttonFill}>
               <Text style={GStyles.textFill}>Save</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={{ marginTop: 20, marginBottom: 50 }}>
-          <TouchableOpacity onPress={this.onSignout}>
-            <View style={styles.buttonFill}>
-              <Text style={styles.textFill}>Sign Out</Text>
             </View>
           </TouchableOpacity>
         </View>

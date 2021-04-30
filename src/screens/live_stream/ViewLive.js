@@ -1,8 +1,14 @@
 import React, { Component } from 'react';
-import { View, SafeAreaView } from 'react-native';
+import {
+  Image,
+  TextInput,
+  TouchableOpacity,
+  View,
+  SafeAreaView,
+} from 'react-native';
 import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
-import moment from 'moment';
+import branch, { BranchEvent } from 'react-native-branch';
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import styles from './styles';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
@@ -14,7 +20,8 @@ import { connect } from 'react-redux';
 import Gifts from '../../components/LiveStream/Gifts';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import Header from '../../components/LiveStream/Header';
-import Controllers from '../../components/LiveStream/SideActionsGroup/SideActionsGroup';
+import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
+
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
 class ViewLive extends Component {
@@ -29,7 +36,8 @@ class ViewLive extends Component {
       room: {},
       isJoined: false,
     };
-    this.bottomSheet = React.createRef();
+    this.giftBottomSheet = React.createRef();
+    this.messageBottomSheet = React.createRef();
   }
 
   componentDidMount() {
@@ -161,11 +169,21 @@ class ViewLive extends Component {
   }
 
   onPressGiftAction = () => {
-    this.bottomSheet?.current?.open();
+    this.giftBottomSheet?.current?.open();
   };
 
-  onPressGift = () => {
-    this.bottomSheet?.current?.close();
+  onPressMessageAction = () => {
+    this.messageBottomSheet?.current?.open();
+  };
+
+  onPressShareAction = async () => {
+    const { room } = this.state;
+    const { user } = this.props;
+    Helper.inviteToLiveStream(room, user);
+  };
+
+  onPressSendGift = () => {
+    this.giftBottomSheet?.current?.close();
     const userId = this.props.user?.id;
 
     SocketManager.instance.emitSendHeart({
@@ -174,7 +192,7 @@ class ViewLive extends Component {
     });
   };
 
-  onPressSend = (message) => {
+  onPressSendMessage = (message) => {
     if (!message) return;
 
     const { isJoined } = this.state;
@@ -197,6 +215,7 @@ class ViewLive extends Component {
         },
       ].concat(messages),
     });
+    this.messageBottomSheet?.current?.close();
   };
 
   renderNodePlayerView = () => {
@@ -231,22 +250,19 @@ class ViewLive extends Component {
           <View style={styles.footer}>
             <MessagesList messages={messages} />
             <BottomActionsGroup
-              onPressSend={this.onPressSend}
               onPressJoin={this.onPressJoin}
               onExit={this.onLeave}
-              isJoined={isJoined}
-              mode="viewer"
-            />
-          </View>
-          <View style={styles.controllers}>
-            <Controllers
               onPressGiftAction={this.onPressGiftAction}
+              onPressMessageAction={this.onPressMessageAction}
+              onPressShareAction={this.onPressShareAction}
+              isJoined={isJoined}
+              liveStatus={liveStatus}
               mode="viewer"
             />
           </View>
         </View>
         <RBSheet
-          ref={this.bottomSheet}
+          ref={this.giftBottomSheet}
           closeOnDragDown
           openDuration={250}
           customStyles={{
@@ -263,7 +279,33 @@ class ViewLive extends Component {
             },
           }}
         >
-          <Gifts onPressGift={this.onPressGift} />
+          <Gifts onPressSendGift={this.onPressSendGift} />
+        </RBSheet>
+        <RBSheet
+          ref={this.messageBottomSheet}
+          closeOnDragDown
+          openDuration={250}
+          height={100}
+          customStyles={{
+            container: {
+              borderTopLeftRadius: 16,
+              borderTopRightRadius: 16,
+              backgroundColor: 'white',
+              paddingHorizontal: 16,
+              paddingBottom: 16,
+              justifyContent: 'center',
+              alignItems: 'center',
+            },
+            wrapper: {
+              backgroundColor: 'transparent',
+            },
+            draggableIcon: {
+              width: 0,
+              height: 0,
+            },
+          }}
+        >
+          <MessageBox onPressSendMessage={this.onPressSendMessage} />
         </RBSheet>
         <FloatingHearts count={countHeart} />
       </SafeAreaView>

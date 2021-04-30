@@ -1,4 +1,4 @@
-import {Dimensions, StyleSheet} from 'react-native';
+import { Dimensions, StyleSheet } from 'react-native';
 import { Helper } from '../../utils/Global';
 import { GStyles } from '../../utils/Global/Styles';
 
@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
   },
   header: {
     marginTop: 24,
-    zIndex: 9999,
+    zIndex: 999,
   },
   footer: {
     position: 'absolute',
@@ -50,36 +50,29 @@ const styles = StyleSheet.create({
     width: '75%',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 32
+    marginTop: 32,
   },
   beginLiveStreamText: {
     ...GStyles.regularText,
-    fontWeight: '600',
+    fontWeight: '700',
     color: 'white',
   },
   wrapperStartPanel: {
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.25)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 999,
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    zIndex: 9999,
   },
   topicInput: {
     ...GStyles.regularText,
+    height: 48,
     paddingVertical: 8,
     borderBottomWidth: 0.5,
     borderBottomColor: 'white',
     textAlign: 'center',
     width: '75%',
     color: 'white',
-  },
-  controllers: {
-    position: 'absolute',
-    right: 16,
-    bottom: 32 + 36,
-    zIndex: 99,
   },
 });
 

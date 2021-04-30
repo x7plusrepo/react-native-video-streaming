@@ -17,7 +17,7 @@ import avatars from '../../assets/avatars';
 
 import { setMyUserAction } from '../../redux/me/actions';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global/index';
+import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global/index';
 
 import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
 import ic_upload from '../../assets/images/Icons/ic_upload.png';
@@ -34,7 +34,7 @@ import ic_support from '../../assets/images/Icons/ic_support.png';
 import ic_signIn from '../../assets/images/Icons/ic_signin.png';
 import ic_signOut from '../../assets/images/Icons/ic_signout.png';
 
-const getMenuItems = (navigation) => {
+const getMenuItems = (navigation, setMyUserAction) => {
   let menu = [
     {
       icon: ic_tab_liveStream,
@@ -121,7 +121,15 @@ const getMenuItems = (navigation) => {
       : {
           icon: ic_signOut,
           title: 'Sign Out',
-          onPress: () => {},
+          onPress: async () => {
+            global.me = null;
+            setMyUserAction(null)
+            await Helper.removeLocalValue(Constants.KEY_USERNAME);
+            await Helper.removeLocalValue(Constants.KEY_PASSWORD);
+
+            global._prevScreen = 'profile_edit';
+            navigation.navigate('play');
+          },
         },
   );
 
@@ -240,7 +248,7 @@ class ProfileMainScreen extends React.Component {
           <Animated.View style={topAnimatedStyle}>
             <TouchableOpacity
               onPress={this.onPressProfile}
-              disabled={global.me.isGuest}
+              //disabled={global.me.isGuest}
               style={{ ...GStyles.centerAlign }}
             >
               <Avatar image={avatarImage} size={106} />
@@ -299,7 +307,7 @@ class ProfileMainScreen extends React.Component {
             )}
           >
             <View style={styles.menuContainer}>
-              {getMenuItems(navigation).map((menu, index) => (
+              {getMenuItems(navigation, setMyUserAction).map((menu, index) => (
                 <TouchableOpacity
                   style={styles.menuItem}
                   onPress={menu.onPress}

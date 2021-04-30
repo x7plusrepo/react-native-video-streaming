@@ -1,47 +1,47 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import styles from './styles';
 import GStyles from '../../utils/Global/Styles';
+import { GStyle } from '../../utils/Global';
+import ScrollableTabView, {
+  DefaultTabBar,
+} from 'react-native-scrollable-tab-view';
+import PanelLive from './PanelLive';
 
 const StartPanel = ({ onPressStart }) => {
-  const [topic, setTopic] = useState('');
-  const onPress = () => {
-    onPressStart && onPressStart(topic);
-    setTopic('');
-  };
-  const onChangeMessageText = (text) => setTopic(text);
 
   return (
     <View style={styles.wrapperStartPanel}>
-      <TextInput
-        style={styles.topicInput}
-        placeholder="Pick a topic to chat?"
-        underlineColorAndroid="transparent"
-        autoCapitalize="none"
-        autoCorrect={false}
-        placeholderTextColor="white"
-        onChangeText={onChangeMessageText}
-      />
-      <TouchableOpacity
-        onPress={onPress}
-        style={[
-          styles.btnBeginLiveStream,
-          { backgroundColor: GStyles.primaryColor },
-        ]}
+      <ScrollableTabView
+        initialPage={0}
+        tabBarPosition='overlayBottom'
+        tabBarBackgroundColor={'transparent'}
+        tabBarTextStyle={styles.tabBarTextStyle}
+        tabBarInactiveTextColor={'white'}
+        tabBarActiveTextColor={GStyle.activeColor}
+        tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
+        renderTabBar={() => (
+          <DefaultTabBar
+            style={{
+              borderWidth: 0,
+              backgroundColor: 'white',
+            }}
+          />
+        )}
       >
-        <Text style={styles.beginLiveStreamText}>Start Live Broadcast</Text>
-      </TouchableOpacity>
+        <PanelLive tabLabel="Live" onPressStart={onPressStart} />
+        <PanelLive tabLabel="Multi Guest Live" onPressStart={onPressStart} />
+        <PanelLive tabLabel="Audio Live" onPressStart={onPressStart} />
+      </ScrollableTabView>
     </View>
   );
 };
 
-StartPanel.propTypes = {
-  navigation: PropTypes.shape({
-    goBack: PropTypes.func,
-  }),
-  currentLiveStatus: PropTypes.number,
-  onPress: PropTypes.func,
-};
+const style = StyleSheet.create({
+    container: {
+
+    }
+})
 
 export default StartPanel;

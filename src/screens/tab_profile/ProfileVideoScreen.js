@@ -19,7 +19,7 @@ import {
   StackActions,
 } from '@react-navigation/native';
 import convertToProxyURL from 'react-native-video-cache';
-import Share  from 'react-native-share';
+import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
@@ -160,7 +160,7 @@ class ProfileVideoScreen extends Component {
     this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
     if (type === 'init') {
-      showForcePageLoader(true);
+      //showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -284,7 +284,7 @@ class ProfileVideoScreen extends Component {
         video_id: item.id,
         is_like: isChecked,
       };
-      showForcePageLoader(true);
+      //showForcePageLoader(true);
       RestAPI.update_like_video(params, (json, err) => {
         showForcePageLoader(false);
 
@@ -660,28 +660,75 @@ class ProfileVideoScreen extends Component {
               backgroundColor: 'black',
             }}
           />
-          <View style={GStyles.playInfoWrapper}>
+          <View style={GStyles.profileVideoInfoWrapper}>
+            <View style={GStyles.rowEndContainer}>
+              <View>
+                <View style={GStyles.videoActionButton}>
+                  <Image
+                    source={ic_eye}
+                    style={[GStyles.actionIcons, { tintColor: 'white'}]}
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressLike(!isLike, item);
+                  }}
+                  style={[
+                    GStyles.videoActionButton,
+                  ]}
+                >
+                  <Image
+                    source={ic_menu_saved_products}
+                    style={{
+                      ...GStyles.actionIcons,
+                      tintColor: isLike ? GStyle.primaryColor : 'white',
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressMessage(item);
+                  }}
+                  style={GStyles.videoActionButton}
+                >
+                  <Image
+                    source={ic_menu_messages}
+                    style={GStyles.actionIcons}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressShare(item);
+                  }}
+                  style={GStyles.videoActionButton}
+                >
+                  <Image source={ic_share} style={GStyles.actionIcons} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
             <View>
-              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 <View style={GStyles.rowContainer}>
                   <View style={GStyles.playInfoTextWrapper}>
                     <Text style={GStyles.playInfoText}>৳{item.price}</Text>
                   </View>
                   {!!item.sticker && (
-                      <View
-                          style={[GStyles.playInfoTextWrapper, { marginLeft: 4 }]}
-                      >
-                        <Text style={GStyles.playInfoText}>
-                          {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
-                        </Text>
-                      </View>
+                    <View
+                      style={[GStyles.playInfoTextWrapper, { marginLeft: 4 }]}
+                    >
+                      <Text style={GStyles.playInfoText}>
+                        {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
+                      </Text>
+                    </View>
                   )}
                 </View>
                 <View style={GStyles.playInfoTextWrapper}>
                   <Text style={GStyles.playInfoText}>lorem ipsum</Text>
                 </View>
               </View>
-              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 <View style={GStyles.playInfoTextWrapper}>
                   <Text numberOfLines={3} style={GStyles.playInfoText}>
                     {newTagList}
@@ -692,81 +739,31 @@ class ProfileVideoScreen extends Component {
                   <Text style={GStyles.playInfoText}>#{item.number}</Text>
                 </View>
               </View>
-              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 {!!item?.description ? (
-                    <View style={GStyles.playInfoTextWrapper}>
-                      <Text numberOfLines={5} style={GStyles.playInfoText}>
-                        {item.description}
-                      </Text>
-                    </View>
+                  <View style={GStyles.playInfoTextWrapper}>
+                    <Text numberOfLines={5} style={GStyles.playInfoText}>
+                      {item.description}
+                    </Text>
+                  </View>
                 ) : (
-                    <View />
+                  <View />
                 )}
 
                 <View style={GStyles.centerAlign}>
                   <Avatar
-                      image={{
-                        uri: user.photo ? user.photo : randomImageUrl,
-                      }}
-                      size={48}
-                      onPress={() => {
-                        this.onPressAvatar(item);
-                      }}
-                      containerStyle={{ marginBottom: 4 }}
+                    image={{
+                      uri: user.photo ? user.photo : randomImageUrl,
+                    }}
+                    size={48}
+                    onPress={() => {
+                      this.onPressAvatar(item);
+                    }}
+                    containerStyle={{ marginBottom: 4 }}
                   />
                   <Text style={GStyles.textSmall}>{user.username}</Text>
                 </View>
               </View>
-            </View>
-
-            <View style={GStyles.rowEndContainer}>
-              <View style={GStyles.videoActionButton}>
-                <Image
-                    source={ic_eye}
-                    style={{
-                      ...GStyles.videoActionIcon,
-                      tintColor: isLike ? GStyle.redColor : 'white',
-                    }}
-                />
-                <Text style={GStyles.textSmall}>{100}</Text>
-              </View>
-              <TouchableOpacity
-                  onPress={() => {
-                    this.onPressLike(!isLike, item);
-                  }}
-                  style={GStyles.videoActionButton}
-              >
-                <Image
-                    source={ic_menu_saved_products}
-                    style={{
-                      ...GStyles.videoActionIcon,
-                      tintColor: isLike ? GStyle.redColor : 'white',
-                    }}
-                />
-                <Text style={GStyles.textSmall}>{item.likeCount}k</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                  onPress={() => {
-                    this.onPressMessage(item);
-                  }}
-                  style={GStyles.videoActionButton}
-              >
-                <Image
-                    source={ic_menu_messages}
-                    style={GStyles.videoActionIcon}
-                />
-                <Text style={GStyles.textSmall}>Chat</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                  onPress={() => {
-                    this.onPressShare(item);
-                  }}
-                  style={GStyles.videoActionButton}
-              >
-                <Image source={ic_share} style={GStyles.videoActionIcon} />
-                <Text style={GStyles.textSmall}>Share</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>

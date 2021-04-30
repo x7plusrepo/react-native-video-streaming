@@ -9,7 +9,7 @@ import { Helper, GStyle } from '../../utils/Global';
 import { GStyles } from '../../utils/Global/Styles';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
-const ITEM_WIDTH = (WINDOW_WIDTH - 16 - 8) / 2;
+const ITEM_WIDTH = (WINDOW_WIDTH - 32 - 16) / 2;
 const LiveStreamRoom = (props) => {
   const { room, index } = props;
   const navigation = useNavigation();
@@ -17,14 +17,18 @@ const LiveStreamRoom = (props) => {
     navigation.navigate('view_live', { roomId: room?.id });
   };
 
-  const image = room.thumbnail ? { uri: room.thumbnail } : stream_thumbnail;
+  const thumbnail = room?.thumbnail || room?.user?.photo;
 
   return (
     <TouchableOpacity
-      style={[styles.card, index % 2 === 0 && { marginRight: 8 }]}
+      style={[styles.card, index % 2 === 0 && { marginRight: 16 }]}
       onPress={onPress}
     >
-      <Image source={image} resizeMode="cover" style={styles.thumbnail} />
+      <Image
+        source={{ uri: thumbnail }}
+        resizeMode="cover"
+        style={styles.thumbnail}
+      />
       <View style={styles.infoWrapper}>
         <View style={styles.top}>
           <View style={[styles.row, styles.multiGuest]}>
@@ -42,7 +46,16 @@ const LiveStreamRoom = (props) => {
         <View style={styles.bottom}>
           <View style={styles.row}>
             <Image source={ic_speaker} style={styles.icons} />
-            <Text style={GStyles.textSmall}>{room?.roomName}</Text>
+            <View style={{flexShrink: 1}}>
+              <Text
+                  style={GStyles.textSmall}
+                  numberOfLines={1}
+                  ellipsizeMode="tail"
+              >
+                {room?.topic || room?.roomName}
+              </Text>
+            </View>
+
           </View>
         </View>
       </View>
@@ -56,7 +69,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    backgroundColor: GStyle.primaryColor,
+    backgroundColor: GStyle.greenColor,
     borderRadius: 8,
     marginTop: 16,
     overflow: 'hidden',
@@ -107,6 +120,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.4)',
     borderRadius: 16,
   },
+  topic: {},
 });
 
 export default LiveStreamRoom;

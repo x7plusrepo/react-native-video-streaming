@@ -3,7 +3,6 @@ import { GStyles } from '../../../utils/Global/Styles';
 
 const styles = StyleSheet.create({
   messageInput: {
-    flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -11,12 +10,7 @@ const styles = StyleSheet.create({
   },
   textInput: {
     flex: 1,
-    ...GStyles.textSmall
-  },
-  joinButton: {
-    ...GStyles.rowEndContainer,
-    marginLeft: 10,
-    ...GStyles.liveStreamActionButtons,
+    ...GStyles.textSmall,
   },
   wrapIconSend: {
     justifyContent: 'center',
@@ -27,11 +21,16 @@ const styles = StyleSheet.create({
     width: 20,
     height: 20,
   },
-  iconAction: {
-    width: 16,
-    height: 16,
-    marginRight: 6,
-  }
+  actionWrapper: {
+    marginRight: 8,
+  },
+  gradient: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 24,
+    padding: 10,
+    overflow: 'hidden',
+  },
 });
 
 export default styles;

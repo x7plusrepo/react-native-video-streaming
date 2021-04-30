@@ -35,7 +35,7 @@ const CFeedbackItem = ({item, onPress}) => (
   <View style={{flexDirection: 'row', alignItems: 'center'}}>
     <Image source={item.avatar} style={[GStyles.image, {width: 50}]} />
     <View style={{flex: 1, marginLeft: 10}}>
-      <View style={[GStyles.rowEndContainer, {marginTop: 8}]}>
+      <View style={[GStyles.rowBetweenContainer, {marginTop: 8}]}>
         <Text style={GStyles.regularText}>{item.name}</Text>
         <AirbnbRating
           defaultRating={item.star}

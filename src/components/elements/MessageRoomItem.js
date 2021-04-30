@@ -61,7 +61,7 @@ const MessageRoomItem = ({item, onPress}) => (
             flex: 1,
           }}>
           <Text style={GStyles.regularText}>{item.opponent_name}</Text>
-          <View style={{...GStyles.rowEndContainer, marginTop: 5}}>
+          <View style={{...GStyles.rowBetweenContainer, marginTop: 5}}>
             <Text
               numberOfLines={1}
               style={{

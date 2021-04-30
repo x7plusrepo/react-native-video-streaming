@@ -113,8 +113,8 @@ class SocketManager {
   }
 
   removeBeginLiveStream = () => {
-    this.socket.removeAllListeners(EVENT_BEGIN_LIVE_STREAM)
-  }
+    this.socket.removeAllListeners(EVENT_BEGIN_LIVE_STREAM);
+  };
 
   listenFinishLiveStream(callback = () => null) {
     this.socket.on(EVENT_FINISH_LIVE_STREAM, (data) => {
@@ -124,7 +124,7 @@ class SocketManager {
   }
 
   removeFinishLiveStream = () => {
-    this.socket.removeAllListeners(EVENT_FINISH_LIVE_STREAM)
+    this.socket.removeAllListeners(EVENT_FINISH_LIVE_STREAM);
   };
 
   listenListLiveStream(callback = () => null) {
@@ -135,8 +135,8 @@ class SocketManager {
   }
 
   removeListLiveStream = () => {
-    this.socket.removeAllListeners(EVENT_LIST_LIVE_STREAM)
-  }
+    this.socket.removeAllListeners(EVENT_LIST_LIVE_STREAM);
+  };
 
   listenSendHeart(callback = () => null) {
     this.socket.on(EVENT_SEND_HEART, () => {
@@ -169,7 +169,7 @@ class SocketManager {
 
   removeReplay = () => {
     this.socket.removeAllListeners(EVENT_SEND_MESSAGE);
-  }
+  };
 
   //
   // ──────────────────────────────────────────────────────────── I ──────────
@@ -189,8 +189,13 @@ class SocketManager {
     this.socket.emit(EVENT_LEAVE_ROOM, { streamerId, userId });
   }
 
-  emitBeginLiveStream({ streamerId, roomName }) {
-    this.socket.emit(EVENT_BEGIN_LIVE_STREAM, { streamerId, roomName });
+  emitBeginLiveStream({ streamerId, roomName, topic, thumbnail }) {
+    this.socket.emit(EVENT_BEGIN_LIVE_STREAM, {
+      streamerId,
+      roomName,
+      topic,
+      thumbnail,
+    });
   }
 
   emitFinishLiveStream({ streamerId }) {

@@ -103,7 +103,7 @@ const GStyles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  rowEndContainer: {
+  rowBetweenContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -112,6 +112,12 @@ const GStyles = StyleSheet.create({
   rowCenterContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+
+  rowEndContainer: {
+    flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
 
@@ -262,7 +268,7 @@ const GStyles = StyleSheet.create({
   },
   textSmall: {
     fontFamily: 'GothamPro',
-    fontWeight: '500',
+    fontWeight: '600',
     fontSize: 12,
     color: 'white',
   },
@@ -274,11 +280,11 @@ const GStyles = StyleSheet.create({
   },
   videoActionButton: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: GStyle.primaryColor,
-    height: 36,
-    paddingHorizontal: 15,
+    backgroundColor: 'rgba(200, 58, 132, 0.71)',
+    padding: 10,
+    marginBottom: 16,
     borderRadius: 32,
   },
   playInfoTextWrapper: {
@@ -292,15 +298,21 @@ const GStyles = StyleSheet.create({
     fontSize: 12,
     color: 'black',
   },
-  videoActionIcon: {
+  actionIcons: {
     width: 16,
     height: 16,
-    marginRight: 6,
   },
   playInfoWrapper: {
     position: 'absolute',
     width: '100%',
     bottom: 66 + Helper.getBottomBarHeight(),
+    left: 0,
+    paddingHorizontal: 16,
+  },
+  profileVideoInfoWrapper: {
+    position: 'absolute',
+    width: '100%',
+    bottom: 24 + Helper.getBottomBarHeight(),
     left: 0,
     paddingHorizontal: 16,
   },

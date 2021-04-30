@@ -30,6 +30,7 @@ import GoLive from '../screens/live_stream/GoLive';
 import ViewLive from '../screens/live_stream/ViewLive';
 
 import { Helper } from '../utils/Global/index';
+import { navigationRef, isReadyRef } from './../utils/Global/RootNavigation';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';
 // import WorkScreen from '../screens/auth/FCAccountStep1Screen';
@@ -52,7 +53,13 @@ const config = {
 
 export default function App() {
   return (
-    <NavigationContainer theme={{ colors: { background: 'black' } }}>
+    <NavigationContainer
+        theme={{ colors: { background: 'black' } }}
+        ref={navigationRef}
+        onReady={() => {
+            isReadyRef.current = true;
+        }}
+    >
       <Stack.Navigator
         screenOptions={{
           headerShown: false,

@@ -646,7 +646,7 @@ class PlayMainScreen extends Component {
             playWhenInactive={false}
             playInBackground={false}
             poster={item.thumb}
-            //posterResizeMode="contain"
+            posterResizeMode="contain"
             onReadyForDisplay={() => {
               this.onVideoReadyForDisplay(item);
             }}
@@ -670,8 +670,53 @@ class PlayMainScreen extends Component {
             }}
           />
           <View style={GStyles.playInfoWrapper}>
+            <View style={GStyles.rowEndContainer}>
+              <View>
+                <View style={GStyles.videoActionButton}>
+                  <Image
+                    source={ic_eye}
+                    style={[GStyles.actionIcons, { tintColor: 'white' }]}
+                  />
+                </View>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressLike(!isLike, item);
+                  }}
+                  style={[GStyles.videoActionButton]}
+                >
+                  <Image
+                    source={ic_menu_saved_products}
+                    style={{
+                      ...GStyles.actionIcons,
+                      tintColor: isLike ? GStyle.primaryColor : 'white',
+                    }}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressMessage(item);
+                  }}
+                  style={GStyles.videoActionButton}
+                >
+                  <Image
+                    source={ic_menu_messages}
+                    style={GStyles.actionIcons}
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressShare(item);
+                  }}
+                  style={GStyles.videoActionButton}
+                >
+                  <Image source={ic_share} style={GStyles.actionIcons} />
+                </TouchableOpacity>
+              </View>
+            </View>
+
             <View>
-              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 <View style={GStyles.rowContainer}>
                   <View style={GStyles.playInfoTextWrapper}>
                     <Text style={GStyles.playInfoText}>৳{item.price}</Text>
@@ -690,7 +735,7 @@ class PlayMainScreen extends Component {
                   <Text style={GStyles.playInfoText}>lorem ipsum</Text>
                 </View>
               </View>
-              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 <View style={GStyles.playInfoTextWrapper}>
                   <Text numberOfLines={3} style={GStyles.playInfoText}>
                     {newTagList}
@@ -701,7 +746,7 @@ class PlayMainScreen extends Component {
                   <Text style={GStyles.playInfoText}>#{item.number}</Text>
                 </View>
               </View>
-              <View style={[GStyles.rowEndContainer, { marginBottom: 8 }]}>
+              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 {!!item?.description ? (
                   <View style={GStyles.playInfoTextWrapper}>
                     <Text numberOfLines={5} style={GStyles.playInfoText}>
@@ -726,56 +771,6 @@ class PlayMainScreen extends Component {
                   <Text style={GStyles.textSmall}>{user.username}</Text>
                 </View>
               </View>
-            </View>
-
-            <View style={GStyles.rowEndContainer}>
-              <View style={GStyles.videoActionButton}>
-                <Image
-                  source={ic_eye}
-                  style={{
-                    ...GStyles.videoActionIcon,
-                    tintColor: isLike ? GStyle.redColor : 'white',
-                  }}
-                />
-                <Text style={GStyles.textSmall}>{100}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  this.onPressLike(!isLike, item);
-                }}
-                style={GStyles.videoActionButton}
-              >
-                <Image
-                  source={ic_menu_saved_products}
-                  style={{
-                    ...GStyles.videoActionIcon,
-                    tintColor: isLike ? GStyle.redColor : 'white',
-                  }}
-                />
-                <Text style={GStyles.textSmall}>{item.likeCount}k</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() => {
-                  this.onPressMessage(item);
-                }}
-                style={GStyles.videoActionButton}
-              >
-                <Image
-                  source={ic_menu_messages}
-                  style={GStyles.videoActionIcon}
-                />
-                <Text style={GStyles.textSmall}>Chat</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  this.onPressShare(item);
-                }}
-                style={GStyles.videoActionButton}
-              >
-                <Image source={ic_share} style={GStyles.videoActionIcon} />
-                <Text style={GStyles.textSmall}>Share</Text>
-              </TouchableOpacity>
             </View>
           </View>
         </View>

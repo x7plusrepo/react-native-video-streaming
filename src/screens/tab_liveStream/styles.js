@@ -3,7 +3,7 @@ import GStyle from '../../utils/Global/Styles';
 
 const styles = StyleSheet.create({
   flatListContentContainer: {
-    paddingHorizontal: 8,
+    paddingHorizontal: 16,
   },
   tabBarTextStyle: {
     fontFamily: 'GothamPro-Medium',

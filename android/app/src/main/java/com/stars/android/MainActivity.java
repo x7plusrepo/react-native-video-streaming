@@ -1,4 +1,7 @@
 package com.stars.android;
+import io.branch.rnbranch.*; // <-- add this
+import android.content.Intent; // <-- and this
+import io.branch.rnbranch.RNBranchModule;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -31,6 +34,17 @@ public class MainActivity extends ReactActivity {
 //        requestPermission();
     }
 
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        RNBranchModule.onNewIntent(intent);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        RNBranchModule.initSession(getIntent().getData(), this);
+    }
     /**
      * Returns the name of the main component registered from JavaScript. This is used to schedule
      * rendering of the component.

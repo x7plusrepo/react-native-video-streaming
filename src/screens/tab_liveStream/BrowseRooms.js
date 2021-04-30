@@ -19,16 +19,9 @@ class BrowseRooms extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('liveStream'));
-      Helper.setLightStatusBar();
-    });
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
-
     this._isMounted = false;
   }
 
@@ -37,7 +30,7 @@ class BrowseRooms extends React.Component {
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white', paddingTop: 16 }}>
         <ScrollableTabView
           initialPage={0}
-          tabBarBackgroundColor={GStyle.snowColor}
+          tabBarBackgroundColor='white'
           tabBarTextStyle={styles.tabBarTextStyle}
           tabBarInactiveTextColor={'black'}
           tabBarActiveTextColor={GStyle.activeColor}

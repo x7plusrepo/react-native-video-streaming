@@ -97,7 +97,7 @@ const UserItem = ({item, onPress, onFavorite}) => {
 
       <View style={[GStyles.shadow, {marginLeft: 16, marginTop: 16}]}>
         <View style={styles.descriptionContainer}>
-          <View style={GStyles.rowEndContainer}>
+          <View style={GStyles.rowBetweenContainer}>
             <TouchableOpacity
               onPress={() => {
                 onPress(item.user_id);
