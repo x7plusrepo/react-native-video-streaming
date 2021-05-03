@@ -2,6 +2,7 @@ import React from 'react';
 import {
   Animated,
   Image,
+  Linking,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -17,7 +18,13 @@ import avatars from '../../assets/avatars';
 
 import { setMyUserAction } from '../../redux/me/actions';
 
-import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global/index';
+import {
+  Constants,
+  GStyle,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global/index';
 
 import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
 import ic_upload from '../../assets/images/Icons/ic_upload.png';
@@ -29,16 +36,18 @@ import ic_menu_drafts from '../../assets/images/Icons/ic_menu_drafts.png';
 import ic_tab_top from '../../assets/images/Icons/ic_tab_top.png';
 import ic_menu_downloads from '../../assets/images/Icons/ic_menu_downloads.png';
 import ic_menu_saved_products from '../../assets/images/Icons/ic_menu_saved_products.png';
-import ic_my_posts from '../../assets/images/Icons/ic_my_posts.png';
+import ic_my_products from '../../assets/images/Icons/ic_my_products.png';
 import ic_support from '../../assets/images/Icons/ic_support.png';
 import ic_signIn from '../../assets/images/Icons/ic_signin.png';
 import ic_signOut from '../../assets/images/Icons/ic_signout.png';
+import ic_sign from '../../assets/images/Icons/ic_vip.png';
 
 const getMenuItems = (navigation, setMyUserAction) => {
   let menu = [
     {
       icon: ic_tab_liveStream,
-      title: 'Go Live',
+      title: 'Start broadcast',
+      hideGuest: true,
       onPress: () => {
         navigation.navigate('go_live');
       },
@@ -46,16 +55,17 @@ const getMenuItems = (navigation, setMyUserAction) => {
     {
       icon: ic_upload,
       title: 'Upload Products',
+      hideGuest: true,
       onPress: () => {
         global._prevScreen = 'profile';
         navigation.navigate('camera_main');
       },
-    },
+    } /*
     {
       icon: ic_tab_play,
       title: 'Release Reels',
       onPress: () => {},
-    },
+    },*/,
     {
       icon: ic_menu_messages,
       title: 'Messages',
@@ -64,6 +74,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
     {
       icon: ic_menu_fans,
       title: 'Fans',
+      hideGuest: true,
       onPress: () => {},
     },
     {
@@ -74,6 +85,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
     {
       icon: ic_menu_drafts,
       title: 'Drafts',
+      hideGuest: true,
       onPress: () => {
         navigation.navigate('camera_draft');
       },
@@ -86,24 +98,24 @@ const getMenuItems = (navigation, setMyUserAction) => {
     {
       icon: ic_menu_saved_products,
       title: 'Saved Products',
+      hideGuest: true,
       onPress: () => {
         navigation.navigate('saved_products');
       },
     },
     {
-      icon: ic_my_posts,
-      title: 'My Posts',
+      icon: ic_my_products,
+      title: 'My Products',
+      hideGuest: true,
       onPress: () => {
-        navigation.navigate('my_posts');
+        navigation.navigate('my_products');
       },
     },
     {
       icon: ic_support,
-      title: 'Customer Support',
+      title: '01913379598',
       onPress: () => {
-        global._roomId = '1';
-        global._opponentName = 'Stars';
-        navigation.navigate('message_chat');
+        Linking.openURL(`tel:01913379598`);
       },
     },
   ];
@@ -111,7 +123,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
   menu.push(
     global.me.isGuest
       ? {
-          icon: ic_signIn,
+          icon: ic_sign,
           title: 'Sign In',
           onPress: () => {
             global._prevScreen = 'profile_edit';
@@ -119,11 +131,11 @@ const getMenuItems = (navigation, setMyUserAction) => {
           },
         }
       : {
-          icon: ic_signOut,
+          icon: ic_sign,
           title: 'Sign Out',
           onPress: async () => {
             global.me = null;
-            setMyUserAction(null)
+            setMyUserAction(null);
             await Helper.removeLocalValue(Constants.KEY_USERNAME);
             await Helper.removeLocalValue(Constants.KEY_PASSWORD);
 
@@ -307,23 +319,28 @@ class ProfileMainScreen extends React.Component {
             )}
           >
             <View style={styles.menuContainer}>
-              {getMenuItems(navigation, setMyUserAction).map((menu, index) => (
-                <TouchableOpacity
-                  style={styles.menuItem}
-                  onPress={menu.onPress}
-                  key={index.toString()}
-                >
-                  <Image source={menu.icon} style={styles.menuIcon} />
+              {getMenuItems(navigation, setMyUserAction).map((menu, index) => {
+                if (user.isGuest && menu.hideGuest) {
+                  return null;
+                }
+                return (
+                  <TouchableOpacity
+                    style={styles.menuItem}
+                    onPress={menu.onPress}
+                    key={index.toString()}
+                  >
+                    <Image source={menu.icon} style={styles.menuIcon} />
 
-                  <View style={styles.menuRight}>
-                    <Text style={GStyles.regularText}>{menu.title}</Text>
-                    <Image
-                      source={ic_chevron_right}
-                      style={styles.chevronRight}
-                    />
-                  </View>
-                </TouchableOpacity>
-              ))}
+                    <View style={styles.menuRight}>
+                      <Text style={GStyles.regularText}>{menu.title}</Text>
+                      <Image
+                        source={ic_chevron_right}
+                        style={styles.chevronRight}
+                      />
+                    </View>
+                  </TouchableOpacity>
+                );
+              })}
             </View>
           </Animated.ScrollView>
         </View>

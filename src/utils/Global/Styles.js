@@ -260,12 +260,6 @@ const GStyles = StyleSheet.create({
     fontSize: 12,
     fontWeight: '700',
   },
-  liveStreamActionButtons: {
-    backgroundColor: 'rgba(0, 0, 0, 0.4)',
-    height: 36,
-    paddingHorizontal: 15,
-    borderRadius: 32,
-  },
   textSmall: {
     fontFamily: 'GothamPro',
     fontWeight: '600',
@@ -288,6 +282,7 @@ const GStyles = StyleSheet.create({
     borderRadius: 32,
   },
   playInfoTextWrapper: {
+    flexDirection: 'row',
     backgroundColor: 'white',
     padding: 6,
     borderRadius: 4,

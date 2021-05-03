@@ -32,13 +32,13 @@ import GHeaderBar from '../../components/GHeaderBar';
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 3;
 
-class MyVideoScreen extends React.Component {
+class MyProductsScreen extends React.Component {
   static contextType = NavigationContext;
 
   constructor(props) {
     super(props);
 
-    console.log('MyVideoScreen start');
+    console.log('MyProductsScreen start');
 
     this.init();
   }
@@ -154,7 +154,7 @@ class MyVideoScreen extends React.Component {
     return (
       <SafeAreaView style={GStyles.container}>
         <GHeaderBar
-          headerTitle="My Posts"
+          headerTitle="My Products"
           leftType="back"
           navigation={navigation}
         />
@@ -348,7 +348,7 @@ const styles = StyleSheet.create({
 const TProfileMyVideoScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
-  return <MyVideoScreen {...props} navigation={navigation} route={route} />;
+  return <MyProductsScreen {...props} navigation={navigation} route={route} />;
 };
 
 export default connect((state) => ({}), { setMyPostCount })(

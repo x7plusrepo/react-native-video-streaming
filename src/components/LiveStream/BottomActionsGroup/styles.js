@@ -6,7 +6,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    ...GStyles.liveStreamActionButtons,
+    backgroundColor: 'rgba(0, 0, 0, 0.4)',
+    height: 44,
+    paddingHorizontal: 15,
+    borderRadius: 32,
   },
   textInput: {
     flex: 1,
@@ -18,8 +21,8 @@ const styles = StyleSheet.create({
     marginLeft: 8,
   },
   iconSend: {
-    width: 20,
-    height: 20,
+    width: 24,
+    height: 24,
   },
   actionWrapper: {
     marginRight: 8,

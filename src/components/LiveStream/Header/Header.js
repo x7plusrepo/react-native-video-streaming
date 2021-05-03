@@ -11,9 +11,9 @@ import GStyle from '../../../utils/Global/Styles';
 import { LIVE_STATUS } from '../../../utils/LiveStream/Constants';
 
 import avatar_decoration from '../../../assets/images/Icons/avatar_decoration.png';
-import ic_bean from '../../../assets/images/Icons/ic_bean.png';
+import ic_love from '../../../assets/images/Icons/ic_love-potion.png';
 import ic_star from '../../../assets/images/Icons/ic_star.png';
-import ic_tab_play from '../../../assets/images/Icons/ic_tab_play.png';
+import ic_flame from '../../../assets/images/Icons/ic_flame.png';
 import ic_close from '../../../assets/images/Icons/ic_close.png';
 
 import avatars from '../../../assets/avatars';
@@ -27,12 +27,16 @@ class Component extends React.Component {
   }
 
   onPressClose = () => {
-    const { navigation } = this.props;
-    navigation.goBack();
+    const { navigation, onPressClose } = this.props;
+    if (onPressClose) {
+      onPressClose();
+    } else {
+      navigation.goBack();
+    }
   };
 
   render() {
-    const { streamer, liveStatus } = this.props;
+    const { streamer, liveStatus, mode } = this.props;
     const streamerName = streamer?.username;
     const avatarImage = { uri: streamer?.photo || randomImageUrl };
     const badgeBackground =
@@ -67,7 +71,7 @@ class Component extends React.Component {
           <View style={styles.streamInfoWrapper}>
             <View style={styles.streamInfo}>
               <View style={styles.infoLabelWrapper}>
-                <Image source={ic_bean} style={styles.infoIcon} />
+                <Image source={ic_love} style={styles.infoIcon} />
                 <Text style={styles.archiveText}>22, 345</Text>
               </View>
             </View>
@@ -79,7 +83,7 @@ class Component extends React.Component {
             </View>
             <View style={styles.streamInfo}>
               <View style={styles.infoLabelWrapper}>
-                <Image source={ic_tab_play} style={styles.infoIcon} />
+                <Image source={ic_flame} style={styles.infoIcon} />
                 <Text style={styles.infoText}>Share</Text>
               </View>
             </View>
@@ -94,11 +98,16 @@ class Component extends React.Component {
               tintColor="white"
             />
           </TouchableOpacity>
-          <View
-            style={[styles.badgeWrapper, { backgroundColor: badgeBackground }]}
-          >
-            <Text style={styles.badgeText}>{badgeText}</Text>
-          </View>
+          {mode !== 'streamer' && (
+            <View
+              style={[
+                styles.badgeWrapper,
+                { backgroundColor: badgeBackground },
+              ]}
+            >
+              <Text style={styles.badgeText}>{badgeText}</Text>
+            </View>
+          )}
         </View>
       </View>
     );

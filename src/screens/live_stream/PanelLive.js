@@ -21,7 +21,7 @@ const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
 const PanelLive = (props) => {
-  const { onPressStart } = props;
+  const { onPressStart, currentLiveStatus } = props;
   const [topic, setTopic] = useState('');
   const [thumbnail, setThumbnail] = useState(null);
   const onChangeText = (text) => setTopic(text);
@@ -32,8 +32,8 @@ const PanelLive = (props) => {
     onPressStart && onPressStart(topic, uploadedUrl);
   };
   const onPressClose = () => {
-    // const navigation = useNavigation();
-    // navigation.goBack();
+    const { onPressClose } = props;
+    onPressClose && onPressClose();
   };
 
   const onPressThumbnail = () => {
@@ -102,6 +102,7 @@ const PanelLive = (props) => {
           styles.btnBeginLiveStream,
           { backgroundColor: GStyle.primaryColor },
         ]}
+        disabled={currentLiveStatus === -1}
       >
         <Text style={styles.beginLiveStreamText}>Go LIVE</Text>
       </TouchableOpacity>

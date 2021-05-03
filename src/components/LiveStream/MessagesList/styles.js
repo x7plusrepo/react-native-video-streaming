@@ -9,6 +9,7 @@ const styles = StyleSheet.create({
     width: screenWidth,
     paddingHorizontal: 16,
     zIndex: 2,
+    marginBottom: 24
   },
   chatItem: {
     flex: 1,

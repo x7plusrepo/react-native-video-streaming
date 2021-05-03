@@ -25,7 +25,7 @@ import ProfileVideoScreen from '../screens/tab_profile/ProfileVideoScreen';
 import ProfileOtherScreen from '../screens/tab_profile/ProfileOtherScreen';
 import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
 import SavedProductsScreen from '../screens/tab_profile/SavedProductsScreen';
-import MyVideoScreen from '../screens/tab_profile/MyVideoScreen';
+import MyVideoScreen from '../screens/tab_profile/MyProductsScreen';
 import GoLive from '../screens/live_stream/GoLive';
 import ViewLive from '../screens/live_stream/ViewLive';
 
@@ -100,7 +100,7 @@ export default function App() {
         />
         <Stack.Screen name="profile_other" component={ProfileOtherScreen} />
         <Stack.Screen name="saved_products" component={SavedProductsScreen} />
-        <Stack.Screen name="my_posts" component={MyVideoScreen} />
+        <Stack.Screen name="my_products" component={MyVideoScreen} />
         <Stack.Screen name="go_live" component={GoLive} />
         <Stack.Screen name="view_live" component={ViewLive} />
       </Stack.Navigator>

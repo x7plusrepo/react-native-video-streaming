@@ -48,10 +48,12 @@ const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
-const ic_eye = require('../../assets/images/Icons/ic_eye.png');
-const ic_menu_saved_products = require('../../assets/images/Icons/ic_menu_saved_products.png');
+const heart = require('../../assets/images/gifts/heart.png');
 const ic_menu_messages = require('../../assets/images/Icons/ic_menu_messages.png');
 const ic_share = require('../../assets/images/Icons/ic_share.png');
+const ic_support = require('../../assets/images/Icons/ic_support.png');
+const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
+const ic_win = require('../../assets/images/Icons/ic_win.png');
 
 const WINDOW_HEIGHT = Helper.getWindowHeight();
 const STATUS_BAR_HEIGHT = Helper.getStatusBarHeight();
@@ -274,31 +276,28 @@ class ProfileVideoScreen extends Component {
 
     if (global.me) {
       if (isChecked) {
-        item.like_count++;
-      } else {
-        item.like_count--;
-      }
+        item.likeCount++;
+        const params = {
+          user_id: global.me.id,
+          video_id: item.id,
+          is_like: isChecked,
+        };
+        //showForcePageLoader(true);
+        RestAPI.update_like_video(params, (json, err) => {
+          showForcePageLoader(false);
 
-      const params = {
-        user_id: global.me.id,
-        video_id: item.id,
-        is_like: isChecked,
-      };
-      //showForcePageLoader(true);
-      RestAPI.update_like_video(params, (json, err) => {
-        showForcePageLoader(false);
-
-        if (err !== null) {
-          Helper.alertNetworkError(err?.message);
-        } else {
-          if (json.status === 200) {
-            item.isLike = isChecked;
-            this.setState(itemDatas);
+          if (err !== null) {
+            Helper.alertNetworkError(err?.message);
           } else {
-            Helper.alertServerDataError();
+            if (json.status === 200) {
+              item.isLike = isChecked;
+              this.setState(itemDatas);
+            } else {
+              Helper.alertServerDataError();
+            }
           }
-        }
-      });
+        });
+      }
     } else {
       this.props.navigation.navigate('signin');
     }
@@ -663,22 +662,14 @@ class ProfileVideoScreen extends Component {
           <View style={GStyles.profileVideoInfoWrapper}>
             <View style={GStyles.rowEndContainer}>
               <View>
-                <View style={GStyles.videoActionButton}>
-                  <Image
-                    source={ic_eye}
-                    style={[GStyles.actionIcons, { tintColor: 'white'}]}
-                  />
-                </View>
                 <TouchableOpacity
                   onPress={() => {
                     this.onPressLike(!isLike, item);
                   }}
-                  style={[
-                    GStyles.videoActionButton,
-                  ]}
+                  style={[GStyles.videoActionButton]}
                 >
                   <Image
-                    source={ic_menu_saved_products}
+                    source={heart}
                     style={{
                       ...GStyles.actionIcons,
                       tintColor: isLike ? GStyle.primaryColor : 'white',
@@ -714,15 +705,24 @@ class ProfileVideoScreen extends Component {
                   <View style={GStyles.playInfoTextWrapper}>
                     <Text style={GStyles.playInfoText}>৳{item.price}</Text>
                   </View>
-                  {!!item.sticker && (
-                    <View
-                      style={[GStyles.playInfoTextWrapper, { marginLeft: 4 }]}
-                    >
-                      <Text style={GStyles.playInfoText}>
-                        {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
-                      </Text>
-                    </View>
-                  )}
+                  <View
+                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
+                  >
+                    <Image
+                      source={ic_support}
+                      style={{ width: 12, height: 12, marginRight: 4 }}
+                    />
+                    <Text style={GStyles.playInfoText}>01913379598 </Text>
+                  </View>
+                  <View
+                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
+                  >
+                    <Image
+                      source={ic_diamond}
+                      style={{ width: 12, height: 12, marginRight: 4 }}
+                    />
+                    <Text style={GStyles.playInfoText}>{item.price / 10}</Text>
+                  </View>
                 </View>
                 <View style={GStyles.playInfoTextWrapper}>
                   <Text style={GStyles.playInfoText}>lorem ipsum</Text>

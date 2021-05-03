@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import styles from './styles';
 import GStyles from '../../utils/Global/Styles';
 import { GStyle } from '../../utils/Global';
@@ -9,13 +15,12 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view';
 import PanelLive from './PanelLive';
 
-const StartPanel = ({ onPressStart }) => {
-
+const StartPanel = ({ onPressStart, currentLiveStatus, onPressClose }) => {
   return (
     <View style={styles.wrapperStartPanel}>
       <ScrollableTabView
         initialPage={0}
-        tabBarPosition='overlayBottom'
+        tabBarPosition="overlayBottom"
         tabBarBackgroundColor={'transparent'}
         tabBarTextStyle={styles.tabBarTextStyle}
         tabBarInactiveTextColor={'white'}
@@ -30,18 +35,31 @@ const StartPanel = ({ onPressStart }) => {
           />
         )}
       >
-        <PanelLive tabLabel="Live" onPressStart={onPressStart} />
-        <PanelLive tabLabel="Multi Guest Live" onPressStart={onPressStart} />
-        <PanelLive tabLabel="Audio Live" onPressStart={onPressStart} />
+        <PanelLive
+          tabLabel="Live"
+          onPressStart={onPressStart}
+          currentLiveStatus={currentLiveStatus}
+          onPressClose={onPressClose}
+        />
+        <PanelLive
+          tabLabel="Multi Guest Live"
+          onPressStart={onPressStart}
+          currentLiveStatus={currentLiveStatus}
+          onPressClose={onPressClose}
+        />
+        <PanelLive
+          tabLabel="Audio Live"
+          onPressStart={onPressStart}
+          currentLiveStatus={currentLiveStatus}
+          onPressClose={onPressClose}
+        />
       </ScrollableTabView>
     </View>
   );
 };
 
 const style = StyleSheet.create({
-    container: {
-
-    }
-})
+  container: {},
+});
 
 export default StartPanel;

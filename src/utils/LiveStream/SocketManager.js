@@ -95,9 +95,9 @@ class SocketManager {
   };
 
   listenPrepareLiveStream(callback = () => null) {
-    this.socket.on(EVENT_PREPARE_LIVE_STREAM, () => {
+    this.socket.on(EVENT_PREPARE_LIVE_STREAM, (data) => {
       Logger.instance.log(`${EVENT_PREPARE_LIVE_STREAM} :`);
-      return callback();
+      return callback(data);
     });
   }
 

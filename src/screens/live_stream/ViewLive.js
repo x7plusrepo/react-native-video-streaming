@@ -1,14 +1,7 @@
 import React, { Component } from 'react';
-import {
-  Image,
-  TextInput,
-  TouchableOpacity,
-  View,
-  SafeAreaView,
-} from 'react-native';
+import { View, TouchableOpacity, SafeAreaView } from 'react-native';
 import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
-import branch, { BranchEvent } from 'react-native-branch';
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import styles from './styles';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
@@ -35,6 +28,7 @@ class ViewLive extends Component {
       liveStatus: LIVE_STATUS.PREPARE,
       room: {},
       isJoined: false,
+      lastPress: 0,
     };
     this.giftBottomSheet = React.createRef();
     this.messageBottomSheet = React.createRef();
@@ -83,6 +77,7 @@ class ViewLive extends Component {
     SocketManager.instance.listenFinishLiveStream(() => {
       this.setState({ liveStatus: LIVE_STATUS.FINISH });
     });
+    this.onPressJoin();
     // if (liveStatus === LIVE_STATUS.FINISH) {
     //   SocketManager.instance.emitReplay({
     //     userId,
@@ -182,13 +177,25 @@ class ViewLive extends Component {
     Helper.inviteToLiveStream(room, user);
   };
 
-  onPressSendGift = () => {
+  onPressSendHeart = () => {
     this.giftBottomSheet?.current?.close();
     const userId = this.props.user?.id;
 
     SocketManager.instance.emitSendHeart({
       streamerId: this.state.room?.user?.id,
       userId,
+    });
+  };
+
+  onDoubleTap = () => {
+    const delta = new Date().getTime() - this.state.lastPress;
+
+    if (delta < 300) {
+      this.onPressSendHeart();
+    }
+
+    this.setState({
+      lastPress: new Date().getTime(),
     });
   };
 
@@ -228,7 +235,7 @@ class ViewLive extends Component {
           this.nodePlayerView = vb;
         }}
         inputUrl={inputUrl}
-        scaleMode="ScaleAspectFit"
+        //scaleMode="ScaleAspectFit"
         bufferTime={300}
         maxBufferTime={1000}
         autoplay
@@ -242,34 +249,42 @@ class ViewLive extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
-        {this.renderNodePlayerView()}
-        <View style={styles.contentWrapper}>
-          <View style={styles.header}>
-            <Header streamer={streamer} liveStatus={liveStatus} />
+        <TouchableOpacity
+          style={{ flex: 1 }}
+          activeOpacity={1}
+          onPress={this.onDoubleTap}
+        >
+          {this.renderNodePlayerView()}
+          <View style={styles.contentWrapper}>
+            <View style={styles.header}>
+              <Header streamer={streamer} liveStatus={liveStatus} />
+            </View>
+            <View style={styles.footer}>
+              <MessagesList messages={messages} />
+              <BottomActionsGroup
+                onPressJoin={this.onPressJoin}
+                onExit={this.onLeave}
+                onPressSendHeart={this.onPressSendHeart}
+                onPressGiftAction={this.onPressGiftAction}
+                onPressMessageAction={this.onPressMessageAction}
+                onPressShareAction={this.onPressShareAction}
+                isJoined={isJoined}
+                liveStatus={liveStatus}
+                mode="viewer"
+              />
+            </View>
           </View>
-          <View style={styles.footer}>
-            <MessagesList messages={messages} />
-            <BottomActionsGroup
-              onPressJoin={this.onPressJoin}
-              onExit={this.onLeave}
-              onPressGiftAction={this.onPressGiftAction}
-              onPressMessageAction={this.onPressMessageAction}
-              onPressShareAction={this.onPressShareAction}
-              isJoined={isJoined}
-              liveStatus={liveStatus}
-              mode="viewer"
-            />
-          </View>
-        </View>
+        </TouchableOpacity>
+
         <RBSheet
           ref={this.giftBottomSheet}
-          closeOnDragDown
+          closeOnDragDown={false}
           openDuration={250}
           customStyles={{
             container: {
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
-              backgroundColor: 'rgba(0, 0, 0, 0.6)',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
             },
             wrapper: {
               backgroundColor: 'transparent',
@@ -279,7 +294,7 @@ class ViewLive extends Component {
             },
           }}
         >
-          <Gifts onPressSendGift={this.onPressSendGift} />
+          <Gifts />
         </RBSheet>
         <RBSheet
           ref={this.messageBottomSheet}
@@ -290,7 +305,7 @@ class ViewLive extends Component {
             container: {
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
-              backgroundColor: 'white',
+              backgroundColor: 'rgba(255, 255, 255, 0.8)',
               paddingHorizontal: 16,
               paddingBottom: 16,
               justifyContent: 'center',
