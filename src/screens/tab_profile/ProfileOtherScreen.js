@@ -89,7 +89,7 @@ class ProfileOtherScreen extends React.Component {
       page_number: '1',
       count_per_page: '1000',
     };
-    showForcePageLoader(true);
+    //showForcePageLoader(true);
     RestAPI.get_user_video_list(params, (json, err) => {
       showForcePageLoader(false);
 
@@ -97,13 +97,14 @@ class ProfileOtherScreen extends React.Component {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
+          console.log(json.data.dislikeCount)
           if (this._isMounted) {
             this.setState({
               type: json.data.type,
               viewCount: json.data.viewCount,
               saveCount: json.data.saveCount,
-              likeCount: json.data.likeCount,
-              dislikeCount: json.data.dislikeCount,
+              likeCount: json.data.likeCount || 0,
+              dislikeCount: 0,
               itemDatas: json.data.videoList,
             });
           }
@@ -139,8 +140,8 @@ class ProfileOtherScreen extends React.Component {
         if (json.status === 200) {
           if (this._isMounted) {
             this.setState({
-              likeCount: json.data.likeCount,
-              dislikeCount: json.data.dislikeCount,
+              likeCount: json.data.likeCount || 0,
+              dislikeCount: json.data.dislikeCount || 0,
             });
           }
         } else {

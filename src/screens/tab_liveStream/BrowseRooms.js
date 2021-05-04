@@ -27,7 +27,7 @@ class BrowseRooms extends React.Component {
 
   render() {
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'white', paddingTop: 16 }}>
+      <SafeAreaView style={styles.container}>
         <ScrollableTabView
           initialPage={0}
           tabBarBackgroundColor='white'

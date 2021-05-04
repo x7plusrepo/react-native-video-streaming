@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  StatusBar,
   TouchableOpacity,
   View,
   SafeAreaView,
@@ -295,6 +296,7 @@ class GoLive extends React.Component {
 
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar backgroundColor='white' barStyle='light-content' />
         <TouchableOpacity
           style={{ flex: 1 }}
           activeOpacity={1}

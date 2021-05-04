@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, SafeAreaView } from 'react-native';
+import { StatusBar, View, TouchableOpacity, SafeAreaView } from 'react-native';
 import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
 import SocketManager from '../../utils/LiveStream/SocketManager';
@@ -249,6 +249,7 @@ class ViewLive extends Component {
 
     return (
       <SafeAreaView style={styles.container}>
+        <StatusBar backgroundColor='white' barStyle='light-content' />
         <TouchableOpacity
           style={{ flex: 1 }}
           activeOpacity={1}

@@ -63,6 +63,7 @@ const styles = StyleSheet.create({
   icoClose: {
     width: 16,
     height: 16,
+    tintColor: 'white',
   },
   infoLabelWrapper: {
     flexDirection: 'row',

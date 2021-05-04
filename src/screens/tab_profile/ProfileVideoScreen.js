@@ -659,7 +659,7 @@ class ProfileVideoScreen extends Component {
               backgroundColor: 'black',
             }}
           />
-          <View style={GStyles.profileVideoInfoWrapper}>
+          <View style={GStyles.playInfoWrapper}>
             <View style={GStyles.rowEndContainer}>
               <View>
                 <TouchableOpacity

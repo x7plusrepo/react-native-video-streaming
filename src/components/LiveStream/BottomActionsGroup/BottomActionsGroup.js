@@ -60,12 +60,14 @@ export default class BottomActionsGroup extends Component {
     const joinLeaveIcon = isJoined ? ic_signOut : ic_join;
 
     return (
-      <View>
+      <>
         {mode === 'streamer' && (
           <View
             style={{
+              position: 'absolute',
+              right: 16,
+              bottom: 72,
               alignItems: 'flex-end',
-              marginBottom: 32,
             }}
           >
             <GradientBackgroundIconButton
@@ -83,7 +85,7 @@ export default class BottomActionsGroup extends Component {
           </View>
         )}
         <View style={GStyles.rowBetweenContainer}>
-          <View style={GStyles.rowContainer}>
+          <View style={GStyles.rowBetweenContainer}>
             <GradientBackgroundIconButton
               onPress={this.onPressMessageAction}
               icon={ic_menu_messages}
@@ -101,7 +103,7 @@ export default class BottomActionsGroup extends Component {
             />
           </View>
 
-          <View style={GStyles.rowContainer}>
+          <View style={GStyles.rowBetweenContainer}>
             <GradientBackgroundIconButton
               icon={heart}
               onPress={this.onPressSendHeart}
@@ -114,20 +116,14 @@ export default class BottomActionsGroup extends Component {
             />
           </View>
         </View>
-      </View>
+      </>
     );
   }
 
   render() {
     return (
       <View style={{ paddingHorizontal: 16 }}>
-        {Platform.OS === 'android' ? (
-          this.renderContent()
-        ) : (
-          <KeyboardAccessory backgroundColor="transparent">
-            {this.renderContent()}
-          </KeyboardAccessory>
-        )}
+        {this.renderContent()}
       </View>
     );
   }

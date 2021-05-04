@@ -296,22 +296,15 @@ const GStyles = StyleSheet.create({
   actionIcons: {
     width: 16,
     height: 16,
+    tintColor: 'white',
   },
   playInfoWrapper: {
     position: 'absolute',
     width: '100%',
-    bottom: 66 + Helper.getBottomBarHeight(),
-    left: 0,
-    paddingHorizontal: 16,
-  },
-  profileVideoInfoWrapper: {
-    position: 'absolute',
-    width: '100%',
-    bottom: 24 + Helper.getBottomBarHeight(),
+    bottom: 64,
     left: 0,
     paddingHorizontal: 16,
   },
 });
-
 export default GStyle;
 export { GStyles };
