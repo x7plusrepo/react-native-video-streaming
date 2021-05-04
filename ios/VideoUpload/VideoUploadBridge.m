@@ -14,6 +14,6 @@
   return @[@"EventUploadProgress"];
 }
 
-RCT_EXTERN_METHOD(upload:(NSString*)uri callback:(RCTResponseSenderBlock)callback)
+RCT_EXTERN_METHOD(upload:(NSString*)uri folder:(NSString*)folder resourceType:(NSString*)resourceType callback:(RCTResponseSenderBlock)callback)
 
 @end

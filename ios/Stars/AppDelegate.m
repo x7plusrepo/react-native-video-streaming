@@ -4,8 +4,7 @@
 #import <React/RCTBundleURLProvider.h>
 #import <React/RCTRootView.h>
 #import <FBSDKCoreKit/FBSDKCoreKit.h>
-#import "RNSplashScreen.h"  // here
-#import <Firebase.h>
+//#import "RNSplashScreen.h"  // here
 
 #ifdef FB_SONARKIT_ENABLED
 #import <FlipperKit/FlipperClient.h>
@@ -34,7 +33,6 @@ static void InitializeFlipper(UIApplication *application) {
   InitializeFlipper(application);
 #endif
   
-  [FIRApp configure];
 
   RCTBridge *bridge = [[RCTBridge alloc] initWithDelegate:self launchOptions:launchOptions];
   RCTRootView *rootView = [[RCTRootView alloc] initWithBridge:bridge
@@ -67,7 +65,7 @@ static void InitializeFlipper(UIApplication *application) {
     [fileManager copyItemAtPath:srcFontPath toPath:destFontPath error:nil];
   }
   
-  [RNSplashScreen show];  // here
+  //[RNSplashScreen show];  // here
   return YES;
 }
 

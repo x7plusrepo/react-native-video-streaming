@@ -64,29 +64,29 @@ function App() {
   const [initLoading, setInitLoading] = useState(true);
 
   useEffect(() => {
-    OneSignal.setLogLevel(6, 0);
+    // OneSignal.setLogLevel(6, 0);
 
-    // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
-    OneSignal.init('26974209-5e4f-40e7-a8ec-732b81998f01', {
-      kOSSettingsKeyAutoPrompt: false,
-      kOSSettingsKeyInAppLaunchURL: false,
-      kOSSettingsKeyInFocusDisplayOption: 2,
-    });
-    OneSignal.inFocusDisplaying(2); // Controls what should happen if a notification is received while the app is open. 2 means that the notification will go directly to the device's notification center.
+    // // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
+    // OneSignal.init('26974209-5e4f-40e7-a8ec-732b81998f01', {
+    //   kOSSettingsKeyAutoPrompt: false,
+    //   kOSSettingsKeyInAppLaunchURL: false,
+    //   kOSSettingsKeyInFocusDisplayOption: 2,
+    // });
+    // OneSignal.inFocusDisplaying(2); // Controls what should happen if a notification is received while the app is open. 2 means that the notification will go directly to the device's notification center.
 
-    // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
-    OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
+    // // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
+    // OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
 
-    OneSignal.addEventListener('received', onReceived);
-    OneSignal.addEventListener('opened', onOpened);
-    OneSignal.addEventListener('ids', onIds);
+    // OneSignal.addEventListener('received', onReceived);
+    // OneSignal.addEventListener('opened', onOpened);
+    // OneSignal.addEventListener('ids', onIds);
 
     subscribeDeepLink();
 
     return () => {
-      OneSignal.removeEventListener('received', onReceived);
-      OneSignal.removeEventListener('opened', onOpened);
-      OneSignal.removeEventListener('ids', onIds);
+      // OneSignal.removeEventListener('received', onReceived);
+      // OneSignal.removeEventListener('opened', onOpened);
+      // OneSignal.removeEventListener('ids', onIds);
     };
   }, []);
 

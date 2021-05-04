@@ -16,8 +16,8 @@ import Cloudinary
 
 @objc(VideoUpload)
 class VideoUpload: RCTEventEmitter {
-  @objc(upload:callback:)
-  func upload( url: String, folder: String, resource_type: String, callback: RCTResponseSenderBlock ) -> Void {
+  @objc(upload:folder:resourceType:callback:)
+  func upload( url: String, folder: String, resourceType: String, callback: RCTResponseSenderBlock ) -> Void {
     print("This is url from Swift")
     print(url);
 
@@ -32,7 +32,7 @@ class VideoUpload: RCTEventEmitter {
     let timestamp =  String(Int64(nowDouble*1000))
 
     let params = CLDUploadRequestParams()
-    params.setResourceType(resource_type)
+    params.setResourceType(resourceType)
     _ = params.setFolder(folder)
     params.setPublicId(timestamp)
 

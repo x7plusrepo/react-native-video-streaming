@@ -17,7 +17,7 @@ RCT_EXPORT_MODULE();
   return @[@"ObjcEventUploadProgress"];
 }
 
-RCT_EXPORT_METHOD(objcUpload:(NSString*)uri  callback:(RCTResponseSenderBlock)callback)
+RCT_EXPORT_METHOD(objcUpload:(NSString*)uri folder:(NSString*)folder resourceType:(NSString*)resourceType callback:(RCTResponseSenderBlock)callback)
 {
   RCTLogInfo(@"--------- uri : %@", uri);
   

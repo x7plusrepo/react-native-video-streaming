@@ -134,5 +134,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>branch_app_domain</key>
+	<string>5pktq.app.link</string>
+	<key>branch_key</key>
+	<string>key_live_fgWpR9q8yZhkmmOiQ0UFDlnhDqo9ocyg</string>
 </dict>
 </plist>

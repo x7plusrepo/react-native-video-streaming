@@ -95,7 +95,7 @@ class Component extends React.Component {
             <Image
               style={styles.icoClose}
               source={ic_close}
-              tintColor="white"
+              tintColor="red"
             />
           </TouchableOpacity>
           {mode !== 'streamer' && (

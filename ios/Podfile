@@ -5,7 +5,6 @@ platform :ios, '11.0'
 
 target 'Stars' do
   # use_frameworks!
-  pod 'react-native-ffmpeg/full-gpl-lts', :podspec => '../node_modules/react-native-ffmpeg/react-native-ffmpeg.podspec'
   config = use_native_modules!
   
   use_react_native!(:path => config["reactNativePath"])
@@ -32,6 +31,7 @@ target 'Stars' do
   pod 'Permission-Siri', :path => "#{permissions_path}/Siri"
   pod 'Permission-SpeechRecognition', :path => "#{permissions_path}/SpeechRecognition"
   pod 'Permission-StoreKit', :path => "#{permissions_path}/StoreKit"
+  pod 'react-native-branch', path: '../node_modules/react-native-branch'
 
 
 
