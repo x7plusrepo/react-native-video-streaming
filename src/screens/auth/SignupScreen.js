@@ -1,22 +1,12 @@
 import React from 'react';
 import {
   Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  Image,
-  LayoutAnimation,
   Linking,
-  Modal,
-  Platform,
   SafeAreaView,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
-  ScrollView,
 } from 'react-native';
 
 import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
@@ -32,11 +22,6 @@ import {
   Constants,
   RestAPI,
 } from '../../utils/Global/index';
-
-const ic_google = require('../../assets/images/Icons/ic_google.png');
-const ic_facebook = require('../../assets/images/Icons/ic_facebook.png');
-const ic_twitter = require('../../assets/images/Icons/ic_twitter.png');
-const ic_linkedin = require('../../assets/images/Icons/ic_linkedin.png');
 
 class SignupScreen extends React.Component {
   constructor(props) {
@@ -186,6 +171,7 @@ class SignupScreen extends React.Component {
         username: userName,
         phone: phoneNumber,
         password: password,
+        userType: 1,
       };
       showForcePageLoader(true);
       RestAPI.signup(params, (json, err) => {

@@ -42,16 +42,17 @@ class ProfileEditScreen extends React.Component {
   init = () => {
     console.log(global.me);
     const { user } = this.props;
+    const isGuest = user?.username?.match(/guest_/i)
     this.state = {
       secureTextEntry: !global.debug,
-      userName: user.username,
-      phoneNumber: user.phone,
+      userName: user?.username,
+      phoneNumber: user?.phone,
       password: '',
       profilePhotoSelSource: null,
       profilePhotoSelPath: '',
       photo: null,
+      isGuest,
     };
-    this._timeTick = 0;
 
     this.initRef();
   };
@@ -127,12 +128,8 @@ class ProfileEditScreen extends React.Component {
   };
 
   onSubmit = async () => {
-    const {
-      userName,
-      phoneNumber,
-      password,
-      profilePhotoSelSource,
-    } = this.state;
+    const { userName, phoneNumber, password, profilePhotoSelSource, isGuest } =
+      this.state;
 
     let errors = {};
 
@@ -151,8 +148,17 @@ class ProfileEditScreen extends React.Component {
       }
     });
 
-    if (password.length > 0 && password.length !== 4) {
+    if(password.length > 0 && password.length !== 4) {
       errors['password'] = 'Should be 4 digits';
+    }
+
+    const isUpdateGuest = userName?.match(/guest_/i);
+    if (password && isUpdateGuest) {
+      errors['password'] = 'Guest user can not set password.'
+    }
+
+    if(isGuest && !isUpdateGuest && password?.length < 1) {
+      errors['password'] = 'Password required.'
     }
 
     this.setState({ errors });
@@ -167,12 +173,15 @@ class ProfileEditScreen extends React.Component {
         );
       }
       this.setState({ photo: uploadedUrl });
+      const updatePassword = isUpdateGuest ? userName : password;
+
       const params = {
         user_id: global.me.id,
         username: userName,
         phone: phoneNumber,
-        password: password,
+        password: updatePassword,
         photo: uploadedUrl,
+        userType: isUpdateGuest ? 0 : 1,
       };
 
       RestAPI.update_profile_with_image(params, (json, err) => {
@@ -184,6 +193,8 @@ class ProfileEditScreen extends React.Component {
           if (json.status === 200) {
             global.me = json.data || {};
             this.props.setMyUserAction(json.data || {});
+            Helper.setLocalValue(Constants.KEY_USERNAME, userName);
+            Helper.setLocalValue(Constants.KEY_PASSWORD, updatePassword);
             success(Constants.SUCCESS_TITLE, 'Success to update your profile');
           } else {
             error(Constants.ERROR_TITLE, 'Failed to update your profile');

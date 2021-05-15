@@ -46,7 +46,7 @@ class MainTabNavigator extends Component {
     };
 
     global.onSetUnreadCount = this.onSetUnreadCount;
-    global.onGotoMessageTab = this.onGotoMessageTab;
+    global.onGotoLiveRoomTab = this.onGotoLiveRoomTab;
 
     global.setBottomTabName = (curTabName) => {
       this.setState({ curTabName });
@@ -75,19 +75,26 @@ class MainTabNavigator extends Component {
     });
   };
 
-  onGotoMessageTab = async () => {
+  onGotoLiveRoomTab = async () => {
     await Helper.setDeviceId();
     await Helper.hasPermissions();
 
     showForcePageLoader(true);
 
-    const username = await Helper.getLocalValue(Constants.KEY_USERNAME);
-    const password = await Helper.getLocalValue(Constants.KEY_PASSWORD);
+    const storageUsername = await Helper.getLocalValue(Constants.KEY_USERNAME);
+    const storagePassword = await Helper.getLocalValue(Constants.KEY_PASSWORD);
+
+    const guestUsername = 'guest_' + global._devId;
+    const guestPassword = 'guest_' + global._devId;
+
+    const username = storageUsername || guestUsername;
+    const password = storagePassword || guestPassword;
 
     let params = {
-      username: username ? username : 'guest_' + global._devId,
-      password: password ? password : '',
+      username,
+      password,
     };
+
     RestAPI.signin_or_signup(params, (json, err) => {
       showForcePageLoader(false);
 
@@ -96,8 +103,9 @@ class MainTabNavigator extends Component {
       } else {
         if (json.status === 200) {
           global.me = json.data || [];
-          global.me.isGuest = global.me.username.indexOf('guest_') > -1;
           this.props.setMyUserAction(global.me);
+          Helper.setLocalValue(Constants.KEY_USERNAME, username);
+          Helper.setLocalValue(Constants.KEY_PASSWORD, password);
           Global.registerPushToken();
           this.props.navigation.navigate('message');
         } else {
@@ -185,8 +193,6 @@ class MainTabNavigator extends Component {
             tabBarIcon: ({ color, size }) => (
               <Image source={ic_tab_liveStream} style={styles.tabIconImage} />
             ),
-            /*TODO - move to profile screen*/
-            tabBarBadge: unreadCount,
             tabBarBadgeStyle: { backgroundColor: 'red' },
           }}
           listeners={({ navigation, route }) => ({

@@ -73,8 +73,8 @@ class SigninScreen extends React.Component {
   init = () => {
     this.state = {
       secureTextEntry: global.debug ? false : true,
-      userName: global.debug ? '1234567890' : '',
-      password: global.debug ? '1234' : '',
+      phoneNumber: '',
+      password: '',
     };
 
     this.initRef();
@@ -101,8 +101,8 @@ class SigninScreen extends React.Component {
   };
 
   initRef = () => {
-    this.userNameRef = (ref) => {
-      this.userName = ref;
+    this.phoneNumberRef = (ref) => {
+      this.phoneNumber = ref;
     };
     this.passwordRef = (ref) => {
       this.password = ref;
@@ -124,7 +124,7 @@ class SigninScreen extends React.Component {
   };
 
   onChangeText = (text) => {
-    ['userName', 'password']
+    ['phoneNumber', 'password']
       .map((name) => ({ name, ref: this[name] }))
       .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
@@ -133,7 +133,7 @@ class SigninScreen extends React.Component {
       });
   };
 
-  onSubmitUserName = () => {
+  onSubmitPhoneNumber = () => {
     this.password.focus();
   };
 
@@ -175,18 +175,18 @@ class SigninScreen extends React.Component {
   onSubmit = async () => {
     let { errors = {} } = this.state;
 
-    ['userName', 'password'].forEach((name) => {
+    ['phoneNumber', 'password'].forEach((name) => {
       let value = this[name].value();
 
       if (!value) {
         errors[name] = 'Should not be empty';
       } else {
-        if ('userName' === name) {
+        if ('phoneNumber' === name) {
           const isValidPhoneNumber = Helper.validatePhoneNumber(value);
           if (!isValidPhoneNumber) {
             errors[name] = 'Phone Number is invalid';
           }
-        } else if ('password' === name && value.length != 4) {
+        } else if ('password' === name && value.length !== 4) {
           errors[name] = 'Should be 4 digits';
         }
       }
@@ -196,13 +196,10 @@ class SigninScreen extends React.Component {
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      const { userName, password } = this.state;
-
-      await Helper.setLocalValue(Constants.KEY_USERNAME, userName);
-      await Helper.setLocalValue(Constants.KEY_PASSWORD, password);
+      const { phoneNumber, password } = this.state;
 
       let params = {
-        username: userName,
+        phone: phoneNumber,
         password: password,
       };
       showForcePageLoader(true);
@@ -215,9 +212,10 @@ class SigninScreen extends React.Component {
           if (json.status === 200) {
             const user = json.data?.user || {};
             global.me = user;
-            global.me.isGuest = false;
             this.props.setMyUserAction(global.me);
-
+            Helper.setLocalValue(Constants.KEY_USERNAME, user?.username);
+            Helper.setLocalValue(Constants.KEY_PASSWORD, password);
+            
             params = {
               user_id: user.id,
               one_signal_id: global._pushAppId,
@@ -300,23 +298,23 @@ class SigninScreen extends React.Component {
   };
 
   _renderInput = () => {
-    let { userName, password, errors = {}, secureTextEntry } = this.state;
+    let { phoneNumber, password, errors = {}, secureTextEntry } = this.state;
 
     return (
       <>
         <TextField
-          ref={this.userNameRef}
+          ref={this.phoneNumberRef}
           keyboardType="phone-pad"
           autoCapitalize="none"
           autoCorrect={false}
           enablesReturnKeyAutomatically={true}
           onFocus={this.onFocus}
           onChangeText={this.onChangeText}
-          onSubmitEditing={this.onSubmitUserName}
+          onSubmitEditing={this.onSubmitPhoneNumber}
           returnKeyType="next"
           label="Phone Number"
-          value={userName}
-          error={errors.userName}
+          value={phoneNumber}
+          error={errors.phoneNumber}
           containerStyle={{ marginTop: 24 }}
         />
         <TextField

@@ -438,7 +438,7 @@ class CameraUploadScreen extends React.Component {
     const { tags } = this.state;
     let errors = {};
 
-    // if (global.me.isGuest) {
+    // if (global.me?.userType === 0) {
     //   warning(Constants.WARNING_TITLE, 'Guest can not upload video.');
     //   return;
     // }

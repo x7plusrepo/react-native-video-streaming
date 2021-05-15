@@ -105,7 +105,7 @@ function App() {
     console.log('openResult: ', openResult);
 
     if (!openResult.notification.isAppInFocus) {
-      Helper.callFunc(global.onGotoMessageTab);
+      Helper.callFunc(global.onGotoLiveRoomTab);
     }
     // else {
     //   Helper.callFunc(global.onSetUnreadCount);

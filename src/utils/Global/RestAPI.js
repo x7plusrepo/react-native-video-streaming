@@ -13,7 +13,7 @@ const RestAPI = {
 
   login: (params, callBack) => {
     const data = {
-      username: params.username,
+      username: params.phone,
       password: params.password,
     };
 
@@ -25,6 +25,7 @@ const RestAPI = {
       username: params.username,
       phone: params.phone,
       password: params.password,
+      userType: params.userType || 0,
     };
 
     formDataCall('api/auth/register', data, {}, callBack, 'post');
@@ -44,6 +45,7 @@ const RestAPI = {
       userId: params.user_id,
       username: params.username,
       phone: params.phone,
+      userType: params.userType || 0,
     };
 
     if (params.photo) {

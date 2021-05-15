@@ -137,8 +137,6 @@ class PlayMainScreen extends Component {
       onEndReachedCalledDuringMomentum: true,
       curIndex: null,
       isMounted: false,
-      username: null,
-      password: null,
     };
 
     await Helper.setDeviceId();
@@ -166,25 +164,29 @@ class PlayMainScreen extends Component {
     }
     this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
 
-    if (type === 'init') {
-      //showForcePageLoader(true);
-
-      const username = await Helper.getLocalValue(Constants.KEY_USERNAME);
-      const password = await Helper.getLocalValue(Constants.KEY_PASSWORD);
-      this.setState({ username, password });
-    } else {
+    if (type !== 'init') {
       this.setState({ isFetching: true });
     }
+
+
+    const storageUsername = await Helper.getLocalValue(Constants.KEY_USERNAME);
+    const storagePassword = await Helper.getLocalValue(Constants.KEY_PASSWORD);
+
+    const guestUsername = 'guest_' + global._devId;
+    const guestPassword = 'guest_' + global._devId;
+
+    const username = storageUsername || guestUsername;
+    const password = storagePassword || guestPassword;
+
     let params = {
       user_id: global.me ? global.me.id : '',
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
-      username: this.state.username
-        ? this.state.username
-        : 'guest_' + global._devId,
-      password: this.state.password ? this.state.password : '',
+      username,
+      password,
     };
-    RestAPI.get_all_video_list(params, (json, err) => {
+
+    RestAPI.get_all_video_list(params, async (json, err) => {
       if (type === 'init') {
         showForcePageLoader(false);
         setIsInitLoading(false);
@@ -195,7 +197,7 @@ class PlayMainScreen extends Component {
       }
 
       if (err !== null) {
-        Helper.alertNetworkError();
+        Helper.alertNetworkError(err.message);
       } else {
         if (json.status === 200) {
           if (this.state.isMounted) {
@@ -207,15 +209,9 @@ class PlayMainScreen extends Component {
               this.setState({ itemDatas: json.data.videoList });
               if (!global.me) {
                 global.me = json.data.loginResult.user || {};
-
-                if (global.me.username.indexOf('guest_') > -1) {
-                  global.me.isGuest = true;
-                } else {
-                  global.me.isGuest = false;
-                }
-
                 this.props.setMyUserAction(global.me);
-
+                Helper.setLocalValue(Constants.KEY_USERNAME, username);
+                Helper.setLocalValue(Constants.KEY_PASSWORD, password);
                 Helper.callFunc(global.onSetUnreadCount);
                 Global.registerPushToken();
               }

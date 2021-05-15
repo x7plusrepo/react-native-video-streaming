@@ -121,7 +121,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
   ];
 
   menu.push(
-    global.me.isGuest
+    global.me?.userType === 0
       ? {
           icon: ic_sign,
           title: 'Sign In',
@@ -204,7 +204,7 @@ class ProfileMainScreen extends React.Component {
       } else {
         if (json.status === 200) {
           const user = json.data || {};
-          this.props.setMyUserAction({ ...user, isGuest: global.me?.isGuest });
+          this.props.setMyUserAction(user);
           global.me.photo = json.data.photo;
           this.setState({
             allViewCount: json.data?.allViewCount,
@@ -251,7 +251,7 @@ class ProfileMainScreen extends React.Component {
         opacity,
       },
       styles.topContainer,
-      user.isGuest && { height: 250 },
+      user?.userType === 0 && { height: 250 },
     ];
 
     return (
@@ -260,7 +260,7 @@ class ProfileMainScreen extends React.Component {
           <Animated.View style={topAnimatedStyle}>
             <TouchableOpacity
               onPress={this.onPressProfile}
-              //disabled={global.me.isGuest}
+              //disabled={global.me?.userType === 0}
               style={{ ...GStyles.centerAlign }}
             >
               <Avatar image={avatarImage} size={106} />
@@ -269,18 +269,16 @@ class ProfileMainScreen extends React.Component {
               >
                 {user.username}
               </Text>
-              {!global.me.isGuest && (
-                <Text
-                  style={[
-                    GStyles.regularText,
-                    { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
-                  ]}
-                >
-                  Edit profile
-                </Text>
-              )}
+              <Text
+                style={[
+                  GStyles.regularText,
+                  { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
+                ]}
+              >
+                Edit profile
+              </Text>
             </TouchableOpacity>
-            {!global.me.isGuest && (
+            {global.me?.userType === 1 && (
               <View style={styles.detailContainer}>
                 <View>
                   <Text style={GStyles.regularText}>10.1k</Text>
@@ -304,7 +302,7 @@ class ProfileMainScreen extends React.Component {
           <Animated.ScrollView
             contentContainerStyle={[
               styles.scrollViewContainer,
-              user.isGuest && { paddingTop: 270 },
+              user?.userType === 0 && { paddingTop: 270 },
             ]}
             scrollEventThrottle={16}
             onScroll={Animated.event(
@@ -320,7 +318,7 @@ class ProfileMainScreen extends React.Component {
           >
             <View style={styles.menuContainer}>
               {getMenuItems(navigation, setMyUserAction).map((menu, index) => {
-                if (user.isGuest && menu.hideGuest) {
+                if (user?.userType === 0 && menu.hideGuest) {
                   return null;
                 }
                 return (
