@@ -137,7 +137,7 @@ class MessageMainScreen extends React.Component {
     RestAPI.set_read_status(params, (json, err) => {});
 
     global._roomId = value.opponent_id;
-    global._opponentName = value.opponent_name;
+    global._opponentName = value.username;
     this.props.navigation.navigate('message_chat');
   };
 

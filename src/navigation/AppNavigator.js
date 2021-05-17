@@ -22,7 +22,7 @@ import HomeSearchScreen from '../screens/tab_home/HomeSearchScreen';
 
 import ProfileEditScreen from '../screens/tab_profile/ProfileEditScreen';
 import ProfileVideoScreen from '../screens/tab_profile/ProfileVideoScreen';
-import ProfileOtherScreen from '../screens/tab_profile/ProfileOtherScreen';
+import ProfileOtherScreen from '../screens/tab_play/ProfileOtherScreen';
 import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
 import SavedProductsScreen from '../screens/tab_profile/SavedProductsScreen';
 import MyVideoScreen from '../screens/tab_profile/MyProductsScreen';

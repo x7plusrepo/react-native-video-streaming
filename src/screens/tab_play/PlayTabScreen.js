@@ -7,7 +7,7 @@ import {
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
 import PlayMainScreen from './PlayMainScreen';
-import ProfileOtherScreen from '../tab_profile/ProfileOtherScreen';
+import ProfileOtherScreen from './ProfileOtherScreen';
 
 const Tab = createMaterialTopTabNavigator();
 

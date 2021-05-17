@@ -120,7 +120,15 @@ const GStyles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
-
+  rowEvenlyContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-evenly',
+    alignItems: 'center',
+  },
+  columnEvenlyContainer: {
+    justifyContent: 'space-evenly',
+    alignItems: 'flex-start',
+  },
   absoluteContainer: {
     position: 'absolute',
     width: '100%',
@@ -171,16 +179,23 @@ const GStyles = StyleSheet.create({
     lineHeight: 32,
   },
 
+  largeText: {
+    fontFamily: 'GothamPro-Medium',
+    color: GStyle.fontColor,
+    fontSize: 20,
+    lineHeight: 32,
+  },
+
   mediumText: {
     fontFamily: 'GothamPro-Medium',
     color: GStyle.blackColor,
-    fontSize: 15,
+    fontSize: 18,
   },
 
   regularText: {
     fontFamily: 'GothamPro',
     color: GStyle.blackColor,
-    fontSize: 15,
+    fontSize: 16,
   },
 
   titleText: {
@@ -304,6 +319,18 @@ const GStyles = StyleSheet.create({
     bottom: 64,
     left: 0,
     paddingHorizontal: 16,
+  },
+  normalText: {
+    fontWeight: '400',
+  },
+  textMedium: {
+    fontWeight: '500',
+  },
+  semiBoldText: {
+    fontWeight: '600',
+  },
+  boldText: {
+    fontWeight: '700',
   },
 });
 export default GStyle;

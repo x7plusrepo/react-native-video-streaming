@@ -62,7 +62,7 @@ const PanelLive = (props) => {
     );
   };
 
-  const avatar = { uri: thumbnail ? thumbnail.uri || '' : randomImageUrl };
+  const avatar = { uri: thumbnail ? thumbnail.uri : randomImageUrl };
 
   return (
     <View style={style.container}>

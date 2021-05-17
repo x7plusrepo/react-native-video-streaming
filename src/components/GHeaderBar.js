@@ -96,14 +96,6 @@ const RIGHT_TYPES = {
 };
 
 class GHeaderBar extends React.Component {
-  static propTypes = {
-    headerTitle: PropTypes.string.isRequired,
-    leftType: PropTypes.string,
-    rightType: PropTypes.string,
-    onPressLeftButton: PropTypes.func,
-    onPressRightButton: PropTypes.func,
-    rightAvatar: PropTypes.element,
-  };
 
   constructor(props) {
     super(props);
@@ -136,8 +128,9 @@ class GHeaderBar extends React.Component {
     return (
       <TouchableOpacity
         onPress={() => {
-          if (this.props.onPressLeftButton) {
-            this.props.onPressLeftButton();
+          const { onPressLeftButton } = this.props;
+          if (onPressLeftButton) {
+            onPressLeftButton();
           } else {
             navigation.pop();
           }
