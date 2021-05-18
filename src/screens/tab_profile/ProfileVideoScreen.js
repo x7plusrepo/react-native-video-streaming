@@ -577,7 +577,8 @@ class ProfileVideoScreen extends Component {
           >
             <Image
               source={ic_back}
-              style={{ width: 20, height: 14, tintColor: 'white' }}
+              style={{ width: 18, height: 18, tintColor: 'white' }}
+              resizeMode={'contain'}
             />
           </TouchableOpacity>
         </View>

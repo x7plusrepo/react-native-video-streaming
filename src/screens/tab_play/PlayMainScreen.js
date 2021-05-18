@@ -253,6 +253,7 @@ class PlayMainScreen extends Component {
   onVideoLoad = () => {
     //this.setState({ isVideoLoading: false });
     console.log('---onVideoLoad');
+    this.player.presentFullscreenPlayer();
   };
 
   onVideoProgress = (value) => {};
@@ -641,7 +642,7 @@ class PlayMainScreen extends Component {
             playWhenInactive={false}
             playInBackground={false}
             poster={item.thumb}
-            posterResizeMode="contain"
+            posterResizeMode="cover"
             onReadyForDisplay={() => {
               this.onVideoReadyForDisplay(item);
             }}

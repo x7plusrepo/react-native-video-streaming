@@ -86,7 +86,7 @@ class ProfileOtherScreen extends React.Component {
       page_number: '1',
       count_per_page: '1000',
     };
-    showForcePageLoader(true);
+    //showForcePageLoader(true);
     RestAPI.get_user_video_list(params, (json, err) => {
       showForcePageLoader(false);
 
@@ -348,8 +348,8 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     flexWrap: 'wrap',
-    marginVertical: 24,
     paddingHorizontal: 16,
+    paddingBottom:24,
   },
   followButtonWrapper: {
     ...GStyles.rowCenterContainer,

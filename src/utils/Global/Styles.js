@@ -332,6 +332,9 @@ const GStyles = StyleSheet.create({
   boldText: {
     fontWeight: '700',
   },
+  upperCaseText: {
+    textTransform: 'uppercase'
+  }
 });
 export default GStyle;
 export { GStyles };
