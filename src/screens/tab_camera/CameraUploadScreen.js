@@ -8,7 +8,7 @@ import {
   PermissionsAndroid,
   Platform,
   SafeAreaView,
-  StatusBar,
+  ScrollView,
   StyleSheet,
   Switch,
   Text,
@@ -19,6 +19,8 @@ import {
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import DropDownPicker from 'react-native-dropdown-picker';
+
 import ProgressBar from '../../lib/Progress/Bar';
 import { Button, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { createThumbnail } from 'react-native-create-thumbnail';
@@ -37,7 +39,9 @@ import {
   RestAPI,
 } from '../../utils/Global/index';
 import GHeaderBar from '../../components/GHeaderBar';
-import Avatar from '../../components/elements/Avatar';
+
+import { connect } from 'react-redux';
+import { setCategories } from '../../redux/categories/actions';
 
 const img_default_avatar = require('../../assets/images/Icons/ic_default_avatar.png');
 
@@ -56,10 +60,17 @@ const inputProps = {
 class CameraUploadScreen extends React.Component {
   constructor(props) {
     super(props);
-
+    console.log(props.categories, '0000');
     console.log('CameraUploadScreen start');
 
     this.init();
+    this.setOpenCategoryDropdown = this.setOpenCategoryDropdown.bind(this);
+    this.setOpenSubCategoryDropdown =
+      this.setOpenSubCategoryDropdown.bind(this);
+    this.setCategories = this.setCategories.bind(this);
+    this.setCategory = this.setCategory.bind(this);
+    this.setSubCategories = this.setSubCategories.bind(this);
+    this.setSubCategory = this.setSubCategory.bind(this);
   }
 
   componentDidMount() {
@@ -109,6 +120,100 @@ class CameraUploadScreen extends React.Component {
       'hardwareBackPress',
       this.onBack,
     );
+    this.refreshCategories();
+  }
+
+  refreshCategories = () => {
+    const { isFetching } = this.state;
+    if (isFetching) {
+      return;
+    }
+    let params = {
+      user_id: global.me ? global.me.id : '',
+    };
+    showForcePageLoader(true);
+    RestAPI.get_product_categories(params, (json, error) => {
+      this.setState({ isFetching: false });
+      showForcePageLoader(false);
+
+      if (error !== null) {
+        Helper.alertNetworkError(error?.message);
+      } else {
+        if (json.status === 200) {
+          const response = json.data || [];
+          this.props.setCategories(response);
+        } else {
+          Helper.alertServerDataError();
+        }
+      }
+    });
+  };
+
+  componentDidUpdate(
+    prevProps: Readonly<P>,
+    prevState: Readonly<S>,
+    snapshot: SS,
+  ): void {
+    if (prevProps.categories !== this.props.categories) {
+      const categories = this.props.categories
+        ?.filter((category) => !!!category.parent)
+        ?.map((category) => ({
+          label: category?.title,
+          value: category?.id,
+        }));
+      this.setState({ categories });
+    }
+
+    if (prevState.category !== this.state.category) {
+      const subCategories = this.props.categories
+        .filter((category) => category.parent?.id === this.state.category)
+        .map((category) => ({
+          label: category?.title,
+          value: category?.id,
+        }));
+      this.setState({ subCategories });
+    }
+  }
+
+  setOpenCategoryDropdown(open) {
+    console.log(open)
+    this.setState({
+      openCategoryDropdown: open,
+      zIndexCategory: open ? 9999 : 999,
+      zIndexSubCategory: open ? 999 : 9999,
+    });
+  }
+
+  setCategory(callback) {
+    this.setState((state) => ({
+      category: callback(state.category),
+    }));
+  }
+
+  setCategories(callback) {
+    this.setState((state) => ({
+      categories: callback(state.categories)
+    }));
+  }
+
+  setOpenSubCategoryDropdown(open) {
+    this.setState({
+      openSubCategoryDropdown: open,
+      zIndexSubCategory: open ? 9999 : 999,
+      zIndexCategory: open ? 999 : 9999,
+    });
+  }
+
+  setSubCategory(callback) {
+    this.setState((state) => ({
+      subCategory: callback(state.subCategory),
+    }));
+  }
+
+  setSubCategories(callback) {
+    this.setState((state) => ({
+      subCategories: callback(state.subCategories),
+    }));
   }
 
   componentWillUnmount() {
@@ -133,6 +238,14 @@ class CameraUploadScreen extends React.Component {
       uploadMode: 'image',
       price: '',
       description: '',
+      category: null,
+      categories: [],
+      zIndexCategory: 9999,
+      zIndexSubCategory: 9999,
+      subCategory: null,
+      subCategories: [],
+      openCategoryDropdown: false,
+      openSubCategoryDropdown: false,
     };
 
     this._isMounted = false;
@@ -263,7 +376,8 @@ class CameraUploadScreen extends React.Component {
   };
 
   uploadVideoToBackend = (cloudinaryUrl) => {
-    const { tags, price, description, thumb } = this.state;
+    const { tags, price, description, thumb, category, subCategory } =
+      this.state;
 
     showForcePageLoader(true);
     const tagSet = tags.join(',');
@@ -275,7 +389,10 @@ class CameraUploadScreen extends React.Component {
       price: parseInt(price) || 0,
       description: description,
       number: (Number(global.me.uploadCount || 0) + 1).toString(),
+      category,
+      subCategory,
     };
+    console.log(params)
     RestAPI.add_video(params, async (json, err) => {
       showForcePageLoader(false);
       if (err !== null) {
@@ -490,6 +607,7 @@ class CameraUploadScreen extends React.Component {
           >
             {this._renderTagInput()}
             {this._renderMainInputs()}
+            {this._renderCategories()}
             {this._renderButtons()}
           </KeyboardAwareScrollView>
           {this._renderProgress()}
@@ -506,6 +624,56 @@ class CameraUploadScreen extends React.Component {
         leftType="back"
         onPressLeftButton={this.onBack}
       />
+    );
+  };
+
+  _renderCategories = () => {
+    const {
+      categories,
+      subCategories,
+      category,
+      subCategory,
+      openCategoryDropdown,
+      openSubCategoryDropdown,
+      zIndexCategory,
+      zIndexSubCategory,
+    } = this.state;
+
+    return (
+      <View>
+        <Text
+          style={{ ...GStyles.mediumText, marginTop: 20, marginBottom: 12 }}
+        >
+          Category
+        </Text>
+        <DropDownPicker
+          loading={true}
+          search={true}
+          open={openCategoryDropdown}
+          value={category}
+          items={categories}
+          setOpen={this.setOpenCategoryDropdown}
+          setValue={this.setCategory}
+          setItems={this.setCategories}
+          zIndex={zIndexCategory}
+          zIndexInverse={zIndexCategory}
+        />
+        <Text
+          style={{ ...GStyles.mediumText, marginTop: 20, marginBottom: 12 }}
+        >
+          Sub Category
+        </Text>
+        <DropDownPicker
+          open={openSubCategoryDropdown}
+          value={subCategory}
+          items={subCategories}
+          setOpen={this.setOpenSubCategoryDropdown}
+          setValue={this.setSubCategory}
+          setItems={this.setSubCategories}
+          zIndex={zIndexSubCategory}
+          zIndexInverse={zIndexSubCategory}
+        />
+      </View>
     );
   };
 
@@ -738,10 +906,17 @@ class CameraUploadScreen extends React.Component {
 
 const styles = StyleSheet.create({});
 
-export default function (props) {
+const TCameraUploadScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
     <CameraUploadScreen {...props} navigation={navigation} route={route} />
   );
-}
+};
+
+export default connect(
+  (state) => ({
+    categories: state.categories.categories,
+  }),
+  { setCategories },
+)(TCameraUploadScreen);

@@ -1,37 +1,21 @@
 import React, { Component } from 'react';
 import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  BallIndicator,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
   Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  LayoutAnimation,
-  Linking,
-  LogBox,
-  Modal,
-  Platform,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import GHeaderBar from '../../components/GHeaderBar';
+import Video from 'react-native-video';
 import { IconButton } from 'react-native-paper';
-var Sound = require('react-native-sound');
+import { GiftedChat, Actions, Send, Bubble } from 'react-native-gifted-chat';
+import Sound from 'react-native-sound';
+
+import GHeaderBar from '../../components/GHeaderBar';
+import CustomActions from '../../components/elements/MessageActions';
+import CustomView from '../../components/elements/MessageView';
 
 import {
   GStyle,
@@ -41,21 +25,10 @@ import {
   Constants,
   RestAPI,
 } from '../../utils/Global/index';
-import { Dropdown } from '../../lib/MaterialDropdown/index';
-import { TextField } from '../../lib/MaterialTextField/index';
-import Accordion from '../../lib/Collapsible/Accordion';
-import Video from 'react-native-video';
+import SocketManager from './../../utils/Message/SocketManager';
+import get from 'lodash/get';
 
 const ic_send = require('../../assets/images/Icons/ic_send.png');
-
-import { GiftedChat, Actions, Send, Bubble } from 'react-native-gifted-chat';
-import CustomActions from '../../components/elements/MessageActions';
-import CustomView from '../../components/elements/MessageView';
-
-const local_messages = require('./data/messages.js');
-const local_old_messages = require('./data/old_messages.js');
-
-const WINDOW_WIDTH = Helper.getContentWidth();
 
 class MessageChatScreen extends Component {
   constructor(props) {
@@ -68,92 +41,124 @@ class MessageChatScreen extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.onRefresh('init');
-    showForcePageLoader(true);
-    global.onSocketError = this.onSocketError;
-    global.onFetchMessageList = this.onFetchMessageList;
-    global.onReceiveMessageList = this.onReceiveMessageList;
-    Helper.connectToServer();
+    //global.onSocketError = this.onSocketError;
+    //global.onFetchMessageList = this.onFetchMessageList;
+    //global.onReceiveMessageList = this.onReceiveMessageList;
   }
 
   componentWillUnmount() {
-    Helper.disconnectSocket();
-
     this._isMounted = false;
-    global.onFetchMessageList = null;
-    global.onReceiveMessageList = null;
-    global.onSocketError = null;
+    SocketManager.instance.removeFetchMessages();
+    SocketManager.instance.removeReceiveMessages();
+    SocketManager.instance.emitLeaveRoom({
+      roomId: this.state.chatRoom?.id,
+      userId: global.me?.id,
+    });
+    // global.onFetchMessageList = null;
+    // global.onReceiveMessageList = null;
+    // global.onSocketError = null;
   }
 
+  createChatRoom = () => {
+    showForcePageLoader(true);
+    const { route } = this.props;
+    const user = get(route, 'params.product.user');
+    const params = {
+      user: user?.id,
+      roomName: user?.username,
+    };
+    RestAPI.create_chatRoom(params, (json, error) => {
+      showForcePageLoader(false);
+      if (json?.status !== 201 || error || !json?.data) {
+        alert('Error while loading the chat room');
+      } else {
+        const chatRoom = json?.data || {};
+        console.log(chatRoom, '---');
+        this.setState(
+          {
+            chatRoom,
+          },
+          this.initChat,
+        );
+      }
+    });
+  };
+
   init = () => {
+    const { route } = this.props;
+    const product = get(route, 'params.product');
     this.state = {
       isFetching: false,
       totalCount: 0,
-
+      product,
+      chatRoom: {},
       chatTitle: '',
       messages: [],
-
       typingText: null,
     };
 
-    this._isMounted = false;
-
+    const params = {
+      ownerId: product?.user.id,
+      userId: global.me?.id,
+    };
+    showForcePageLoader(true);
+    RestAPI.get_chatRoom(params, (json, error) => {
+      console.log(error);
+      console.log(json);
+      showForcePageLoader(false);
+      if (error?.reason === 'not_found') {
+        this.createChatRoom();
+      } else if (error || json?.status !== 200 || !json.data) {
+        alert('Error while loading messages.');
+      } else if (json?.status === 200) {
+        const chatRoom = json?.data || {};
+        this.setState(
+          {
+            chatRoom,
+          },
+          this.initChat,
+        );
+      }
+    });
     Sound.setCategory('Playback');
   };
 
+  initChat = () => {
+    const { chatRoom } = this.state;
+    SocketManager.instance.emitJoinRoom({
+      roomId: chatRoom?.id,
+      userId: global.me?.id,
+    });
+    SocketManager.instance.listenFetchMessages(this.onFetchMessageList);
+    SocketManager.instance.listenReceiveMessages(this.onReceiveMessageList);
+    this.onRefresh('init');
+  };
+
   onRefresh = (type) => {
-    let { isFetching, totalCount, messages } = this.state;
+    let { isFetching, totalCount, messages, chatRoom } = this.state;
 
     if (isFetching) {
       return;
     }
 
-    let lastMessageId = 0;
-    if (type == 'more') {
+    const params = {
+      roomId: chatRoom?.id,
+      userId: global.me?.id,
+    };
+
+    if (type === 'more') {
       if (messages.length < totalCount) {
-        lastMessageId = messages[messages.length - 1]._id;
+        console.log(messages[messages.length - 1])
+        params.lastMessageCreatedAt = messages[messages.length - 1]?.createdAt || new Date()
       } else {
         return;
       }
-    }
-
-    if (type == 'init') {
-      const params = {
-        none: 'none',
-      };
-
-      RestAPI.get_chat_title(params, (json, err) => {
-        showForcePageLoader(true);
-
-        if (err !== null) {
-          Helper.alertNetworkError(err?.message);
-        } else {
-          if (json.status === 200) {
-            this.setState({ chatTitle: json.data.chatTitle });
-          } else {
-            Helper.alertServerDataError();
-          }
-        }
-      });
-    } else {
-      const params = {
-        room_id: Helper.getChatRoomId(),
-        last_message_id: lastMessageId,
-        count_per_page: Constants.COUNT_PER_PAGE,
-      };
-
       this.setState({ isFetching: true });
-      RestAPI.get_message_list(params, (error) => {
-        if (error !== null) {
-          if (type == 'init') {
-            showForcePageLoader(false);
-          } else {
-            this.setState({ isFetching: false });
-          }
-          Helper.alertNetworkError();
-        }
-      });
+    } else {
+      showForcePageLoader(true);
     }
+    SocketManager.instance.emitFetchMessages(params);
+
   };
 
   onSocketError = () => {
@@ -163,49 +168,41 @@ class MessageChatScreen extends Component {
     Helper.alertNetworkError();
   };
 
-  onFetchMessageList = () => {
+  onFetchMessageList = (response) => {
     showForcePageLoader(false);
     this.setState({ isFetching: false });
 
-    const json = global._fetchedMessageList;
-    this.setState({ totalCount: json.data.total_count });
-    this.onLoadMore(json.data.message_list);
+    this.setState({ totalCount: response?.totalCount || 0 });
+    this.onLoadMore(response?.messages);
   };
 
-  onReceiveMessageList = () => {
+  onReceiveMessageList = (response) => {
     showForcePageLoader(false);
 
-    const json = global._receivedMessageList;
-    this.setState({ totalCount: json.data.total_count });
-    this.onReceive(json.data.message_list);
+    const messages = response.messages || [];
+
+    this.onReceive(messages);
   };
 
   onBack = () => {
-    let params = {
-      user_id: global.me.id,
-      other_id: global._roomId,
-    };
-    RestAPI.set_read_status(params, (json, err) => {});
+    // let params = {
+    //   user_id: global.me.id,
+    //   other_id: global._roomId,
+    // };
+    //RestAPI.set_read_status(params, (json, err) => {});
 
-    Helper.disconnectSocket();
     this.props.navigation.goBack();
   };
 
   onSend = (messages = []) => {
+    console.log(messages);
     if (messages.length > 0) {
-      let params = {
-        room_id: Helper.getChatRoomId(),
-        sender_id: global.me.id,
-        receiver_id: global._roomId,
-        type: Constants.MESSAGE_TYPE_TEXT,
+      //showForcePageLoader(true);
+      SocketManager.instance.emitSendMessage({
+        roomId: this.state.chatRoom.id,
+        senderId: global.me.id,
+        messageType: Constants.MESSAGE_TYPE_TEXT,
         message: messages[0].text,
-      };
-      // showForcePageLoader(true);
-      RestAPI.send_message(params, (error) => {
-        if (error !== null) {
-          showForcePageLoader(false);
-          Helper.alertNetworkError();
-        }
       });
     }
   };
@@ -224,13 +221,13 @@ class MessageChatScreen extends Component {
     let messages = [];
     message_list.forEach((item) => {
       const newItem = {
-        _id: item.message_id,
+        _id: item.id,
         text: item.message,
-        createdAt: item.time,
+        createdAt: new Date(),
         user: {
-          _id: item.sender_id == global.me.id ? 1 : 2,
-          name: item.sender_name,
-          avatar: item.sender_photo,
+          _id: item.sender?.id,
+          name: item.sender?.username,
+          avatar: item.sender?.photo,
         },
       };
       messages.push(newItem);
@@ -243,18 +240,18 @@ class MessageChatScreen extends Component {
     });
   };
 
-  onLoadMore = (message_list = []) => {
+  onLoadMore = (array = []) => {
     let messages = [];
-    message_list.forEach((item) => {
+    array.forEach((item) => {
       if (item.message) {
         const newItem = {
-          _id: item.message_id,
+          _id: item.id,
           text: item.message,
-          createdAt: new Date(item.time),
+          createdAt: new Date(item.createdAt),
           user: {
-            _id: item.sender_id == global.me.id ? 1 : 2,
-            name: item.sender_name,
-            avatar: item.sender_photo,
+            _id: item.sender?.id,
+            name: item.sender?.username,
+            avatar: item.sender?.photo,
           },
         };
         messages.push(newItem);
@@ -318,9 +315,9 @@ class MessageChatScreen extends Component {
   _renderChat = () => {
     const { messages, isFetching, totalCount } = this.state;
 
-    let isLoadEarlier = messages.length > 0 ? true : false;
+    let isLoadEarlier = messages.length > 0;
     if (isLoadEarlier) {
-      isLoadEarlier = messages.length < totalCount ? true : false;
+      isLoadEarlier = messages.length < totalCount;
     }
 
     return (
@@ -338,7 +335,7 @@ class MessageChatScreen extends Component {
             this.onRefresh('more');
           }}
           isLoadingEarlier={isFetching}
-          user={{ _id: 1, name: 'Dick Arnold' }}
+          user={{ _id: global.me?.id, name: global.me?.username }}
           renderBubble={this._renderBubble}
           placeholder="Type your message here..."
           showUserAvatar
@@ -388,10 +385,7 @@ class MessageChatScreen extends Component {
             paddingHorizontal: 14,
           }}
         >
-          <Image
-            source={ic_send}
-            style={{ ...GStyles.image, width: 24 }}
-          ></Image>
+          <Image source={ic_send} style={{ ...GStyles.image, width: 24 }} />
         </View>
       </Send>
     );
@@ -484,6 +478,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa',
   },
+  bottomComponentContainer: {}
 });
 
 export default MessageChatScreen;

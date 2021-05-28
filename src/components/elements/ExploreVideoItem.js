@@ -1,114 +1,92 @@
-import React, { Component } from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
-
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import React from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
-import { GStyle, GStyles, Constants } from '../../utils/Global/index';
+import {GStyle, GStyles, Constants, Helper} from '../../utils/Global/index';
+import ic_eye from "../../assets/images/Icons/ic_eye.png";
+import ic_diamond from "../../assets/images/Icons/ic_diamond.png";
 
-const ExploreVideoItem = ({ item, onPress }) => {
+const WINDOW_WIDTH = Helper.getWindowWidth();
+const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;
+
+const ExploreVideoItem = ({ item, index, onPress }) => {
   const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
   const user = item.userId || {};
   return (
-    <View
-      style={{
-        flex: 1,
-        maxWidth: '50%',
-        alignItems: 'center',
-        paddingVertical: 8,
-        marginHorizontal: 8,
-        marginVertical: 8,
-        borderWidth: 1,
-        borderColor: GStyle.grayBackColor,
+    <TouchableOpacity
+      onPress={() => {
+        onPress(item.id);
       }}
+      style={[styles.container, index % 2 === 0 && { marginRight: 0 }]}
     >
-      <TouchableOpacity
-        onPress={() => {
-          onPress(item.id);
+      <FastImage
+        source={{
+          uri: item.thumb || '',
         }}
-        style={{ ...GStyles.centerAlign, width: '100%' }}
-      >
-        <FastImage
-          source={{
-            uri: item.thumb || '',
-            priority: FastImage.priority.normal,
-          }}
-          resizeMode={FastImage.resizeMode.cover}
-          style={{
-            width: '100%',
-            //height: WINDOW_WIDTH * 0.7,
-            aspectRatio: 1,
-            marginTop: 2,
-          }}
-        />
-        {/* <Image
-          source={{uri: item.thumb}}
-          style={{
-            width: '100%',
-            height: WINDOW_WIDTH * 0.7,
-            resizeMode: 'cover',
-            marginTop: 2,
-          }}
-        /> */}
-        <View
-          style={{
-            ...GStyles.rowContainer,
-            position: 'absolute',
-            left: 8,
-            bottom: 20,
-          }}
-        >
-          <Text
-            style={{
-              ...GStyles.regularText,
-              color: 'black',
-              backgroundColor: item.sticker > 0 ? 'white' : 'transparent',
-              marginLeft: 8,
-              padding: 2,
-            }}
-          >
-            {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
-          </Text>
+        resizeMode={FastImage.resizeMode.cover}
+        style={styles.image}
+      />
+      <View style={styles.infoWrapper}>
+        <View style={{ flex: 1 }} />
+        <View style={GStyles.rowBetweenContainer}>
+          <View style={GStyles.rowContainer}>
+            <Image
+              source={ic_diamond}
+              style={styles.icons}
+            />
+            <Text style={styles.textLabel}>237</Text>
+          </View>
+          <View style={GStyles.rowContainer}>
+            <Image
+              source={ic_eye}
+              style={[styles.icons, { tintColor: 'white' }]}
+            />
+            <Text style={styles.textLabel}>237</Text>
+          </View>
+
         </View>
-        <View
-          style={{
-            ...GStyles.rowContainer,
-            position: 'absolute',
-            right: 20,
-            bottom: 20,
-            backgroundColor: 'white',
-            paddingVertical: 2,
-            paddingHorizontal: 4,
-          }}
-        >
-          <FontAwesome name="group" style={{ fontSize: 18, color: 'black' }} />
-          <Text
-            style={{
-              ...GStyles.regularText,
-              color: 'black',
-              marginLeft: 8,
-            }}
-          >
-            {item.viewCount || 0}
-          </Text>
-        </View>
-      </TouchableOpacity>
-      {newTagList.length > 0 && (
-        <Text
-          numberOfLines={1}
-          style={{ ...GStyles.regularText, fontSize: 13, marginTop: 4 }}
-        >
-          {newTagList}
-        </Text>
-      )}
-      <Text style={{ ...GStyles.regularText, marginTop: 2 }}>
-        {user.username}
-      </Text>
-      <Text style={{ ...GStyles.regularText, color: 'green' }}>
-        ৳{item.price}
-      </Text>
-    </View>
+      </View>
+    </TouchableOpacity>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    width : ITEM_WIDTH,
+    ...GStyles.centerAlign,
+    marginHorizontal: 12,
+    marginTop: 12,
+    backgroundColor: 'white',
+    overflow: 'hidden',
+    borderRadius: 8,
+    elevation: 12,
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOffset: {
+      width: 0,
+      height: 12,
+    },
+    shadowRadius: 6,
+    shadowOpacity: 0.3,
+  },
+  image: {
+    width: '100%',
+    aspectRatio: 1,
+  },
+  icons: {
+    width: 16,
+    height: 16,
+    marginRight: 4,
+  },
+  infoWrapper: {
+    width: '100%',
+    height: '100%',
+    position: 'absolute',
+    padding: 6,
+  },
+  textLabel: {
+    ...GStyles.textExtraSmall,
+    color: GStyle.activeColor,
+  }
+});
 
 export default ExploreVideoItem;

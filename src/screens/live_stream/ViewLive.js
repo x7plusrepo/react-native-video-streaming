@@ -61,7 +61,6 @@ class ViewLive extends Component {
     const userId = user?.id;
     const streamerId = room?.user?.id;
 
-    SocketManager.instance.connect();
     SocketManager.instance.emitJoinRoom({
       streamerId,
       userId,
@@ -155,7 +154,7 @@ class ViewLive extends Component {
       streamerId,
       userId,
     });
-    SocketManager.instance.disconnect();
+    //SocketManager.instance.disconnect();
   };
 
   componentWillUnmount() {

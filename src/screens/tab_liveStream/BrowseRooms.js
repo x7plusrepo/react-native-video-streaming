@@ -35,6 +35,7 @@ class BrowseRooms extends React.Component {
           tabBarInactiveTextColor={'black'}
           tabBarActiveTextColor={GStyle.activeColor}
           tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
+          style={{ flex: 1 }}
           renderTabBar={() => (
             <DefaultTabBar
               style={{

@@ -9,7 +9,8 @@ import { Helper, GStyle } from '../../utils/Global';
 import { GStyles } from '../../utils/Global/Styles';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
-const ITEM_WIDTH = (WINDOW_WIDTH - 32 - 16) / 2;
+const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;
+
 const LiveStreamRoom = (props) => {
   const { room, index } = props;
   const navigation = useNavigation();
@@ -21,7 +22,7 @@ const LiveStreamRoom = (props) => {
 
   return (
     <TouchableOpacity
-      style={[styles.card, index % 2 === 0 && { marginRight: 16 }]}
+      style={[styles.card, index % 2 === 0 && { marginRight: 0 }]}
       onPress={onPress}
     >
       <Image
@@ -70,9 +71,18 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     backgroundColor: GStyle.greenColor,
-    borderRadius: 8,
-    marginTop: 16,
+    borderRadius: 6,
+    marginHorizontal: 12,
+    marginTop: 12,
     overflow: 'hidden',
+    elevation: 12,
+    shadowColor: 'rgba(0, 0, 0, 0.1)',
+    shadowOffset: {
+      width: 0,
+      height: 20,
+    },
+    shadowRadius: 5,
+    shadowOpacity: 0.3,
   },
   thumbnail: {
     width: '100%',
@@ -99,9 +109,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
   },
   viewersCount: {
-    fontFamily: 'GothamPro',
-    fontWeight: '500',
-    fontSize: 11,
+    ...GStyles.textExtraSmall,
     color: 'white',
   },
   row: {

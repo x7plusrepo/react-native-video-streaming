@@ -29,6 +29,7 @@ import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
 import { setMyUserAction } from '../../redux/me/actions';
+import ChatStreamSocketManager from "../../utils/Message/SocketManager";
 
 class ProfileEditScreen extends React.Component {
   constructor(props) {
@@ -191,7 +192,16 @@ class ProfileEditScreen extends React.Component {
           error(Constants.ERROR_TITLE, 'Failed to update your profile');
         } else {
           if (json.status === 200) {
+            ChatStreamSocketManager.instance.emitLeaveRoom({
+              roomId: global.me?.id,
+              userId: global.me?.id,
+            });
+
             global.me = json.data || {};
+            ChatStreamSocketManager.instance.emitJoinRoom({
+              roomId: global.me?.id,
+              userId: global.me?.id,
+            });
             this.props.setMyUserAction(json.data || {});
             Helper.setLocalValue(Constants.KEY_USERNAME, userName);
             Helper.setLocalValue(Constants.KEY_PASSWORD, updatePassword);

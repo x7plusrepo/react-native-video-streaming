@@ -32,6 +32,7 @@ import Fontisto from 'react-native-vector-icons/Fontisto';
 
 import Video from 'react-native-video';
 import { setMyUserAction } from '../../redux/me/actions';
+import { setProducts, updateProduct } from '../../redux/products/actions';
 
 import Avatar from '../../components/elements/Avatar';
 import ProgressModal from '../../components/ProgressModal';
@@ -44,8 +45,10 @@ import {
   Constants,
   RestAPI,
 } from '../../utils/Global/index';
+import ChatStreamSocketManager from './../../utils/Message/SocketManager';
 
 import avatars from '../../assets/avatars';
+
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
@@ -132,9 +135,8 @@ class PlayMainScreen extends Component {
       isFetching: false,
       totalCount: 0,
       curPage: 1,
-      itemDatas: [],
       item: {},
-      onEndReachedCalledDuringMomentum: true,
+      onEndReachedDuringMomentum: true,
       curIndex: null,
       isMounted: false,
     };
@@ -146,7 +148,9 @@ class PlayMainScreen extends Component {
   };
 
   onRefresh = async (type) => {
-    let { isFetching, totalCount, curPage, itemDatas } = this.state;
+    let { isFetching, totalCount, curPage } = this.state;
+
+    const { products} = this.props;
 
     if (isFetching) {
       return;
@@ -162,12 +166,11 @@ class PlayMainScreen extends Component {
     } else {
       curPage = 1;
     }
-    this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
+    this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type !== 'init') {
       this.setState({ isFetching: true });
     }
-
 
     const storageUsername = await Helper.getLocalValue(Constants.KEY_USERNAME);
     const storagePassword = await Helper.getLocalValue(Constants.KEY_PASSWORD);
@@ -197,18 +200,30 @@ class PlayMainScreen extends Component {
       }
 
       if (err !== null) {
-        Helper.alertNetworkError(err.message);
+        Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
           if (this.state.isMounted) {
+            console.log(json.data.videoList);
             this.setState({ totalCount: json.data.totalCounts });
             if (type === 'more') {
-              let data = itemDatas.concat(json.data.videoList);
-              this.setState({ itemDatas: data });
+              let data = products.concat(json.data.videoList || []);
+              this.props.setProducts(data);
             } else {
-              this.setState({ itemDatas: json.data.videoList });
+              this.props.setProducts(json.data.videoList || []);
               if (!global.me) {
+                ChatStreamSocketManager.instance.emitLeaveRoom({
+                  roomId: global.me?.id,
+                  userId: global.me?.id,
+                });
+
                 global.me = json.data.loginResult.user || {};
+
+                ChatStreamSocketManager.instance.emitJoinRoom({
+                  roomId: global.me?.id,
+                  userId: global.me?.id,
+                });
+
                 this.props.setMyUserAction(global.me);
                 Helper.setLocalValue(Constants.KEY_USERNAME, username);
                 Helper.setLocalValue(Constants.KEY_PASSWORD, password);
@@ -274,7 +289,7 @@ class PlayMainScreen extends Component {
 
       let params = {
         video_id: item.id,
-        owner_id: item.userId?.id,
+        owner_id: item.user?.id,
         viewer_id: global.me ? global.me.id : 0,
         device_type: Platform.OS === 'ios' ? '1' : '0',
         device_identifier: global._deviceId,
@@ -284,7 +299,7 @@ class PlayMainScreen extends Component {
   };
 
   onPressAvatar = (item) => {
-    const user = item?.userId || {};
+    const user = item?.user || {};
     if (global.me) {
       if (user.id === global.me.id) {
         this.props.navigation.navigate('profile');
@@ -300,7 +315,6 @@ class PlayMainScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
-    let { itemDatas } = this.state;
 
     if (global.me) {
       if (isChecked) {
@@ -319,7 +333,6 @@ class PlayMainScreen extends Component {
           } else {
             if (json.status === 200) {
               item.isLike = isChecked;
-              this.setState(itemDatas);
             } else {
               Helper.alertServerDataError();
             }
@@ -332,15 +345,13 @@ class PlayMainScreen extends Component {
   };
 
   onPressMessage = (item) => {
-    const user = item?.userId || {};
+    const user = item?.user || {};
 
     if (global.me) {
-      if (user.id === global.me.id) {
+      if (false && user.id === global.me.id) {
         return;
       } else {
-        global._roomId = user.id;
-        global._opponentName = user.username;
-        this.props.navigation.navigate('message_chat');
+        this.props.navigation.navigate('message_chat', { product: item });
       }
     } else {
       this.props.navigation.navigate('signin');
@@ -358,7 +369,7 @@ class PlayMainScreen extends Component {
 
   onShareFacebook = async () => {
     this.Scrollable.close();
-    const user = this.state.item?.userId || {};
+    const user = this.state.item?.user || {};
 
     if (Platform.OS === 'android') {
       const SHARE_LINK_CONTENT = {
@@ -401,7 +412,7 @@ class PlayMainScreen extends Component {
 
   onShareFacebookMessenger = async () => {
     this.Scrollable.close();
-    const user = this.state.item?.userId || {};
+    const user = this.state.item?.user || {};
 
     const SHARE_LINK_CONTENT = {
       contentType: 'link',
@@ -458,7 +469,7 @@ class PlayMainScreen extends Component {
   onDownloadVideo = async () => {
     this.Scrollable.close();
     const item = this.state.item || {};
-    const user = item?.userId || {};
+    const user = item?.user || {};
 
     if (!global.me) {
       return;
@@ -548,7 +559,9 @@ class PlayMainScreen extends Component {
   }
 
   _renderVideo = () => {
-    const { isFetching, itemDatas } = this.state;
+    const { isFetching } = this.state;
+    const { products } = this.props;
+
     return (
       <FlatList
         showsVerticalScrollIndicator={false}
@@ -561,15 +574,15 @@ class PlayMainScreen extends Component {
         ListFooterComponent={this._renderFooter}
         onEndReachedThreshold={0.4}
         onMomentumScrollBegin={() => {
-          this.setState({ onEndReachedCalledDuringMomentum: false });
+          this.setState({ onEndReachedDuringMomentum: false });
         }}
         onEndReached={() => {
-          if (!this.state.onEndReachedCalledDuringMomentum) {
-            this.setState({ onEndReachedCalledDuringMomentum: true });
+          if (!this.state.onEndReachedDuringMomentum) {
+            this.setState({ onEndReachedDuringMomentum: true });
             this.onRefresh('more');
           }
         }}
-        data={itemDatas}
+        data={products}
         renderItem={this._renderItem}
         onViewableItemsChanged={this.onViewableItemsChanged}
         viewabilityConfig={{
@@ -600,7 +613,7 @@ class PlayMainScreen extends Component {
   _renderItem = ({ item, index }) => {
     const { isVideoPause } = this.state;
     const paused = isVideoPause || this.state.curIndex !== index;
-    const user = item.userId || {};
+    const user = item.user || {};
     if (Math.abs(this.state.curIndex - index) > 2) {
       return (
         <View
@@ -615,6 +628,8 @@ class PlayMainScreen extends Component {
     } else {
       const isLike = !!item.isLike;
       const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
+      const categoryName = item?.category?.title || '';
+      const subCategoryName = item?.subCategory?.title || '';
 
       if (this.state.curIndex === index) {
         global._opponentId = user?.id;
@@ -737,7 +752,7 @@ class PlayMainScreen extends Component {
               <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 <View style={GStyles.playInfoTextWrapper}>
                   <Text numberOfLines={3} style={GStyles.playInfoText}>
-                    {newTagList}
+                    {newTagList} {''} {categoryName} {''} {subCategoryName}
                   </Text>
                 </View>
 
@@ -957,6 +972,7 @@ const styles = StyleSheet.create({});
 export default connect(
   (state) => ({
     user: state.me.user,
+    products: state.products.products,
   }),
-  { setMyUserAction },
+  { setMyUserAction, setProducts, updateProduct },
 )(PlayMainScreen);

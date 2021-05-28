@@ -28,8 +28,8 @@ const PageLoaderIndicator = ({ isPageLoader = false }) => {
         position: 'absolute',
         top: 0,
         left: 0,
-        width: Constants.WINDOW_WIDTH,
-        height: Constants.WINDOW_HEIGHT,
+        width: '100%',
+        height: '100%',
         backgroundColor: 'rgba(13,13,13,0.4)',
         zIndex: 99999,
       }}

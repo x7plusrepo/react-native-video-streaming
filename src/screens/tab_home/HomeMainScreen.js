@@ -1,32 +1,32 @@
 import React from 'react';
 import {
-  Keyboard,
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
 import { connect } from 'react-redux';
 import { setKeyword } from '../../redux/home/actions';
 
-import {
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import ScrollableTabView, {
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
 
 import {
+  Constants,
   GStyle,
   GStyles,
   Helper,
+  RestAPI,
 } from '../../utils/Global/index';
-import SearchBarItem from '../../components/elements/SearchBarItem';
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+const ic_search = require('../../assets/images/Icons/ic_search.png');
 
 import HomeVideoScreen from './HomeVideoScreen';
+import { setCategories } from '../../redux/categories/actions';
 
 class HomeMainScreen extends React.Component {
   constructor(props) {
@@ -42,6 +42,7 @@ class HomeMainScreen extends React.Component {
       Helper.callFunc(global.setBottomTabName('home'));
       Helper.setLightStatusBar();
     });
+    this.refreshCategories();
   }
 
   componentWillUnmount() {
@@ -53,172 +54,116 @@ class HomeMainScreen extends React.Component {
   init = () => {
     this.state = {
       isFetching: false,
-      totalCount: 0,
-
-      searchText: '',
+      categories: [],
     };
 
     this._isMounted = false;
   };
 
-  onChangeSearchText = (text) => {
-    const parseWhen = [',', ' ', ';', '\n'];
-
-    if (text.length === 1) {
-      if (parseWhen.indexOf(text.charAt(0)) > -1) {
-        return;
-      }
-    }
-    if (text.length > 1) {
-      if (
-        parseWhen.indexOf(text.charAt(text.length - 1)) > -1 &&
-        parseWhen.indexOf(text.charAt(text.length - 2)) > -1
-      ) {
-        return;
-      }
-    }
-
-    this.setState({ searchText: text });
-  };
-
-  onSubmitSearchText = () => {
-    Keyboard.dismiss();
-    // if (this.videoListRef) {
-    //   this.videoListRef.scrollToTop();
-    // }
-
-    const { searchText } = this.state;
-
-    const lastTyped = searchText.charAt(searchText.length - 1);
-    const parseWhen = [',', ' ', ';', '\n'];
-
-    let keyword = '';
-    if (searchText.length > 0) {
-      if (parseWhen.indexOf(lastTyped) > -1) {
-        keyword = searchText.slice(0, searchText.length - 1);
-      } else {
-        keyword = searchText;
-      }
-    } else {
-      keyword = '';
-    }
-
-    this.setState({ searchText: '' });
-    if (keyword === '') {
+  refreshCategories = () => {
+    const { isFetching } = this.state;
+    if (isFetching) {
       return;
     }
+    let params = {
+      user_id: global.me ? global.me.id : '',
+    };
+    showForcePageLoader(true);
+    RestAPI.get_product_categories(params, (json, error) => {
+      this.setState({ isFetching: false });
+      showForcePageLoader(false);
 
-    this.props.setKeyword(keyword);
-    this.props.navigation.navigate('home_search');
+      if (error !== null) {
+        Helper.alertNetworkError(error?.message);
+      } else {
+        if (json.status === 200) {
+          const response = json.data || [];
+          this.props.setCategories(response);
+          const categories = response
+            .filter((category) => !!!category.parent)
+            .map((parent, index) => {
+              const subCategories = response.filter(
+                (category, index) => category.parent?.id === parent.id,
+              );
+              return {
+                ...parent,
+                subCategories,
+              };
+            });
+          this.setState({
+            categories,
+          });
+        } else {
+          Helper.alertServerDataError();
+        }
+      }
+    });
+  };
+
+  onPressSearch = () => {
+    const { navigation } = this.props;
+    navigation.navigate('home_search');
   };
 
   render() {
-    const { keyword } = this.props;
+    const { categories } = this.state;
 
     return (
       <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
-        {this._renderSearch()}
         <ScrollableTabView
           initialPage={0}
-          tabBarBackgroundColor={GStyle.snowColor}
+          tabBarBackgroundColor="white"
+          tabBarTextStyle={styles.tabBarTextStyle}
+          tabBarInactiveTextColor={'black'}
           tabBarActiveTextColor={GStyle.activeColor}
-          tabBarUnderlineStyle={{ backgroundColor: GStyle.activeColor }}
-          renderTabBar={() => <ScrollableTabBar />}
+          tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
+          renderTabBar={(props) => {
+            return (
+              <View style={[GStyles.rowBetweenContainer, { paddingRight: 16 }]}>
+                <ScrollableTabBar {...props} style={styles.scrollBar} />
+                <TouchableOpacity onPress={this.onPressSearch}>
+                  <Image
+                    source={ic_search}
+                    style={{
+                      ...GStyles.actionIcons,
+                      tintColor: '#5F5F5F',
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          }}
         >
-          <HomeVideoScreen
-            tabLabel="Gifts"
-            quickKeyword={'gift,gifts'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Women"
-            quickKeyword={'woman,women'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Men"
-            quickKeyword={'man,men'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Boys"
-            quickKeyword={'boy,boys'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Girls"
-            quickKeyword={'girl,girls'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Baby"
-            quickKeyword={'baby'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Toys"
-            quickKeyword={'toy,toys'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Home"
-            quickKeyword={'home'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Kitchen"
-            quickKeyword={'kitchen'}
-            isQuickSearch={true}
-          />
-          <HomeVideoScreen
-            tabLabel="Electronics"
-            quickKeyword={'electronic,electronics'}
-            isQuickSearch={true}
-          />
+          {categories.map((category, index) => (
+            <HomeVideoScreen
+              tabLabel={category.title}
+              category={category}
+              key={index.toString()}
+            />
+          ))}
         </ScrollableTabView>
       </SafeAreaView>
     );
   }
-
-  _renderSearch = () => {
-    const { searchText } = this.state;
-
-    return (
-      <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
-        <View style={{ flex: 1, marginVertical: 8, marginHorizontal: 16}}>
-          <SearchBarItem
-            searchText={searchText}
-            onChangeText={this.onChangeSearchText}
-            onSubmitText={this.onSubmitSearchText}
-          />
-        </View>
-        {searchText !== '' && (
-          <View style={{ ...GStyles.centerAlign, marginRight: 12 }}>
-            <TouchableNativeFeedback
-              onPress={this.onSubmitSearchText}
-              style={{ ...GStyles.centerAlign, height: 50 }}
-            >
-              <Text style={{ ...GStyles.regularText, color: 'red' }}>
-                Search
-              </Text>
-            </TouchableNativeFeedback>
-          </View>
-        )}
-      </View>
-    );
-  };
 }
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  tabBarTextStyle: {
+    fontFamily: 'GothamPro-Medium',
+    fontSize: 16,
+    fontWeight: '500',
+  },
+  scrollBar: {
+    borderWidth: 0,
+    backgroundColor: 'white',
+    flex: 1,
+    marginRight: 16,
+  },
+});
 
 const THomeMainScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return <HomeMainScreen {...props} navigation={navigation} route={route} />;
 };
-export default connect(
-  (state) => ({
-    keyword: state.home.keyword,
-  }),
-  { setKeyword },
-)(THomeMainScreen);
+export default connect((state) => ({}), { setCategories })(THomeMainScreen);

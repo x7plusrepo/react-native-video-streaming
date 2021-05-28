@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
     },
     shadowRadius: 5,
     shadowOpacity: 0.3,
-    elevation: 0,
+    elevation: 6,
   },
 
   headerContainer: {

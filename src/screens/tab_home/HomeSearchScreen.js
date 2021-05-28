@@ -8,22 +8,22 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
-
-import {connect} from 'react-redux';
-import {setKeyword} from '../../redux/home/actions';
-
-import ScrollableTabView, {DefaultTabBar} from 'rn-collapsing-tab-bar';
-
 import {
-  GStyle,
-  GStyles,
-  Helper,
-} from '../../utils/Global/index';
-import SearchBarItem from '../../components/elements/SearchBarItem';
-import {TouchableNativeFeedback} from 'react-native-gesture-handler';
+  useNavigation,
+  useRoute,
+  StackActions,
+} from '@react-navigation/native';
 
-import HomeVideoScreen from './HomeVideoScreen';
+import { connect } from 'react-redux';
+import { setKeyword } from '../../redux/home/actions';
+
+import ScrollableTabView, { DefaultTabBar } from 'rn-collapsing-tab-bar';
+
+import { GStyle, GStyles, Helper } from '../../utils/Global/index';
+import SearchBarItem from '../../components/elements/SearchBarItem';
+import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+
+import HomeVideoSearch from './HomeVideoSearch';
 import HomeUsersScreen from './HomeUsersScreen';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
@@ -62,7 +62,7 @@ class HomeSearchScreen extends React.Component {
   };
 
   onChangeSearchText = (text) => {
-    const {searchText} = this.state;
+    const { searchText } = this.state;
 
     if (searchText.length < 1 && text.length > 1) {
       return;
@@ -85,7 +85,7 @@ class HomeSearchScreen extends React.Component {
       }
     }
 
-    this.setState({searchText: text});
+    this.setState({ searchText: text });
   };
 
   onSubmitSearchText = () => {
@@ -98,7 +98,7 @@ class HomeSearchScreen extends React.Component {
       this.videosListRef.scrollToTop();
     }
 
-    const {searchText} = this.state;
+    const { searchText } = this.state;
 
     const lastTyped = searchText.charAt(searchText.length - 1);
     const parseWhen = [',', ' ', ';', '\n'];
@@ -114,7 +114,7 @@ class HomeSearchScreen extends React.Component {
       keyword = '';
     }
 
-    this.setState({searchText: ''});
+    this.setState({ searchText: '' });
     if (keyword == '') {
       return;
     }
@@ -125,7 +125,7 @@ class HomeSearchScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
           {this._renderSearch()}
           {this._renderTab()}
         </SafeAreaView>
@@ -134,32 +134,33 @@ class HomeSearchScreen extends React.Component {
   }
 
   _renderSearch = () => {
-    const {searchText} = this.state;
+    const { searchText } = this.state;
 
     return (
-      <View style={{flexDirection: 'row', justifyContent: 'center'}}>
-        <View style={{justifyContent: 'center'}}>
-          <TouchableOpacity
-            onPress={this.onBack}
-            style={{...GStyles.centerAlign, width: 40, height: 50}}>
-            <Image
-              source={ic_back}
-              style={{width: 20, height: 14, marginLeft: 12}}></Image>
-          </TouchableOpacity>
-        </View>
-        <View style={{flex: 1, marginVertical: 4, marginHorizontal: 8}}>
+      <View style={{ flexDirection: 'row', padding: 16 }}>
+        <TouchableOpacity onPress={this.onBack} style={GStyles.centerAlign}>
+          <Image
+            source={ic_back}
+            style={{ width: 18, height: 18 }}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
+        <View style={{ flex: 1, marginVertical: 4, marginHorizontal: 8 }}>
           <SearchBarItem
             searchText={searchText}
             onChangeText={this.onChangeSearchText}
             onSubmitText={this.onSubmitSearchText}
           />
         </View>
-        {searchText != '' && (
-          <View style={{...GStyles.centerAlign, marginRight: 12}}>
+        {searchText !== '' && (
+          <View style={{ ...GStyles.centerAlign, marginRight: 12 }}>
             <TouchableNativeFeedback
               onPress={this.onSubmitSearchText}
-              style={{...GStyles.centerAlign, height: 50}}>
-              <Text style={{...GStyles.regularText, color: 'red'}}>Search</Text>
+              style={{ ...GStyles.centerAlign, height: 50 }}
+            >
+              <Text style={{ ...GStyles.regularText, color: 'red' }}>
+                Search
+              </Text>
             </TouchableNativeFeedback>
           </View>
         )}
@@ -168,7 +169,7 @@ class HomeSearchScreen extends React.Component {
   };
 
   _renderTab = () => {
-    const {keyword} = this.props;
+    const { keyword } = this.props;
 
     return (
       <ScrollableTabView
@@ -178,15 +179,16 @@ class HomeSearchScreen extends React.Component {
         initialPage={0}
         tabBarBackgroundColor={GStyle.snowColor}
         tabBarActiveTextColor={GStyle.activeColor}
-        tabBarUnderlineStyle={{backgroundColor: GStyle.activeColor}}
+        tabBarUnderlineStyle={{ backgroundColor: GStyle.activeColor }}
         renderTabBar={() => (
           <DefaultTabBar
             inactiveTextColor={GStyle.fontColor}
             activeTextColor={GStyle.fontColor}
             backgroundColor={GStyle.grayBackColor}
           />
-        )}>
-        <HomeVideoScreen
+        )}
+      >
+        <HomeVideoSearch
           tabLabel="Videos"
           ref={(ref) => {
             this.videosListRef = ref;
@@ -217,5 +219,5 @@ export default connect(
   (state) => ({
     keyword: state.home.keyword,
   }),
-  {setKeyword},
+  { setKeyword },
 )(THomeSearchScreen);

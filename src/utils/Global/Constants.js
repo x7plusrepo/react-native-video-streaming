@@ -17,8 +17,8 @@ const Constants = {
   //HOST_URL: 'http://192.168.1.110:3000',
   //CHAT_SOCKET_URL: 'http://192.168.1.110:3000/ChatStream',
   CHAT_SOCKET_URL: 'http://107.180.73.164:3000/ChatStream',
-  STREAM_SOCKET_URL: 'http://107.180.73.164:3000/LiveStream',
-  //STREAM_SOCKET_URL: 'http://192.168.1.110:3000/LiveStream',
+  LIVE_SOCKET_URL: 'http://107.180.73.164:3000/LiveStream',
+  //LIVE_SOCKET_URL: 'http://192.168.1.110:3000/LiveStream',
   RTMP_SERVER: 'rtmp://107.180.73.164',
   //RTMP_SERVER: 'rtmp://192.168.1.110',
   GOOGLE_PLAY_URL:
@@ -57,15 +57,6 @@ const Constants = {
   SOCKET_JOIN_STREAM: 'joinStream',
   SOCKET_STREAM: 'stream',
   SOCKET_STREAM_COMMENT: 'streamComment',
-
-  NOTIFICATION_SEND_MESSAGE: 'SendMessage',
-  NOTIFICATION_NEW_USER: 'NewUser',
-  NOTIFICATION_USER_LEFT: 'UserLeft',
-  NOTIFICATION_USER_TYPING: 'UserTyping',
-  NOTIFICATION_MESSAGE_CHANGES: 'MessageChanges',
-  NOTIFICATION_MESSAGE_DELETED: 'MessageDeleted',
-  NOTIFICATION_SEND_STREAM: 'SendStream',
-  NOTIFICATION_SEND_STREAM_COMMENT: 'SendStreamComment',
 
   ERROR_CODES: {
     1000001: 'Name is not provided.',

@@ -59,7 +59,7 @@ class TopUsersScreen extends React.Component {
       curPage: 1,
 
       itemDatas: [],
-      onEndReachedCalledDuringMomentum: true,
+      onEndReachedDuringMomentum: true,
     };
   };
 
@@ -80,7 +80,7 @@ class TopUsersScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
+    this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init') {
       //showForcePageLoader(true);
@@ -370,12 +370,12 @@ class TopUsersScreen extends React.Component {
           refreshing={isFetching}
           ListFooterComponent={this._renderFooter}
           onMomentumScrollBegin={() => {
-            this.setState({ onEndReachedCalledDuringMomentum: false });
+            this.setState({ onEndReachedDuringMomentum: false });
           }}
           onEndReachedThreshold={0.4}
           onEndReached={() => {
-            if (!this.state.onEndReachedCalledDuringMomentum) {
-              this.setState({ onEndReachedCalledDuringMomentum: true });
+            if (!this.state.onEndReachedDuringMomentum) {
+              this.setState({ onEndReachedDuringMomentum: true });
               this.onRefresh('more');
             }
           }}

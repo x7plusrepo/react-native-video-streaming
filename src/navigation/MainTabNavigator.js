@@ -21,6 +21,7 @@ import { connect } from 'react-redux';
 import { setUnreadCount } from '../redux/message/actions';
 import avatars from '../assets/avatars';
 import { setMyUserAction } from '../redux/me/actions';
+import ChatStreamSocketManager from "../utils/Message/SocketManager";
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/Icons/ic_tab_home.png');
@@ -102,7 +103,15 @@ class MainTabNavigator extends Component {
         Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
+          ChatStreamSocketManager.instance.emitLeaveRoom({
+            roomId: global.me?.id,
+            userId: global.me?.id,
+          });
           global.me = json.data || [];
+          ChatStreamSocketManager.instance.emitJoinRoom({
+            roomId: global.me?.id,
+            userId: global.me?.id,
+          });
           this.props.setMyUserAction(global.me);
           Helper.setLocalValue(Constants.KEY_USERNAME, username);
           Helper.setLocalValue(Constants.KEY_PASSWORD, password);

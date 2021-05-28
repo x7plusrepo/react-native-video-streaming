@@ -41,6 +41,8 @@ import ic_support from '../../assets/images/Icons/ic_support.png';
 import ic_signIn from '../../assets/images/Icons/ic_signin.png';
 import ic_signOut from '../../assets/images/Icons/ic_signout.png';
 import ic_sign from '../../assets/images/Icons/ic_vip.png';
+import LinearGradient from 'react-native-linear-gradient';
+import ChatStreamSocketManager from "../../utils/Message/SocketManager";
 
 const getMenuItems = (navigation, setMyUserAction) => {
   let menu = [
@@ -69,7 +71,9 @@ const getMenuItems = (navigation, setMyUserAction) => {
     {
       icon: ic_menu_messages,
       title: 'Messages',
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('message');
+      },
     },
     {
       icon: ic_menu_fans,
@@ -134,6 +138,10 @@ const getMenuItems = (navigation, setMyUserAction) => {
           icon: ic_sign,
           title: 'Sign Out',
           onPress: async () => {
+            ChatStreamSocketManager.instance.emitLeaveRoom({
+              roomId: global.me?.id,
+              userId: global.me?.id,
+            });
             global.me = null;
             setMyUserAction(null);
             await Helper.removeLocalValue(Constants.KEY_USERNAME);
@@ -281,19 +289,27 @@ class ProfileMainScreen extends React.Component {
             {global.me?.userType === 1 && (
               <View style={styles.detailContainer}>
                 <View>
-                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={[GStyles.regularText, GStyles.boldText]}>
+                    10.1k
+                  </Text>
                   <Text style={GStyles.elementLabel}>Views</Text>
                 </View>
                 <View>
-                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={[GStyles.regularText, GStyles.boldText]}>
+                    10.1k
+                  </Text>
                   <Text style={GStyles.elementLabel}>Views</Text>
                 </View>
                 <View>
-                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={[GStyles.regularText, GStyles.boldText]}>
+                    10.1k
+                  </Text>
                   <Text style={GStyles.elementLabel}>Views</Text>
                 </View>
                 <View>
-                  <Text style={GStyles.regularText}>10.1k</Text>
+                  <Text style={[GStyles.regularText, GStyles.boldText]}>
+                    10.1k
+                  </Text>
                   <Text style={GStyles.elementLabel}>Views</Text>
                 </View>
               </View>

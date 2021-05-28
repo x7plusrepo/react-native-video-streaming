@@ -289,7 +289,8 @@ const Helper = {
   },
 
   validatePhoneNumber: function (phoneNumber) {
-    const regexp = /^[\+]?[0-9]{0,3}[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3,6}[-\s\.]?[0-9]{3,6}$/;
+    const regexp =
+      /^[\+]?[0-9]{0,3}[-\s\.]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3,6}[-\s\.]?[0-9]{3,6}$/;
     return regexp.test(phoneNumber);
   },
 
@@ -327,111 +328,11 @@ const Helper = {
     return membershipImage;
   },
 
-  //** sockect */
-  connectToServer: function () {
-    const socket = io(Constants.CHAT_SOCKET_URL, { reconnectionAttempts: 3 });
-    global.socket = socket;
-
-    socket.on('connect', () => {
-      console.log('--- crn_dev --- socket_connect_id:', socket.id);
-
-      const data = {
-        room_id: Helper.getChatRoomId(),
-        opponent_id: global._roomId,
-        user_id: global.me.id,
-      };
-      console.log('--- crn_dev --- data:', data);
-      socket.emit(Constants.SOCKET_LOGIN, data);
-    });
-
-    socket.on('connect_error', (error) => {
-      console.log('--- crn_dev --- socket_connect_error:', error);
-    });
-
-    socket.on('connect_timeout', (timeout) => {
-      console.log('--- crn_dev --- socket_connect_timeout:', timeout);
-    });
-
-    socket.on('error', (error) => {
-      console.log('--- crn_dev --- socket_error:', error);
-    });
-
-    socket.on('disconnect', (reason) => {
-      console.log('--- crn_dev --- socket_disconnect_reason:', reason);
-    });
-
-    socket.on('reconnect', (attemptNumber) => {
-      console.log(
-        '--- crn_dev --- socket_reconnect_attemptNumber:',
-        attemptNumber,
-      );
-    });
-
-    socket.on('reconnect_attempt', (attemptNumber) => {
-      console.log(
-        '--- crn_dev --- socket_reconnect_attempt_attemptNumber:',
-        attemptNumber,
-      );
-    });
-
-    socket.on('reconnecting', (attemptNumber) => {
-      console.log(
-        '--- crn_dev --- socket_reconnecting_attemptNumber:',
-        attemptNumber,
-      );
-    });
-
-    socket.on('reconnect_error', (error) => {
-      console.log('--- crn_dev --- socket_reconnect_error:', error);
-    });
-
-    socket.on('reconnect_failed', () => {
-      console.log('--- crn_dev --- socket_reconnect_failed');
-    });
-
-    socket.on(Constants.SOCKET_ERROR, (errorCode) => {
-      console.log(
-        '--- crn_dev --- SOCKET_ERROR:',
-        Constants.ERROR_CODES[errorCode.code],
-      );
-      Helper.callFunc(global.onSocketError);
-    });
-
-    socket.on(Constants.SOCKET_FETCH_MESSAGE_LIST, (data) => {
-      global._fetchedMessageList = data;
-      Helper.callFunc(global.onFetchMessageList);
-    });
-
-    socket.on(Constants.SOCKET_NEW_MESSAGE, (data) => {
-      global._receivedMessageList = data;
-      Helper.callFunc(global.onReceiveMessageList);
-    });
-  },
-
-  disconnectSocket: function () {
-    if (global.socket) {
-      global.socket.disconnect();
-      global.socket = null;
-    }
-  },
-
   //** utility */
   callFunc: function (func) {
     if (func) {
       func();
     }
-  },
-
-  getChatRoomId: function () {
-    let roomId = null;
-
-    if (global._roomId < global.me.id) {
-      roomId = global._roomId.toString() + '_' + global.me.id.toString();
-    } else {
-      roomId = global.me.id.toString() + '_' + global._roomId.toString();
-    }
-
-    return roomId;
   },
 
   //** permission */
@@ -630,9 +531,6 @@ const Helper = {
       global._deviceId = deviceId;
       global._devId = deviceId.substr(deviceId.length - 8);
     }
-
-    console.log('--- crn_dev --- global._deviceId:', global._deviceId);
-    console.log('--- crn_dev --- global._devId:', global._devId);
   },
 
   //** not used */
@@ -689,13 +587,13 @@ const Helper = {
     const image = room?.thumbnail;
 
     const branchUniversalObject = await branch.createBranchUniversalObject(
-        'canonicalIdentifier',
-        {
-          locallyIndex: true,
-          title: 'Welcome to my channel.',
-          contentImageUrl: image,
-          contentDescription: '',
-        },
+      'canonicalIdentifier',
+      {
+        locallyIndex: true,
+        title: 'Welcome to my channel.',
+        contentImageUrl: image,
+        contentDescription: '',
+      },
     );
 
     const shareOptions = {
@@ -709,11 +607,11 @@ const Helper = {
     };
 
     await branchUniversalObject.showShareSheet(
-        shareOptions,
-        linkProperties,
-        controlParams,
+      shareOptions,
+      linkProperties,
+      controlParams,
     );
-  }
+  },
 };
 
 export default Helper;

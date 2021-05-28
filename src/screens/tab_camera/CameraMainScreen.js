@@ -49,6 +49,7 @@ class CameraMainScreen extends Component {
       Helper.callFunc(global.setBottomTabName('camera'));
       Helper.setDarkStatusBar();
     });
+    //this.props.navigation.navigate('camera_upload');
   }
 
   componentWillUnmount() {

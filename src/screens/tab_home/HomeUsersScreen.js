@@ -81,7 +81,7 @@ class HomeUsersScreen extends React.Component {
       return;
     }
 
-    if (type == 'more') {
+    if (type === 'more') {
       curPage += 1;
       const maxPage =
         (totalCount + Constants.COUNT_PER_PAGE - 1) / Constants.COUNT_PER_PAGE;
@@ -93,7 +93,7 @@ class HomeUsersScreen extends React.Component {
     }
     this.setState({curPage});
 
-    if (type == 'init') {
+    if (type === 'init') {
       showForcePageLoader(true);
     } else {
       this.setState({isFetching: true});
@@ -101,11 +101,11 @@ class HomeUsersScreen extends React.Component {
     let params = {
       keyword: keyword,
       user_id: global.me ? global.me.id : 0,
-      page_number: type == 'more' ? curPage : '1',
+      page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
     RestAPI.get_filtered_user_list(params, (json, err) => {
-      if (type == 'init') {
+      if (type === 'init') {
         showForcePageLoader(false);
       } else {
         this.setState({isFetching: false});
@@ -116,7 +116,7 @@ class HomeUsersScreen extends React.Component {
       } else {
         if (json.status === 200) {
           this.setState({totalCount: json.data?.totalCount});
-          if (type == 'more') {
+          if (type === 'more') {
             let data = itemDatas.concat(json.data?.userList);
             this.setState({itemDatas: data});
           } else {
@@ -131,12 +131,12 @@ class HomeUsersScreen extends React.Component {
 
   onPressUser = (item) => {
     if (global.me) {
-      if (item.id == global.me.id) {
+      if (item.id === global.me.id) {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentId = item.id;
-        global._opponentName = item.user_name;
-        global._opponentPhoto = item.user_photo;
+        global._opponentName = item.username;
+        global._opponentPhoto = item.photo;
         this.props.navigation.navigate('profile_other');
       }
     } else {
@@ -190,8 +190,8 @@ class HomeUsersScreen extends React.Component {
     return <ActivityIndicator style={{color: '#000'}} />;
   };
 
-  _renderItem = ({item}) => {
-    return <ExploreUserItem item={item} onPress={this.onPressUser} />;
+  _renderItem = ({item, index}) => {
+    return <ExploreUserItem item={item} index={index} onPress={this.onPressUser} />;
   };
 }
 

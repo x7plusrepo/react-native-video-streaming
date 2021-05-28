@@ -103,7 +103,7 @@ class GoLive extends React.Component {
     SocketManager.instance.emitLeaveRoom({
       streamerId,
     });
-    SocketManager.instance.disconnect();
+    //SocketManager.instance.disconnect();
   }
 
   onPressGiftAction = () => {
@@ -173,7 +173,7 @@ class GoLive extends React.Component {
         {
           message,
           sender: user,
-          type: 1,
+          messageType: 1,
         },
       ].concat(messages),
     });

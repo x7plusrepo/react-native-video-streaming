@@ -1,36 +1,16 @@
 import React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {
-  useNavigation,
-  useRoute,
-  StackActions,
-} from '@react-navigation/native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
-import SwitchSelector from 'react-native-switch-selector';
 
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import {GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import LinearGradient from 'react-native-linear-gradient';
 import avatars from '../../assets/avatars';
 
-const ic_like = require('../../assets/images/Icons/ic_like.png');
 const ic_plus_1 = require('../../assets/images/Icons/ic_plus_1.png');
 const ic_message = require('../../assets/images/Icons/ic_menu_messages.png');
 
@@ -68,14 +48,7 @@ class ProfileOtherScreen extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
-
-      type: 0,
-      viewCount: 0,
-      saveCount: 0,
-      likeCount: 0,
-      dislikeCount: 0,
     };
-
     this._isMounted = false;
   };
 
@@ -89,20 +62,13 @@ class ProfileOtherScreen extends React.Component {
     //showForcePageLoader(true);
     RestAPI.get_user_video_list(params, (json, err) => {
       showForcePageLoader(false);
-
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          console.log(json.data.dislikeCount);
           if (this._isMounted) {
             this.setState({
-              type: json.data.type,
-              viewCount: json.data.viewCount,
-              saveCount: json.data.saveCount,
-              likeCount: json.data.likeCount || 0,
-              dislikeCount: 0,
-              itemDatas: json.data.videoList,
+              itemDatas: json.data.videoList || [],
             });
           }
         } else {
@@ -114,9 +80,7 @@ class ProfileOtherScreen extends React.Component {
 
   onPressVideo = (value) => {
     const { itemDatas } = this.state;
-    const selIndex = itemDatas.findIndex((obj) => obj.id === value);
-
-    global._selIndex = selIndex;
+    global._selIndex = itemDatas.findIndex((obj) => obj.id === value);
     global._profileOtherVideoDatas = itemDatas;
     global._prevScreen = 'profile_other';
     const pushAction = StackActions.push('profile_video', null);
@@ -128,7 +92,6 @@ class ProfileOtherScreen extends React.Component {
     let params = {
       user_id: global.me ? global.me.id : 0,
       other_id: global._opponentId,
-      type: value,
     };
     RestAPI.update_user_like(params, (json, err) => {
       if (err !== null) {
@@ -210,7 +173,7 @@ class ProfileOtherScreen extends React.Component {
           <Avatar image={avatar} size={84} />
           <View style={styles.profileDetailWrapper}>
             <View style={GStyles.rowCenterContainer}>
-              <Text style={[GStyles.largeText, { textTransform: 'uppercase' }]}>
+              <Text style={[GStyles.mediumText, { textTransform: 'uppercase' }]}>
                 {global._opponentName}
               </Text>
             </View>
@@ -230,27 +193,27 @@ class ProfileOtherScreen extends React.Component {
             </View>
           </View>
         </View>
-        <View style={GStyles.rowBetweenContainer}>
+        <View style={GStyles.rowEvenlyContainer}>
           <View>
-            <Text style={[GStyles.regularText, GStyles.semiBoldText]}>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>
               10.1k
             </Text>
             <Text style={GStyles.elementLabel}>Views</Text>
           </View>
           <View>
-            <Text style={[GStyles.regularText, GStyles.semiBoldText]}>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>
               10.1k
             </Text>
             <Text style={GStyles.elementLabel}>Views</Text>
           </View>
           <View>
-            <Text style={[GStyles.regularText, GStyles.semiBoldText]}>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>
               10.1k
             </Text>
             <Text style={GStyles.elementLabel}>Views</Text>
           </View>
           <View>
-            <Text style={[GStyles.regularText, GStyles.semiBoldText]}>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>
               10.1k
             </Text>
             <Text style={GStyles.elementLabel}>Views</Text>
@@ -266,12 +229,6 @@ class ProfileOtherScreen extends React.Component {
     return (
       <View style={styles.videosWrapper}>
         {[
-          ...itemDatas,
-          ...itemDatas,
-          ...itemDatas,
-          ...itemDatas,
-          ...itemDatas,
-          ...itemDatas,
           ...itemDatas,
         ].map((item, i) => {
           return (
@@ -326,7 +283,7 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   textID: {
-    ...GStyles.mediumText,
+    ...GStyles.regularText,
     color: GStyle.grayColor,
   },
   buttonCopy: {

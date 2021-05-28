@@ -84,10 +84,8 @@ const formDataCall = (subUrl, body, headers, callBack, method = 'post') => {
     },
   )
     .then(function (resJson) {
-      console.log('formDataCall response from server === >>>');
       try {
         const res = resJson;
-        console.log(resJson.data);
         callBack(res, null);
       } catch (exception) {
         console.error('exception:', exception);

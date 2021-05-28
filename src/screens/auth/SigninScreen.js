@@ -44,6 +44,7 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import { connect } from 'react-redux';
 import { setMyUserAction } from '../../redux/me/actions';
+import ChatStreamSocketManager from "../../utils/Message/SocketManager";
 
 const image_logo = require('../../assets/images/Icons/ic_logo.png');
 const image_google = require('../../assets/images/Icons/ic_google.png');
@@ -210,8 +211,16 @@ class SigninScreen extends React.Component {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 200) {
+            ChatStreamSocketManager.instance.emitLeaveRoom({
+              roomId: global.me?.id,
+              userId: global.me?.id,
+            });
             const user = json.data?.user || {};
             global.me = user;
+            ChatStreamSocketManager.instance.emitJoinRoom({
+              roomId: global.me?.id,
+              userId: global.me?.id,
+            });
             this.props.setMyUserAction(global.me);
             Helper.setLocalValue(Constants.KEY_USERNAME, user?.username);
             Helper.setLocalValue(Constants.KEY_PASSWORD, password);
@@ -224,17 +233,7 @@ class SigninScreen extends React.Component {
               device_type: Platform.OS === 'ios' ? '1' : '0',
             };
             showForcePageLoader(true);
-            RestAPI.register_push_token(params, (json, err) => {
-              showForcePageLoader(false);
-
-              if (err !== null) {
-                Helper.alertNetworkError();
-              } else {
-                if (json.status !== 204) {
-                  Helper.alertServerDataError();
-                }
-              }
-            });
+            Global.registerPushToken();
 
             this.props.navigation.navigate('main_tab_navigator');
           } else {

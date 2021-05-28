@@ -1,5 +1,7 @@
 import React from 'react';
 import {
+  ActivityIndicator,
+  FlatList,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -16,9 +18,7 @@ import {
 
 import { connect } from 'react-redux';
 import { setMyPostCount } from '../../redux/me/actions';
-import FastImage from 'react-native-fast-image';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import {
   Constants,
@@ -28,9 +28,8 @@ import {
   RestAPI,
 } from '../../utils/Global/index';
 import GHeaderBar from '../../components/GHeaderBar';
+import ProductsList from "../../components/elements/ProductsList";
 
-const WINDOW_WIDTH = Helper.getWindowWidth();
-const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 3;
 
 class MyProductsScreen extends React.Component {
   static contextType = NavigationContext;
@@ -47,9 +46,9 @@ class MyProductsScreen extends React.Component {
     this._isMounted = true;
 
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      this.onRefresh();
       Helper.callFunc(global.setBottomTabName('profile'));
     });
+    this.onRefresh('init');
   }
 
   componentWillUnmount() {
@@ -61,29 +60,67 @@ class MyProductsScreen extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
+      totalCount: 0,
+      curPage: 1,
+      isFetching: false,
+      onEndReachedDuringMomentum: true,
     };
 
     this._isMounted = false;
     this._selItem = null;
   };
 
-  onRefresh = () => {
+  onRefresh = (type) => {
+    let { isFetching, totalCount, curPage, itemDatas } = this.state;
+    if (isFetching) {
+      return;
+    }
+
+    if (type === 'more') {
+      curPage += 1;
+      const maxPage =
+        (totalCount + Constants.COUNT_PER_PAGE - 1) / Constants.COUNT_PER_PAGE;
+      if (curPage > maxPage) {
+        return;
+      }
+    } else {
+      curPage = 1;
+    }
+
+    this.setState({ curPage });
+    if (type === 'init') {
+      showForcePageLoader(true);
+    } else {
+      this.setState({ isFetching: true });
+    }
+
     let params = {
-      user_id: global.me.id,
-      page_number: '1',
-      count_per_page: '1000',
+      user_id: global.me ? global.me.id : '',
+      me_id: global.me ? global.me.id : '',
+      page_number: type === 'more' ? curPage : '1',
+      count_per_page: Constants.COUNT_PER_PAGE,
     };
     //showForcePageLoader(true);
     RestAPI.get_user_video_list(params, (json, err) => {
-      showForcePageLoader(false);
-
+      if (type === 'init') {
+        showForcePageLoader(false);
+      } else {
+        if (this._isMounted) {
+          this.setState({ isFetching: false });
+        }
+      }
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
           if (this._isMounted) {
-            this.setState({ itemDatas: json.data.videoList });
-            this.props.setMyPostCount(json.data.videoList.length);
+            this.setState({ totalCount: json.data.totalCount });
+            if (type === 'more') {
+              let data = itemDatas.concat(json.data.videoList);
+              this.setState({ itemDatas: data });
+            } else {
+              this.setState({ itemDatas: json.data.videoList });
+            }
           }
         } else {
           Helper.alertServerDataError();
@@ -92,9 +129,9 @@ class MyProductsScreen extends React.Component {
     });
   };
 
-  onPressVideo = (value) => {
+  onPressVideo = (item) => {
     const { itemDatas } = this.state;
-    global._selIndex = itemDatas.findIndex((obj) => obj.id === value);
+    global._selIndex = itemDatas.findIndex((obj) => obj.id === item.id);
     global._profileMyVideoDatas = itemDatas;
     global._prevScreen = 'profile_my_video';
     const pushAction = StackActions.push('profile_video', null);
@@ -149,51 +186,6 @@ class MyProductsScreen extends React.Component {
     RestAPI.update_video_sticker(params, (json, err) => {});
   };
 
-  render() {
-    const { navigation } = this.props;
-    return (
-      <SafeAreaView style={GStyles.container}>
-        <GHeaderBar
-          headerTitle="My Products"
-          leftType="back"
-          navigation={navigation}
-        />
-        <View
-          style={{
-            width: '88%',
-            height: '100%',
-          }}
-        >
-          {this._renderVideo()}
-
-          <RBSheet
-            ref={(ref) => {
-              this.bottomMenu = ref;
-            }}
-            height={200}
-            closeOnDragDown
-            openDuration={250}
-            customStyles={{
-              container: {
-                borderTopLeftRadius: 10,
-                borderTopRightRadius: 10,
-              },
-            }}
-          >
-            <View
-              style={{
-                ...GStyles.rowContainer,
-                justifyContent: 'space-around',
-              }}
-            >
-              {this._renderBottomMenu()}
-            </View>
-          </RBSheet>
-        </View>
-      </SafeAreaView>
-    );
-  }
-
   _renderBottomMenu = () => (
     <View style={{ width: '100%' }}>
       <TouchableOpacity
@@ -223,111 +215,67 @@ class MyProductsScreen extends React.Component {
     </View>
   );
 
+  setOnEndReachedDuringMomentum = (onEndReachedDuringMomentum) => {
+    this.setState({
+      onEndReachedDuringMomentum,
+    });
+  };
+  
   _renderVideo = () => {
-    const { itemDatas } = this.state;
-
+    const { isFetching, itemDatas, onEndReachedDuringMomentum } = this.state;
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginVertical: 50,
-        }}
-      >
-        {itemDatas.map((item, i) => {
-          return (
-            <View
-              key={i}
-              style={{
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: 'white',
-              }}
-            >
-              <View
-                style={{
-                  ...GStyles.centerAlign,
-                  width: 52,
-                  height: 20,
-                  borderRadius: 10,
-                  backgroundColor: 'lightgray',
-                  marginVertical: 4,
-                }}
-              >
-                <Text style={{ ...GStyles.mediumText }}>{item.number}</Text>
-              </View>
-              <TouchableOpacity
-                onPress={() => {
-                  this.onPressVideo(item.id);
-                }}
-                onLongPress={() => {
-                  this._selItem = item;
-                  this.bottomMenu.open();
-                }}
-              >
-                <FastImage
-                  source={{ uri: item.thumb || '' }}
-                  resizeMode={FastImage.resizeMode.stretch}
-                  style={{
-                    width: CELL_WIDTH,
-                    height: 120,
-                  }}
-                />
-                <View
-                  style={{
-                    ...GStyles.rowContainer,
-                    position: 'absolute',
-                    right: 12,
-                    bottom: 32,
-                  }}
-                >
-                  <Text
-                    style={{
-                      ...GStyles.regularText,
-                      fontSize: 10,
-                      color: 'black',
-                      backgroundColor:
-                        item.sticker > 0 ? 'white' : 'transparent',
-                      padding: 2,
-                    }}
-                  >
-                    {Constants.STICKER_NAME_LIST[Number(item.sticker)]}
-                  </Text>
-                </View>
-                <View
-                  style={{
-                    ...GStyles.rowContainer,
-                    position: 'absolute',
-                    right: 12,
-                    bottom: 12,
-                    backgroundColor: 'white',
-                    paddingVertical: 2,
-                    paddingHorizontal: 4,
-                  }}
-                >
-                  <FontAwesome
-                    name="group"
-                    style={{ fontSize: 16, color: 'black' }}
-                  />
-                  <Text
-                    style={{
-                      ...GStyles.regularText,
-                      fontSize: 13,
-                      color: 'black',
-                      marginLeft: 4,
-                    }}
-                  >
-                    {item.viewCount}
-                  </Text>
-                </View>
-              </TouchableOpacity>
-            </View>
-          );
-        })}
+      <View style={{ flex: 1 }}>
+        <ProductsList
+          products={itemDatas}
+          ref={(ref) => {
+            this.flatListRef = ref;
+          }}
+          onRefresh={this.onRefresh}
+          isFetching={isFetching}
+          onPressVideo={this.onPressVideo}
+          onEndReachedDuringMomentum={onEndReachedDuringMomentum}
+          setOnEndReachedDuringMomentum={this.setOnEndReachedDuringMomentum}
+        />
       </View>
     );
   };
+
+  render() {
+    const { navigation } = this.props;
+    return (
+      <SafeAreaView style={GStyles.container}>
+        <GHeaderBar
+          headerTitle="My Products"
+          leftType="back"
+          navigation={navigation}
+        />
+        {this._renderVideo()}
+        <RBSheet
+          ref={(ref) => {
+            this.bottomMenu = ref;
+          }}
+          height={200}
+          closeOnDragDown
+          openDuration={250}
+          customStyles={{
+            container: {
+              borderTopLeftRadius: 10,
+              borderTopRightRadius: 10,
+            },
+          }}
+        >
+          <View
+            style={{
+              ...GStyles.rowContainer,
+              justifyContent: 'space-around',
+            }}
+          >
+            {this._renderBottomMenu()}
+          </View>
+        </RBSheet>
+      </SafeAreaView>
+    );
+  }
 }
 
 const styles = StyleSheet.create({

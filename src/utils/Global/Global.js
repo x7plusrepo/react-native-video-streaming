@@ -29,7 +29,7 @@ import {
   View,
 } from 'react-native';
 
-import {GStyle, GStyles, Helper, Constants, RestAPI} from './index';
+import { GStyle, GStyles, Helper, Constants, RestAPI } from './index';
 
 const Global = {
   email: '',

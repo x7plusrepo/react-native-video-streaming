@@ -68,6 +68,8 @@ const RestAPI = {
       description: params.description,
       number: params.number,
       thumb: params.thumb,
+      category: params.category,
+      subCategory: params.subCategory
     };
     formDataCall('api/video', data, {}, callBack, 'post');
   },
@@ -106,7 +108,7 @@ const RestAPI = {
   },
 
   get_filtered_video_list: (params, callBack) => {
-    const data = {
+    let data = {
       userId: params.user_id,
       page: params.page_number,
       amount: params.count_per_page,
@@ -121,8 +123,15 @@ const RestAPI = {
       userId: params.user_id,
       page: params.page_number,
       amount: params.count_per_page,
-      keyword: params.keyword,
     };
+
+    if(params.category) {
+      data.category = params.category;
+    }
+
+    if(params.subCategory) {
+      data.subCategory = params.subCategory;
+    }
 
     formDataCall('api/video/filteredVideo', data, {}, callBack, 'get');
   },
@@ -150,9 +159,30 @@ const RestAPI = {
   get_liveStream: (params, callBack) => {
     const data = {
       id: params.roomId,
+      userId: params.userId,
     };
 
     formDataCall('api/liveStream', data, {}, callBack, 'get');
+  },
+
+  get_chatRoom: (params, callBack) => {
+    const data = {};
+    if (params.id) {
+      data.id = params.id;
+    }
+    if(params.ownerId) {
+      data.ownerId = params.ownerId;
+    }
+
+    formDataCall('api/chatStream', data, {}, callBack, 'get');
+  },
+
+  create_chatRoom: (params, callBack) => {
+    const data = {
+      user: params.user,
+      roomName: params.roomName,
+    };
+    formDataCall('api/chatStream', data, {}, callBack, 'post');
   },
 
   get_unread_count: (params, callBack) => {
@@ -165,27 +195,11 @@ const RestAPI = {
 
   set_read_status: (params, callBack) => {
     const data = {
-      userId: params.user_id,
-      otherId: params.other_id,
+      roomId: params.roomId,
+      userId: params.userId,
     };
 
     formDataCall('api/productChat/readStatus', data, {}, callBack, 'patch');
-  },
-
-  get_message_list: (params, callBack) => {
-    if (global.socket) {
-      global.socket.emit(Constants.SOCKET_FETCH_MESSAGE_LIST, params);
-    } else {
-      callBack('error');
-    }
-  },
-
-  send_message: (params, callBack) => {
-    if (global.socket) {
-      global.socket.emit(Constants.SOCKET_SEND_MESSAGE, params);
-    } else {
-      callBack('error');
-    }
   },
 
   register_push_token: (params, callBack) => {
@@ -273,6 +287,12 @@ const RestAPI = {
 
     formDataCall('api/user/like', data, {}, callBack, 'put');
   },
+  get_product_categories: (params, callBack) => {
+    const data = {
+      userId: params.user_id,
+    };
+    formDataCall('api/categories', data, {}, callBack, 'get');
+  }
 };
 
 export default RestAPI;

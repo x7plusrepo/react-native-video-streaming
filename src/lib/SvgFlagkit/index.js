@@ -1830,7 +1830,7 @@ export const getFlagSvgComponentByCode = (code) => {
 }
 
 export const getFlagByDollarCode = (dollarCode) => {
-    let code = dollarCode.slice(0, 2)
+    let code = dollarCode?.slice(0, 2)
     if (dollarCode === 'ANG') {
         code = 'NL'
     }

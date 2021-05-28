@@ -1,29 +1,16 @@
 import React from 'react';
 import {
   ActivityIndicator,
-  BackHandler,
-  Button,
-  Dimensions,
   FlatList,
-  Image,
-  Platform,
   SafeAreaView,
-  StatusBar,
   StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
 } from 'react-native';
 import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {connect} from 'react-redux';
 
 import {
-  GStyle,
   GStyles,
-  Global,
   Helper,
   Constants,
   RestAPI,
@@ -75,7 +62,7 @@ class MessageMainScreen extends React.Component {
       return;
     }
 
-    if (type == 'more') {
+    if (type === 'more') {
       curPage += 1;
       const maxPage =
         (totalCount + Constants.COUNT_PER_PAGE - 1) / Constants.COUNT_PER_PAGE;
@@ -85,23 +72,25 @@ class MessageMainScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    if (type == 'init') {
+    if (type === 'init') {
       Helper.callFunc(global.onSetUnreadCount);
     }
     this.setState({curPage});
 
-    if (type == 'init' || type == 'update') {
+    if (type === 'init' || type === 'update') {
       showForcePageLoader(true);
     } else {
       this.setState({isFetching: true});
     }
     let params = {
       user_id: global.me.id,
-      page_number: type == 'more' ? curPage : '1',
+      page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
     RestAPI.get_room_list(params, (json, err) => {
-      if (type == 'init' || type == 'update') {
+      console.log(json, '-------');
+
+      if (type === 'init' || type === 'update') {
         showForcePageLoader(false);
       } else {
         this.setState({isFetching: false});
@@ -112,7 +101,7 @@ class MessageMainScreen extends React.Component {
       } else {
         if (json.status === 200) {
           this.setState({totalCount: json.data.totalCount});
-          if (type == 'more') {
+          if (type === 'more') {
             let data = itemDatas.concat(json.data.roomList);
             this.setState({itemDatas: data});
           } else {
@@ -131,13 +120,10 @@ class MessageMainScreen extends React.Component {
 
   onPressRoom = (value) => {
     let params = {
-      user_id: global.me.id,
-      other_id: value.opponent_id,
+      roomId: '',
+      userId: global.me?.id,
     };
     RestAPI.set_read_status(params, (json, err) => {});
-
-    global._roomId = value.opponent_id;
-    global._opponentName = value.username;
     this.props.navigation.navigate('message_chat');
   };
 
@@ -199,7 +185,7 @@ class MessageMainScreen extends React.Component {
 
 const styles = StyleSheet.create({});
 
-TMessageMainScreen = function (props) {
+const TMessageMainScreen = function (props) {
   let navigation = useNavigation();
   let route = useRoute();
   return <MessageMainScreen {...props} navigation={navigation} route={route} />;

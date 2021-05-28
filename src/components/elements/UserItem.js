@@ -1,4 +1,4 @@
-import React, {Component, isValidElement} from 'react';
+import React, { Component, isValidElement } from 'react';
 import {
   Alert,
   BackHandler,
@@ -21,18 +21,22 @@ import {
   View,
 } from 'react-native';
 
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global/index';
+import {
+  GStyle,
+  GStyles,
+  Global,
+  Helper,
+  Constants,
+  RestAPI,
+} from '../../utils/Global/index';
 import CheckBox from '../../lib/Checkbox/index';
 import Avatar from './Avatar';
 import Flag from '../../lib/SvgFlagkit/Flag';
 
-const ic_mini_money = require('../../assets/images/ic_mini_money.png');
-const ic_favorite_active = require('../../assets/images/ic_favorite_active_1.png');
-const ic_favorite_inactive = require('../../assets/images/ic_favorite_inactive_1.png');
-const ic_mini_location = require('../../assets/images/ic_mini_location_1.png');
-const ic_mini_star = require('../../assets/images/ic_mini_star.png');
-const ic_mini_hourly_rate = require('../../assets/images/ic_mini_hourly_rate.png');
-const img_avatar1 = require('../../assets/images/img_avatar1.png');
+const ic_favorite_active = require('../../assets/images/Icons/ic_default_avatar.png');
+const ic_favorite_inactive = require('../../assets/images/Icons/ic_default_avatar.png');
+const ic_mini_star = require('../../assets/images/Icons/ic_default_avatar.png');
+const ic_mini_hourly_rate = require('../../assets/images/Icons/ic_default_avatar.png');
 const ic_membership_free = require('../../assets/images/Icons/ic_membership_free.png');
 const ic_membership_basic = require('../../assets/images/Icons/ic_membership_basic.png');
 const ic_membership_professional = require('../../assets/images/Icons/ic_membership_professional.png');
@@ -56,11 +60,11 @@ const membershipImages = {
   Executive: ic_membership_executive,
 };
 
-const UserItem = ({item, onPress, onFavorite}) => {
+const UserItem = ({ item, onPress, onFavorite }) => {
   return (
-    <View style={{marginTop: 24}}>
+    <View style={{ marginTop: 24 }}>
       <Avatar
-        image={item.photo ? {uri: item.photo} : ic_default_avatar}
+        image={item.photo ? { uri: item.photo } : ic_default_avatar}
         size={80}
         status={item.status}
         containerStyle={styles.avatarContainer}
@@ -72,14 +76,16 @@ const UserItem = ({item, onPress, onFavorite}) => {
             position: 'absolute',
             left: 90,
             top: 0,
-          }}>
+          }}
+        >
           <Text
             style={{
               fontFamily: 'GothamPro-Medium',
               fontSize: 13,
               color: itemTypeColor[Helper.capitalizeString(item.job_status)],
               marginLeft: 8,
-            }}>
+            }}
+          >
             {Helper.capitalizeString(item.job_status)}
           </Text>
           <Text
@@ -88,21 +94,23 @@ const UserItem = ({item, onPress, onFavorite}) => {
               fontSize: 13,
               color: GStyle.grayColor,
               marginLeft: 8,
-            }}>
+            }}
+          >
             {item.leftTime}
           </Text>
         </View>
       )}
       <Image source={membershipImages[item.package]} style={styles.tagImage} />
 
-      <View style={[GStyles.shadow, {marginLeft: 16, marginTop: 16}]}>
+      <View style={[GStyles.shadow, { marginLeft: 16, marginTop: 16 }]}>
         <View style={styles.descriptionContainer}>
           <View style={GStyles.rowBetweenContainer}>
             <TouchableOpacity
               onPress={() => {
                 onPress(item.user_id);
-              }}>
-              <Text style={[GStyles.mediumText, {lineHeight: 20}]}>
+              }}
+            >
+              <Text style={[GStyles.mediumText, { lineHeight: 20 }]}>
                 {item.name}
               </Text>
             </TouchableOpacity>
@@ -119,45 +127,53 @@ const UserItem = ({item, onPress, onFavorite}) => {
               onChange={(value) => {
                 onFavorite(value.checked, item);
               }}
-              checkboxStyle={[GStyles.image, {width: 16}]}
+              checkboxStyle={[GStyles.image, { width: 16 }]}
             />
           </View>
           <Text
             numberOfLines={1}
-            style={[GStyles.regularText, {fontSize: 13, marginTop: 6}]}>
+            style={[GStyles.regularText, { fontSize: 13, marginTop: 6 }]}
+          >
             {item.description}
           </Text>
-          <View style={[GStyles.rowContainer, {marginTop: 10}]}>
-            {Helper.isValid(item.country_code) && (
-              <Flag id={item.country_code} width={16} height={16} />
+          <View style={[GStyles.rowContainer, { marginTop: 10 }]}>
+            {true && (
+              <Flag id={item.country_code || ''} width={16} height={16} />
             )}
-            <Text style={[GStyles.regularText, {fontSize: 13, marginLeft: 8}]}>
+            <Text
+              style={[GStyles.regularText, { fontSize: 13, marginLeft: 8 }]}
+            >
               {item.location}
             </Text>
           </View>
-          <View style={[GStyles.rowContainer, {marginTop: 10}]}>
-            <Image source={ic_mini_star} style={[GStyles.image, {width: 16}]} />
+          <View style={[GStyles.rowContainer, { marginTop: 10 }]}>
+            <Image
+              source={ic_mini_star}
+              style={[GStyles.image, { width: 16 }]}
+            />
             <Text
               style={[
                 GStyles.regularText,
-                {fontSize: 13, fontWeight: 'bold', marginLeft: 8},
-              ]}>
+                { fontSize: 13, fontWeight: 'bold', marginLeft: 8 },
+              ]}
+            >
               {item.review_score}
             </Text>
             <Text
               style={[
                 GStyles.regularText,
-                {fontSize: 11, color: GStyle.grayColor, marginLeft: 2},
-              ]}>
+                { fontSize: 11, color: GStyle.grayColor, marginLeft: 2 },
+              ]}
+            >
               ({item.review_count} reviews)
             </Text>
           </View>
-          <View style={[GStyles.rowContainer, {marginTop: 10}]}>
+          <View style={[GStyles.rowContainer, { marginTop: 10 }]}>
             <Image
               source={ic_mini_hourly_rate}
-              style={[GStyles.image, {width: 16}]}
+              style={[GStyles.image, { width: 16 }]}
             />
-            <Text style={[GStyles.mediumText, {fontSize: 13, marginLeft: 8}]}>
+            <Text style={[GStyles.mediumText, { fontSize: 13, marginLeft: 8 }]}>
               {item.hourly_rate}/hr
             </Text>
           </View>

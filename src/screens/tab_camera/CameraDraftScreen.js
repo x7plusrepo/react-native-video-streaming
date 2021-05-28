@@ -1,18 +1,8 @@
 import React from 'react';
 import {
   Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  Image,
-  PermissionsAndroid,
-  Platform,
   SafeAreaView,
   StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -20,8 +10,6 @@ import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 
 import {NavigationContext} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import FastImage from 'react-native-fast-image';
 
 import {
   GStyle,
@@ -32,11 +20,12 @@ import {
 } from '../../utils/Global/index';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
+import ProductsList from "../../components/elements/ProductsList";
 
 const img_default_avatar = require('../../assets/images/Icons/ic_default_avatar.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
-const CELL_WIDTH = (WINDOW_WIDTH * 0.88) / 3.0 - 3;
+const CELL_WIDTH = (WINDOW_WIDTH - 24 ) / 3.0;
 
 class CameraDraftScreen extends React.Component {
   static contextType = NavigationContext;
@@ -128,18 +117,12 @@ class CameraDraftScreen extends React.Component {
   };
 
   render() {
-    const {itemDatas} = this.state;
-
     return (
       <>
         <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={GStyles.container}>
+        <SafeAreaView style={[GStyles.container]}>
           {this._renderHeader()}
-          <KeyboardAwareScrollView
-            showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
-            {this._renderVideo()}
-          </KeyboardAwareScrollView>
+          {this._renderVideo()}
         </SafeAreaView>
       </>
     );
@@ -156,44 +139,59 @@ class CameraDraftScreen extends React.Component {
   };
 
   _renderVideo = () => {
-    const {itemDatas} = this.state;
-
+    const { isFetching, itemDatas } = this.state;
     return (
-      <View
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-          flexWrap: 'wrap',
-          marginVertical: 50,
-        }}>
-        {itemDatas.map((item, i) => {
-          return (
-            <View
-              key={i}
-              style={{
-                alignItems: 'center',
-                borderWidth: 1,
-                borderColor: 'white',
-              }}>
-              <TouchableOpacity
-                onPress={() => {
-                  this.onPressVideo(item);
-                }}>
-                <FastImage
-                  source={{uri: item.thumb || ''}}
-                  resizeMode={FastImage.resizeMode.stretch}
-                  style={{
-                    width: CELL_WIDTH,
-                    height: 120,
-                  }}
-                />
-              </TouchableOpacity>
-            </View>
-          );
-        })}
+      <View style={{ flex: 1 }}>
+        <ProductsList
+          products={itemDatas}
+          onRefresh={this.onRefresh}
+          isFetching={isFetching}
+          onPressVideo={this.onPressVideo}
+          onEndReachedDuringMomentum={true}
+        />
       </View>
     );
   };
+
+  // _renderVideo = () => {
+  //   const {itemDatas} = this.state;
+  //
+  //   return (
+  //     <View
+  //       style={{
+  //         flexDirection: 'row',
+  //         flexWrap: 'wrap',
+  //         justifyContent: 'space-evenly',
+  //         marginVertical: 24,
+  //         marginTop: 8,
+  //       }}>
+  //       {itemDatas.map((item, i) => {
+  //         return (
+  //           <View
+  //             key={i}
+  //             style={{
+  //               alignItems: 'center',
+  //               borderColor: 'white',
+  //             }}>
+  //             <TouchableOpacity
+  //               onPress={() => {
+  //                 this.onPressVideo(item);
+  //               }}>
+  //               <FastImage
+  //                 source={{uri: item.thumb || ''}}
+  //                 resizeMode={FastImage.resizeMode.stretch}
+  //                 style={{
+  //                   width: CELL_WIDTH,
+  //                   height: 120,
+  //                 }}
+  //               />
+  //             </TouchableOpacity>
+  //           </View>
+  //         );
+  //       })}
+  //     </View>
+  //   );
+  // };
 }
 
 const styles = StyleSheet.create({});

@@ -120,6 +120,11 @@ const GStyles = StyleSheet.create({
     justifyContent: 'flex-end',
     alignItems: 'center',
   },
+  columnEndContainer: {
+    flexDirection: 'column',
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+  },
   rowEvenlyContainer: {
     flexDirection: 'row',
     justifyContent: 'space-evenly',

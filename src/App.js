@@ -24,6 +24,8 @@ import FlashMessage, {
 } from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
+import LiveStreamSocketManager  from "./utils/LiveStream/SocketManager";
+import ChatStreamSocketManager  from "./utils/Message/SocketManager";
 
 const subscribeDeepLink = () => {
   branch.subscribe(({ error, params, uri }) => {
@@ -83,7 +85,12 @@ function App() {
 
     subscribeDeepLink();
 
+    LiveStreamSocketManager.instance.connect();
+    ChatStreamSocketManager.instance.connect();
+
     return () => {
+      LiveStreamSocketManager.instance.disconnect();
+      ChatStreamSocketManager.instance.disconnect();
       // OneSignal.removeEventListener('received', onReceived);
       // OneSignal.removeEventListener('opened', onOpened);
       // OneSignal.removeEventListener('ids', onIds);

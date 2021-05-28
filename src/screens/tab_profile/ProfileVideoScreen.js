@@ -86,6 +86,8 @@ class ProfileVideoScreen extends Component {
           itemDatas = global._profileLikedVideoDatas;
         } else if (global._prevScreen === 'profile_other') {
           itemDatas = global._profileOtherVideoDatas;
+        } else if (global._prevScreen === 'stream_header') {
+          itemDatas = global._randomProducts;
         } else {
           itemDatas = [];
         }
@@ -135,7 +137,7 @@ class ProfileVideoScreen extends Component {
       curPage: global._curPage ? global._curPage : '1',
       keyword: global._keyword ? global._keyword : '',
       itemDatas: [],
-      onEndReachedCalledDuringMomentum: true,
+      onEndReachedDuringMomentum: true,
       isMounted: false,
       curIndex: -1,
       item: {},
@@ -159,7 +161,7 @@ class ProfileVideoScreen extends Component {
     } else {
       curPage = 1;
     }
-    this.setState({ curPage, onEndReachedCalledDuringMomentum: true });
+    this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init') {
       //showForcePageLoader(true);
@@ -253,7 +255,7 @@ class ProfileVideoScreen extends Component {
   };
 
   onPressAvatar = (item) => {
-    const user = item?.userId || {};
+    const user = item?.user || {};
 
     if (global.me) {
       if (user.id === global.me.id) {
@@ -307,11 +309,11 @@ class ProfileVideoScreen extends Component {
     const user = item?.userId || {};
 
     if (global.me) {
-      if (user.id === global.me.id) {
+      if (false && user.id === global.me.id) {
       } else {
         global._roomId = user.id;
         global._opponentName = user.username;
-        this.props.navigation.navigate('message_chat');
+        this.props.navigation.navigate('message_chat', { product: item });
       }
     } else {
       this.props.navigation.navigate('signin');
@@ -536,11 +538,11 @@ class ProfileVideoScreen extends Component {
           //ListFooterComponent={this._renderFooter}
           onEndReachedThreshold={0.4}
           onMomentumScrollBegin={() => {
-            this.setState({ onEndReachedCalledDuringMomentum: false });
+            this.setState({ onEndReachedDuringMomentum: false });
           }}
           onEndReached={() => {
-            if (!this.state.onEndReachedCalledDuringMomentum) {
-              this.setState({ onEndReachedCalledDuringMomentum: true });
+            if (!this.state.onEndReachedDuringMomentum) {
+              this.setState({ onEndReachedDuringMomentum: true });
               this.onRefresh('more');
             }
           }}
@@ -594,10 +596,9 @@ class ProfileVideoScreen extends Component {
   };
 
   _renderItem = ({ item, index }) => {
-    const { isVideoLoading, isVideoPause } = this.state;
+    const { isVideoPause } = this.state;
     const user = item.userId || {};
     const paused = isVideoPause || this.state.curIndex !== index;
-    console.log(item, '-----');
     if (Math.abs(this.state.curIndex - index) > 2) {
       return (
         <View
@@ -612,6 +613,8 @@ class ProfileVideoScreen extends Component {
     } else {
       const isLike = !!item.isLike;
       const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
+      const categoryName = item?.category?.title || '';
+      const subCategoryName = item?.subCategory?.title || '';
 
       return (
         <View
@@ -732,7 +735,7 @@ class ProfileVideoScreen extends Component {
               <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
                 <View style={GStyles.playInfoTextWrapper}>
                   <Text numberOfLines={3} style={GStyles.playInfoText}>
-                    {newTagList}
+                    {newTagList} {''} {categoryName} {''} {subCategoryName}
                   </Text>
                 </View>
 
