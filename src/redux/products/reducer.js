@@ -17,7 +17,7 @@ actionMap[UPDATE_PRODUCT] = (state, { payload }) => {
   const newProducts = [...products];
   const productId = payload?.productId;
   const productIndex = products.findIndex((p) => p.id === productId);
-  if (productIndex) {
+  if (productIndex > -1) {
     newProducts[productIndex] = payload.updatedProduct || {};
   }
   return {

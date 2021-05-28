@@ -277,29 +277,27 @@ class ProfileVideoScreen extends Component {
     let { itemDatas } = this.state;
 
     if (global.me) {
-      if (isChecked) {
-        item.likeCount++;
-        const params = {
-          user_id: global.me.id,
-          video_id: item.id,
-          is_like: isChecked,
-        };
-        //showForcePageLoader(true);
-        RestAPI.update_like_video(params, (json, err) => {
-          showForcePageLoader(false);
+      item.likeCount++;
+      const params = {
+        user_id: global.me.id,
+        video_id: item.id,
+        is_like: isChecked,
+      };
+      //showForcePageLoader(true);
+      RestAPI.update_like_video(params, (json, err) => {
+        showForcePageLoader(false);
 
-          if (err !== null) {
-            Helper.alertNetworkError(err?.message);
+        if (err !== null) {
+          Helper.alertNetworkError(err?.message);
+        } else {
+          if (json.status === 200) {
+            item.isLiked = isChecked;
+            this.setState({ itemDatas });
           } else {
-            if (json.status === 200) {
-              item.isLike = isChecked;
-              this.setState(itemDatas);
-            } else {
-              Helper.alertServerDataError();
-            }
+            Helper.alertServerDataError();
           }
-        });
-      }
+        }
+      });
     } else {
       this.props.navigation.navigate('signin');
     }
@@ -611,7 +609,7 @@ class ProfileVideoScreen extends Component {
         />
       );
     } else {
-      const isLike = !!item.isLike;
+      const isLike = !!item.isLiked;
       const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
       const categoryName = item?.category?.title || '';
       const subCategoryName = item?.subCategory?.title || '';

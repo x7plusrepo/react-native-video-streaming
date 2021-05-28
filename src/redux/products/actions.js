@@ -7,6 +7,6 @@ export const setProducts = (products) => (dispatch) => {
   dispatch(setProductsAction(products));
 };
 
-export const updateProduct = (productId, updatedProduct) => {
+export const updateProduct = (productId, updatedProduct) => (dispatch) => {
   dispatch(updateProductAction({ productId, updatedProduct }));
 };

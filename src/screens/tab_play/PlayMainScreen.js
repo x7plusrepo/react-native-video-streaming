@@ -150,7 +150,7 @@ class PlayMainScreen extends Component {
   onRefresh = async (type) => {
     let { isFetching, totalCount, curPage } = this.state;
 
-    const { products} = this.props;
+    const { products } = this.props;
 
     if (isFetching) {
       return;
@@ -315,30 +315,31 @@ class PlayMainScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
-
+    console.log(isChecked)
     if (global.me) {
-      if (isChecked) {
-        item.likeCount++;
-        const params = {
-          user_id: global.me.id,
-          video_id: item.id,
-          is_like: isChecked,
-        };
-        //showForcePageLoader(true);
-        RestAPI.update_like_video(params, (json, err) => {
-          showForcePageLoader(false);
+      const params = {
+        user_id: global.me.id,
+        video_id: item.id,
+        is_like: isChecked,
+      };
+      //showForcePageLoader(true);
+      RestAPI.update_like_video(params, (json, err) => {
+        showForcePageLoader(false);
 
-          if (err !== null) {
-            Helper.alertNetworkError(err?.message);
+        if (err !== null) {
+          Helper.alertNetworkError(err?.message);
+        } else {
+          if (json.status === 200) {
+            this.props.updateProduct(item?.id, {
+              ...item,
+              likeCount: item.likeCount + 1,
+              isLiked: isChecked,
+            });
           } else {
-            if (json.status === 200) {
-              item.isLike = isChecked;
-            } else {
-              Helper.alertServerDataError();
-            }
+            Helper.alertServerDataError();
           }
-        });
-      }
+        }
+      });
     } else {
       this.props.navigation.navigate('signin');
     }
@@ -626,7 +627,7 @@ class PlayMainScreen extends Component {
         />
       );
     } else {
-      const isLike = !!item.isLike;
+      const isLike = !!item.isLiked;
       const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
       const categoryName = item?.category?.title || '';
       const subCategoryName = item?.subCategory?.title || '';
