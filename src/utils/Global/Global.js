@@ -1,33 +1,4 @@
-import {
-  AppState,
-  ActivityIndicator,
-  Alert,
-  Animated,
-  BallIndicator,
-  BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  LayoutAnimation,
-  Linking,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  useColorScheme,
-  View,
-} from 'react-native';
+import { Platform } from 'react-native';
 import { Helper, RestAPI } from './index';
 import branch from 'react-native-branch';
 

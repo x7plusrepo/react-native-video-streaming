@@ -10,18 +10,16 @@ const WINDOW_WIDTH = Helper.getWindowWidth();
 const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;
 
 const ExploreVideoItem = ({ item, index, onPress }) => {
-  const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
-  const user = item.userId || {};
   return (
     <TouchableOpacity
       onPress={() => {
-        onPress(item.id);
+        onPress(item?.id);
       }}
       style={[styles.container, index % 2 === 0 && { marginRight: 0 }]}
     >
       <FastImage
         source={{
-          uri: item.thumb || '',
+          uri: item?.thumb || '',
         }}
         resizeMode={FastImage.resizeMode.cover}
         style={styles.image}
@@ -34,16 +32,8 @@ const ExploreVideoItem = ({ item, index, onPress }) => {
               source={ic_diamond}
               style={styles.icons}
             />
-            <Text style={styles.textLabel}>237</Text>
+            <Text style={styles.textLabel}>{item?.price || 0}</Text>
           </View>
-          <View style={GStyles.rowContainer}>
-            <Image
-              source={ic_eye}
-              style={[styles.icons, { tintColor: 'white' }]}
-            />
-            <Text style={styles.textLabel}>237</Text>
-          </View>
-
         </View>
       </View>
     </TouchableOpacity>

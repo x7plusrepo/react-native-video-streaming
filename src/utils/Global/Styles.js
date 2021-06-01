@@ -143,18 +143,15 @@ const GStyles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-
   centerAlign: {
     justifyContent: 'center',
     alignItems: 'center',
   },
-
   borderBottom: {
     borderBottomWidth: StyleSheet.hairlineWidth,
     borderColor: GStyle.grayColor,
     paddingBottom: 8,
   },
-
   shadow: {
     backgroundColor: 'white',
     borderRadius: 16,
@@ -167,7 +164,6 @@ const GStyles = StyleSheet.create({
     shadowOpacity: 0.12,
     elevation: 3,
   },
-
   defaultShadow: {
     elevation: 5,
     shadowOffset: {
@@ -176,33 +172,28 @@ const GStyles = StyleSheet.create({
     },
     shadowOpacity: 0.2,
   },
-
   bigText: {
     fontFamily: 'GothamPro-Medium',
     color: GStyle.fontColor,
     fontSize: 24,
     lineHeight: 32,
   },
-
   largeText: {
     fontFamily: 'GothamPro-Medium',
     color: GStyle.fontColor,
     fontSize: 20,
     lineHeight: 32,
   },
-
   mediumText: {
     fontFamily: 'GothamPro-Medium',
     color: GStyle.blackColor,
     fontSize: 18,
   },
-
   regularText: {
     fontFamily: 'GothamPro',
     color: GStyle.blackColor,
     fontSize: 16,
   },
-
   titleText: {
     fontFamily: 'GothamPro-Medium',
     color: GStyle.fontColor,
@@ -210,7 +201,6 @@ const GStyles = StyleSheet.create({
     lineHeight: 28,
     marginTop: 20,
   },
-
   titleDescription: {
     fontFamily: 'GothamPro',
     color: GStyle.fontColor,
@@ -218,14 +208,12 @@ const GStyles = StyleSheet.create({
     lineHeight: 24,
     marginTop: 20,
   },
-
   notifyTitle: {
     fontFamily: 'GothamPro-Medium',
     color: GStyle.fontColor,
     fontSize: 17,
     marginTop: 35,
   },
-
   notifyDescription: {
     fontFamily: 'GothamPro',
     color: GStyle.fontColor,
@@ -234,13 +222,11 @@ const GStyles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 20,
   },
-
   elementLabel: {
     color: GStyle.grayColor,
     fontFamily: 'GothamPro-Medium',
     fontSize: 13,
   },
-
   image: {
     width: 56,
     height: undefined,
@@ -254,14 +240,12 @@ const GStyles = StyleSheet.create({
     width: BUTTON_WIDTH,
     height: 50,
   },
-
   textFill: {
     fontFamily: 'GothamPro-Medium',
     fontSize: 15,
     textAlign: 'center',
     color: 'white',
   },
-
   miniDot: {
     width: 3,
     height: 3,
@@ -338,8 +322,8 @@ const GStyles = StyleSheet.create({
     fontWeight: '700',
   },
   upperCaseText: {
-    textTransform: 'uppercase'
-  }
+    textTransform: 'uppercase',
+  },
 });
 export default GStyle;
 export { GStyles };

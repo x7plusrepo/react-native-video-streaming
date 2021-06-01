@@ -66,7 +66,7 @@ const RestAPI = {
       number: params.number,
       thumb: params.thumb,
       category: params.category,
-      subCategory: params.subCategory
+      subCategory: params.subCategory,
     };
     formDataCall('api/video', data, {}, callBack, 'post');
   },
@@ -122,11 +122,11 @@ const RestAPI = {
       amount: params.count_per_page,
     };
 
-    if(params.category) {
+    if (params.category) {
       data.category = params.category;
     }
 
-    if(params.subCategory) {
+    if (params.subCategory) {
       data.subCategory = params.subCategory;
     }
 
@@ -171,7 +171,7 @@ const RestAPI = {
     if (params.id) {
       data.id = params.id;
     }
-    if(params.ownerId) {
+    if (params.ownerId) {
       data.ownerId = params.ownerId;
     }
 
@@ -238,6 +238,7 @@ const RestAPI = {
 
   get_top_user_list: (params, callBack) => {
     const data = {
+      sortBy: params.sortBy || 'elixir',
       page: params.page_number,
       amount: params.count_per_page,
     };
@@ -293,7 +294,7 @@ const RestAPI = {
       userId: params.user_id,
     };
     formDataCall('api/categories', data, {}, callBack, 'get');
-  }
+  },
 };
 
 export default RestAPI;

@@ -148,8 +148,9 @@ class MessageChatScreen extends Component {
 
     if (type === 'more') {
       if (messages.length < totalCount) {
-        console.log(messages[messages.length - 1])
-        params.lastMessageCreatedAt = messages[messages.length - 1]?.createdAt || new Date()
+        console.log(messages[messages.length - 1]);
+        params.lastMessageCreatedAt =
+          messages[messages.length - 1]?.createdAt || new Date();
       } else {
         return;
       }
@@ -158,7 +159,6 @@ class MessageChatScreen extends Component {
       showForcePageLoader(true);
     }
     SocketManager.instance.emitFetchMessages(params);
-
   };
 
   onSocketError = () => {
@@ -292,7 +292,7 @@ class MessageChatScreen extends Component {
 
   _renderHeader = () => {
     const { opponentUser } = this.state;
-
+    console.log(opponentUser);
     return (
       <GHeaderBar
         headerTitle={opponentUser?.username}
@@ -480,7 +480,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: '#aaa',
   },
-  bottomComponentContainer: {}
+  bottomComponentContainer: {},
 });
 
 export default MessageChatScreen;

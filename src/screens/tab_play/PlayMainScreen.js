@@ -313,7 +313,7 @@ class PlayMainScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
-    console.log(isChecked)
+    console.log(isChecked);
     if (global.me) {
       const params = {
         user_id: global.me.id,
@@ -347,10 +347,10 @@ class PlayMainScreen extends Component {
     const user = item?.user || {};
 
     if (global.me) {
-      if (false && user.id === global.me.id) {
-        return;
-      } else {
-        this.props.navigation.navigate('message_chat', { opponentUser: item?.user || {} });
+      if (user.id !== global.me.id) {
+        this.props.navigation.navigate('message_chat', {
+          opponentUser: item?.user || {},
+        });
       }
     } else {
       this.props.navigation.navigate('signin');
@@ -695,17 +695,20 @@ class PlayMainScreen extends Component {
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressMessage(item);
-                  }}
-                  style={GStyles.videoActionButton}
-                >
-                  <Image
-                    source={ic_menu_messages}
-                    style={GStyles.actionIcons}
-                  />
-                </TouchableOpacity>
+                {user.id !== global.me.id && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.onPressMessage(item);
+                    }}
+                    style={GStyles.videoActionButton}
+                  >
+                    <Image
+                      source={ic_menu_messages}
+                      style={GStyles.actionIcons}
+                    />
+                  </TouchableOpacity>
+                )}
+
                 <TouchableOpacity
                   onPress={() => {
                     this.onPressShare(item);

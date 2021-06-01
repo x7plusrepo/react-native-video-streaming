@@ -95,7 +95,10 @@ class GoLive extends React.Component {
     SocketManager.instance.listenSendHeart((data) => {
       const room = data?.room;
       if (room) {
-        this.setState({ room });
+        this.setState((prevState) => ({
+          room,
+          countHeart: prevState.countHeart + 1,
+        }));
       }
     });
     SocketManager.instance.listenSendMessage((data) => {

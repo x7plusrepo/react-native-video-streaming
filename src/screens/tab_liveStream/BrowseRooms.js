@@ -46,7 +46,6 @@ class BrowseRooms extends React.Component {
           )}
         >
           <LiveStreamRooms tabLabel="Popular" keyword={'popular'} />
-          <LiveStreamRooms tabLabel="NearBy" keyword={'nearby'} />
         </ScrollableTabView>
       </SafeAreaView>
     );

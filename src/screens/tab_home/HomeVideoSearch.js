@@ -110,6 +110,10 @@ class HomeVideoSearch extends React.Component {
     });
   };
 
+  scrollToTop = () => {
+    this.flatListRef.scrollToOffset({animated: false, offset: 0});
+  };
+
   onPressVideo = (item) => {
     const { itemDatas, curPage, totalCount } = this.state;
     const { keyword } = this.props;

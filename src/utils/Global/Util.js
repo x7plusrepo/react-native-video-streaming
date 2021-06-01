@@ -555,6 +555,75 @@ const Helper = {
 
     return skillName;
   },
+  getLvL: function (diamondSpent) {
+    const diamondLvLMap = [
+      {
+        lvl: 1,
+        diamond: 0,
+      },
+      {
+        lvl: 2,
+        diamond: 5,
+      },
+      {
+        lvl: 3,
+        diamond: 50,
+      },
+      {
+        lvl: 4,
+        diamond: 100,
+      },
+      {
+        lvl: 5,
+        diamond: 200,
+      },
+      {
+        lvl: 6,
+        diamond: 500,
+      },
+      {
+        lvl: 7,
+        diamond: 1000,
+      },
+      {
+        lvl: 8,
+        diamond: 2000,
+      },
+      {
+        lvl: 9,
+        diamond: 3000,
+      },
+      {
+        lvl: 10,
+        diamond: 5000,
+      },
+      {
+        lvl: 11,
+        diamond: 6000,
+      },
+      {
+        lvl: 12,
+        diamond: 7000,
+      },
+      {
+        lvl: 13,
+        diamond: 8000,
+      },
+      {
+        lvl: 14,
+        diamond: 9000,
+      },
+      {
+        lvl: 15,
+        diamond: 12000,
+      },
+    ];
+    const levels = diamondLvLMap.filter((item) => item.diamond <= diamondSpent);
+    const level = Math.max.apply(Math, levels.map(function(o) { return o.lvl; }));
+
+    return level || 1;
+
+  }
 
 };
 

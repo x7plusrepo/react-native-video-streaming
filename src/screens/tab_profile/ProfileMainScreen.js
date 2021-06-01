@@ -42,7 +42,7 @@ import ic_signIn from '../../assets/images/Icons/ic_signin.png';
 import ic_signOut from '../../assets/images/Icons/ic_signout.png';
 import ic_sign from '../../assets/images/Icons/ic_vip.png';
 import LinearGradient from 'react-native-linear-gradient';
-import ChatStreamSocketManager from "../../utils/Message/SocketManager";
+import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 
 const getMenuItems = (navigation, setMyUserAction) => {
   let menu = [
@@ -273,7 +273,10 @@ class ProfileMainScreen extends React.Component {
             >
               <Avatar image={avatarImage} size={106} />
               <Text
-                style={[GStyles.textSmall, { color: 'black', marginTop: 16 }]}
+                style={[
+                  GStyles.mediumText,
+                  { marginTop: 16, textTransform: 'uppercase' },
+                ]}
               >
                 {user.username}
               </Text>
@@ -288,29 +291,21 @@ class ProfileMainScreen extends React.Component {
             </TouchableOpacity>
             {global.me?.userType === 1 && (
               <View style={styles.detailContainer}>
-                <View>
+                <View style={GStyles.centerAlign}>
                   <Text style={[GStyles.regularText, GStyles.boldText]}>
-                    10.1k
+                    {user?.elixir || 0}
                   </Text>
-                  <Text style={GStyles.elementLabel}>Views</Text>
+                  <Text style={GStyles.elementLabel}>Elixir</Text>
                 </View>
-                <View>
+                <View style={GStyles.centerAlign}>
                   <Text style={[GStyles.regularText, GStyles.boldText]}>
-                    10.1k
+                    {user?.elixirFlame || 0}
                   </Text>
-                  <Text style={GStyles.elementLabel}>Views</Text>
+                  <Text style={GStyles.elementLabel}>Elixir Flames</Text>
                 </View>
-                <View>
-                  <Text style={[GStyles.regularText, GStyles.boldText]}>
-                    10.1k
-                  </Text>
-                  <Text style={GStyles.elementLabel}>Views</Text>
-                </View>
-                <View>
-                  <Text style={[GStyles.regularText, GStyles.boldText]}>
-                    10.1k
-                  </Text>
-                  <Text style={GStyles.elementLabel}>Views</Text>
+                <View style={GStyles.centerAlign}>
+                  <Text style={[GStyles.regularText, GStyles.boldText]}>0</Text>
+                  <Text style={GStyles.elementLabel}>Fans</Text>
                 </View>
               </View>
             )}

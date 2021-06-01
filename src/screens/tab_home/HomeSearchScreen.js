@@ -95,7 +95,7 @@ class HomeSearchScreen extends React.Component {
       this.usersListRef.scrollToTop();
     }
     if (this.videosListRef) {
-      this.videosListRef.scrollToTop();
+      this.videosListRef.scrollToTop()
     }
 
     const { searchText } = this.state;

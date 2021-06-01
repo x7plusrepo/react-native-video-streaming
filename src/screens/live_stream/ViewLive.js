@@ -27,6 +27,7 @@ class ViewLive extends Component {
       messages: [],
       inputUrl: null,
       room: {},
+      countHeart: 0,
       isJoined: false,
       lastPress: 0,
     };
@@ -50,15 +51,7 @@ class ViewLive extends Component {
         alert('Error while loading the stream.');
       } else if (json?.status === 200) {
         const room = json?.data || {};
-        this.setState(
-          {
-            room: {
-              ...room,
-              countHeart: 0,
-            },
-          },
-          this.init,
-        );
+        this.setState({ room }, this.init);
       }
     });
     RestAPI.get_gifts({ userId: this.props.user?.id }, (json, error) => {
@@ -142,9 +135,11 @@ class ViewLive extends Component {
 
     SocketManager.instance.listenSendHeart((data) => {
       const newRoom = data?.room;
-      console.log(newRoom);
       if (newRoom) {
-        this.setState({ room: newRoom });
+        this.setState((prevState) => ({
+          room: newRoom,
+          countHeart: prevState.countHeart + 1,
+        }));
       }
     });
 
@@ -318,9 +313,8 @@ class ViewLive extends Component {
   };
 
   render() {
-    const { messages, isJoined } = this.state;
+    const { messages, isJoined, countHeart } = this.state;
     const room = this.state.room || {};
-    const countHeart = room?.countHeart || 0;
     const liveStatus = room?.liveStatus || 0;
     const gifts = this.props.gifts || [];
 

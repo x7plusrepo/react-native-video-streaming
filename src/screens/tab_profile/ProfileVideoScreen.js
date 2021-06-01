@@ -302,11 +302,10 @@ class ProfileVideoScreen extends Component {
   };
 
   onPressMessage = (item) => {
-    const user = item?.userId || {};
+    const user = item?.user || {};
 
     if (global.me) {
-      if (false && user.id === global.me.id) {
-      } else {
+      if (user.id !== global.me.id) {
         this.props.navigation.navigate('message_chat', { opponentUser: user });
       }
     } else {
@@ -675,17 +674,20 @@ class ProfileVideoScreen extends Component {
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressMessage(item);
-                  }}
-                  style={GStyles.videoActionButton}
-                >
-                  <Image
-                    source={ic_menu_messages}
-                    style={GStyles.actionIcons}
-                  />
-                </TouchableOpacity>
+                {user.id !== global.me.id && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.onPressMessage(item);
+                    }}
+                    style={GStyles.videoActionButton}
+                  >
+                    <Image
+                      source={ic_menu_messages}
+                      style={GStyles.actionIcons}
+                    />
+                  </TouchableOpacity>
+                )}
+
                 <TouchableOpacity
                   onPress={() => {
                     this.onPressShare(item);

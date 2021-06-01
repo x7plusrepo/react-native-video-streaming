@@ -23,6 +23,9 @@ import GHeaderBar from '../../components/GHeaderBar';
 import TopUserItem from '../../components/elements/TopUserItem';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
 import ic_bean from '../../assets/images/Icons/ic_bean.png';
+import ScrollableTabView, {
+  DefaultTabBar,
+} from 'react-native-scrollable-tab-view';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 32) / 3.0;
@@ -42,9 +45,8 @@ class TopUsersScreen extends React.Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('top'));
       Helper.setLightStatusBar();
-
-      this.onRefresh('init');
     });
+    this.onRefresh('init');
   }
 
   componentWillUnmount() {
@@ -57,14 +59,14 @@ class TopUsersScreen extends React.Component {
       isFetching: false,
       totalCount: 0,
       curPage: 1,
-
+      sortBy: 'elixir',
       itemDatas: [],
       onEndReachedDuringMomentum: true,
     };
   };
 
   onRefresh = (type) => {
-    let { isFetching, totalCount, curPage, itemDatas } = this.state;
+    let { isFetching, totalCount, curPage, itemDatas, sortBy } = this.state;
 
     if (isFetching) {
       return;
@@ -83,11 +85,12 @@ class TopUsersScreen extends React.Component {
     this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init') {
-      //showForcePageLoader(true);
+      showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
     let params = {
+      sortBy,
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
@@ -141,6 +144,7 @@ class TopUsersScreen extends React.Component {
         <SafeAreaView style={GStyles.statusBar} />
         <SafeAreaView style={GStyles.container}>
           {this._renderHeader()}
+          {this._renderTab()}
           {this._renderStatistics()}
           {this._renderAboutRule()}
           {this._renderUserList()}
@@ -206,7 +210,7 @@ class TopUsersScreen extends React.Component {
           <Text
             style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
           >
-            Today
+            NO.1
           </Text>
         </View>
         <View style={styles.statisticsWrapper}>
@@ -237,7 +241,7 @@ class TopUsersScreen extends React.Component {
           <Text
             style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
           >
-            Today
+            NO.2
           </Text>
         </View>
         <View style={styles.statisticsWrapper}>
@@ -268,7 +272,7 @@ class TopUsersScreen extends React.Component {
           <Text
             style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
           >
-            Today
+            NO.3
           </Text>
         </View>
       </View>
@@ -377,7 +381,7 @@ class TopUsersScreen extends React.Component {
               this.onRefresh('more');
             }
           }}
-          data={[...itemDatas, ...itemDatas, ...itemDatas, ...itemDatas]}
+          data={itemDatas}
           renderItem={this._renderItem}
           keyExtractor={(item) => item.id}
         />
@@ -385,6 +389,58 @@ class TopUsersScreen extends React.Component {
     );
   };
 
+  onChangeTab = (page) => {
+    this.setState(
+      {
+        sortBy: page === 0 ? 'elixir' : 'diamondSpent',
+      },
+      () => this.onRefresh('init'),
+    );
+  };
+
+  renderTabItem = (name, page, isTabActive, onPressHandler) => {
+    const textColor = isTabActive ? 'black' : GStyle.grayColor;
+    const fontWeight = isTabActive ? '700' : '600';
+    const onPress = () => {
+      onPressHandler(page);
+      this.onChangeTab(page);
+    };
+
+    return (
+      <TouchableOpacity
+        style={[styles.tabStyle, isTabActive && { backgroundColor: 'white' }]}
+        key={name}
+        onPress={onPress}
+      >
+        <Text style={[{ color: textColor, fontWeight }, styles.tabTextStyle]}>
+          {name}
+        </Text>
+      </TouchableOpacity>
+    );
+  };
+
+  _renderTab = () => {
+    return (
+      <View style={styles.tabContainer}>
+        <ScrollableTabView
+          initialPage={0}
+          tabBarUnderlineStyle={{ backgroundColor: 'transparent' }}
+          style={styles.tabView}
+          renderTabBar={() => {
+            return (
+              <DefaultTabBar
+                style={styles.tabBar}
+                renderTab={this.renderTabItem}
+              />
+            );
+          }}
+        >
+          <View tabLabel="Elixir Got" />
+          <View tabLabel="Gift Sent" />
+        </ScrollableTabView>
+      </View>
+    );
+  };
   _renderFooter = () => {
     const { isFetching } = this.state;
 
@@ -393,7 +449,8 @@ class TopUsersScreen extends React.Component {
   };
 
   _renderItem = ({ item, index }) => {
-    return <TopUserItem index={index} item={item} onPress={this.onPressUser} />;
+    const { sortBy } = this.state;
+    return <TopUserItem index={index} item={item} onPress={this.onPressUser} sortBy={sortBy}/>;
   };
 }
 
@@ -415,6 +472,31 @@ const styles = StyleSheet.create({
     flex: 1,
     width: '100%',
     backgroundColor: 'white',
+  },
+  tabContainer: {
+    width: '100%',
+    marginTop: 16,
+  },
+  tabView: {
+    backgroundColor: '#F8F6F7',
+    flex: 0,
+    padding: 8,
+    borderRadius: 120,
+    marginHorizontal: 24,
+    overflow: 'hidden',
+  },
+  tabBar: {
+    borderWidth: 0,
+  },
+  tabStyle: {
+    flex: 1,
+    borderRadius: 120,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  tabTextStyle: {
+    fontFamily: 'GothamPro',
+    fontSize: 16,
   },
 });
 

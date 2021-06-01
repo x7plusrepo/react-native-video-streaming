@@ -195,6 +195,8 @@ class ProfileOtherScreen extends React.Component {
       uri: opponentUser?.photo ? opponentUser?.photo : randomImageUrl,
     };
 
+    const lvl = Helper.getLvL(opponentUser?.diamondSpent || 0);
+
     return (
       <LinearGradient
         colors={[
@@ -231,22 +233,41 @@ class ProfileOtherScreen extends React.Component {
           </View>
         </View>
         <View style={GStyles.rowEvenlyContainer}>
-          <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
-            <Text style={GStyles.elementLabel}>Views</Text>
-          </View>
-          <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
-            <Text style={GStyles.elementLabel}>Views</Text>
-          </View>
-          <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
-            <Text style={GStyles.elementLabel}>Views</Text>
-          </View>
-          <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
-            <Text style={GStyles.elementLabel}>Views</Text>
-          </View>
+          {opponentUser?.userType === 1 ? (
+            <>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.elixir || 0}
+                </Text>
+                <Text style={GStyles.elementLabel}>Elixir</Text>
+              </View>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.elixirFlame || 0}
+                </Text>
+                <Text style={GStyles.elementLabel}>Elixir Flames</Text>
+              </View>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>0</Text>
+                <Text style={GStyles.elementLabel}>Fans</Text>
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.diamond || 0}
+                </Text>
+                <Text style={GStyles.elementLabel}>Diamonds</Text>
+              </View>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {lvl}
+                </Text>
+                <Text style={GStyles.elementLabel}>LvL</Text>
+              </View>
+            </>
+          )}
         </View>
       </LinearGradient>
     );

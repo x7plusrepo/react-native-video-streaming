@@ -7,10 +7,11 @@ import avatars from '../../assets/avatars';
 import GStyle from '../../utils/Global/Styles';
 import ic_sparkles from '../../assets/images/Icons/ic_sparkles.png';
 const ic_plus_1 = require('../../assets/images/Icons/ic_plus_1.png');
-const ic_bean = require('../../assets/images/Icons/ic_bean.png');
+const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
 const ic_rank_first = require('../../assets/images/Icons/ic_rank_first.png');
 const ic_rank_second = require('../../assets/images/Icons/ic_rank_second.png');
 const ic_rank_third = require('../../assets/images/Icons/ic_rank_third.png');
+const ic_elixir = require('../../assets/images/Icons/ic_love-potion.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
@@ -30,7 +31,11 @@ const numberMark = (index) => {
   );
 };
 
-const TopUserItem = ({ index, item, onPress }) => {
+const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
+
+  const icon = sortBy === 'elixir' ? ic_elixir : ic_diamond;
+  const iconText = sortBy === 'elixir' ? item?.elixir || 0 : item?.diamondSpent || 0;
+
   return (
     <TouchableOpacity
       onPress={() => {
@@ -59,7 +64,7 @@ const TopUserItem = ({ index, item, onPress }) => {
                 { marginHorizontal: 12 },
               ]}
             >
-              {item.username}
+              {item?.username}
             </Text>
             <Image
               source={ic_sparkles}
@@ -67,14 +72,14 @@ const TopUserItem = ({ index, item, onPress }) => {
               resizeMode="contain"
             />
           </View>
-          <View style={GStyles.rowContainer}>
+          <View style={[GStyles.rowContainer, { marginTop: 2 }]}>
             <Image
-              source={ic_bean}
-              style={{ width: 12, height: 12, marginRight: 12 }}
+              source={icon}
+              style={{ width: 16, height: 16, marginRight: 4 }}
               resizeMode="contain"
             />
             <Text style={[GStyles.regularText, { color: GStyle.yellowColor }]}>
-              123456789
+              {iconText}
             </Text>
           </View>
         </View>
