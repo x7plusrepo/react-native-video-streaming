@@ -62,10 +62,10 @@ class MessageChatScreen extends Component {
   createChatRoom = () => {
     showForcePageLoader(true);
     const { route } = this.props;
-    const user = get(route, 'params.product.user');
+    const opponentUser = get(route, 'params.opponentUser');
     const params = {
-      user: user?.id,
-      roomName: user?.username,
+      user: opponentUser?.id,
+      roomName: opponentUser?.username,
     };
     RestAPI.create_chatRoom(params, (json, error) => {
       showForcePageLoader(false);
@@ -86,19 +86,19 @@ class MessageChatScreen extends Component {
 
   init = () => {
     const { route } = this.props;
-    const product = get(route, 'params.product');
+    const opponentUser = get(route, 'params.opponentUser');
     this.state = {
       isFetching: false,
       totalCount: 0,
-      product,
       chatRoom: {},
+      opponentUser,
       chatTitle: '',
       messages: [],
       typingText: null,
     };
 
     const params = {
-      ownerId: product?.user.id,
+      ownerId: opponentUser?.id,
       userId: global.me?.id,
     };
     showForcePageLoader(true);
@@ -291,9 +291,11 @@ class MessageChatScreen extends Component {
   }
 
   _renderHeader = () => {
+    const { opponentUser } = this.state;
+
     return (
       <GHeaderBar
-        headerTitle={global._opponentName}
+        headerTitle={opponentUser?.username}
         leftType="back"
         onPressLeftButton={this.onBack}
       />

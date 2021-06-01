@@ -1,11 +1,22 @@
 import React from 'react';
-import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
 
-import {GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import LinearGradient from 'react-native-linear-gradient';
@@ -48,14 +59,16 @@ class ProfileOtherScreen extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
+      followed: false,
     };
     this._isMounted = false;
   };
 
   onRefresh = () => {
+    this.setState({ opponentUser: global._opponentUser || {} });
     let params = {
       me_id: global.me ? global.me.id : 0,
-      user_id: global._opponentId,
+      user_id: global._opponentUser?.id,
       page_number: '1',
       count_per_page: '1000',
     };
@@ -88,24 +101,31 @@ class ProfileOtherScreen extends React.Component {
   };
 
   onChangeLike = (value) => {
-    let params = {
-      user_id: global.me ? global.me.id : 0,
-      other_id: global._opponentId,
-    };
-    RestAPI.update_user_like(params, (json, err) => {
-      if (err !== null) {
-        Helper.alertNetworkError();
-      } else {
-        if (json.status === 200) {
-          if (this._isMounted) {
-            this.setState({
-              likeCount: json.data.likeCount || 0,
-            });
-          }
-        } else {
-          Helper.alertServerDataError();
-        }
-      }
+    this.setState({ followed: true });
+    // let params = {
+    //   user_id: global.me ? global.me.id : 0,
+    //   other_id: global._opponentUser?.id,
+    // };
+    // RestAPI.update_user_like(params, (json, err) => {
+    //   if (err !== null) {
+    //     Helper.alertNetworkError();
+    //   } else {
+    //     if (json.status === 200) {
+    //       if (this._isMounted) {
+    //         this.setState({
+    //           likeCount: json.data.likeCount || 0,
+    //         });
+    //       }
+    //     } else {
+    //       Helper.alertServerDataError();
+    //     }
+    //   }
+    // });
+  };
+
+  onPressChat = () => {
+    this.props.navigation.navigate('message_chat', {
+      opponentUser: this.state.opponentUser || {},
     });
   };
 
@@ -140,22 +160,39 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderBottom = () => {
+    const { followed } = this.state;
+
     return (
       <View style={[GStyles.rowEvenlyContainer, styles.bottom]}>
-        <TouchableOpacity style={styles.followButtonWrapper}>
-          <Image source={ic_plus_1} style={[styles.buttonIcons, {tintColor: 'white'}]} tintColor='white'/>
-          <Text style={[GStyles.regularText, { color: 'white'}]}>Follow</Text>
+        <TouchableOpacity
+          style={styles.followButtonWrapper}
+          onPress={this.onChangeLike}
+        >
+          <Image
+            source={ic_plus_1}
+            style={[styles.buttonIcons, { tintColor: 'white' }]}
+            tintColor="white"
+          />
+          <Text style={[GStyles.regularText, { color: 'white' }]}>
+            {followed ? 'Followed' : 'Follow'}
+          </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.chatButtonWrapper}>
+        <TouchableOpacity
+          style={styles.chatButtonWrapper}
+          onPress={this.onPressChat}
+        >
           <Image source={ic_message} style={styles.buttonIcons} />
-          <Text style={[GStyles.regularText, { color: GStyle.activeColor}]}>Chat</Text>
+          <Text style={[GStyles.regularText, { color: GStyle.activeColor }]}>
+            Chat
+          </Text>
         </TouchableOpacity>
       </View>
     );
   };
   _renderAvartar = () => {
+    const { opponentUser } = this.state;
     const avatar = {
-      uri: global._opponentPhoto ? global._opponentPhoto : randomImageUrl,
+      uri: opponentUser?.photo ? opponentUser?.photo : randomImageUrl,
     };
 
     return (
@@ -171,8 +208,10 @@ class ProfileOtherScreen extends React.Component {
           <Avatar image={avatar} size={84} />
           <View style={styles.profileDetailWrapper}>
             <View style={GStyles.rowCenterContainer}>
-              <Text style={[GStyles.mediumText, { textTransform: 'uppercase' }]}>
-                {global._opponentName}
+              <Text
+                style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
+              >
+                {opponentUser?.username}
               </Text>
             </View>
             <View style={[GStyles.rowCenterContainer]}>
@@ -182,7 +221,7 @@ class ProfileOtherScreen extends React.Component {
                   ellipsizeMode="tail"
                   numberOfLines={1}
                 >
-                  ID: {global._opponentId}
+                  ID: {opponentUser?.id}
                 </Text>
               </View>
               <TouchableOpacity style={styles.buttonCopy}>
@@ -193,27 +232,19 @@ class ProfileOtherScreen extends React.Component {
         </View>
         <View style={GStyles.rowEvenlyContainer}>
           <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>
-              10.1k
-            </Text>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
             <Text style={GStyles.elementLabel}>Views</Text>
           </View>
           <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>
-              10.1k
-            </Text>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
             <Text style={GStyles.elementLabel}>Views</Text>
           </View>
           <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>
-              10.1k
-            </Text>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
             <Text style={GStyles.elementLabel}>Views</Text>
           </View>
           <View>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>
-              10.1k
-            </Text>
+            <Text style={[GStyles.regularText, GStyles.boldText]}>10.1k</Text>
             <Text style={GStyles.elementLabel}>Views</Text>
           </View>
         </View>
@@ -226,9 +257,7 @@ class ProfileOtherScreen extends React.Component {
 
     return (
       <View style={styles.videosWrapper}>
-        {[
-          ...itemDatas,
-        ].map((item, i) => {
+        {[...itemDatas].map((item, i) => {
           return (
             <View
               key={i}
@@ -304,7 +333,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     flexWrap: 'wrap',
     paddingHorizontal: 16,
-    paddingBottom:24,
+    paddingBottom: 24,
   },
   followButtonWrapper: {
     ...GStyles.rowCenterContainer,

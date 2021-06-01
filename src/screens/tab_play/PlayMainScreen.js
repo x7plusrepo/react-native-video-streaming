@@ -304,9 +304,7 @@ class PlayMainScreen extends Component {
       if (user.id === global.me.id) {
         this.props.navigation.navigate('profile');
       } else {
-        global._opponentId = user.id;
-        global._opponentName = user.username;
-        global._opponentPhoto = user.photo;
+        global._opponentUser = user;
         this.props.navigation.navigate('profile_other');
       }
     } else {
@@ -352,7 +350,7 @@ class PlayMainScreen extends Component {
       if (false && user.id === global.me.id) {
         return;
       } else {
-        this.props.navigation.navigate('message_chat', { product: item });
+        this.props.navigation.navigate('message_chat', { opponentUser: item?.user || {} });
       }
     } else {
       this.props.navigation.navigate('signin');
@@ -633,9 +631,7 @@ class PlayMainScreen extends Component {
       const subCategoryName = item?.subCategory?.title || '';
 
       if (this.state.curIndex === index) {
-        global._opponentId = user?.id;
-        global._opponentName = user.username;
-        global._opponentPhoto = user.photo;
+        global._opponentUser = user;
       }
 
       return (

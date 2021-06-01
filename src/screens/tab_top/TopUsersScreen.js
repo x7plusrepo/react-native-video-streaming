@@ -121,9 +121,7 @@ class TopUsersScreen extends React.Component {
       if (item.id === global.me.id) {
         this.props.navigation.navigate('profile');
       } else {
-        global._opponentId = item.id;
-        global._opponentName = item.username;
-        global._opponentPhoto = item.photo;
+        global._opponentUser = item;
         this.props.navigation.navigate('profile_other');
       }
     } else {

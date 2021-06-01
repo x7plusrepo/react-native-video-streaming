@@ -118,13 +118,14 @@ class MessageMainScreen extends React.Component {
     console.log('---');
   };
 
-  onPressRoom = (value) => {
+  onPressRoom = (room) => {
     let params = {
       roomId: '',
       userId: global.me?.id,
     };
     RestAPI.set_read_status(params, (json, err) => {});
     this.props.navigation.navigate('message_chat');
+    this.props.navigation.navigate('message_chat', { opponentUser: room?.user || {} });
   };
 
   render() {
@@ -179,7 +180,7 @@ class MessageMainScreen extends React.Component {
   };
 
   _renderItem = ({item}) => {
-    return <MessageRoomItem item={item} onPress={this.onPressRoom} />;
+    return <MessageRoomItem item={item} onPress={() => this.onPressRoom(item)} />;
   };
 }
 

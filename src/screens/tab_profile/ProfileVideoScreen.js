@@ -261,9 +261,7 @@ class ProfileVideoScreen extends Component {
       if (user.id === global.me.id) {
         this.props.navigation.navigate('profile');
       } else {
-        global._opponentId = user.id;
-        global._opponentName = user.username;
-        global._opponentPhoto = user.photo;
+        global._opponentUser = user;
         // this.props.navigation.navigate('profile_other');
         const pushAction = StackActions.push('profile_other', null);
         this.props.navigation.dispatch(pushAction);
@@ -309,9 +307,7 @@ class ProfileVideoScreen extends Component {
     if (global.me) {
       if (false && user.id === global.me.id) {
       } else {
-        global._roomId = user.id;
-        global._opponentName = user.username;
-        this.props.navigation.navigate('message_chat', { product: item });
+        this.props.navigation.navigate('message_chat', { opponentUser: user });
       }
     } else {
       this.props.navigation.navigate('signin');
