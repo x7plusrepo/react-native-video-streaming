@@ -40,48 +40,48 @@ class SocketManager {
       Logger.instance.log('disconnect');
     });
     this.socket?.on('connect_error', (error) => {
-      console.log('--- crn_dev --- socket_connect_error:', error);
+      console.log('--- univ_dev --- socket_connect_error:', error);
     });
 
     this.socket?.on('connect_timeout', (timeout) => {
-      console.log('--- crn_dev --- socket_connect_timeout:', timeout);
+      console.log('--- univ_dev --- socket_connect_timeout:', timeout);
     });
 
     this.socket?.on('error', (error) => {
-      console.log('--- crn_dev --- socket_error:', error);
+      console.log('--- univ_dev --- socket_error:', error);
     });
 
     this.socket?.on('disconnect', (reason) => {
-      console.log('--- crn_dev --- socket_disconnect_reason:', reason);
+      console.log('--- univ_dev --- socket_disconnect_reason:', reason);
     });
 
     this.socket?.on('reconnect', (attemptNumber) => {
       console.log(
-        '--- crn_dev --- socket_reconnect_attemptNumber:',
+        '--- univ_dev --- socket_reconnect_attemptNumber:',
         attemptNumber,
       );
     });
 
     this.socket?.on('reconnect_attempt', (attemptNumber) => {
       console.log(
-        '--- crn_dev --- socket_reconnect_attempt_attemptNumber:',
+        '--- univ_dev --- socket_reconnect_attempt_attemptNumber:',
         attemptNumber,
       );
     });
 
     this.socket?.on('reconnecting', (attemptNumber) => {
       console.log(
-        '--- crn_dev --- socket_reconnecting_attemptNumber:',
+        '--- univ_dev --- socket_reconnecting_attemptNumber:',
         attemptNumber,
       );
     });
 
     this.socket?.on('reconnect_error', (error) => {
-      console.log('--- crn_dev --- socket_reconnect_error:', error);
+      console.log('--- univ_dev --- socket_reconnect_error:', error);
     });
 
     this.socket?.on('reconnect_failed', () => {
-      console.log('--- crn_dev --- socket_reconnect_failed');
+      console.log('--- univ_dev --- socket_reconnect_failed');
     });
   }
 

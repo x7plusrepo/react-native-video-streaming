@@ -144,7 +144,7 @@ class PlayMainScreen extends Component {
     await Helper.setDeviceId();
     Helper.hasPermissions();
 
-    console.log('--- crn_dev --- global._devId:', global._devId);
+    console.log('--- univ_dev --- global._devId:', global._devId);
   };
 
   onRefresh = async (type) => {

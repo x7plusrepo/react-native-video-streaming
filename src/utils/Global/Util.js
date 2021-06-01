@@ -65,12 +65,12 @@ const Helper = {
 
   alertNetworkError: function (message = 'Network error.') {
     Alert.alert('Error', message);
-    console.log('--- crn_dev --- :', global._url);
+    console.log('--- univ_dev --- :', global._url);
   },
 
   alertServerDataError: function () {
     Alert.alert(Constants.ERROR_TITLE, 'Failed to get data from server');
-    console.log('--- crn_dev --- :', global._url);
+    console.log('--- univ_dev --- :', global._url);
   },
 
   //** string */
@@ -416,7 +416,7 @@ const Helper = {
           result['android.permission.RECORD_AUDIO'] === 'never_ask_again'
         ) {
           console.log(
-            '--- crn_dev --- :',
+            '--- univ_dev --- :',
             'Please Go into Settings -> Applications -> APP_NAME -> Permissions and Allow permissions to continue',
           );
         }
@@ -428,15 +428,15 @@ const Helper = {
       //   PERMISSIONS.IOS.MEDIA_LIBRARY,
       // ]).then((statuses) => {
       //   console.log(
-      //     '--- crn_dev --- statuses[PERMISSIONS.IOS.CAMERA]:',
+      //     '--- univ_dev --- statuses[PERMISSIONS.IOS.CAMERA]:',
       //     statuses[PERMISSIONS.IOS.CAMERA],
       //   );
       //   console.log(
-      //     '--- crn_dev --- status[PERMISSIONS.IOS.MICROPHONE]:',
+      //     '--- univ_dev --- status[PERMISSIONS.IOS.MICROPHONE]:',
       //     status[PERMISSIONS.IOS.MICROPHONE],
       //   );
       //   console.log(
-      //     '--- crn_dev --- status[PERMISSIONS.IOS.MEDIA_LIBRARY]:',
+      //     '--- univ_dev --- status[PERMISSIONS.IOS.MEDIA_LIBRARY]:',
       //     status[PERMISSIONS.IOS.MEDIA_LIBRARY],
       //   );
       // });
@@ -447,15 +447,15 @@ const Helper = {
         PERMISSIONS.IOS.PHOTO_LIBRARY,
       ]).then((statuses) => {
         // console.log(
-        //   '--- crn_dev --- statuses[PERMISSIONS.IOS.CAMERA]:',
+        //   '--- univ_dev --- statuses[PERMISSIONS.IOS.CAMERA]:',
         //   statuses[PERMISSIONS.IOS.CAMERA],
         // );
         // console.log(
-        //   '--- crn_dev --- statuses[PERMISSIONS.IOS.MICROPHONE]:',
+        //   '--- univ_dev --- statuses[PERMISSIONS.IOS.MICROPHONE]:',
         //   statuses[PERMISSIONS.IOS.MICROPHONE],
         // );
         // console.log(
-        //   '--- crn_dev --- statuses[PERMISSIONS.IOS.PHOTO_LIBRARY]:',
+        //   '--- univ_dev --- statuses[PERMISSIONS.IOS.PHOTO_LIBRARY]:',
         //   statuses[PERMISSIONS.IOS.PHOTO_LIBRARY],
         // );
 
@@ -526,7 +526,7 @@ const Helper = {
         global._deviceId = ipId;
         global._devId = ipId.substr(ip.length - 8);
       }
-      console.log('--- crn_dev --- ip:', ip);
+      console.log('--- univ_dev --- ip:', ip);
     } else {
       global._deviceId = deviceId;
       global._devId = deviceId.substr(deviceId.length - 8);

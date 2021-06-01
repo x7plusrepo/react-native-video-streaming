@@ -1,12 +1,15 @@
 import React from 'react';
 import { Image, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import stream_thumbnail from '../../assets/images/stream_thumbnail.png';
+
+import { Helper, GStyle } from '../../utils/Global';
+import { GStyles } from '../../utils/Global/Styles';
+
 import ic_speaker from '../../assets/images/Icons/ic_speaker.png';
 import ic_eye from '../../assets/images/Icons/ic_eye.png';
 import ic_group from '../../assets/images/Icons/ic_group.png';
-import { Helper, GStyle } from '../../utils/Global';
-import { GStyles } from '../../utils/Global/Styles';
+import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
+import ic_audio_on from '../../assets/images/Icons/ic_audio_on.png';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;
@@ -18,7 +21,21 @@ const LiveStreamRoom = (props) => {
     navigation.navigate('view_live', { roomId: room?.id });
   };
 
+  const streamModeIcon =
+    room?.mode === 0
+      ? ic_tab_liveStream
+      : room?.mode === 1
+      ? ic_audio_on
+      : ic_group;
+  const streamMode =
+    room?.mode === 0
+      ? 'Video-Live'
+      : room?.mode === 1
+      ? 'Audio-Live'
+      : 'Multi-Guests';
   const thumbnail = room?.thumbnail || room?.user?.photo;
+  const roomTitle = room?.topic || room?.roomName;
+  const viewerCount = room?.people?.length || 0;
 
   return (
     <TouchableOpacity
@@ -33,30 +50,29 @@ const LiveStreamRoom = (props) => {
       <View style={styles.infoWrapper}>
         <View style={styles.top}>
           <View style={[styles.row, styles.multiGuest]}>
-            <Image source={ic_group} style={styles.icons} />
-            <Text style={styles.viewersCount}>Multi-Guests</Text>
+            <Image source={streamModeIcon} style={styles.icons} />
+            <Text style={styles.viewersCount}>{streamMode}</Text>
           </View>
           <View style={styles.row}>
             <Image
               source={ic_eye}
               style={[styles.icons, { tintColor: 'white' }]}
             />
-            <Text style={styles.viewersCount}>237</Text>
+            <Text style={styles.viewersCount}>{viewerCount}</Text>
           </View>
         </View>
         <View style={styles.bottom}>
           <View style={styles.row}>
             <Image source={ic_speaker} style={styles.icons} />
-            <View style={{flexShrink: 1}}>
+            <View style={{ flexShrink: 1 }}>
               <Text
-                  style={GStyles.textSmall}
-                  numberOfLines={1}
-                  ellipsizeMode="tail"
+                style={GStyles.textSmall}
+                numberOfLines={1}
+                ellipsizeMode="tail"
               >
-                {room?.topic || room?.roomName}
+                {roomTitle}
               </Text>
             </View>
-
           </View>
         </View>
       </View>

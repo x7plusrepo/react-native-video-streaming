@@ -88,7 +88,6 @@ class ProfileOtherScreen extends React.Component {
   };
 
   onChangeLike = (value) => {
-    // console.log('--- crn_dev --- value:', value);
     let params = {
       user_id: global.me ? global.me.id : 0,
       other_id: global._opponentId,
@@ -101,7 +100,6 @@ class ProfileOtherScreen extends React.Component {
           if (this._isMounted) {
             this.setState({
               likeCount: json.data.likeCount || 0,
-              dislikeCount: json.data.dislikeCount || 0,
             });
           }
         } else {
