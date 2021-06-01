@@ -12,7 +12,7 @@ import {
 } from 'react-native';
 
 import ProgressBar from '../lib/Progress/Bar';
-import {GStyle, GStyles, Global, Helper, Constants} from '../utils/Global/index';
+import {GStyle, GStyles, Global, Helper, Constants} from '../utils/Global';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 

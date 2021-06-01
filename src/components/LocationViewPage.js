@@ -26,7 +26,7 @@ import GStyle from '../assets/Styles';
 // import Modal from "react-native-modal";
 import LocationView from 'react-native-location-view';
 import GHeaderBar from '../components/GHeaderBar';
-import Constants from '../utils/Global/index';
+import Constants from '../utils/Global';
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 const WINDOW_HEIGHT = Dimensions.get('window').height;

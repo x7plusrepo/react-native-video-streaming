@@ -45,9 +45,8 @@ class Component extends React.Component {
 
   onRandomProduct = () => {
     const { products } = this.props;
-    const randomNumber = Math.floor(Math.random() * avatars.length);
+    const randomNumber = Math.floor(Math.random() * products.length);
     const randomProduct = products[randomNumber];
-
     this.setState({
       showingRandomProduct: true,
       randomProduct,
@@ -83,8 +82,9 @@ class Component extends React.Component {
   };
 
   render() {
-    const { streamer, liveStatus, mode } = this.props;
+    const { room, liveStatus, mode } = this.props;
     const { showingRandomProduct, randomProduct } = this.state;
+    const streamer = room?.user || {};
     const streamerName = streamer?.username;
     const avatarImage = { uri: streamer?.photo || randomImageUrl };
     const badgeBackground =
@@ -111,7 +111,9 @@ class Component extends React.Component {
               >
                 <View style={styles.textWrapper}>
                   <Text style={[GStyles.textExtraSmall]}>{streamerName}</Text>
-                  <Text style={GStyles.textExtraSmall}>449</Text>
+                  <Text style={GStyles.textExtraSmall}>
+                    {streamer?.elixir || 0}
+                  </Text>
                 </View>
               </LinearGradient>
               <Image source={avatarImage} style={styles.userAvatarImage} />
@@ -124,7 +126,7 @@ class Component extends React.Component {
               <View style={styles.streamInfo}>
                 <View style={styles.infoLabelWrapper}>
                   <Image source={ic_love} style={styles.infoIcon} />
-                  <Text style={styles.archiveText}>22, 345</Text>
+                  <Text style={styles.archiveText}>{room?.elixir || 0}</Text>
                 </View>
               </View>
               <View style={styles.streamInfo}>
@@ -136,7 +138,7 @@ class Component extends React.Component {
               <View style={styles.streamInfo}>
                 <View style={styles.infoLabelWrapper}>
                   <Image source={ic_flame} style={styles.infoIcon} />
-                  <Text style={styles.infoText}>Share</Text>
+                  <Text style={styles.infoText}>{room?.elixirFlame || 0}</Text>
                 </View>
               </View>
             </View>
@@ -178,16 +180,30 @@ class Component extends React.Component {
               height: 150,
             }}
           >
-            <Image source={{ uri: randomProduct?.thumb }} style={{ width: '100%', height: '100%' }} />
+            <Image
+              source={{ uri: randomProduct?.thumb }}
+              style={{ width: '100%', height: '100%' }}
+            />
             <View
-              style={[GStyles.columnEndContainer, { position: 'absolute', flex: 1, width: '100%', height: '100%', padding: 8 }]}
+              style={[
+                GStyles.columnEndContainer,
+                {
+                  position: 'absolute',
+                  flex: 1,
+                  width: '100%',
+                  height: '100%',
+                  padding: 8,
+                },
+              ]}
             >
               {/*<Text style={[GStyles.textSmall, { marginBottom: 4 }]}>*/}
               {/*  0/1200*/}
               {/*</Text>*/}
               <View style={GStyles.rowContainer}>
                 <Image source={ic_bean} style={styles.infoIcon} />
-                <Text style={styles.archiveText}>{randomProduct?.price || 0}</Text>
+                <Text style={styles.archiveText}>
+                  {randomProduct?.price || 0}
+                </Text>
               </View>
             </View>
           </TouchableOpacity>

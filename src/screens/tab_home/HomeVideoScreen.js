@@ -10,7 +10,7 @@ import {
   StackActions,
 } from '@react-navigation/native';
 
-import { Helper, Constants, RestAPI } from '../../utils/Global/index';
+import { Helper, Constants, RestAPI } from '../../utils/Global';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
 import GStyle, { GStyles } from '../../utils/Global/Styles';
 import ProductsList from '../../components/elements/ProductsList';

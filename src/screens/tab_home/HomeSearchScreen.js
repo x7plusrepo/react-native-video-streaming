@@ -19,7 +19,7 @@ import { setKeyword } from '../../redux/home/actions';
 
 import ScrollableTabView, { DefaultTabBar } from 'rn-collapsing-tab-bar';
 
-import { GStyle, GStyles, Helper } from '../../utils/Global/index';
+import { GStyle, GStyles, Helper } from '../../utils/Global';
 import SearchBarItem from '../../components/elements/SearchBarItem';
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 
@@ -217,7 +217,7 @@ const THomeSearchScreen = function (props) {
 };
 export default connect(
   (state) => ({
-    keyword: state.home.keyword,
+    keyword: state.home?.keyword,
   }),
   { setKeyword },
 )(THomeSearchScreen);

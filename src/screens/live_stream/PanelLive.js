@@ -12,7 +12,7 @@ import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
-import Helper from '../../utils/Global/Util';
+import { Global } from '../../utils/Global';
 import GStyle, { GStyles } from '../../utils/Global/Styles';
 import styles from './styles';
 
@@ -21,13 +21,13 @@ const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
 const PanelLive = (props) => {
-  const { onPressStart, currentLiveStatus } = props;
+  const { onPressStart, liveStatus } = props;
   const [topic, setTopic] = useState('');
   const [thumbnail, setThumbnail] = useState(null);
   const onChangeText = (text) => setTopic(text);
   const onStart = async () => {
     showForcePageLoader(true);
-    const uploadedUrl = await Helper.uploadImageToCloudinary(thumbnail);
+    const uploadedUrl = await Global.uploadImageToCloudinary(thumbnail);
     showForcePageLoader(false);
     onPressStart && onPressStart(topic, uploadedUrl);
   };
@@ -102,7 +102,7 @@ const PanelLive = (props) => {
           styles.btnBeginLiveStream,
           { backgroundColor: GStyle.primaryColor },
         ]}
-        disabled={currentLiveStatus === -1}
+        disabled={liveStatus === -1}
       >
         <Text style={styles.beginLiveStreamText}>Go LIVE</Text>
       </TouchableOpacity>

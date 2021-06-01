@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global/index';
+import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global';
 
 const styles = {
   button: {

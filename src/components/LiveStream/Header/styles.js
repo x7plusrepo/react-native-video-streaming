@@ -15,13 +15,14 @@ const styles = StyleSheet.create({
   streamerInfoWrapper: {
     flexDirection: 'row',
     marginBottom: 16,
+    borderRadius: 48,
   },
   streamerGradient: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    borderRadius: 48,
     borderWidth: 1.5,
     borderColor: '#9F9A92',
+    borderRadius: 48,
     height: 32,
   },
   userAvatarImage: {
@@ -29,6 +30,7 @@ const styles = StyleSheet.create({
     height: 32,
     position: 'absolute',
     top: '50%',
+    borderRadius: 48,
     left: 0,
     transform: [{ translateX: 0 }, { translateY: -16 }],
   },

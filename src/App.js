@@ -7,10 +7,7 @@ import { store } from './redux/store';
 
 // import RestAPI from './DB/RestAPI';
 // import Constants from './DB/Constants';
-import {
-  Helper,
-  Constants,
-} from './utils/Global/index';
+import { Helper, Constants } from './utils/Global';
 
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 import AppNavigator from './navigation/AppNavigator';
@@ -24,8 +21,8 @@ import FlashMessage, {
 } from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
-import LiveStreamSocketManager  from "./utils/LiveStream/SocketManager";
-import ChatStreamSocketManager  from "./utils/Message/SocketManager";
+import LiveStreamSocketManager from './utils/LiveStream/SocketManager';
+import ChatStreamSocketManager from './utils/Message/SocketManager';
 
 const subscribeDeepLink = () => {
   branch.subscribe(({ error, params, uri }) => {
@@ -57,7 +54,7 @@ const subscribeDeepLink = () => {
     // const image = params.$og_image_url;
     // const inviterId = params.inviterId;
     const roomId = params.roomId;
-    RootNavigation.navigate('view_live', { roomId })
+    RootNavigation.navigate('view_live', { roomId });
   });
 };
 
@@ -179,6 +176,7 @@ function App() {
       </View>
     </Provider>
   );
+  return <></>;
 }
 
 function myiOSPromptCallback(permission) {

@@ -21,7 +21,7 @@ import {
   View,
 } from 'react-native';
 
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global/index';
+import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global';
 import CheckBox from '../../lib/Checkbox/index';
 import Avatar from './Avatar';
 import {JobItemProperty} from './JobItem';

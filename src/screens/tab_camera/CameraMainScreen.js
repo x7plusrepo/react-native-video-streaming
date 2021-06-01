@@ -19,7 +19,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import {
   GStyles,
   Helper,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 const ic_camera_flip = require('../../assets/images/Icons/ic_camera_flip.png');

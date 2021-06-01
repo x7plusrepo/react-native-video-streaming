@@ -13,6 +13,7 @@ import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import ic_join from '../../../assets/images/Icons/ic_join.png';
 import ic_signOut from '../../../assets/images/Icons/ic_signout.png';
 import heart from '../../../assets/images/gifts/heart.png';
+import MessagesList from '../MessagesList';
 const ic_audio_on = require('../../../assets/images/Icons/ic_audio_on.png');
 const ic_audio_off = require('../../../assets/images/Icons/ic_audio_off.png');
 
@@ -55,35 +56,37 @@ export default class BottomActionsGroup extends Component {
   };
 
   renderContent() {
-    const { mode, isJoined, onPressJoin, onExit, isMuted } = this.props;
+    const { mode, isJoined, onPressJoin, onExit, isMuted, messages } =
+      this.props;
     const onPressJoinButton = isJoined ? onExit : onPressJoin;
     const joinLeaveIcon = isJoined ? ic_signOut : ic_join;
 
     return (
       <>
-        {mode === 'streamer' && (
-          <View
-            style={{
-              position: 'absolute',
-              right: 16,
-              bottom: 72,
-              alignItems: 'flex-end',
-            }}
-          >
-            <GradientBackgroundIconButton
-              onPress={this.onPressSwitchCamera}
-              icon={ic_switch_camera}
-              iconStyle={{ tintColor: 'white' }}
-              containerStyle={{ marginRight: 0, marginBottom: 8 }}
-            />
-            <GradientBackgroundIconButton
-              onPress={this.onPressSwitchAudio}
-              icon={isMuted ? ic_audio_off : ic_audio_on}
-              iconStyle={{ tintColor: 'white' }}
-              containerStyle={{ marginRight: 0 }}
-            />
-          </View>
-        )}
+        <View
+          style={[
+            GStyles.rowContainer,
+            { alignItems: 'flex-end', marginBottom: 24 },
+          ]}
+        >
+          <MessagesList messages={messages} />
+          {mode === 'streamer' && (
+            <View>
+              <GradientBackgroundIconButton
+                onPress={this.onPressSwitchCamera}
+                icon={ic_switch_camera}
+                iconStyle={{ tintColor: 'white' }}
+                containerStyle={{ marginRight: 0, marginBottom: 8 }}
+              />
+              <GradientBackgroundIconButton
+                onPress={this.onPressSwitchAudio}
+                icon={isMuted ? ic_audio_off : ic_audio_on}
+                iconStyle={{ tintColor: 'white' }}
+                containerStyle={{ marginRight: 0 }}
+              />
+            </View>
+          )}
+        </View>
         <View style={GStyles.rowBetweenContainer}>
           <View style={GStyles.rowBetweenContainer}>
             <GradientBackgroundIconButton
@@ -109,11 +112,13 @@ export default class BottomActionsGroup extends Component {
               onPress={this.onPressSendHeart}
               containerStyle={{ marginLeft: 8, marginRight: 0 }}
             />
-            <GradientBackgroundIconButton
-              icon={ic_gift}
-              onPress={this.onPressGiftAction}
-              containerStyle={{ marginLeft: 8, marginRight: 0 }}
-            />
+            {mode === 'viewer' && (
+              <GradientBackgroundIconButton
+                icon={ic_gift}
+                onPress={this.onPressGiftAction}
+                containerStyle={{ marginLeft: 8, marginRight: 0 }}
+              />
+            )}
           </View>
         </View>
       </>
@@ -122,9 +127,7 @@ export default class BottomActionsGroup extends Component {
 
   render() {
     return (
-      <View style={{ paddingHorizontal: 16 }}>
-        {this.renderContent()}
-      </View>
+      <View style={{ paddingHorizontal: 16 }}>{this.renderContent()}</View>
     );
   }
 }

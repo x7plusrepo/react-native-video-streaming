@@ -15,17 +15,16 @@ import get from 'lodash/get';
 
 import StartPanel from './StartPanel';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
-import MessagesList from '../../components/LiveStream/MessagesList/MessagesList';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Gifts from '../../components/LiveStream/Gifts';
-
-import SocketManager from '../../utils/LiveStream/SocketManager';
-
-import { LIVE_STATUS, videoConfig } from '../../utils/LiveStream/Constants';
-import { Constants, Helper, Logger } from '../../utils/Global';
-import styles from './styles';
 import Header from '../../components/LiveStream/Header';
 import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
+
+import SocketManager from '../../utils/LiveStream/SocketManager';
+import { LIVE_STATUS, videoConfig } from '../../utils/LiveStream/Constants';
+import { Constants, Global, Logger, RestAPI } from '../../utils/Global';
+import { setGifts } from '../../redux/liveStream/actions';
+import styles from './styles';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -33,10 +32,8 @@ class GoLive extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      currentLiveStatus: -1,
       messages: [],
       room: {},
-      countHeart: 0,
       isMuted: false,
       audioConfig: {
         bitrate: 32000,
@@ -50,6 +47,10 @@ class GoLive extends React.Component {
   }
 
   componentDidMount() {
+    this.init();
+  }
+
+  init = () => {
     this.requestCameraPermission();
     const user = this.props.user || {};
     const { id: streamerId, username: roomName } = user;
@@ -58,37 +59,82 @@ class GoLive extends React.Component {
       streamerId,
       userId: streamerId,
     });
+
     SocketManager.instance.listenPrepareLiveStream((room) => {
       if (streamerId === room?.user) {
-        this.setState({ room, currentLiveStatus: room?.liveStatus || 0 });
+        this.setState({
+          room: {
+            ...room,
+            user: this.props.user || {},
+            countHeart: 0,
+          },
+        });
       }
     });
-    SocketManager.instance.listenBeginLiveStream((data) => {
-      if (data?.user === streamerId) {
-        const currentLiveStatus = get(data, 'liveStatus', '');
-        this.setState({ currentLiveStatus });
+
+    SocketManager.instance.listenBeginLiveStream((room) => {
+      if (room?.user === streamerId) {
+        this.setState((prevState) => ({
+          room: {
+            ...prevState?.room,
+            liveStatus: room?.liveStatus || 1,
+          },
+        }));
       }
     });
     SocketManager.instance.listenFinishLiveStream((data) => {
       if (data?.user === streamerId) {
-        const currentLiveStatus = get(data, 'liveStatus', '');
-        this.setState({ currentLiveStatus });
+        this.setState((prevState) => ({
+          room: {
+            ...prevState?.room,
+            liveStatus: LIVE_STATUS.FINISH,
+          },
+        }));
       }
     });
-    SocketManager.instance.listenSendHeart(() => {
-      this.setState((prevState) => ({ countHeart: prevState.countHeart + 1 }));
+    SocketManager.instance.listenSendHeart((data) => {
+      const room = data?.room;
+      if (room) {
+        this.setState({ room });
+      }
     });
-    SocketManager.instance.listenSendMessage((message) => {
-      if (message?.sender?.id !== this.props.user?.id) {
+    SocketManager.instance.listenSendMessage((data) => {
+      const { message, room } = data;
+      if (message && message?.sender?.id !== this.props.user?.id) {
         const messages = this.state.messages || [];
         this.setState({ messages: [message].concat(messages) });
+      }
+      if (room) {
+        this.setState({ room });
+      }
+    });
+    SocketManager.instance.listenSendGift((data) => {
+      const { gift, room, senderName } = data;
+      if (gift) {
+        const message = {
+          message: `Sent a ${gift.name}`,
+          giftIcon: gift.icon,
+          sender: {
+            username: senderName,
+          },
+        };
+        const messages = this.state.messages || [];
+        this.setState({ messages: [message].concat(messages) });
+      }
+      if (room) {
+        this.setState({ room });
       }
     });
     SocketManager.instance.emitPrepareLiveStream({
       streamerId,
       roomName,
     });
-  }
+    RestAPI.get_gifts({ userId: this.props.user?.id }, (json, error) => {
+      if (json?.status === 200 || json?.data) {
+        this.props.setGifts(json.data.gifts || []);
+      }
+    });
+  };
 
   componentWillUnmount() {
     const user = this.props.user || {};
@@ -99,11 +145,11 @@ class GoLive extends React.Component {
     SocketManager.instance.removeFinishLiveStream();
     SocketManager.instance.removeSendHeart();
     SocketManager.instance.removeSendMessage();
+    SocketManager.instance.removeSendGift();
     SocketManager.instance.emitFinishLiveStream({ streamerId });
     SocketManager.instance.emitLeaveRoom({
       streamerId,
     });
-    //SocketManager.instance.disconnect();
   }
 
   onPressGiftAction = () => {
@@ -117,11 +163,10 @@ class GoLive extends React.Component {
   onPressShareAction = async () => {
     const { room } = this.state;
     const { user } = this.props;
-    Helper.inviteToLiveStream(room, user);
+    Global.inviteToLiveStream(room, user);
   };
 
   onPressSendHeart = () => {
-    this.giftBottomSheet?.current?.close();
     const user = this.props.user || {};
     const { id: streamerId } = user;
     SocketManager.instance.emitSendHeart({
@@ -157,6 +202,17 @@ class GoLive extends React.Component {
       lastPress: new Date().getTime(),
     });
   };
+
+  // onPressSendGift = (gift) => {
+  //   const userId = this.props.user?.id;
+  //   const { room } = this.state;
+  //   this.giftBottomSheet?.current?.close();
+  //   SocketManager.instance.emitSendGift({
+  //     streamerId: room?.user?.id,
+  //     userId,
+  //     giftId: gift?.id,
+  //   });
+  // };
 
   onPressSendMessage = (message) => {
     if (!message) return;
@@ -198,12 +254,12 @@ class GoLive extends React.Component {
     const { navigation } = this.props;
     const user = this.props.user || {};
     const { id: streamerId, username: roomName } = user;
-    const { currentLiveStatus } = this.state;
-    if (currentLiveStatus === -1) {
+    const liveStatus = this.state.room?.liveStatus || 0;
+    if (liveStatus === -1) {
       alert('Error while initializing live.');
       return;
     }
-    if (Number(currentLiveStatus) === Number(LIVE_STATUS.PREPARE)) {
+    if (Number(liveStatus) === Number(LIVE_STATUS.PREPARE)) {
       /**
        * Waiting live stream
        */
@@ -218,7 +274,7 @@ class GoLive extends React.Component {
         this.nodeCameraViewRef.startPreview();
         this.nodeCameraViewRef.start();
       }
-    } else if (Number(currentLiveStatus) === Number(LIVE_STATUS.ON_LIVE)) {
+    } else if (Number(liveStatus) === Number(LIVE_STATUS.ON_LIVE)) {
       /**
        * Finish live stream
        */
@@ -282,21 +338,19 @@ class GoLive extends React.Component {
   };
 
   render() {
-    const {
-      currentLiveStatus,
-      countHeart,
-      messages,
-      audioConfig,
-      isMuted,
-    } = this.state;
+    const { messages, audioConfig, isMuted, room } =
+      this.state;
     const user = this.props.user || {};
+    const gifts = this.props.gifts || [];
+    const countHeart = room?.countHeart || 0;
+    const liveStatus = room?.liveStatus || 0;
 
     const { id: streamerId } = user;
     const outputUrl = `${RTMP_SERVER}/live/${streamerId}`;
 
     return (
       <SafeAreaView style={styles.container}>
-        <StatusBar backgroundColor='white' barStyle='light-content' />
+        <StatusBar hidden />
         <TouchableOpacity
           style={{ flex: 1 }}
           activeOpacity={1}
@@ -314,10 +368,10 @@ class GoLive extends React.Component {
             autopreview={false}
           />
 
-          {(currentLiveStatus === LIVE_STATUS.PREPARE ||
-            currentLiveStatus === -1) && (
+          {(liveStatus === LIVE_STATUS.PREPARE ||
+            liveStatus === -1) && (
             <StartPanel
-              currentLiveStatus={currentLiveStatus}
+              liveStatus={liveStatus}
               onPressStart={this.onPressStart}
               onPressClose={this.onPressClose}
             />
@@ -325,14 +379,13 @@ class GoLive extends React.Component {
           <View style={styles.contentWrapper}>
             <View style={styles.header}>
               <Header
-                streamer={user}
-                liveStatus={currentLiveStatus}
+                room={room}
+                liveStatus={liveStatus}
                 mode="streamer"
                 onPressClose={this.onPressClose}
               />
             </View>
             <View style={styles.footer}>
-              <MessagesList messages={messages} />
               <BottomActionsGroup
                 onPressSendHeart={this.onPressSendHeart}
                 onPressGiftAction={this.onPressGiftAction}
@@ -342,6 +395,7 @@ class GoLive extends React.Component {
                 onPressShareAction={this.onPressShareAction}
                 mode="streamer"
                 isMuted={isMuted}
+                messages={messages}
               />
             </View>
           </View>
@@ -355,30 +409,33 @@ class GoLive extends React.Component {
             container: {
               borderTopLeftRadius: 16,
               borderTopRightRadius: 16,
-              backgroundColor: 'rgba(0, 0, 0, 0.32)',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              height: 360,
             },
             wrapper: {
               backgroundColor: 'transparent',
             },
             draggableIcon: {
               width: 0,
+              height: 0,
+              padding: 0,
+              margin: 0,
             },
           }}
         >
-          <Gifts />
+          <Gifts gifts={gifts} onPressSendGift={this.onPressSendGift} />
         </RBSheet>
         <RBSheet
           ref={this.messageBottomSheet}
           closeOnDragDown
           openDuration={250}
-          height={100}
+          height={60}
           customStyles={{
             container: {
-              borderTopLeftRadius: 16,
-              borderTopRightRadius: 16,
-              backgroundColor: 'rgba(255, 255, 255, 0.6)',
+              borderRadius: 32,
               paddingHorizontal: 16,
               paddingBottom: 16,
+              backgroundColor: 'transparent',
               justifyContent: 'center',
               alignItems: 'center',
             },
@@ -388,6 +445,8 @@ class GoLive extends React.Component {
             draggableIcon: {
               width: 0,
               height: 0,
+              padding: 0,
+              margin: 0,
             },
           }}
         >
@@ -402,6 +461,7 @@ class GoLive extends React.Component {
 export default connect(
   (state) => ({
     user: state.me.user,
+    gifts: state.liveStream?.gifts || [],
   }),
-  {},
+  { setGifts },
 )(GoLive);

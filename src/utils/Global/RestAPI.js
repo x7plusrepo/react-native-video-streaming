@@ -1,6 +1,3 @@
-import RNFetchBlob from 'rn-fetch-blob';
-import Helper from './Util';
-import Constants from './Constants';
 import { formDataCall } from './ApiBase';
 
 const RestAPI = {
@@ -163,6 +160,10 @@ const RestAPI = {
     };
 
     formDataCall('api/liveStream', data, {}, callBack, 'get');
+  },
+
+  get_gifts: (params, callBack) => {
+    formDataCall('api/gifts/all', params, {}, callBack, 'get');
   },
 
   get_chatRoom: (params, callBack) => {

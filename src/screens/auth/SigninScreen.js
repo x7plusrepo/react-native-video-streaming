@@ -39,7 +39,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 
 import GHeaderBar from '../../components/GHeaderBar';
 import { connect } from 'react-redux';

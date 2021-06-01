@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Image, FlatList } from 'react-native';
+import { Image, FlatList, TouchableOpacity, Text, View } from 'react-native';
 import styles from './styles';
 import { GStyle } from '../../../utils/Global';
 import ScrollableTabView, { DefaultTabBar } from 'rn-collapsing-tab-bar';
 import HomeVideoScreen from '../../../screens/tab_home/HomeVideoScreen';
 import { GStyles } from '../../../utils/Global/Styles';
+import diamond from './../../../assets/images/Icons/ic_diamond.png';
 
-const gifts = [
+const something = [
   {
     name: 'apple',
     icon: require(`./../../../assets/images/gifts/apple.png`),
@@ -104,41 +105,81 @@ const gifts = [
     icon: require(`./../../../assets/images/gifts/ufo.png`),
   },
 ];
+
 export default class Gifts extends Component {
   constructor(props) {
     super(props);
     this.state = {
       message: '',
+      selectedGift: null,
     };
   }
 
   onPressSendGift = () => {
     const { onPressSendGift } = this.props;
-    onPressSendGift && onPressSendGift();
+    const { selectedGift } = this.state;
+    selectedGift && onPressSendGift && onPressSendGift(selectedGift);
+  };
+
+  setSelectedGift = (selectedGift) => {
+    this.setState({ selectedGift });
   };
 
   _renderItem = ({ item, index }) => {
+    const { selectedGift } = this.state;
     return (
-      <TouchableOpacity style={styles.giftContainer}>
-        <Image source={item.icon} style={styles.giftIcon} />
+      <TouchableOpacity
+        style={[
+          styles.giftContainer,
+          selectedGift?.id === item?.id && {
+            backgroundColor: 'rgba(255, 255, 255, 0.1)',
+          },
+        ]}
+        onPress={() => this.setSelectedGift(item)}
+      >
+        <Image source={{ uri: item.icon }} style={styles.giftIcon} />
+        <Text style={[GStyles.textSmall, { marginVertical: 8 }]}>
+          {item.name}
+        </Text>
+        <View style={GStyles.rowContainer}>
+          <Image source={diamond} style={styles.diamondIcon} />
+          <Text style={[GStyles.textExtraSmall, { color: GStyle.infoColor }]}>
+            {item.diamond || 0}
+          </Text>
+        </View>
       </TouchableOpacity>
     );
   };
 
   render() {
+    const gifts = this.props.gifts || [];
+
     return (
       <View style={styles.container}>
         <FlatList
           onEndReachedThreshold={0.4}
-          numColumns={6}
+          numColumns={4}
           data={gifts}
           renderItem={this._renderItem}
           viewabilityConfig={{
             itemVisiblePercentThreshold: 60,
           }}
           keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ alignItems: 'center', paddingTop: 32 }}
+          contentContainerStyle={{ paddingBottom: 32 }}
         />
+        <View
+          style={[
+            GStyles.rowEndContainer,
+            { marginTop: 16 }
+          ]}
+        >
+          <TouchableOpacity
+            style={styles.sendButton}
+            onPress={this.onPressSendGift}
+          >
+            <Text style={styles.sendText}>Send</Text>
+          </TouchableOpacity>
+        </View>
       </View>
     );
   }

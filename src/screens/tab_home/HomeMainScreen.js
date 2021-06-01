@@ -22,7 +22,7 @@ import {
   GStyles,
   Helper,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 const ic_search = require('../../assets/images/Icons/ic_search.png');
 
 import HomeVideoScreen from './HomeVideoScreen';

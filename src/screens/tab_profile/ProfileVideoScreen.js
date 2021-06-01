@@ -42,7 +42,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import avatars from '../../assets/avatars';
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
@@ -244,7 +244,7 @@ class ProfileVideoScreen extends Component {
 
       let params = {
         video_id: item?.id,
-        owner_id: item.userId?.id,
+        owner_id: item.user?.id,
         viewer_id: global.me ? global.me.id : 0,
         device_type: Platform.OS === 'ios' ? '1' : '0',
         device_identifier: global._deviceId,

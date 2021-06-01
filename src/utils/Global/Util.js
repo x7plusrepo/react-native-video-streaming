@@ -555,63 +555,7 @@ const Helper = {
 
     return skillName;
   },
-  uploadImageToCloudinary: (source, folder = 'images', public_id) => {
-    return new Promise((resolve, reject) => {
-      const data = new FormData();
-      data.append('file', source);
-      data.append('upload_preset', 'dmljgqvn');
-      data.append('cloud_name', 'snaplist');
-      data.append('folder', folder);
-      data.append('api_key', '882925219281537');
-      data.append('api_secret ', 'ppqMDgtivesiIut2_uC0rSylJHM');
-      fetch('https://api.cloudinary.com/v1_1/snaplist/upload', {
-        method: 'post',
-        body: data,
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          resolve(data?.secure_url);
-        })
-        .catch((err) => {
-          console.log(err, '----');
-          resolve(null);
-        });
-    });
-  },
-  inviteToLiveStream: async (room, user) => {
-    const userId = user?.id;
-    const roomId = room?.id;
 
-    const channelName = room?.topic || room?.roomName;
-    const image = room?.thumbnail;
-
-    const branchUniversalObject = await branch.createBranchUniversalObject(
-      'canonicalIdentifier',
-      {
-        locallyIndex: true,
-        title: 'Welcome to my channel.',
-        contentImageUrl: image,
-        contentDescription: '',
-      },
-    );
-
-    const shareOptions = {
-      messageHeader: 'Come to chat with me',
-      messageBody: `${user?.username} invited you to channel ${channelName}!`,
-    };
-    const linkProperties = { feature: 'share', channel: 'facebook' };
-    let controlParams = {
-      roomId,
-      inviterId: userId,
-    };
-
-    await branchUniversalObject.showShareSheet(
-      shareOptions,
-      linkProperties,
-      controlParams,
-    );
-  },
 };
 
 export default Helper;

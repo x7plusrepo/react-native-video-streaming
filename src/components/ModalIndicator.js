@@ -27,7 +27,7 @@ import {
   View,
 } from 'react-native';
 
-import {GStyle, GStyles, Global, Helper} from '../utils/Global/index';
+import {GStyle, GStyles, Global, Helper} from '../utils/Global';
 import {SkypeIndicator} from 'react-native-indicators';
 
 const ModalIndicator = () => (

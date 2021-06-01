@@ -17,7 +17,7 @@ import Helper from '../helper';
 import Counter from '../counter';
 
 import styles from './styles';
-import {GStyle, GStyles} from '../../../../../utils/Global/index';
+import {GStyle, GStyles} from '../../../../../utils/Global';
 
 function startAnimation(animation, options, callback) {
   Animated.timing(animation, options).start(callback);

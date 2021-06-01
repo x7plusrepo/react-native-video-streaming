@@ -2,7 +2,7 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 
-import { Helper, Constants, RestAPI } from '../../utils/Global/index';
+import { Helper, Constants, RestAPI } from '../../utils/Global';
 import ProductsList from '../../components/elements/ProductsList';
 
 class HomeVideoSearch extends React.Component {

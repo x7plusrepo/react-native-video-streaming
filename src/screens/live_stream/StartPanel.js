@@ -15,7 +15,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view';
 import PanelLive from './PanelLive';
 
-const StartPanel = ({ onPressStart, currentLiveStatus, onPressClose }) => {
+const StartPanel = ({ onPressStart, liveStatus, onPressClose }) => {
   return (
     <View style={styles.wrapperStartPanel}>
       <ScrollableTabView
@@ -38,19 +38,19 @@ const StartPanel = ({ onPressStart, currentLiveStatus, onPressClose }) => {
         <PanelLive
           tabLabel="Live"
           onPressStart={onPressStart}
-          currentLiveStatus={currentLiveStatus}
+          liveStatus={liveStatus}
           onPressClose={onPressClose}
         />
         <PanelLive
           tabLabel="Multi Guest Live"
           onPressStart={onPressStart}
-          currentLiveStatus={currentLiveStatus}
+          liveStatus={liveStatus}
           onPressClose={onPressClose}
         />
         <PanelLive
           tabLabel="Audio Live"
           onPressStart={onPressStart}
-          currentLiveStatus={currentLiveStatus}
+          liveStatus={liveStatus}
           onPressClose={onPressClose}
         />
       </ScrollableTabView>

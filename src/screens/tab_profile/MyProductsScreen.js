@@ -26,7 +26,7 @@ import {
   GStyles,
   Helper,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from "../../components/elements/ProductsList";
 

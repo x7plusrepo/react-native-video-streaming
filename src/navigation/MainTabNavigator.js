@@ -8,7 +8,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../utils/Global/index';
+} from '../utils/Global';
 import PlayTabScreen from '../screens/tab_play/PlayTabScreen';
 import TopUsersScreen from '../screens/tab_top/TopUsersScreen';
 import HomeMainScreen from '../screens/tab_home/HomeMainScreen';

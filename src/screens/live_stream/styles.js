@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 16,
     zIndex: 9,
+    width: '100%',
   },
   playerView: {
     position: 'absolute',

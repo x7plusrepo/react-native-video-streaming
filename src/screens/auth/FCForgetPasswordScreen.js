@@ -19,7 +19,7 @@ import {
   Global,
   Helper,
   Constant,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 
 class FCForgetPasswordScreen extends React.Component {
   constructor(props) {

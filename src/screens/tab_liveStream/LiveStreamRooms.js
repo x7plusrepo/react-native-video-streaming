@@ -3,7 +3,7 @@ import { ActivityIndicator, FlatList, View } from 'react-native';
 
 import LiveStreamRoom from './LiveStreamRoom';
 
-import { Helper, Constants, RestAPI } from '../../utils/Global/index';
+import { Helper, Constants, RestAPI } from '../../utils/Global';
 import styles from './styles';
 
 class LiveStreamRooms extends React.Component {

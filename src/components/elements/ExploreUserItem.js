@@ -7,7 +7,7 @@ import {
 
 import {
   GStyles,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import Avatar from './Avatar';
 import avatars from "../../assets/avatars";
 

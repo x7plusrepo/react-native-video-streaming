@@ -40,7 +40,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 
 class FCVerifyEmailScreen extends React.Component {
   constructor(props) {

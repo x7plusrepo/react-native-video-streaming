@@ -16,7 +16,7 @@ import {
   Global,
   Helper,
   Constants,
-} from '../utils/Global/index';
+} from '../utils/Global';
 
 const PageLoaderIndicator = ({ isPageLoader = false }) => {
   if (!isPageLoader) {

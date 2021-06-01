@@ -28,7 +28,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import CheckBox from '../../lib/Checkbox/index';
 import Avatar from './Avatar';
 import Flag from '../../lib/SvgFlagkit/Flag';

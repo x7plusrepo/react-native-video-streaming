@@ -21,7 +21,7 @@ import {
   GStyles,
   Helper,
   Constants,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 
 class CameraPreviewScreen extends Component {

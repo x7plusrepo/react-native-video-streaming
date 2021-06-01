@@ -28,7 +28,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import Avatar from './Avatar';
 
 const MessageRoomItem = ({item, onPress}) => (

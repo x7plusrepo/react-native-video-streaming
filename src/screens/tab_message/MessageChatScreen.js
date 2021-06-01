@@ -24,7 +24,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import SocketManager from './../../utils/Message/SocketManager';
 import get from 'lodash/get';
 

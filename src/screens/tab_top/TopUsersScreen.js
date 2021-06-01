@@ -18,7 +18,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import TopUserItem from '../../components/elements/TopUserItem';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';

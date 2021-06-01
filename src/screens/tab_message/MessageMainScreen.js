@@ -14,7 +14,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import MessageRoomItem from '../../components/elements/MessageRoomItem';
 
@@ -192,7 +192,7 @@ const TMessageMainScreen = function (props) {
 };
 export default connect(
   (state) => ({
-    unreadCount: state.message.unreadCount,
+    unreadCount: state.message?.unreadCount,
   }),
   {},
 )(TMessageMainScreen);

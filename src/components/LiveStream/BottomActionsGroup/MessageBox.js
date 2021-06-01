@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   Image,
   Keyboard,
+  KeyboardAvoidingView,
+  Platform,
   TextInput,
   TouchableOpacity,
   View,
@@ -29,7 +31,10 @@ const MessageBox = (props) => {
   const onChangeMessageText = (text) => setMessage(text);
 
   return (
-    <View style={styles.messageInput}>
+    <KeyboardAvoidingView
+      style={styles.messageInput}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <TextInput
         ref={textInput}
         style={styles.textInput}
@@ -53,7 +58,7 @@ const MessageBox = (props) => {
           style={styles.iconSend}
         />
       </TouchableOpacity>
-    </View>
+    </KeyboardAvoidingView>
   );
 };
 

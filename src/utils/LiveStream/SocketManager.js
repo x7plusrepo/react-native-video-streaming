@@ -9,6 +9,7 @@ const EVENT_BEGIN_LIVE_STREAM = 'begin-live-stream';
 const EVENT_FINISH_LIVE_STREAM = 'finish-live-stream';
 const EVENT_SEND_HEART = 'send-heart';
 const EVENT_SEND_MESSAGE = 'send-message';
+const EVENT_SEND_GIFT = 'send-gift';
 const EVENT_PREPARE_LIVE_STREAM = 'prepare-live-stream';
 const EVENT_SEND_REPLAY = 'replay';
 
@@ -139,9 +140,9 @@ class SocketManager {
   };
 
   listenSendHeart(callback = () => null) {
-    this.socket?.on(EVENT_SEND_HEART, () => {
+    this.socket?.on(EVENT_SEND_HEART, (data) => {
       Logger.instance.log(`${EVENT_SEND_HEART} :`);
-      return callback();
+      return callback(data);
     });
   }
 
@@ -158,6 +159,17 @@ class SocketManager {
 
   removeSendMessage = () => {
     this.socket?.removeAllListeners(EVENT_SEND_MESSAGE);
+  };
+
+  listenSendGift(callback = () => null) {
+    this.socket?.on(EVENT_SEND_GIFT, (data) => {
+      Logger.instance.log(`${EVENT_SEND_GIFT} :`);
+      return callback(data);
+    })
+  };
+
+  removeSendGift = () => {
+    this.socket?.removeAllListeners(EVENT_SEND_GIFT);
   };
 
   listenReplay(callback = () => null) {
@@ -212,6 +224,10 @@ class SocketManager {
 
   emitSendMessage({ streamerId, userId, message }) {
     this.socket?.emit(EVENT_SEND_MESSAGE, { streamerId, userId, message });
+  }
+
+  emitSendGift({ streamerId, userId, giftId }) {
+    this.socket?.emit(EVENT_SEND_GIFT, { streamerId, userId, giftId });
   }
 
   emitReplay({ streamerId, userId }) {

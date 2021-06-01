@@ -29,7 +29,7 @@ import MyVideoScreen from '../screens/tab_profile/MyProductsScreen';
 import GoLive from '../screens/live_stream/GoLive';
 import ViewLive from '../screens/live_stream/ViewLive';
 
-import { Helper } from '../utils/Global/index';
+import { Helper } from '../utils/Global';
 import { navigationRef, isReadyRef } from './../utils/Global/RootNavigation';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';

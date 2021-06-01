@@ -37,7 +37,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 
 import { connect } from 'react-redux';
@@ -916,7 +916,7 @@ const TCameraUploadScreen = (props) => {
 
 export default connect(
   (state) => ({
-    categories: state.categories.categories,
+    categories: state.categories?.categories,
   }),
   { setCategories },
 )(TCameraUploadScreen);

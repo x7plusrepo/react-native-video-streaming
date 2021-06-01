@@ -24,7 +24,7 @@ import {
   GStyles,
   Helper,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 
 import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
 import ic_upload from '../../assets/images/Icons/ic_upload.png';
@@ -437,7 +437,7 @@ const TProfileMainScreen = (props) => {
 
 export default connect(
   (state) => ({
-    user: state.me.user,
+    user: state.me?.user || {},
   }),
   { setMyUserAction },
 )(TProfileMainScreen);

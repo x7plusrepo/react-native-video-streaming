@@ -28,7 +28,7 @@ import {
   Global,
   Helper,
   Constants,
-} from '../utils/Global/index';
+} from '../utils/Global';
 
 const HeaderBarHeight = 46;
 

@@ -21,7 +21,7 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import ChatStreamSocketManager from "../../utils/Message/SocketManager";
 
 class SignupScreen extends React.Component {

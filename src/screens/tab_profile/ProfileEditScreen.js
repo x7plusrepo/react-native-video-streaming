@@ -24,7 +24,8 @@ import {
   Helper,
   Constants,
   RestAPI,
-} from '../../utils/Global/index';
+  Global,
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
@@ -169,7 +170,7 @@ class ProfileEditScreen extends React.Component {
       showForcePageLoader(true);
       let uploadedUrl;
       if (profilePhotoSelSource) {
-        uploadedUrl = await Helper.uploadImageToCloudinary(
+        uploadedUrl = await Global.uploadImageToCloudinary(
           profilePhotoSelSource,
         );
       }
@@ -461,7 +462,7 @@ const styles = StyleSheet.create({
 
 export default connect(
   (state) => ({
-    user: state.me.user,
+    user: state.me?.user || {},
   }),
   { setMyUserAction },
 )(ProfileEditScreen);

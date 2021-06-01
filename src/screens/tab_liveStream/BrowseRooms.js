@@ -7,7 +7,7 @@ import ScrollableTabView, {
 } from 'react-native-scrollable-tab-view';
 import LiveStreamRooms from './LiveStreamRooms';
 
-import { GStyle, Helper } from '../../utils/Global/index';
+import { GStyle, Helper } from '../../utils/Global';
 import styles from './styles';
 
 class BrowseRooms extends React.Component {

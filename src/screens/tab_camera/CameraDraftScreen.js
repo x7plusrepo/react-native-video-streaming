@@ -17,7 +17,7 @@ import {
   Global,
   Helper,
   Constants,
-} from '../../utils/Global/index';
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import ProductsList from "../../components/elements/ProductsList";
