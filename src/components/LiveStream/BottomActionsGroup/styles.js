@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { GStyles } from '../../../utils/Global/Styles';
+import GStyle, { GStyles } from '../../../utils/Global/Styles';
 
 const styles = StyleSheet.create({
   messageInput: {
@@ -33,6 +33,18 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 10,
     overflow: 'hidden',
+  },
+  sendButton: {
+    height: 36,
+    paddingHorizontal: 24,
+    ...GStyles.centerAlign,
+    backgroundColor: GStyle.activeColor,
+    borderRadius: 120,
+  },
+  sendText: {
+    ...GStyles.textSmall,
+    color: GStyle.whiteColor,
+    ...GStyles.semiBoldText,
   },
 });
 

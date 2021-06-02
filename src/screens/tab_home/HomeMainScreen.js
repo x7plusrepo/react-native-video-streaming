@@ -66,7 +66,7 @@ class HomeMainScreen extends React.Component {
       return;
     }
     let params = {
-      user_id: global.me ? global.me.id : '',
+      user_id: global.me ? global.me?.id : '',
     };
     showForcePageLoader(true);
     RestAPI.get_product_categories(params, (json, error) => {

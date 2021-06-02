@@ -201,12 +201,13 @@ class SocketManager {
     this.socket?.emit(EVENT_LEAVE_ROOM, { streamerId, userId });
   }
 
-  emitBeginLiveStream({ streamerId, roomName, topic, thumbnail }) {
+  emitBeginLiveStream({ streamerId, roomName, topic, thumbnail, mode }) {
     this.socket?.emit(EVENT_BEGIN_LIVE_STREAM, {
       streamerId,
       roomName,
       topic,
       thumbnail,
+      mode,
     });
   }
 

@@ -200,7 +200,7 @@ class ProfileMainScreen extends React.Component {
 
   onRefresh = () => {
     let params = {
-      user_id: global.me.id,
+      user_id: global.me?.id,
     };
     //showForcePageLoader(true);
     RestAPI.get_user_profile(params, (json, err) => {

@@ -67,7 +67,7 @@ class ProfileOtherScreen extends React.Component {
   onRefresh = () => {
     this.setState({ opponentUser: global._opponentUser || {} });
     let params = {
-      me_id: global.me ? global.me.id : 0,
+      me_id: global.me ? global.me?.id : 0,
       user_id: global._opponentUser?.id,
       page_number: '1',
       count_per_page: '1000',
@@ -103,7 +103,7 @@ class ProfileOtherScreen extends React.Component {
   onChangeLike = (value) => {
     this.setState({ followed: true });
     // let params = {
-    //   user_id: global.me ? global.me.id : 0,
+    //   user_id: global.me ? global.me?.id : 0,
     //   other_id: global._opponentUser?.id,
     // };
     // RestAPI.update_user_like(params, (json, err) => {
@@ -195,7 +195,7 @@ class ProfileOtherScreen extends React.Component {
       uri: opponentUser?.photo ? opponentUser?.photo : randomImageUrl,
     };
 
-    const lvl = Helper.getLvL(opponentUser?.diamondSpent || 0);
+    const lvl = Helper.getLvLGuest(opponentUser?.diamondSpent || 0);
 
     return (
       <LinearGradient

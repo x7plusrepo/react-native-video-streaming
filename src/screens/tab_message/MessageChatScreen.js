@@ -186,7 +186,7 @@ class MessageChatScreen extends Component {
 
   onBack = () => {
     // let params = {
-    //   user_id: global.me.id,
+    //   user_id: global.me?.id,
     //   other_id: global._roomId,
     // };
     //RestAPI.set_read_status(params, (json, err) => {});
@@ -200,7 +200,7 @@ class MessageChatScreen extends Component {
       //showForcePageLoader(true);
       SocketManager.instance.emitSendMessage({
         roomId: this.state.chatRoom.id,
-        senderId: global.me.id,
+        senderId: global.me?.id,
         messageType: Constants.MESSAGE_TYPE_TEXT,
         message: messages[0].text,
       });

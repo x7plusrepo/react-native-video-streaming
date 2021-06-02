@@ -36,21 +36,17 @@ const StartPanel = ({ onPressStart, liveStatus, onPressClose }) => {
         )}
       >
         <PanelLive
-          tabLabel="Live"
+          tabLabel="Video Live"
           onPressStart={onPressStart}
           liveStatus={liveStatus}
-          onPressClose={onPressClose}
-        />
-        <PanelLive
-          tabLabel="Multi Guest Live"
-          onPressStart={onPressStart}
-          liveStatus={liveStatus}
+          mode={0}
           onPressClose={onPressClose}
         />
         <PanelLive
           tabLabel="Audio Live"
           onPressStart={onPressStart}
           liveStatus={liveStatus}
+          mode={1}
           onPressClose={onPressClose}
         />
       </ScrollableTabView>

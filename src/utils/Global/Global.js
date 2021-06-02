@@ -1,6 +1,7 @@
 import { Platform } from 'react-native';
 import { Helper, RestAPI } from './index';
 import branch from 'react-native-branch';
+import axios from 'axios';
 
 const Global = {
   email: '',
@@ -40,7 +41,7 @@ const Global = {
     }
 
     const params = {
-      user_id: global.me.id,
+      user_id: global.me?.id,
       one_signal_id: global._pushAppId,
       token: global._pushToken,
       device_id: global._deviceId,
@@ -68,17 +69,22 @@ const Global = {
       data.append('folder', folder);
       data.append('api_key', '882925219281537');
       data.append('api_secret ', 'ppqMDgtivesiIut2_uC0rSylJHM');
-      fetch('https://api.cloudinary.com/v1_1/snaplist/upload', {
-        method: 'post',
-        body: data,
+      const url = 'https://api.cloudinary.com/v1_1/snaplist/upload';
+
+      axios({
+        url,
+        method: 'POST',
+        data: data,
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'multipart/form-data',
+          //'Authorization':'Basic YnJva2VyOmJyb2tlcl8xMjM='
+        },
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          resolve(data?.secure_url);
+        .then(function (response) {
+          resolve(response?.data?.secure_url);
         })
-        .catch((err) => {
-          console.log(err, '----');
+        .catch(function (error) {
           resolve(null);
         });
     });

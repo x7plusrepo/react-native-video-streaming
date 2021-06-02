@@ -178,7 +178,7 @@ class ProfileEditScreen extends React.Component {
       const updatePassword = isUpdateGuest ? userName : password;
 
       const params = {
-        user_id: global.me.id,
+        user_id: global.me?.id,
         username: userName,
         phone: phoneNumber,
         password: updatePassword,

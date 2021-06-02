@@ -12,6 +12,4 @@ const videoConfig = {
   videoFrontMirror: false,
 };
 
-const audioConfig = { bitrate: 32000, profile: 1, samplerate: 44100 };
-
-export { videoConfig, audioConfig, LIVE_STATUS };
+export { videoConfig, LIVE_STATUS };

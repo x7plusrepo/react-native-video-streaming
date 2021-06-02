@@ -100,7 +100,7 @@ class HomeUsersScreen extends React.Component {
     }
     let params = {
       keyword: keyword,
-      user_id: global.me ? global.me.id : 0,
+      user_id: global.me ? global.me?.id : 0,
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
@@ -131,7 +131,7 @@ class HomeUsersScreen extends React.Component {
 
   onPressUser = (item) => {
     if (global.me) {
-      if (item.id === global.me.id) {
+      if (item.id === global.me?.id) {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = item;

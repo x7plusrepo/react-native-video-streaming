@@ -1,5 +1,11 @@
 import React, { Component } from 'react';
-import { StatusBar, View, TouchableOpacity, SafeAreaView } from 'react-native';
+import {
+  StatusBar,
+  View,
+  TouchableOpacity,
+  SafeAreaView,
+  Image,
+} from 'react-native';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
@@ -16,6 +22,7 @@ import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
 import { Constants, Helper, Global, RestAPI } from '../../utils/Global';
 import styles from './styles';
 import CountDownAnimation from '../../components/LiveStream/Gifts/CountDownAnimation';
+import ic_audio from '../../assets/images/Icons/ic_audio_on.png';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -296,10 +303,12 @@ class ViewLive extends Component {
 
   renderNodePlayerView = () => {
     const { inputUrl } = this.state;
+    const mode = this.state.room?.mode || 0;
+
     if (!inputUrl) return null;
     return (
       <NodePlayerView
-        style={styles.playerView}
+        style={[styles.playerView, mode === 1 && { width: 0, height: 0 }]}
         ref={(vb) => {
           this.nodePlayerView = vb;
         }}
@@ -317,6 +326,7 @@ class ViewLive extends Component {
     const room = this.state.room || {};
     const liveStatus = room?.liveStatus || 0;
     const gifts = this.props.gifts || [];
+    const mode = room?.mode || 0;
 
     return (
       <SafeAreaView style={styles.container}>
@@ -327,6 +337,11 @@ class ViewLive extends Component {
           onPress={this.onDoubleTap}
         >
           {this.renderNodePlayerView()}
+          {mode === 1 && (
+            <View style={styles.audioLiveContainer}>
+              <Image source={ic_audio} style={{ width: 24, height: 24 }} />
+            </View>
+          )}
           <View style={styles.contentWrapper}>
             <View style={styles.header}>
               <Header room={room} liveStatus={liveStatus} />
@@ -353,21 +368,9 @@ class ViewLive extends Component {
           closeOnDragDown={false}
           openDuration={250}
           customStyles={{
-            container: {
-              borderTopLeftRadius: 16,
-              borderTopRightRadius: 16,
-              backgroundColor: 'rgba(0, 0, 0, 0.9)',
-              height: 360,
-            },
-            wrapper: {
-              backgroundColor: 'transparent',
-            },
-            draggableIcon: {
-              width: 0,
-              height: 0,
-              padding: 0,
-              margin: 0,
-            },
+            container: styles.sheetGiftContainer,
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
           }}
         >
           <Gifts gifts={gifts} onPressSendGift={this.onPressSendGift} />
@@ -378,23 +381,9 @@ class ViewLive extends Component {
           openDuration={250}
           height={60}
           customStyles={{
-            container: {
-              borderRadius: 32,
-              paddingHorizontal: 16,
-              paddingBottom: 16,
-              backgroundColor: 'transparent',
-              justifyContent: 'center',
-              alignItems: 'center',
-            },
-            wrapper: {
-              backgroundColor: 'transparent',
-            },
-            draggableIcon: {
-              width: 0,
-              height: 0,
-              padding: 0,
-              margin: 0,
-            },
+            container: styles.sheetCommonContainer,
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
           }}
         >
           <MessageBox onPressSendMessage={this.onPressSendMessage} />

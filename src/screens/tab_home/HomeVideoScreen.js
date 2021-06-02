@@ -53,7 +53,7 @@ const HomeVideoScreen = (props) => {
       setIsFetching(true);
     }
     let params = {
-      user_id: global.me ? global.me.id : '',
+      user_id: global.me ? global.me?.id : '',
       page_number: type === 'more' ? newPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
       category: category?.id,

@@ -3,8 +3,7 @@ import { View, Platform } from 'react-native';
 import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
 import { GStyles } from '../../../utils/Global/Styles';
 import GradientBackgroundIconButton from './GradientBackgroundIconButton';
-
-import { LIVE_STATUS } from '../../../utils/LiveStream/Constants';
+import MessagesList from '../MessagesList';
 
 import ic_switch_camera from '../../../assets/images/Icons/ic_switch_camera.png';
 import ic_menu_messages from '../../../assets/images/Icons/ic_menu_messages.png';
@@ -13,9 +12,9 @@ import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import ic_join from '../../../assets/images/Icons/ic_join.png';
 import ic_signOut from '../../../assets/images/Icons/ic_signout.png';
 import heart from '../../../assets/images/gifts/heart.png';
-import MessagesList from '../MessagesList';
 const ic_audio_on = require('../../../assets/images/Icons/ic_audio_on.png');
 const ic_audio_off = require('../../../assets/images/Icons/ic_audio_off.png');
+const ic_star = require('../../../assets/images/Icons/ic_star.png');
 
 export default class BottomActionsGroup extends Component {
   constructor(props) {
@@ -43,6 +42,11 @@ export default class BottomActionsGroup extends Component {
   onPressShareAction = () => {
     const { onPressShareAction } = this.props;
     onPressShareAction && onPressShareAction();
+  };
+
+  onPressTaskAction = () => {
+    const { onPressTaskAction } = this.props;
+    onPressTaskAction && onPressTaskAction();
   };
 
   onPressSwitchCamera = () => {
@@ -93,17 +97,23 @@ export default class BottomActionsGroup extends Component {
               onPress={this.onPressMessageAction}
               icon={ic_menu_messages}
             />
-            {mode === 'viewer' && (
-              <GradientBackgroundIconButton
-                onPress={onPressJoinButton}
-                icon={joinLeaveIcon}
-              />
-            )}
+            {/*{mode === 'viewer' && (*/}
+            {/*  <GradientBackgroundIconButton*/}
+            {/*    onPress={onPressJoinButton}*/}
+            {/*    icon={joinLeaveIcon}*/}
+            {/*  />*/}
+            {/*)}*/}
 
             <GradientBackgroundIconButton
               icon={ic_share}
               onPress={this.onPressShareAction}
             />
+            {mode === 'streamer' && (
+              <GradientBackgroundIconButton
+                icon={ic_star}
+                onPress={this.onPressTaskAction}
+              />
+            )}
           </View>
 
           <View style={GStyles.rowBetweenContainer}>

@@ -56,7 +56,7 @@ class MainTabNavigator extends Component {
 
   onSetUnreadCount = () => {
     let params = {
-      user_id: global.me.id,
+      user_id: global.me?.id,
     };
     //showForcePageLoader(true);
     RestAPI.get_unread_count(params, (json, err) => {

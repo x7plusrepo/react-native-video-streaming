@@ -76,7 +76,7 @@ class HomeVideoSearch extends React.Component {
       this.setState({ isFetching: true });
     }
     let params = {
-      user_id: global.me ? global.me.id : '',
+      user_id: global.me ? global.me?.id : '',
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
       keyword,

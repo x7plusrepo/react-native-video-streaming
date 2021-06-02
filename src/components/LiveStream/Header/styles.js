@@ -25,6 +25,20 @@ const styles = StyleSheet.create({
     borderRadius: 48,
     height: 32,
   },
+  progress: {
+    position: 'absolute',
+    height: '100%',
+    borderTopLeftRadius: 32,
+    borderBottomLeftRadius: 32,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    top: 0,
+    left: 0,
+  },
+  progressWrapper: {
+    marginRight: 12,
+    borderRadius: 32,
+    overflow: 'hidden',
+  },
   userAvatarImage: {
     width: 32,
     height: 32,
@@ -50,11 +64,6 @@ const styles = StyleSheet.create({
   streamInfoWrapper: {
     flexDirection: 'row',
     justifyContent: 'flex-start',
-    alignItems: 'center',
-  },
-  streamInfo: {
-    flexDirection: 'row',
-    justifyContent: 'center',
     alignItems: 'center',
   },
   btnClose: {
@@ -92,7 +101,7 @@ const styles = StyleSheet.create({
   badgeWrapper: {
     marginTop: 8,
     borderRadius: 4,
-    paddingVertical: 6,
+    paddingVertical: 8,
     paddingHorizontal: 12,
   },
   badgeText: {

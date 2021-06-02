@@ -121,7 +121,7 @@ class TopUsersScreen extends React.Component {
 
   onPressUser = (item) => {
     if (global.me) {
-      if (item.id === global.me.id) {
+      if (item.id === global.me?.id) {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = item;

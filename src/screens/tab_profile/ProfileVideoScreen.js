@@ -169,7 +169,7 @@ class ProfileVideoScreen extends Component {
       this.setState({ isFetching: true });
     }
     let params = {
-      user_id: global.me.id,
+      user_id: global.me?.id,
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
       keyword: keyword,
@@ -245,7 +245,7 @@ class ProfileVideoScreen extends Component {
       let params = {
         video_id: item?.id,
         owner_id: item.user?.id,
-        viewer_id: global.me ? global.me.id : 0,
+        viewer_id: global.me ? global.me?.id : 0,
         device_type: Platform.OS === 'ios' ? '1' : '0',
         device_identifier: global._deviceId,
       };
@@ -258,7 +258,7 @@ class ProfileVideoScreen extends Component {
     const user = item?.user || {};
 
     if (global.me) {
-      if (user.id === global.me.id) {
+      if (user.id === global.me?.id) {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = user;
@@ -277,7 +277,7 @@ class ProfileVideoScreen extends Component {
     if (global.me) {
       item.likeCount++;
       const params = {
-        user_id: global.me.id,
+        user_id: global.me?.id,
         video_id: item.id,
         is_like: isChecked,
       };
@@ -305,7 +305,7 @@ class ProfileVideoScreen extends Component {
     const user = item?.user || {};
 
     if (global.me) {
-      if (user.id !== global.me.id) {
+      if (user.id !== global.me?.id) {
         this.props.navigation.navigate('message_chat', { opponentUser: user });
       }
     } else {
@@ -557,26 +557,27 @@ class ProfileVideoScreen extends Component {
             elevation: 1,
           }}
         />
-        <View
+        <TouchableOpacity
           style={{
             position: 'absolute',
-            left: 0,
-            top: 20,
+            left: 16,
+            top: 32,
             zIndex: 1,
             elevation: 1,
+            ...GStyles.centerAlign,
+            width: 48,
+            height: 48,
+            backgroundColor: 'rgba(0, 0, 0, 0.5)',
+            borderRadius: 120,
           }}
+          onPress={this.onBack}
         >
-          <TouchableOpacity
-            onPress={this.onBack}
-            style={{ ...GStyles.centerAlign, width: 50, height: 50 }}
-          >
-            <Image
-              source={ic_back}
-              style={{ width: 18, height: 18, tintColor: 'white' }}
-              resizeMode={'contain'}
-            />
-          </TouchableOpacity>
-        </View>
+          <Image
+            source={ic_back}
+            style={{ width: 18, height: 18, tintColor: 'white' }}
+            resizeMode={'contain'}
+          />
+        </TouchableOpacity>
       </>
     );
   };
@@ -674,7 +675,7 @@ class ProfileVideoScreen extends Component {
                   />
                 </TouchableOpacity>
 
-                {user.id !== global.me.id && (
+                {user.id !== global.me?.id && (
                   <TouchableOpacity
                     onPress={() => {
                       this.onPressMessage(item);

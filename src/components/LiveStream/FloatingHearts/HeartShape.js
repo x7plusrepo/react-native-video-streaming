@@ -4,7 +4,7 @@ import { Image } from 'react-native';
 const HeartShape = () => {
   return (
     <Image
-      source={require('../../../assets/images/gifts/heart.png')}
+      source={require('../../../assets/images/Icons/ico_heart.png')}
       style={{
         width: 40,
         height: 40,

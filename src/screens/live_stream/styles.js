@@ -40,6 +40,16 @@ const styles = StyleSheet.create({
     width: Helper.getWindowWidth(),
     height: Helper.getWindowHeight(),
   },
+  audioLiveContainer: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    ...GStyles.centerAlign,
+    width: Helper.getWindowWidth(),
+    height: Helper.getWindowHeight(),
+  },
   bottomGroup: {
     justifyContent: 'center',
     alignItems: 'center',
@@ -74,6 +84,29 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     width: '75%',
     color: 'white',
+  },
+  sheetDragIcon: {
+    width: 0,
+    height: 0,
+    padding: 0,
+    margin: 0,
+  },
+  sheetWrapper: {
+    backgroundColor: 'transparent',
+  },
+  sheetCommonContainer: {
+    borderRadius: 32,
+    paddingHorizontal: 16,
+    paddingBottom: 16,
+    backgroundColor: 'transparent',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  sheetGiftContainer: {
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    height: 360,
   },
 });
 

@@ -19,6 +19,7 @@ import ic_flame from '../../../assets/images/Icons/ic_flame.png';
 import ic_close from '../../../assets/images/Icons/ic_close.png';
 
 import avatars from '../../../assets/avatars';
+import Helper from '../../../utils/Global/Util';
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
@@ -82,11 +83,15 @@ class Component extends React.Component {
   };
 
   render() {
-    const { room, liveStatus, mode } = this.props;
+    const { room, liveStatus, mode, goal } = this.props;
     const { showingRandomProduct, randomProduct } = this.state;
     const streamer = room?.user || {};
     const streamerName = streamer?.username;
     const avatarImage = { uri: streamer?.photo || randomImageUrl };
+    const level = Helper.getLvlLiveStream(room?.elixir || 0);
+    const progress =
+      goal === 0 ? '100%' : `${Math.min(100, (level * 100) / goal)}%`;
+
     const badgeBackground =
       liveStatus === LIVE_STATUS.ON_LIVE
         ? 'red'
@@ -117,29 +122,24 @@ class Component extends React.Component {
                 </View>
               </LinearGradient>
               <Image source={avatarImage} style={styles.userAvatarImage} />
-              <Image
-                source={avatar_decoration}
-                style={styles.decorationImage}
-              />
             </View>
             <View style={styles.streamInfoWrapper}>
-              <View style={styles.streamInfo}>
-                <View style={styles.infoLabelWrapper}>
-                  <Image source={ic_love} style={styles.infoIcon} />
-                  <Text style={styles.archiveText}>{room?.elixir || 0}</Text>
-                </View>
+              <View style={styles.infoLabelWrapper}>
+                <Image source={ic_love} style={styles.infoIcon} />
+                <Text style={styles.archiveText}>{room?.elixir || 0}</Text>
               </View>
-              <View style={styles.streamInfo}>
-                <View style={styles.infoLabelWrapper}>
-                  <Image source={ic_star} style={styles.infoIcon} />
-                  <Text style={styles.infoText}>Share</Text>
+              {mode === 'streamer' && (
+                <View style={styles.progressWrapper}>
+                  <View style={[styles.infoLabelWrapper, { marginRight: 0 }]}>
+                    <Image source={ic_star} style={styles.infoIcon} />
+                    <Text style={styles.infoText}>{level} Star</Text>
+                  </View>
+                  <View style={[styles.progress, { width: progress }]} />
                 </View>
-              </View>
-              <View style={styles.streamInfo}>
-                <View style={styles.infoLabelWrapper}>
-                  <Image source={ic_flame} style={styles.infoIcon} />
-                  <Text style={styles.infoText}>{room?.elixirFlame || 0}</Text>
-                </View>
+              )}
+              <View style={styles.infoLabelWrapper}>
+                <Image source={ic_flame} style={styles.infoIcon} />
+                <Text style={styles.infoText}>{room?.elixirFlame || 0}</Text>
               </View>
             </View>
           </View>
@@ -168,45 +168,44 @@ class Component extends React.Component {
         </View>
 
         {showingRandomProduct && randomProduct && (
-          <TouchableOpacity
-            onPress={this.onPressVideo}
-            style={{
-              marginTop: 24,
-              marginLeft: 24,
-              overflow: 'hidden',
-              borderRadius: 16,
-              backgroundColor: 'rgba(16, 33, 75, 0.88)',
-              width: 120,
-              height: 150,
-            }}
-          >
-            <Image
-              source={{ uri: randomProduct?.thumb }}
-              style={{ width: '100%', height: '100%' }}
-            />
-            <View
-              style={[
-                GStyles.columnEndContainer,
-                {
-                  position: 'absolute',
-                  flex: 1,
-                  width: '100%',
-                  height: '100%',
-                  padding: 8,
-                },
-              ]}
+          <View style={[GStyles.rowEndContainer]}>
+            <TouchableOpacity
+              onPress={this.onPressVideo}
+              style={{
+                marginTop: 24,
+                marginRight: 16,
+                overflow: 'hidden',
+                borderRadius: 16,
+                backgroundColor: 'rgba(16, 33, 75, 0.88)',
+                width: 100,
+                height: 120,
+              }}
             >
-              {/*<Text style={[GStyles.textSmall, { marginBottom: 4 }]}>*/}
-              {/*  0/1200*/}
-              {/*</Text>*/}
-              <View style={GStyles.rowContainer}>
-                <Image source={ic_bean} style={styles.infoIcon} />
-                <Text style={styles.archiveText}>
-                  {randomProduct?.price || 0}
-                </Text>
+              <Image
+                source={{ uri: randomProduct?.thumb }}
+                style={{ width: '100%', height: '100%' }}
+              />
+              <View
+                style={[
+                  GStyles.columnEndContainer,
+                  {
+                    position: 'absolute',
+                    flex: 1,
+                    width: '100%',
+                    height: '100%',
+                    padding: 8,
+                  },
+                ]}
+              >
+                <View style={GStyles.rowContainer}>
+                  <Image source={ic_bean} style={styles.infoIcon} />
+                  <Text style={styles.archiveText}>
+                    {randomProduct?.price || 0}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+          </View>
         )}
       </View>
     );

@@ -301,7 +301,7 @@ class PlayMainScreen extends Component {
   onPressAvatar = (item) => {
     const user = item?.user || {};
     if (global.me) {
-      if (user.id === global.me.id) {
+      if (user.id === global.me?.id) {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = user;
@@ -316,7 +316,7 @@ class PlayMainScreen extends Component {
     console.log(isChecked);
     if (global.me) {
       const params = {
-        user_id: global.me.id,
+        user_id: global.me?.id,
         video_id: item.id,
         is_like: isChecked,
       };
@@ -347,7 +347,7 @@ class PlayMainScreen extends Component {
     const user = item?.user || {};
 
     if (global.me) {
-      if (user.id !== global.me.id) {
+      if (user.id !== global.me?.id) {
         this.props.navigation.navigate('message_chat', {
           opponentUser: item?.user || {},
         });
@@ -695,7 +695,7 @@ class PlayMainScreen extends Component {
                   />
                 </TouchableOpacity>
 
-                {user.id !== global.me.id && (
+                {user.id !== global.me?.id && (
                   <TouchableOpacity
                     onPress={() => {
                       this.onPressMessage(item);

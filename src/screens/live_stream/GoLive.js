@@ -1,30 +1,31 @@
 import React from 'react';
 import {
+  Alert,
+  Image,
+  PermissionsAndroid,
+  SafeAreaView,
   StatusBar,
+  Text,
   TouchableOpacity,
   View,
-  SafeAreaView,
-  Alert,
-  PermissionsAndroid,
-  BackHandler,
 } from 'react-native';
 import { NodeCameraView } from 'react-native-nodemediaclient';
 import { connect } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import get from 'lodash/get';
 
 import StartPanel from './StartPanel';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
-import Gifts from '../../components/LiveStream/Gifts';
 import Header from '../../components/LiveStream/Header';
 import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
+import TaskInput from '../../components/LiveStream/BottomActionsGroup/TaskInput';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
-import { LIVE_STATUS, videoConfig } from '../../utils/LiveStream/Constants';
+import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
 import { Constants, Global, Logger, RestAPI } from '../../utils/Global';
 import { setGifts } from '../../redux/liveStream/actions';
 import styles from './styles';
+import ic_audio from './../../assets/images/Icons/ic_audio_on.png';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -40,10 +41,18 @@ class GoLive extends React.Component {
         profile: 1,
         samplerate: 44100,
       },
+      videoConfig: {
+        preset: 1,
+        bitrate: 500000,
+        profile: 1,
+        fps: 15,
+        videoFrontMirror: false,
+      },
       lastPress: 0,
+      goal: 0,
     };
-    this.giftBottomSheet = React.createRef();
     this.messageBottomSheet = React.createRef();
+    this.taskBottomSheet = React.createRef();
   }
 
   componentDidMount() {
@@ -78,6 +87,7 @@ class GoLive extends React.Component {
           room: {
             ...prevState?.room,
             liveStatus: room?.liveStatus || 1,
+            mode: room?.mode || 0,
           },
         }));
       }
@@ -155,10 +165,6 @@ class GoLive extends React.Component {
     });
   }
 
-  onPressGiftAction = () => {
-    this.giftBottomSheet?.current?.open();
-  };
-
   onPressMessageAction = () => {
     this.messageBottomSheet?.current?.open();
   };
@@ -167,6 +173,10 @@ class GoLive extends React.Component {
     const { room } = this.state;
     const { user } = this.props;
     Global.inviteToLiveStream(room, user);
+  };
+
+  onPressTaskAction = () => {
+    this.taskBottomSheet?.current?.open();
   };
 
   onPressSendHeart = () => {
@@ -206,17 +216,6 @@ class GoLive extends React.Component {
     });
   };
 
-  // onPressSendGift = (gift) => {
-  //   const userId = this.props.user?.id;
-  //   const { room } = this.state;
-  //   this.giftBottomSheet?.current?.close();
-  //   SocketManager.instance.emitSendGift({
-  //     streamerId: room?.user?.id,
-  //     userId,
-  //     giftId: gift?.id,
-  //   });
-  // };
-
   onPressSendMessage = (message) => {
     if (!message) return;
     const user = this.props.user || {};
@@ -239,6 +238,11 @@ class GoLive extends React.Component {
     this.messageBottomSheet?.current?.close();
   };
 
+  onPressSetGoal = (goal) => {
+    this.setState({ goal });
+    this.taskBottomSheet?.current?.close();
+  };
+
   onPressClose = () => {
     if (this.props.navigation.isFocused()) {
       Alert.alert(Constants.WARNING_TITLE, 'Stop broadcast?', [
@@ -253,7 +257,7 @@ class GoLive extends React.Component {
     return true;
   };
 
-  onPressStart = (topic, thumbnail) => {
+  onPressStart = (topic, thumbnail, mode) => {
     const { navigation } = this.props;
     const user = this.props.user || {};
     const { id: streamerId, username: roomName } = user;
@@ -271,8 +275,8 @@ class GoLive extends React.Component {
         roomName,
         topic,
         thumbnail,
+        mode,
       });
-      console.log(this.nodeCameraViewRef);
       if (this.nodeCameraViewRef) {
         this.nodeCameraViewRef.startPreview();
         this.nodeCameraViewRef.start();
@@ -341,12 +345,12 @@ class GoLive extends React.Component {
   };
 
   render() {
-    const { messages, audioConfig, isMuted, room } =
+    const { messages, audioConfig, videoConfig, isMuted, room, goal } =
       this.state;
     const user = this.props.user || {};
-    const gifts = this.props.gifts || [];
     const countHeart = room?.countHeart || 0;
     const liveStatus = room?.liveStatus || 0;
+    const mode = room?.mode || 0;
 
     const { id: streamerId } = user;
     const outputUrl = `${RTMP_SERVER}/live/${streamerId}`;
@@ -360,7 +364,7 @@ class GoLive extends React.Component {
           onPress={this.onDoubleTap}
         >
           <NodeCameraView
-            style={styles.streamerView}
+            style={[styles.streamerView, mode === 1 && { width: 0, height: 0 }]}
             ref={this.setCameraRef}
             outputUrl={outputUrl}
             camera={{ cameraId: 0, cameraFrontMirror: true }}
@@ -370,9 +374,13 @@ class GoLive extends React.Component {
             smoothSkinLevel={3}
             autopreview={false}
           />
+          {liveStatus === LIVE_STATUS.ON_LIVE && mode === 1 && (
+            <View style={styles.audioLiveContainer}>
+              <Image source={ic_audio} style={{ width: 24, height: 24 }} />
+            </View>
+          )}
 
-          {(liveStatus === LIVE_STATUS.PREPARE ||
-            liveStatus === -1) && (
+          {(liveStatus === LIVE_STATUS.PREPARE || liveStatus === -1) && (
             <StartPanel
               liveStatus={liveStatus}
               onPressStart={this.onPressStart}
@@ -385,17 +393,18 @@ class GoLive extends React.Component {
                 room={room}
                 liveStatus={liveStatus}
                 mode="streamer"
+                goal={goal}
                 onPressClose={this.onPressClose}
               />
             </View>
             <View style={styles.footer}>
               <BottomActionsGroup
                 onPressSendHeart={this.onPressSendHeart}
-                onPressGiftAction={this.onPressGiftAction}
                 onPressSwitchCamera={this.onPressSwitchCamera}
                 onPressSwitchAudio={this.onPressSwitchAudio}
                 onPressMessageAction={this.onPressMessageAction}
                 onPressShareAction={this.onPressShareAction}
+                onPressTaskAction={this.onPressTaskAction}
                 mode="streamer"
                 isMuted={isMuted}
                 messages={messages}
@@ -403,57 +412,30 @@ class GoLive extends React.Component {
             </View>
           </View>
         </TouchableOpacity>
-
-        <RBSheet
-          ref={this.giftBottomSheet}
-          closeOnDragDown={false}
-          openDuration={250}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 16,
-              borderTopRightRadius: 16,
-              backgroundColor: 'rgba(0, 0, 0, 0.8)',
-              height: 360,
-            },
-            wrapper: {
-              backgroundColor: 'transparent',
-            },
-            draggableIcon: {
-              width: 0,
-              height: 0,
-              padding: 0,
-              margin: 0,
-            },
-          }}
-        >
-          <Gifts gifts={gifts} onPressSendGift={this.onPressSendGift} />
-        </RBSheet>
         <RBSheet
           ref={this.messageBottomSheet}
           closeOnDragDown
           openDuration={250}
           height={60}
           customStyles={{
-            container: {
-              borderRadius: 32,
-              paddingHorizontal: 16,
-              paddingBottom: 16,
-              backgroundColor: 'transparent',
-              justifyContent: 'center',
-              alignItems: 'center',
-            },
-            wrapper: {
-              backgroundColor: 'transparent',
-            },
-            draggableIcon: {
-              width: 0,
-              height: 0,
-              padding: 0,
-              margin: 0,
-            },
+            container: styles.sheetCommonContainer,
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
           }}
         >
           <MessageBox onPressSendMessage={this.onPressSendMessage} />
+        </RBSheet>
+        <RBSheet
+          ref={this.taskBottomSheet}
+          closeOnDragDown
+          openDuration={250}
+          customStyles={{
+            container: styles.sheetCommonContainer,
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
+          }}
+        >
+          <TaskInput onPressSetGoal={this.onPressSetGoal} goal={goal} />
         </RBSheet>
         <FloatingHearts count={countHeart} />
       </SafeAreaView>

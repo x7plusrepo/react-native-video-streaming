@@ -555,7 +555,7 @@ const Helper = {
 
     return skillName;
   },
-  getLvL: function (diamondSpent) {
+  getLvLGuest: function (diamondSpent) {
     const diamondLvLMap = [
       {
         lvl: 1,
@@ -619,12 +619,92 @@ const Helper = {
       },
     ];
     const levels = diamondLvLMap.filter((item) => item.diamond <= diamondSpent);
-    const level = Math.max.apply(Math, levels.map(function(o) { return o.lvl; }));
+    const level = Math.max.apply(
+      Math,
+      levels.map(function (o) {
+        return o.lvl;
+      }),
+    );
 
     return level || 1;
+  },
+  getLvlLiveStream: (elixir) => {
+    const elixirLvLMap = [
+      {
+        lvl: 0,
+        elixir: 0,
+      },
+      {
+        lvl: 1,
+        elixir: 24,
+      },
+      {
+        lvl: 2,
+        elixir: 150,
+      },
+      {
+        lvl: 3,
+        elixir: 500,
+      },
+      {
+        lvl: 4,
+        elixir: 1000,
+      },
+      {
+        lvl: 5,
+        elixir: 2000,
+      },
+      {
+        lvl: 6,
+        elixir: 3000,
+      },
+      {
+        lvl: 7,
+        elixir: 5000,
+      },
+      {
+        lvl: 8,
+        elixir: 10000,
+      },
+      {
+        lvl: 9,
+        elixir: 15000,
+      },
+      {
+        lvl: 10,
+        elixir: 25000,
+      },
+      {
+        lvl: 11,
+        elixir: 50000,
+      },
+      {
+        lvl: 12,
+        elixir: 100000,
+      },
+      {
+        lvl: 13,
+        elixir: 150000,
+      },
+      {
+        lvl: 14,
+        elixir: 200000,
+      },
+      {
+        lvl: 15,
+        elixir: 250000,
+      },
+    ];
+    const levels = elixirLvLMap.filter((item) => item.elixir <= elixir);
+    const level = Math.max.apply(
+      Math,
+      levels.map(function (o) {
+        return o.lvl;
+      }),
+    );
 
-  }
-
+    return level || 0;
+  },
 };
 
 export default Helper;

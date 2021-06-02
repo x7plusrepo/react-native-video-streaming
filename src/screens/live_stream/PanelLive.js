@@ -21,7 +21,7 @@ const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
 const PanelLive = (props) => {
-  const { onPressStart, liveStatus } = props;
+  const { onPressStart, liveStatus, mode } = props;
   const [topic, setTopic] = useState('');
   const [thumbnail, setThumbnail] = useState(null);
   const onChangeText = (text) => setTopic(text);
@@ -29,7 +29,7 @@ const PanelLive = (props) => {
     showForcePageLoader(true);
     const uploadedUrl = await Global.uploadImageToCloudinary(thumbnail);
     showForcePageLoader(false);
-    onPressStart && onPressStart(topic, uploadedUrl);
+    onPressStart && onPressStart(topic, uploadedUrl, mode);
   };
   const onPressClose = () => {
     const { onPressClose } = props;

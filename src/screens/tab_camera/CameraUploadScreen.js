@@ -129,7 +129,7 @@ class CameraUploadScreen extends React.Component {
       return;
     }
     let params = {
-      user_id: global.me ? global.me.id : '',
+      user_id: global.me ? global.me?.id : '',
     };
     showForcePageLoader(true);
     RestAPI.get_product_categories(params, (json, error) => {
@@ -382,7 +382,7 @@ class CameraUploadScreen extends React.Component {
     showForcePageLoader(true);
     const tagSet = tags.join(',');
     const params = {
-      user_id: global.me.id,
+      user_id: global.me?.id,
       uploaded_url: cloudinaryUrl,
       thumb,
       tags: tagSet,
