@@ -8,7 +8,7 @@ import { GStyles } from '../../utils/Global/Styles';
 import ic_speaker from '../../assets/images/Icons/ic_speaker.png';
 import ic_eye from '../../assets/images/Icons/ic_eye.png';
 import ic_group from '../../assets/images/Icons/ic_group.png';
-import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
+import ico_play from '../../assets/images/Icons/ico_play.png';
 import ic_audio_on from '../../assets/images/Icons/ic_audio_on.png';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
@@ -23,7 +23,7 @@ const LiveStreamRoom = (props) => {
 
   const streamModeIcon =
     room?.mode === 0
-      ? ic_tab_liveStream
+      ? ico_play
       : room?.mode === 1
       ? ic_audio_on
       : ic_group;
