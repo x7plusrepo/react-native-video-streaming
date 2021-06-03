@@ -5,16 +5,11 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {connect} from 'react-redux';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { connect } from 'react-redux';
 
-import {
-  GStyles,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import { GStyles, Helper, Constants, RestAPI } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import MessageRoomItem from '../../components/elements/MessageRoomItem';
 
@@ -31,8 +26,8 @@ class MessageMainScreen extends React.Component {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('message'));
       Helper.setLightStatusBar();
-      this.onRefresh('init');
     });
+    this.onRefresh('init');
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -52,11 +47,12 @@ class MessageMainScreen extends React.Component {
       curPage: 1,
 
       itemDatas: [],
+      onEndReachedDuringMomentum: true,
     };
   };
 
   onRefresh = (type) => {
-    let {isFetching, totalCount, curPage, itemDatas} = this.state;
+    let { isFetching, totalCount, curPage, itemDatas } = this.state;
 
     if (isFetching) {
       return;
@@ -75,12 +71,12 @@ class MessageMainScreen extends React.Component {
     if (type === 'init') {
       Helper.callFunc(global.onSetUnreadCount);
     }
-    this.setState({curPage});
+    this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init' || type === 'update') {
       showForcePageLoader(true);
     } else {
-      this.setState({isFetching: true});
+      this.setState({ isFetching: true });
     }
     let params = {
       user_id: global.me?.id,
@@ -93,19 +89,19 @@ class MessageMainScreen extends React.Component {
       if (type === 'init' || type === 'update') {
         showForcePageLoader(false);
       } else {
-        this.setState({isFetching: false});
+        this.setState({ isFetching: false });
       }
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          this.setState({totalCount: json.data.totalCount});
+          this.setState({ totalCount: json.data.totalCount });
           if (type === 'more') {
             let data = itemDatas.concat(json.data.roomList);
-            this.setState({itemDatas: data});
+            this.setState({ itemDatas: data });
           } else {
-            this.setState({itemDatas: json.data.roomList});
+            this.setState({ itemDatas: json.data.roomList });
           }
         } else {
           Helper.alertServerDataError();
@@ -118,21 +114,22 @@ class MessageMainScreen extends React.Component {
     console.log('---');
   };
 
-  onPressRoom = (room) => {
+  onPressChatThread = (opponent) => {
     let params = {
-      roomId: '',
       userId: global.me?.id,
+      otherId: opponent?.id,
     };
     RestAPI.set_read_status(params, (json, err) => {});
-    this.props.navigation.navigate('message_chat');
-    this.props.navigation.navigate('message_chat', { opponentUser: room?.user || {} });
+    this.props.navigation.navigate('message_chat', {
+      opponentUser: opponent || {},
+    });
   };
 
   render() {
     return (
       <>
         <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={{flex: 1, backgroundColor: 'white'}}>
+        <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
           {this._renderHeader()}
           {this._renderRooms()}
         </SafeAreaView>
@@ -151,7 +148,7 @@ class MessageMainScreen extends React.Component {
   };
 
   _renderRooms = () => {
-    const {isFetching, itemDatas} = this.state;
+    const { isFetching, itemDatas } = this.state;
 
     return (
       <FlatList
@@ -162,25 +159,36 @@ class MessageMainScreen extends React.Component {
         refreshing={isFetching}
         ListFooterComponent={this._renderFooter}
         onEndReachedThreshold={0.4}
+        onMomentumScrollBegin={() => {
+          this.setState({ onEndReachedDuringMomentum: false });
+        }}
         onEndReached={() => {
-          this.onRefresh('more');
+          if (!this.state.onEndReachedDuringMomentum) {
+            this.setState({ onEndReachedDuringMomentum: true });
+            this.onRefresh('more');
+          }
         }}
         data={itemDatas}
         renderItem={this._renderItem}
-        keyExtractor={(item) => item.opponent_id.toString()}
+        keyExtractor={(item) => item.id.toString()}
       />
     );
   };
 
   _renderFooter = () => {
-    const {isFetching} = this.state;
+    const { isFetching } = this.state;
 
     if (!isFetching) return null;
-    return <ActivityIndicator style={{color: '#000'}} />;
+    return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
-  _renderItem = ({item}) => {
-    return <MessageRoomItem item={item} onPress={() => this.onPressRoom(item)} />;
+  _renderItem = ({ item }) => {
+    return (
+      <MessageRoomItem
+        item={item}
+        onPress={() => this.onPressChatThread(item)}
+      />
+    );
   };
 }
 

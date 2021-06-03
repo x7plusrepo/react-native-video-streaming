@@ -1,91 +1,74 @@
-import React, {Component} from 'react';
-import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
-  LayoutAnimation,
-  ListView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { Text, TouchableOpacity, View } from 'react-native';
 
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import { GStyle, GStyles, Helper } from '../../utils/Global';
 import Avatar from './Avatar';
+import avatars from '../../assets/avatars';
 
-const MessageRoomItem = ({item, onPress}) => (
-  <View style={{alignItems: 'center', marginTop: 24}}>
-    <TouchableOpacity
-      onPress={() => {
-        onPress(item);
-      }}>
-      <View style={{width: '88%', flexDirection: 'row', alignItems: 'center'}}>
-        {item.unread_count > 0 && (
-          <View
-            style={{
-              width: 8,
-              height: 8,
-              borderRadius: 4,
-              position: 'absolute',
-              backgroundColor: 'red',
-              left: -16,
-              top: 25,
-            }}
-          />
-        )}
-        <Avatar
-          image={{uri: item.opponent_photo}}
-          // status={item.opponent_status}
-        />
-        <View
+const randomNumber = Math.floor(Math.random() * avatars.length);
+const randomImageUrl = avatars[randomNumber];
+
+const MessageRoomItem = ({ item, onPress }) => (
+  <TouchableOpacity
+    style={{ marginTop: 24, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}
+    onPress={() => {
+      onPress(item);
+    }}
+  >
+    <Avatar
+      image={{ uri: item.photo || randomImageUrl }}
+      // status={item.opponent_status}
+    />
+    <View
+      style={{
+        marginLeft: 10,
+        marginRight: 12,
+        flex: 1,
+      }}
+    >
+      <Text
+        style={[GStyles.regularText, GStyles.boldText, GStyles.upperCaseText]}
+      >
+        {item.username}
+      </Text>
+      <View style={{ ...GStyles.rowBetweenContainer, marginTop: 5 }}>
+        <Text
+          numberOfLines={1}
           style={{
-            marginLeft: 10,
-            flex: 1,
-          }}>
-          <Text style={GStyles.regularText}>{item.opponent_name}</Text>
-          <View style={{...GStyles.rowBetweenContainer, marginTop: 5}}>
-            <Text
-              numberOfLines={1}
-              style={{
-                width: '70%',
-                fontFamily: 'GothamPro',
-                fontSize: 13,
-                color: GStyle.grayColor,
-                lineHeight: 16,
-              }}>
-              {item.last_message}
-            </Text>
-            <Text
-              style={{
-                fontFamily: 'GothamPro',
-                fontSize: 13,
-                color: GStyle.grayColor,
-              }}>
-              {Helper.getPastTimeString(item.last_time)} ago
-            </Text>
-          </View>
-        </View>
+            width: '70%',
+            fontFamily: 'GothamPro',
+            fontSize: 13,
+            color: GStyle.grayColor,
+            lineHeight: 16,
+          }}
+        >
+          {item.lastMessage}
+        </Text>
+        <Text
+          style={{
+            fontFamily: 'GothamPro',
+            fontSize: 13,
+            color: GStyle.grayColor,
+          }}
+        >
+          {Helper.getPastTimeString(item.createdAt)} ago
+        </Text>
       </View>
-    </TouchableOpacity>
-  </View>
+    </View>
+    {item.unreadCount > 0 && (
+      <View
+        style={{
+          width: 8,
+          height: 8,
+          borderRadius: 4,
+          position: 'absolute',
+          backgroundColor: 'red',
+          right: 16,
+          top: 25,
+        }}
+      />
+    )}
+  </TouchableOpacity>
 );
 
 export default MessageRoomItem;

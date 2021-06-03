@@ -166,26 +166,6 @@ const RestAPI = {
     formDataCall('api/gifts/all', params, {}, callBack, 'get');
   },
 
-  get_chatRoom: (params, callBack) => {
-    const data = {};
-    if (params.id) {
-      data.id = params.id;
-    }
-    if (params.ownerId) {
-      data.ownerId = params.ownerId;
-    }
-
-    formDataCall('api/chatStream', data, {}, callBack, 'get');
-  },
-
-  create_chatRoom: (params, callBack) => {
-    const data = {
-      user: params.user,
-      roomName: params.roomName,
-    };
-    formDataCall('api/chatStream', data, {}, callBack, 'post');
-  },
-
   get_unread_count: (params, callBack) => {
     const data = {
       userId: params.user_id,
@@ -196,7 +176,7 @@ const RestAPI = {
 
   set_read_status: (params, callBack) => {
     const data = {
-      roomId: params.roomId,
+      otherId: params.otherId,
       userId: params.userId,
     };
 

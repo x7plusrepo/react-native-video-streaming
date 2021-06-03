@@ -50,39 +50,10 @@ class MessageChatScreen extends Component {
     this._isMounted = false;
     SocketManager.instance.removeFetchMessages();
     SocketManager.instance.removeReceiveMessages();
-    SocketManager.instance.emitLeaveRoom({
-      roomId: this.state.chatRoom?.id,
-      userId: global.me?.id,
-    });
     // global.onFetchMessageList = null;
     // global.onReceiveMessageList = null;
     // global.onSocketError = null;
   }
-
-  createChatRoom = () => {
-    showForcePageLoader(true);
-    const { route } = this.props;
-    const opponentUser = get(route, 'params.opponentUser');
-    const params = {
-      user: opponentUser?.id,
-      roomName: opponentUser?.username,
-    };
-    RestAPI.create_chatRoom(params, (json, error) => {
-      showForcePageLoader(false);
-      if (json?.status !== 201 || error || !json?.data) {
-        alert('Error while loading the chat room');
-      } else {
-        const chatRoom = json?.data || {};
-        console.log(chatRoom, '---');
-        this.setState(
-          {
-            chatRoom,
-          },
-          this.initChat,
-        );
-      }
-    });
-  };
 
   init = () => {
     const { route } = this.props;
@@ -90,61 +61,29 @@ class MessageChatScreen extends Component {
     this.state = {
       isFetching: false,
       totalCount: 0,
-      chatRoom: {},
       opponentUser,
       chatTitle: '',
       messages: [],
       typingText: null,
     };
-
-    const params = {
-      ownerId: opponentUser?.id,
-      userId: global.me?.id,
-    };
-    showForcePageLoader(true);
-    RestAPI.get_chatRoom(params, (json, error) => {
-      console.log(error);
-      console.log(json);
-      showForcePageLoader(false);
-      if (error?.reason === 'not_found') {
-        this.createChatRoom();
-      } else if (error || json?.status !== 200 || !json.data) {
-        alert('Error while loading messages.');
-      } else if (json?.status === 200) {
-        const chatRoom = json?.data || {};
-        this.setState(
-          {
-            chatRoom,
-          },
-          this.initChat,
-        );
-      }
-    });
-    Sound.setCategory('Playback');
-  };
-
-  initChat = () => {
-    const { chatRoom } = this.state;
-    SocketManager.instance.emitJoinRoom({
-      roomId: chatRoom?.id,
-      userId: global.me?.id,
-    });
     SocketManager.instance.listenFetchMessages(this.onFetchMessageList);
     SocketManager.instance.listenReceiveMessages(this.onReceiveMessageList);
     this.onRefresh('init');
   };
 
   onRefresh = (type) => {
-    let { isFetching, totalCount, messages, chatRoom } = this.state;
+    let { isFetching, totalCount, messages, opponentUser } = this.state;
 
     if (isFetching) {
       return;
     }
 
     const params = {
-      roomId: chatRoom?.id,
+      otherId: opponentUser?.id,
       userId: global.me?.id,
     };
+
+    console.log(params)
 
     if (type === 'more') {
       if (messages.length < totalCount) {
@@ -195,13 +134,13 @@ class MessageChatScreen extends Component {
   };
 
   onSend = (messages = []) => {
-    console.log(messages);
     if (messages.length > 0) {
       //showForcePageLoader(true);
       SocketManager.instance.emitSendMessage({
-        roomId: this.state.chatRoom.id,
         senderId: global.me?.id,
+        receiverId: this.state?.opponentUser?.id,
         messageType: Constants.MESSAGE_TYPE_TEXT,
+        roomType: 0,
         message: messages[0].text,
       });
     }
@@ -368,7 +307,7 @@ class MessageChatScreen extends Component {
             backgroundColor: GStyle.grayBackColor,
           },
           right: {
-            backgroundColor: GStyle.activeColor,
+            backgroundColor: GStyle.orangeColor,
           },
         }}
       />

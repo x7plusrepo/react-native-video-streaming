@@ -675,19 +675,17 @@ class ProfileVideoScreen extends Component {
                   />
                 </TouchableOpacity>
 
-                {user.id !== global.me?.id && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.onPressMessage(item);
-                    }}
-                    style={GStyles.videoActionButton}
-                  >
-                    <Image
-                      source={ic_menu_messages}
-                      style={GStyles.actionIcons}
-                    />
-                  </TouchableOpacity>
-                )}
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressMessage(item);
+                  }}
+                  style={GStyles.videoActionButton}
+                >
+                  <Image
+                    source={ic_menu_messages}
+                    style={GStyles.actionIcons}
+                  />
+                </TouchableOpacity>
 
                 <TouchableOpacity
                   onPress={() => {

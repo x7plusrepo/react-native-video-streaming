@@ -304,6 +304,12 @@ class ProfileMainScreen extends React.Component {
                   <Text style={GStyles.elementLabel}>Elixir Flames</Text>
                 </View>
                 <View style={GStyles.centerAlign}>
+                  <Text style={[GStyles.regularText, GStyles.boldText]}>
+                    {user?.diamond || 0}
+                  </Text>
+                  <Text style={GStyles.elementLabel}>Diamond</Text>
+                </View>
+                <View style={GStyles.centerAlign}>
                   <Text style={[GStyles.regularText, GStyles.boldText]}>0</Text>
                   <Text style={GStyles.elementLabel}>Fans</Text>
                 </View>
