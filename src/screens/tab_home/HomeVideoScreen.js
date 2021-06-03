@@ -1,14 +1,6 @@
 import React, { useEffect, useState, useRef, forwardRef } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import {
-  useNavigation,
-  StackActions,
-} from '@react-navigation/native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { useNavigation, StackActions } from '@react-navigation/native';
 
 import { Helper, Constants, RestAPI } from '../../utils/Global';
 import useIsMountedRef from '../../hooks/useIsMountedRef';
@@ -96,17 +88,22 @@ const HomeVideoScreen = (props) => {
   const _renderVideo = () => {
     return (
       <View style={{ flex: 1 }}>
-        <ProductsList
-          products={products}
-          ref={flatListRef}
-          onRefresh={onRefresh}
-          isFetching={isFetching}
-          onPressVideo={onPressVideo}
-          onEndReachedDuringMomentum={onEndReachedDuringMomentum}
-          setOnEndReachedDuringMomentum={setOnEndReachedDuringMomentum}
-        />
+        {products?.length ? (
+          <ProductsList
+            products={products}
+            ref={flatListRef}
+            onRefresh={onRefresh}
+            isFetching={isFetching}
+            onPressVideo={onPressVideo}
+            onEndReachedDuringMomentum={onEndReachedDuringMomentum}
+            setOnEndReachedDuringMomentum={setOnEndReachedDuringMomentum}
+          />
+        ) : (
+          <View style={{ flex: 1, ...GStyles.centerAlign }}>
+            <Text style={GStyles.notifyDescription}>Not found.</Text>
+          </View>
+        )}
       </View>
-
     );
   };
 
@@ -169,7 +166,7 @@ const styles = StyleSheet.create({
   subCategoryText: {
     ...GStyles.textSmall,
     color: GStyle.grayColor,
-    ...GStyles.semiBoldText,
+    ...GStyles.boldText,
   },
 });
 

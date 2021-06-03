@@ -361,30 +361,37 @@ class TopUsersScreen extends React.Component {
             </Text>
           </View>
         </View>
-        <FlatList
-          ref={(ref) => {
-            this.flatListRef = ref;
-          }}
-          showsVerticalScrollIndicator={false}
-          onRefresh={() => {
-            this.onRefresh('pull');
-          }}
-          refreshing={isFetching}
-          ListFooterComponent={this._renderFooter}
-          onMomentumScrollBegin={() => {
-            this.setState({ onEndReachedDuringMomentum: false });
-          }}
-          onEndReachedThreshold={0.4}
-          onEndReached={() => {
-            if (!this.state.onEndReachedDuringMomentum) {
-              this.setState({ onEndReachedDuringMomentum: true });
-              this.onRefresh('more');
-            }
-          }}
-          data={itemDatas}
-          renderItem={this._renderItem}
-          keyExtractor={(item) => item.id}
-        />
+
+        {itemDatas?.length ? (
+          <FlatList
+            ref={(ref) => {
+              this.flatListRef = ref;
+            }}
+            showsVerticalScrollIndicator={false}
+            onRefresh={() => {
+              this.onRefresh('pull');
+            }}
+            refreshing={isFetching}
+            ListFooterComponent={this._renderFooter}
+            onMomentumScrollBegin={() => {
+              this.setState({ onEndReachedDuringMomentum: false });
+            }}
+            onEndReachedThreshold={0.4}
+            onEndReached={() => {
+              if (!this.state.onEndReachedDuringMomentum) {
+                this.setState({ onEndReachedDuringMomentum: true });
+                this.onRefresh('more');
+              }
+            }}
+            data={itemDatas}
+            renderItem={this._renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        ) : (
+          <View style={{ flex: 1, ...GStyles.centerAlign }}>
+            <Text style={GStyles.notifyDescription}>Not found.</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -450,7 +457,14 @@ class TopUsersScreen extends React.Component {
 
   _renderItem = ({ item, index }) => {
     const { sortBy } = this.state;
-    return <TopUserItem index={index} item={item} onPress={this.onPressUser} sortBy={sortBy}/>;
+    return (
+      <TopUserItem
+        index={index}
+        item={item}
+        onPress={this.onPressUser}
+        sortBy={sortBy}
+      />
+    );
   };
 }
 

@@ -28,11 +28,11 @@ const ExploreVideoItem = ({ item, index, onPress }) => {
         <View style={{ flex: 1 }} />
         <View style={GStyles.rowBetweenContainer}>
           <View style={GStyles.rowContainer}>
-            <Image
-              source={ic_diamond}
-              style={styles.icons}
-            />
-            <Text style={styles.textLabel}>{item?.price || 0}</Text>
+            {/*<Image*/}
+            {/*  source={ic_diamond}*/}
+            {/*  style={styles.icons}*/}
+            {/*/>*/}
+            <Text style={styles.textLabel}>৳ {item?.price || 0}</Text>
           </View>
         </View>
       </View>
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
     padding: 6,
   },
   textLabel: {
-    ...GStyles.textExtraSmall,
+    ...GStyles.textSmall,
     color: GStyle.activeColor,
   }
 });

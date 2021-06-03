@@ -1,4 +1,4 @@
-import React, {useState, useRef, forwardRef} from 'react';
+import React, { useState, useRef, forwardRef } from 'react';
 import {
   ActivityIndicator,
   BackHandler,
@@ -16,8 +16,8 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import {
   GStyle,
@@ -44,18 +44,16 @@ class HomeUsersScreen extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.setState({keyword: this.props.keyword}, () => {
+    this.setState({ keyword: this.props.keyword }, () => {
       this.onRefresh('init');
     });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.keyword) {
-      if (prevProps.keyword !== this.props.keyword) {
-        this.setState({keyword: this.props.keyword}, () => {
-          this.onRefresh('init');
-        });
-      }
+    if (prevProps.keyword !== this.props.keyword) {
+      this.setState({ keyword: this.props.keyword }, () => {
+        this.onRefresh('init');
+      });
     }
   }
 
@@ -75,7 +73,7 @@ class HomeUsersScreen extends React.Component {
   };
 
   onRefresh = (type) => {
-    let {isFetching, totalCount, curPage, itemDatas, keyword} = this.state;
+    let { isFetching, totalCount, curPage, itemDatas, keyword } = this.state;
 
     if (isFetching) {
       return;
@@ -91,12 +89,12 @@ class HomeUsersScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    this.setState({curPage});
+    this.setState({ curPage });
 
     if (type === 'init') {
       showForcePageLoader(true);
     } else {
-      this.setState({isFetching: true});
+      this.setState({ isFetching: true });
     }
     let params = {
       keyword: keyword,
@@ -108,19 +106,19 @@ class HomeUsersScreen extends React.Component {
       if (type === 'init') {
         showForcePageLoader(false);
       } else {
-        this.setState({isFetching: false});
+        this.setState({ isFetching: false });
       }
 
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
-          this.setState({totalCount: json.data?.totalCount});
+          this.setState({ totalCount: json.data?.totalCount });
           if (type === 'more') {
             let data = itemDatas.concat(json.data?.userList);
-            this.setState({itemDatas: data});
+            this.setState({ itemDatas: data });
           } else {
-            this.setState({itemDatas: json.data?.userList});
+            this.setState({ itemDatas: json.data?.userList });
           }
         } else {
           Helper.alertServerDataError();
@@ -143,13 +141,13 @@ class HomeUsersScreen extends React.Component {
   };
 
   scrollToTop = () => {
-    this.flatListRef.scrollToOffset({animated: false, offset: 0});
+    this.flatListRef?.scrollToOffset({ animated: false, offset: 0 });
   };
 
   render() {
     return (
       <>
-        <View style={{flex: 1, backgroundColor: 'white'}}>
+        <View style={{ flex: 1, backgroundColor: 'white' }}>
           {this._renderUserList()}
         </View>
       </>
@@ -157,39 +155,49 @@ class HomeUsersScreen extends React.Component {
   }
 
   _renderUserList = () => {
-    const {isFetching, itemDatas} = this.state;
+    const { isFetching, itemDatas } = this.state;
 
     return (
-      <FlatList
-        ref={(ref) => {
-          this.flatListRef = ref;
-        }}
-        showsVerticalScrollIndicator={false}
-        onRefresh={() => {
-          this.onRefresh('pull');
-        }}
-        refreshing={isFetching}
-        ListFooterComponent={this._renderFooter}
-        onEndReachedThreshold={0.4}
-        onEndReached={() => {
-          this.onRefresh('more');
-        }}
-        data={itemDatas}
-        renderItem={this._renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      <>
+        {itemDatas?.length ? (
+          <FlatList
+            ref={(ref) => {
+              this.flatListRef = ref;
+            }}
+            showsVerticalScrollIndicator={false}
+            onRefresh={() => {
+              this.onRefresh('pull');
+            }}
+            refreshing={isFetching}
+            ListFooterComponent={this._renderFooter}
+            onEndReachedThreshold={0.4}
+            onEndReached={() => {
+              this.onRefresh('more');
+            }}
+            data={itemDatas}
+            renderItem={this._renderItem}
+            keyExtractor={(item) => item.id}
+          />
+        ) : (
+          <View style={{ flex: 1, ...GStyles.centerAlign }}>
+            <Text style={GStyles.notifyDescription}>Not found.</Text>
+          </View>
+        )}
+      </>
     );
   };
 
   _renderFooter = () => {
-    const {isFetching} = this.state;
+    const { isFetching } = this.state;
 
     if (!isFetching) return null;
-    return <ActivityIndicator style={{color: '#000'}} />;
+    return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
-  _renderItem = ({item, index}) => {
-    return <ExploreUserItem item={item} index={index} onPress={this.onPressUser} />;
+  _renderItem = ({ item, index }) => {
+    return (
+      <ExploreUserItem item={item} index={index} onPress={this.onPressUser} />
+    );
   };
 }
 

@@ -126,7 +126,7 @@ class ProfileVideoScreen extends Component {
 
   init = () => {
     this.state = {
-      isVideoLoading: true,
+      isVideoLoading: false,
       isVideoPause: false,
 
       isVisibleProgress: false,
@@ -210,7 +210,7 @@ class ProfileVideoScreen extends Component {
 
   onVideoReadyForDisplay = (item) => {
     console.log('---onVideoReadyForDisplay');
-    //this.setState({ isVideoLoading: false });
+    this.setState({ isVideoLoading: false });
   };
 
   onVideoBuffer = () => {};
@@ -631,9 +631,6 @@ class ProfileVideoScreen extends Component {
             playInBackground={false}
             poster={item.thumb}
             posterResizeMode="contain"
-            onReadyForDisplay={() => {
-              this.onVideoReadyForDisplay(item);
-            }}
             onBuffer={this.onVideoBuffer}
             onLoad={this.onVideoLoad}
             onProgress={this.onVideoProgress}

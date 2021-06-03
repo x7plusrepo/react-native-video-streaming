@@ -1,8 +1,8 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, Text, View } from 'react-native';
 import { StackActions } from '@react-navigation/native';
 
-import { Helper, Constants, RestAPI } from '../../utils/Global';
+import { Helper, Constants, RestAPI, GStyles } from '../../utils/Global';
 import ProductsList from '../../components/elements/ProductsList';
 
 class HomeVideoSearch extends React.Component {
@@ -16,17 +16,16 @@ class HomeVideoSearch extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-    this.onRefresh('init');
-    console.log(this.props, '===');
+    this.setState({ keyword: this.props.keyword }, () => {
+      this.onRefresh('init');
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
-    if (prevProps.keyword) {
-      if (prevProps.keyword !== this.props.keyword) {
-        this.setState({ keyword: this.props.keyword }, () => {
-          this.onRefresh('init');
-        });
-      }
+    if (prevProps.keyword !== this.props.keyword) {
+      this.setState({ keyword: this.props.keyword }, () => {
+        this.onRefresh('init');
+      });
     }
   }
 
@@ -39,7 +38,7 @@ class HomeVideoSearch extends React.Component {
       isFetching: false,
       totalCount: 0,
       curPage: 1,
-
+      keyword: '',
       itemDatas: [],
 
       minVisibleIndex: 0,
@@ -111,7 +110,7 @@ class HomeVideoSearch extends React.Component {
   };
 
   scrollToTop = () => {
-    this.flatListRef.scrollToOffset({animated: false, offset: 0});
+    this.flatListRef?.scrollToOffset({ animated: false, offset: 0 });
   };
 
   onPressVideo = (item) => {
@@ -151,17 +150,23 @@ class HomeVideoSearch extends React.Component {
     const { isFetching, itemDatas, onEndReachedDuringMomentum } = this.state;
     return (
       <View style={{ flex: 1 }}>
-        <ProductsList
-          products={itemDatas}
-          ref={(ref) => {
-            this.flatListRef = ref;
-          }}
-          onRefresh={this.onRefresh}
-          isFetching={isFetching}
-          onPressVideo={this.onPressVideo}
-          onEndReachedDuringMomentum={onEndReachedDuringMomentum}
-          setOnEndReachedDuringMomentum={this.setOnEndReachedDuringMomentum}
-        />
+        {itemDatas?.length ? (
+          <ProductsList
+            products={itemDatas}
+            ref={(ref) => {
+              this.flatListRef = ref;
+            }}
+            onRefresh={this.onRefresh}
+            isFetching={isFetching}
+            onPressVideo={this.onPressVideo}
+            onEndReachedDuringMomentum={onEndReachedDuringMomentum}
+            setOnEndReachedDuringMomentum={this.setOnEndReachedDuringMomentum}
+          />
+        ) : (
+          <View style={{ flex: 1, ...GStyles.centerAlign }}>
+            <Text style={GStyles.notifyDescription}>Not found.</Text>
+          </View>
+        )}
       </View>
     );
   };
@@ -169,4 +174,4 @@ class HomeVideoSearch extends React.Component {
 
 const styles = StyleSheet.create({});
 
-export default HomeVideoSearch
+export default HomeVideoSearch;

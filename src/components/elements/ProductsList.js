@@ -57,7 +57,7 @@ const ProductsList = forwardRef((props, ref) => {
       data={products}
       renderItem={_renderItem}
       contentContainerStyle={{ paddingBottom: 64 }}
-      keyExtractor={(item, index) => index.toString() + 'aaa'}
+      keyExtractor={(item, index) => index.toString()}
     />
   );
 });

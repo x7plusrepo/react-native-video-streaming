@@ -51,6 +51,7 @@ class HomeSearchScreen extends React.Component {
       totalCount: 0,
 
       searchText: '',
+      keyword: '',
       itemDatas: [],
     };
 
@@ -68,10 +69,9 @@ class HomeSearchScreen extends React.Component {
       return;
     }
 
-    const lastTyped = text.charAt(text.length - 1);
     const parseWhen = [',', ' ', ';', '\n'];
 
-    if (text.length == 1) {
+    if (text.length === 1) {
       if (parseWhen.indexOf(text.charAt(0)) > -1) {
         return;
       }
@@ -113,13 +113,7 @@ class HomeSearchScreen extends React.Component {
     } else {
       keyword = '';
     }
-
-    this.setState({ searchText: '' });
-    if (keyword == '') {
-      return;
-    }
-
-    this.props.setKeyword(keyword);
+    this.setState({ keyword })
   };
 
   render() {
@@ -152,24 +146,22 @@ class HomeSearchScreen extends React.Component {
             onSubmitText={this.onSubmitSearchText}
           />
         </View>
-        {searchText !== '' && (
-          <View style={{ ...GStyles.centerAlign, marginRight: 12 }}>
-            <TouchableNativeFeedback
-              onPress={this.onSubmitSearchText}
-              style={{ ...GStyles.centerAlign, height: 50 }}
-            >
-              <Text style={{ ...GStyles.regularText, color: 'red' }}>
-                Search
-              </Text>
-            </TouchableNativeFeedback>
-          </View>
-        )}
+        <View style={{ ...GStyles.centerAlign, marginRight: 12 }}>
+          <TouchableNativeFeedback
+            onPress={this.onSubmitSearchText}
+            style={{ ...GStyles.centerAlign, height: 50 }}
+          >
+            <Text style={{ ...GStyles.regularText, color: 'red' }}>
+              Search
+            </Text>
+          </TouchableNativeFeedback>
+        </View>
       </View>
     );
   };
 
   _renderTab = () => {
-    const { keyword } = this.props;
+    const { keyword } = this.state;
 
     return (
       <ScrollableTabView
@@ -215,9 +207,4 @@ const THomeSearchScreen = function (props) {
   let route = useRoute();
   return <HomeSearchScreen {...props} navigation={navigation} route={route} />;
 };
-export default connect(
-  (state) => ({
-    keyword: state.home?.keyword,
-  }),
-  { setKeyword },
-)(THomeSearchScreen);
+export default THomeSearchScreen

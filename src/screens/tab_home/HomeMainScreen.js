@@ -151,7 +151,7 @@ const styles = StyleSheet.create({
   tabBarTextStyle: {
     fontFamily: 'GothamPro-Medium',
     fontSize: 16,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   scrollBar: {
     borderWidth: 0,
