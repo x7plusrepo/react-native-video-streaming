@@ -36,7 +36,7 @@ class Component extends React.Component {
   }
 
   componentDidMount(): void {
-    this.interval = setInterval(this.onRandomProduct, 10000);
+    this.interval = setInterval(this.onRandomProduct, 60000);
   }
 
   componentWillUnmount(): void {
@@ -117,7 +117,7 @@ class Component extends React.Component {
                 <View style={styles.textWrapper}>
                   <Text style={[GStyles.textExtraSmall]}>{streamerName}</Text>
                   <Text style={GStyles.textExtraSmall}>
-                    {streamer?.elixir || 0}
+                    {room?.people?.length || 0}
                   </Text>
                 </View>
               </LinearGradient>

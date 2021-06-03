@@ -5,7 +5,7 @@ import LiveStreamRoom from './LiveStreamRoom';
 
 import { Helper, Constants, RestAPI } from '../../utils/Global';
 import styles from './styles';
-import {GStyles} from "../../utils/Global/Styles";
+import { GStyles } from '../../utils/Global/Styles';
 
 class LiveStreamRooms extends React.Component {
   constructor(props) {
@@ -119,35 +119,36 @@ class LiveStreamRooms extends React.Component {
 
     return (
       <View style={{ flex: 1 }}>
-        {itemDatas?.length ? (
-          <FlatList
-            ref={(ref) => {
-              this.flatListRef = ref;
-            }}
-            showsVerticalScrollIndicator={false}
-            numColumns={2}
-            onRefresh={() => {
-              this.onRefresh('pull');
-            }}
-            refreshing={isFetching}
-            ListFooterComponent={this._renderFooter}
-            onEndReachedThreshold={0.4}
-            onMomentumScrollBegin={() => {
-              this.setState({ onEndReachedDuringMomentum: false });
-            }}
-            onEndReached={() => {
-              if (!this.state.onEndReachedDuringMomentum) {
-                this.setState({ onEndReachedDuringMomentum: true });
-                this.onRefresh('more');
-              }
-            }}
-            data={itemDatas}
-            renderItem={this._renderItem}
-            contentContainerStyle={styles.flatListContentContainer}
-            keyExtractor={(item, index) => `${item.id}-${index}`}
-          />
-        ) : (
-          <View style={{ flex: 1, ...GStyles.centerAlign}}><Text style={GStyles.notifyDescription}>Not found.</Text></View>
+        <FlatList
+          ref={(ref) => {
+            this.flatListRef = ref;
+          }}
+          showsVerticalScrollIndicator={false}
+          numColumns={2}
+          onRefresh={() => {
+            this.onRefresh('pull');
+          }}
+          refreshing={isFetching}
+          ListFooterComponent={this._renderFooter}
+          onEndReachedThreshold={0.4}
+          onMomentumScrollBegin={() => {
+            this.setState({ onEndReachedDuringMomentum: false });
+          }}
+          onEndReached={() => {
+            if (!this.state.onEndReachedDuringMomentum) {
+              this.setState({ onEndReachedDuringMomentum: true });
+              this.onRefresh('more');
+            }
+          }}
+          data={itemDatas}
+          renderItem={this._renderItem}
+          contentContainerStyle={styles.flatListContentContainer}
+          keyExtractor={(item, index) => `${item.id}-${index}`}
+        />
+        {itemDatas?.length === 0 && (
+          <View style={{ flex: 1, ...GStyles.centerAlign }}>
+            <Text style={GStyles.notifyDescription}>Not found.</Text>
+          </View>
         )}
       </View>
     );

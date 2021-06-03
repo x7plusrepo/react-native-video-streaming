@@ -29,6 +29,10 @@ const PanelLive = (props) => {
     showForcePageLoader(true);
     const uploadedUrl = await Global.uploadImageToCloudinary(thumbnail);
     showForcePageLoader(false);
+    if (!uploadedUrl) {
+      alert('Thumbnail required.');
+      return;
+    }
     onPressStart && onPressStart(topic, uploadedUrl, mode);
   };
   const onPressClose = () => {

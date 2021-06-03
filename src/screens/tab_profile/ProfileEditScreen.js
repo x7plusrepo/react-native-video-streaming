@@ -15,7 +15,7 @@ import { connect } from 'react-redux';
 
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { launchCamera } from 'react-native-image-picker';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 
 import { TextField } from '../../lib/MaterialTextField/index';
 import {
@@ -216,7 +216,7 @@ class ProfileEditScreen extends React.Component {
   };
 
   onPressProfilePhoto = () => {
-    launchCamera(
+    launchImageLibrary(
       {
         height: 300,
         width: 300,
