@@ -41,18 +41,12 @@ class MessageChatScreen extends Component {
 
   componentDidMount() {
     this._isMounted = true;
-    //global.onSocketError = this.onSocketError;
-    //global.onFetchMessageList = this.onFetchMessageList;
-    //global.onReceiveMessageList = this.onReceiveMessageList;
   }
 
   componentWillUnmount() {
     this._isMounted = false;
     SocketManager.instance.removeFetchMessages();
-    SocketManager.instance.removeReceiveMessages();
-    // global.onFetchMessageList = null;
-    // global.onReceiveMessageList = null;
-    // global.onSocketError = null;
+    //SocketManager.instance.removeReceiveMessages();
   }
 
   init = () => {
@@ -82,8 +76,6 @@ class MessageChatScreen extends Component {
       otherId: opponentUser?.id,
       userId: global.me?.id,
     };
-
-    console.log(params)
 
     if (type === 'more') {
       if (messages.length < totalCount) {

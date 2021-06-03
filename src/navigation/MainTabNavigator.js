@@ -21,7 +21,7 @@ import { connect } from 'react-redux';
 import { setUnreadCount } from '../redux/message/actions';
 import avatars from '../assets/avatars';
 import { setMyUserAction } from '../redux/me/actions';
-import ChatStreamSocketManager from "../utils/Message/SocketManager";
+import ChatStreamSocketManager from '../utils/Message/SocketManager';
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/Icons/ic_tab_home.png');
@@ -47,7 +47,7 @@ class MainTabNavigator extends Component {
     };
 
     global.onSetUnreadCount = this.onSetUnreadCount;
-    global.onGotoLiveRoomTab = this.onGotoLiveRoomTab;
+    global.onGotoMessage = this.onGotoMessage;
 
     global.setBottomTabName = (curTabName) => {
       this.setState({ curTabName });
@@ -66,9 +66,7 @@ class MainTabNavigator extends Component {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          const unreadCount =
-            json.data.unReadCounts > 0 ? json.data.unReadCounts : null;
-          this.props.setUnreadCount(unreadCount);
+          this.props.setUnreadCount(json.data?.unreadCount || 0);
         } else {
           Helper.alertServerDataError();
         }
@@ -76,7 +74,7 @@ class MainTabNavigator extends Component {
     });
   };
 
-  onGotoLiveRoomTab = async () => {
+  onGotoMessage = async () => {
     await Helper.setDeviceId();
     await Helper.hasPermissions();
 
@@ -126,7 +124,6 @@ class MainTabNavigator extends Component {
 
   render() {
     const { curTabName } = this.state;
-    const { unreadCount } = this.props;
 
     return (
       <Tab.Navigator
@@ -142,11 +139,9 @@ class MainTabNavigator extends Component {
                 ? 'absolute'
                 : 'relative',
             elevation: 0,
-            // borderTopWidth: 0,
           },
           showLabel: false,
         }}
-        // sceneContainerStyle={{backgroundColor: 'transparent'}}
       >
         <Tab.Screen
           name="top"
@@ -247,12 +242,9 @@ class MainTabNavigator extends Component {
   }
 }
 
-export default connect(
-  (state) => ({
-    unreadCount: state.message.unreadCount,
-  }),
-  { setUnreadCount, setMyUserAction },
-)(MainTabNavigator);
+export default connect((state) => ({}), { setUnreadCount, setMyUserAction })(
+  MainTabNavigator,
+);
 
 const styles = StyleSheet.create({
   tabIconImage: {

@@ -1,7 +1,7 @@
 import io from 'socket.io-client';
 import { Logger } from '../Global';
 import { Constants } from '../Global';
-import Helper from "../Global/Util";
+import Helper from '../Global/Util';
 
 class SocketManager {
   socket = null;
@@ -106,10 +106,12 @@ class SocketManager {
     this.socket?.removeAllListeners(Constants.SOCKET_FETCH_MESSAGE_LIST);
   };
 
-  listenReceiveMessages(callback = () => null) {
+  listenReceiveMessages(callback =  null) {
     this.socket?.on(Constants.SOCKET_NEW_MESSAGE, (data) => {
       Logger.instance.log(`${Constants.SOCKET_NEW_MESSAGE} :`);
-      return callback(data);
+      return callback
+        ? callback(data)
+        : Helper.callFunc(global.onSetUnreadCount);
     });
   }
 
@@ -118,14 +120,20 @@ class SocketManager {
   };
 
   emitSendMessage({ roomId, senderId, receiverId, message, messageType = 1 }) {
-    this.socket?.emit(Constants.SOCKET_SEND_MESSAGE, { roomId, senderId, receiverId, message, messageType });
+    this.socket?.emit(Constants.SOCKET_SEND_MESSAGE, {
+      roomId,
+      senderId,
+      receiverId,
+      message,
+      messageType,
+    });
   }
 
   emitFetchMessages(params) {
     this.socket?.emit(Constants.SOCKET_FETCH_MESSAGE_LIST, params);
   }
-  
-  listenError(callback = () =>null) {
+
+  listenError(callback = () => null) {
     this.socket?.on(Constants.SOCKET_ERROR, (errorCode) => {
       console.log(
         '--- univ_dev --- SOCKET_ERROR:',
@@ -135,10 +143,10 @@ class SocketManager {
       callback ? callback(errorCode) : Helper.callFunc(global.onSocketError);
     });
   }
-  
+
   removeError = () => {
     this.socket?.removeAllListeners(Constants.SOCKET_ERROR);
-  }
+  };
 }
 
 const instance = new SocketManager();

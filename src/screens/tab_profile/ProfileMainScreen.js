@@ -28,7 +28,6 @@ import {
 
 import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
 import ic_upload from '../../assets/images/Icons/ic_upload.png';
-import ic_tab_play from '../../assets/images/Icons/ic_tab_play.png';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
 import ic_menu_messages from '../../assets/images/Icons/ic_menu_messages.png';
 import ic_menu_fans from '../../assets/images/Icons/ic_menu_fans.png';
@@ -38,10 +37,7 @@ import ic_menu_downloads from '../../assets/images/Icons/ic_menu_downloads.png';
 import ic_menu_saved_products from '../../assets/images/Icons/ic_menu_saved_products.png';
 import ic_my_products from '../../assets/images/Icons/ic_my_products.png';
 import ic_support from '../../assets/images/Icons/ic_support.png';
-import ic_signIn from '../../assets/images/Icons/ic_signin.png';
-import ic_signOut from '../../assets/images/Icons/ic_signout.png';
 import ic_sign from '../../assets/images/Icons/ic_vip.png';
-import LinearGradient from 'react-native-linear-gradient';
 import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 
 const getMenuItems = (navigation, setMyUserAction) => {
@@ -71,6 +67,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
     {
       icon: ic_menu_messages,
       title: 'Messages',
+      key: 'messages',
       onPress: () => {
         navigation.navigate('message');
       },
@@ -173,12 +170,8 @@ class ProfileMainScreen extends React.Component {
       Helper.callFunc(global.setBottomTabName('profile'));
       Helper.setLightStatusBar();
       this.onRefresh();
+      Helper.callFunc(global.onSetUnreadCount);
     });
-
-    const curMonth = Helper.getCurMonthString();
-    this.setState({ curMonth });
-    const lastMonths = Helper.getLastMonthList();
-    this.setState({ lastMonths });
   }
 
   componentWillUnmount() {
@@ -192,9 +185,6 @@ class ProfileMainScreen extends React.Component {
 
       tabOneHeight: WINDOW_HEIGHT,
       tabTwoHeight: WINDOW_HEIGHT,
-
-      curMonth: '',
-      lastMonths: [],
     };
   };
 
@@ -234,7 +224,7 @@ class ProfileMainScreen extends React.Component {
   };
 
   render() {
-    const { user, navigation } = this.props;
+    const { user, navigation, unreadCount } = this.props;
     const randomNumber = Math.floor(Math.random() * avatars.length);
     const randomImageUrl = avatars[randomNumber];
     const avatarImage = {
@@ -345,9 +335,20 @@ class ProfileMainScreen extends React.Component {
                     key={index.toString()}
                   >
                     <Image source={menu.icon} style={styles.menuIcon} />
-
                     <View style={styles.menuRight}>
                       <Text style={GStyles.regularText}>{menu.title}</Text>
+                      {unreadCount > 0 && menu.key === 'messages' && (
+                        <View style={styles.messageBadgeContainer}>
+                          <View style={styles.messageBadgeWrapper}>
+                            <Text
+                              style={[GStyles.textExtraSmall, GStyles.boldText]}
+                            >
+                              {unreadCount}
+                            </Text>
+                          </View>
+                        </View>
+                      )}
+
                       <Image
                         source={ic_chevron_right}
                         style={styles.chevronRight}
@@ -428,6 +429,18 @@ const styles = StyleSheet.create({
     width: 5.5,
     height: 9.62,
   },
+  messageBadgeContainer: {
+    flex: 1,
+    ...GStyles.rowEndContainer,
+    marginRight: 12,
+  },
+  messageBadgeWrapper: {
+    backgroundColor: 'red',
+    borderRadius: 120,
+    ...GStyles.centerAlign,
+    width: 20,
+    height: 20,
+  },
 });
 
 const TProfileMainScreen = (props) => {
@@ -439,6 +452,7 @@ const TProfileMainScreen = (props) => {
 export default connect(
   (state) => ({
     user: state.me?.user || {},
+    unreadCount: state?.message?.unreadCount || 0,
   }),
   { setMyUserAction },
 )(TProfileMainScreen);

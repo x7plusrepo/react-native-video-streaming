@@ -109,7 +109,7 @@ function App() {
     console.log('openResult: ', openResult);
 
     if (!openResult.notification.isAppInFocus) {
-      Helper.callFunc(global.onGotoLiveRoomTab);
+      Helper.callFunc(global.onGotoMessage);
     }
     // else {
     //   Helper.callFunc(global.onSetUnreadCount);

@@ -5,7 +5,6 @@ import {
   SafeAreaView,
   StyleSheet,
 } from 'react-native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { connect } from 'react-redux';
 
@@ -23,21 +22,7 @@ class MessageMainScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('message'));
-      Helper.setLightStatusBar();
-    });
     this.onRefresh('init');
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.unreadCount !== this.props.unreadCount) {
-      this.onRefresh('update');
-    }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
   }
 
   init = () => {
@@ -45,7 +30,6 @@ class MessageMainScreen extends React.Component {
       isFetching: false,
       totalCount: 0,
       curPage: 1,
-
       itemDatas: [],
       onEndReachedDuringMomentum: true,
     };
@@ -58,6 +42,7 @@ class MessageMainScreen extends React.Component {
       return;
     }
 
+    console.log('clicked?')
     if (type === 'more') {
       curPage += 1;
       const maxPage =
@@ -68,9 +53,7 @@ class MessageMainScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    if (type === 'init') {
-      Helper.callFunc(global.onSetUnreadCount);
-    }
+
     this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init' || type === 'update') {
@@ -84,9 +67,7 @@ class MessageMainScreen extends React.Component {
       count_per_page: Constants.COUNT_PER_PAGE,
     };
     RestAPI.get_room_list(params, (json, err) => {
-      console.log(json, '-------');
-
-      if (type === 'init' || type === 'update') {
+      if (type === 'init') {
         showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
@@ -111,7 +92,7 @@ class MessageMainScreen extends React.Component {
   };
 
   onLogo = () => {
-    console.log('---');
+    this.props.navigation.goBack();
   };
 
   onPressChatThread = (opponent) => {
@@ -119,7 +100,23 @@ class MessageMainScreen extends React.Component {
       userId: global.me?.id,
       otherId: opponent?.id,
     };
-    RestAPI.set_read_status(params, (json, err) => {});
+    RestAPI.set_read_status(params, (json, err) => {
+      if (json.status === 204) {
+        const { itemDatas } = this.state;
+        let newItems = [...itemDatas];
+        const findIndex = newItems.findIndex(
+          (item) => item?.id === opponent?.id,
+        );
+        if (findIndex > -1) {
+          newItems[findIndex] = {
+            ...newItems[findIndex],
+            unreadCount: 0,
+          };
+          this.setState({ itemDatas: newItems });
+        }
+        Helper.callFunc(global.onSetUnreadCount);
+      }
+    });
     this.props.navigation.navigate('message_chat', {
       opponentUser: opponent || {},
     });
@@ -141,7 +138,7 @@ class MessageMainScreen extends React.Component {
     return (
       <GHeaderBar
         headerTitle="Messages"
-        leftType="logo"
+        leftType="back"
         onPressLeftButton={this.onLogo}
       />
     );

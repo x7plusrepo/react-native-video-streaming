@@ -145,8 +145,8 @@ class TopUsersScreen extends React.Component {
         <SafeAreaView style={GStyles.container}>
           {this._renderHeader()}
           {this._renderTab()}
-          {this._renderStatistics()}
-          {this._renderAboutRule()}
+          {/*{this._renderStatistics()}*/}
+          {/*{this._renderAboutRule()}*/}
           {this._renderUserList()}
         </SafeAreaView>
       </>
@@ -285,11 +285,11 @@ class TopUsersScreen extends React.Component {
         headerTitle="Top Rank"
         leftType="logo"
         onPressLeftButton={this.onLogo}
-        rightAvatar={
-          <TouchableOpacity>
-            <Text style={[GStyles.regularText, GStyles.boldText]}>Global</Text>
-          </TouchableOpacity>
-        }
+        // rightAvatar={
+        //   <TouchableOpacity>
+        //     <Text style={[GStyles.regularText, GStyles.boldText]}>Global</Text>
+        //   </TouchableOpacity>
+        // }
       />
     );
   };
@@ -318,13 +318,13 @@ class TopUsersScreen extends React.Component {
                 { color: GStyle.grayColor },
               ]}
             >
-              Count Down:
+              Total:
             </Text>
             <Text
               style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}
             >
               {' '}
-              23:21
+              {itemDatas.length}
             </Text>
           </View>
           <View style={GStyles.rowCenterContainer}>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, TouchableOpacity, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import { GStyle, GStyles, Helper } from '../../utils/Global';
 import Avatar from './Avatar';
@@ -56,19 +56,30 @@ const MessageRoomItem = ({ item, onPress }) => (
       </View>
     </View>
     {item.unreadCount > 0 && (
-      <View
-        style={{
-          width: 8,
-          height: 8,
-          borderRadius: 4,
-          position: 'absolute',
-          backgroundColor: 'red',
-          right: 16,
-          top: 25,
-        }}
-      />
+      <View style={styles.messageBadgeContainer}>
+        <View style={styles.messageBadgeWrapper}>
+          <Text
+            style={[GStyles.textExtraSmall, GStyles.boldText]}
+          >
+            {item.unreadCount}
+          </Text>
+        </View>
+      </View>
     )}
   </TouchableOpacity>
 );
+
+const styles = StyleSheet.create({
+  messageBadgeContainer: {
+    ...GStyles.rowEndContainer,
+  },
+  messageBadgeWrapper: {
+    backgroundColor: 'red',
+    borderRadius: 120,
+    ...GStyles.centerAlign,
+    width: 20,
+    height: 20,
+  },
+});
 
 export default MessageRoomItem;
