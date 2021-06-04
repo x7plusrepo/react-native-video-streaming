@@ -60,11 +60,12 @@ const Global = {
       }
     });
   },
-  uploadToCloudinary: async (source, folder = '/', public_id) => {
+  uploadToCloudinary: async (source, folder = '/', resource_type = 'auto', public_id) => {
     return new Promise((resolve, reject) => {
       const data = new FormData();
       data.append('file', source);
       data.append('upload_preset', 'dmljgqvn');
+      data.append('resource_type', resource_type);
       data.append('cloud_name', 'snaplist');
       data.append('folder', folder);
       data.append('api_key', '882925219281537');
@@ -85,6 +86,7 @@ const Global = {
           resolve(response?.data?.secure_url);
         })
         .catch(function (error) {
+          console.log(error);
           resolve(null);
         });
     });

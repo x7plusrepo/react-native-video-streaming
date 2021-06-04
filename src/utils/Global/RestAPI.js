@@ -59,7 +59,7 @@ const RestAPI = {
   add_video: (params, callBack) => {
     const data = {
       userId: params.userId,
-      url: params.uploaded_url,
+      url: params.url,
       tags: params.tags,
       price: params.price,
       description: params.description,
@@ -67,6 +67,7 @@ const RestAPI = {
       thumb: params.thumb,
       category: params.category,
       subCategory: params.subCategory,
+      isPermanent: !!params.isPermanent
     };
     formDataCall('api/video', data, {}, callBack, 'post');
   },

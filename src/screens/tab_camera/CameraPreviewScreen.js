@@ -8,20 +8,12 @@ import {
   View,
 } from 'react-native';
 
-import {
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 
 import Video from 'react-native-video';
 
-import {
-  GStyle,
-  GStyles,
-  Helper,
-  Constants,
-} from '../../utils/Global';
+import { GStyle, GStyles, Helper, Constants } from '../../utils/Global';
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 
 class CameraPreviewScreen extends Component {
@@ -195,7 +187,7 @@ class CameraPreviewScreen extends Component {
           <Image
             source={ic_close}
             style={{ ...GStyles.image, width: 20, tintColor: 'white' }}
-          ></Image>
+          />
         </TouchableOpacity>
       </View>
     );
@@ -204,38 +196,31 @@ class CameraPreviewScreen extends Component {
   _renderButton = () => {
     return (
       <>
-        {global._prevScreen == 'camera_draft' && (
+        {global._prevScreen === 'camera_draft' && (
           <View
             style={{
               position: 'absolute',
               width: '100%',
               height: 50,
-              bottom: 20,
+              bottom: 36,
               alignItems: 'center',
               paddingHorizontal: 10,
               zIndex: 1,
               elevation: 1,
+              flexDirection: 'row',
+              justifyContent: 'space-around',
             }}
           >
-            <View
-              style={{
-                width: '88%',
-                flexDirection: 'row',
-                justifyContent: 'space-around',
-                alignItems: 'center',
-              }}
-            >
-              <TouchableOpacity onPress={this.onPressUpload}>
-                <View style={styles.buttonBlank}>
-                  <Text style={styles.textBlank}>Upload</Text>
-                </View>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.onPressDelete}>
-                <View style={styles.buttonFill}>
-                  <Text style={styles.textFill}>Delete</Text>
-                </View>
-              </TouchableOpacity>
-            </View>
+            <TouchableOpacity onPress={this.onPressUpload}>
+              <View style={styles.buttonBlank}>
+                <Text style={styles.textBlank}>Upload</Text>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.onPressDelete}>
+              <View style={styles.buttonFill}>
+                <Text style={styles.textFill}>Delete</Text>
+              </View>
+            </TouchableOpacity>
           </View>
         )}
       </>

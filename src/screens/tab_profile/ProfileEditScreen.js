@@ -165,9 +165,11 @@ class ProfileEditScreen extends React.Component {
       showForcePageLoader(true);
       let uploadedUrl;
       if (profilePhotoSelSource) {
+        console.log(profilePhotoSelSource);
         uploadedUrl = await Global.uploadToCloudinary(
           profilePhotoSelSource,
           'avatars',
+          'image',
         );
       }
       this.setState({ photo: uploadedUrl });

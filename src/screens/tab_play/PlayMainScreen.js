@@ -644,7 +644,7 @@ class PlayMainScreen extends Component {
           }}
         >
           <Video
-            source={{ uri: convertToProxyURL(item.url) }}
+            source={{ uri: convertToProxyURL(item.url || '') }}
             ref={(ref) => {
               this.player = ref;
             }}

@@ -2,17 +2,10 @@ import React from 'react';
 import {
   Alert,
   BackHandler,
-  Dimensions,
-  Image,
-  NativeEventEmitter,
-  PermissionsAndroid,
+  CheckBox,
   Platform,
   SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
+  Text, TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -25,7 +18,6 @@ import ProgressBar from '../../lib/Progress/Bar';
 import { Button, Paragraph, Dialog, Portal } from 'react-native-paper';
 import { createThumbnail } from 'react-native-create-thumbnail';
 import TagInput from '../../lib/react-native-tag-input/index';
-import VideoUpload from '../../utils/NativeModule/NativePackage';
 import RNFS from 'react-native-fs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
@@ -33,17 +25,15 @@ import { TextField } from '../../lib/MaterialTextField/index';
 import {
   GStyle,
   GStyles,
-  Global,
   Helper,
   Constants,
   RestAPI,
+  Global,
 } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 
 import { connect } from 'react-redux';
 import { setCategories } from '../../redux/categories/actions';
-
-const img_default_avatar = require('../../assets/images/Icons/ic_default_avatar.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 
@@ -60,7 +50,6 @@ const inputProps = {
 class CameraUploadScreen extends React.Component {
   constructor(props) {
     super(props);
-    console.log(props.categories, '0000');
     console.log('CameraUploadScreen start');
 
     this.init();
@@ -76,51 +65,18 @@ class CameraUploadScreen extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    const eventEmitter = new NativeEventEmitter(VideoUpload);
-    this.eventListener = eventEmitter.addListener(
-      'EventUploadProgress',
-      (event) => {
-        console.log(event);
-        if (!this._isMounted) {
-          return;
-        }
-        this.setState({ percent: event.percent });
-        if (event.percent == 100 && event.url) {
-          const curTimeTick = Helper.getTimeStamp();
-          const uploadInterval = curTimeTick - this._timeTick;
-          this._timeTick = curTimeTick;
-          if (uploadInterval > 5000) {
-            if (this.state.uploadMode === 'image') {
-              this.setState({ thumb: event.url });
-              this.uploadVideoToCloudinary();
-            } else {
-              this.uploadVideoToBackend(event.url);
-            }
-          }
-        } else if (event.percent < 0) {
-          this.setState({
-            isVisibleProgress: false,
-            uploadMode: 'image',
-            thumb: '',
-          });
-          error(Constants.ERROR_TITLE, 'Failed to upload video3');
-        }
-      },
-    );
-
     this.onRefresh();
-
-    this.unsubscribe = this.props.navigation.addListener('focus', async () => {
-      if (Platform.OS === 'android') {
-        Helper.setLightStatusBar();
-      }
-    });
 
     this.backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       this.onBack,
     );
     this.refreshCategories();
+  }
+
+  componentWillUnmount() {
+    this.backHandler?.remove();
+    this._isMounted = false;
   }
 
   refreshCategories = () => {
@@ -176,7 +132,6 @@ class CameraUploadScreen extends React.Component {
   }
 
   setOpenCategoryDropdown(open) {
-    console.log(open)
     this.setState({
       openCategoryDropdown: open,
       zIndexCategory: open ? 9999 : 999,
@@ -192,7 +147,7 @@ class CameraUploadScreen extends React.Component {
 
   setCategories(callback) {
     this.setState((state) => ({
-      categories: callback(state.categories)
+      categories: callback(state.categories),
     }));
   }
 
@@ -216,26 +171,14 @@ class CameraUploadScreen extends React.Component {
     }));
   }
 
-  componentWillUnmount() {
-    if (Platform.OS === 'android') {
-      this.eventListener.remove(); //Removes the listener
-    }
-
-    this.unsubscribe();
-    BackHandler.removeEventListener('hardwareBackPress', this.onBack);
-    this._isMounted = false;
-  }
-
   init = () => {
     this.state = {
       isVisibleProgress: false,
       isVisibleDialog: false,
       percent: 0,
-
+      isPermanent: false,
       tags: [],
       text: '',
-      thumb: '',
-      uploadMode: 'image',
       price: '',
       description: '',
       category: null,
@@ -249,18 +192,16 @@ class CameraUploadScreen extends React.Component {
     };
 
     this._isMounted = false;
-    this._timeTick = 0;
 
     this.initRef();
   };
 
   onRefresh = () => {
-    if (global._prevScreen != 'camera_preview') {
+    if (global._prevScreen !== 'camera_preview') {
       showForcePageLoader(true);
       createThumbnail({ url: global._videoUri })
         .then((response) => {
           global._thumbUri = response.path;
-          console.log(response.path);
           showForcePageLoader(false);
 
           this.saveDraft();
@@ -317,119 +258,58 @@ class CameraUploadScreen extends React.Component {
     }
   };
 
-  uploadVideoToCloudinary = () => {
-    this.setState({ percent: 0, isVisibleProgress: true, uploadMode: 'video' });
+  uploadVideoToBackend = () => {
+    const {
+      tags,
+      price,
+      description,
+      uploadedThumbUrl,
+      uploadedVideoUrl,
+      category,
+      subCategory,
+      isPermanent,
+    } = this.state;
 
-    if (Platform.OS === 'android') {
-      const split = global._videoUri?.split(':') || [];
-      const videoUrl = split[1]?.substring(2);
-      VideoUpload.upload(
-        videoUrl,
-        'work/',
-        'video',
-        (msg) => {
-          this.uploadVideoToBackend(msg);
-        },
-        (msg) => {
-          console.log('onError', msg);
-          this.setState({ isVisibleProgress: false });
-          error(Constants.ERROR_TITLE, 'Failed to upload video');
-        },
-      );
-    } else {
-      VideoUpload.upload(
-        global._videoUri,
-        'work/',
-        'video',
-        (error, respArray) => {},
-      );
+    if (!uploadedThumbUrl || !uploadedVideoUrl) {
+      alert('Resource not found.');
     }
-  };
-
-  uploadImageToCloudinary = () => {
-    this.setState({ percent: 0, isVisibleProgress: true, uploadMode: 'image' });
-    if (Platform.OS === 'android') {
-      const split = global._thumbUri?.split(':') || [];
-      const imageUrl = split[1]?.substring(2);
-      VideoUpload.upload(
-        imageUrl,
-        'images/',
-        'image',
-        (msg) => {
-          this.setState({ thumb: msg });
-          this.uploadVideoToCloudinary();
-        },
-        (msg) => {
-          console.log('onError', msg);
-          this.setState({ isVisibleProgress: false, thumb: '' });
-          error(Constants.ERROR_TITLE, 'Failed to upload image');
-        },
-      );
-    } else {
-      VideoUpload.upload(
-        global._videoUri,
-        'images/',
-        'image',
-        (error, respArray) => {},
-      );
-    }
-  };
-
-  uploadVideoToBackend = (cloudinaryUrl) => {
-    const { tags, price, description, thumb, category, subCategory } =
-      this.state;
 
     showForcePageLoader(true);
     const tagSet = tags.join(',');
     const params = {
-      user_id: global.me?.id,
-      uploaded_url: cloudinaryUrl,
-      thumb,
+      userId: global.me?.id,
+      url: uploadedVideoUrl,
+      thumb: uploadedThumbUrl,
       tags: tagSet,
       price: parseInt(price) || 0,
       description: description,
       number: (Number(global.me.uploadCount || 0) + 1).toString(),
       category,
       subCategory,
+      isPermanent,
     };
-    console.log(params)
     RestAPI.add_video(params, async (json, err) => {
       showForcePageLoader(false);
       if (err !== null) {
-        this.setState({
-          isVisibleProgress: false,
-          uploadMode: 'image',
-          thumb: '',
-        });
         error(Constants.ERROR_TITLE, 'Failed to upload video1');
-        if (global._prevScreen == 'camera_main') {
+        if (global._prevScreen === 'camera_main') {
           this.props.navigation.goBack();
         } else {
           this.props.navigation.navigate('camera_draft');
         }
       } else {
         if (json.status === 201) {
-          this.setState({
-            isVisibleProgress: false,
-            uploadMode: 'image',
-            thumb: '',
-          });
-          global.me.upload_count = Number(global.me.uploadCount || 0) + 1;
+          global.me.uploadCount = Number(global.me.uploadCount || 0) + 1;
           success(Constants.SUCCESS_TITLE, 'Success to upload video');
           await this.deleteVideo();
-          if (global._prevScreen == 'camera_main') {
+          if (global._prevScreen === 'camera_main') {
             this.props.navigation.goBack();
           } else {
             this.props.navigation.navigate('camera_draft');
           }
         } else {
-          this.setState({
-            isVisibleProgress: false,
-            uploadMode: 'image',
-            thumb: '',
-          });
           error(Constants.ERROR_TITLE, 'Failed to upload video2');
-          if (global._prevScreen == 'camera_main') {
+          if (global._prevScreen === 'camera_main') {
             this.props.navigation.goBack();
           } else {
             this.props.navigation.navigate('camera_draft');
@@ -480,7 +360,7 @@ class CameraUploadScreen extends React.Component {
     const lastTyped = text.charAt(text.length - 1);
     const parseWhen = [',', ' ', ';', '\n'];
 
-    if (text.length == 1) {
+    if (text.length === 1) {
       if (parseWhen.indexOf(text.charAt(0)) > -1) {
         return;
       }
@@ -542,9 +422,49 @@ class CameraUploadScreen extends React.Component {
     this.props.navigation.navigate('camera_draft');
   };
 
-  onPressUploadVideo = () => {
+  setPermanent = (isPermanent) => {
+    this.setState({
+      isPermanent
+    })
+  };
+
+  onPressUploadVideo = async () => {
     this.setState({ isVisibleDialog: false });
-    this.uploadImageToCloudinary();
+    let imageName = Helper.getFile4Path(global._thumbUri);
+    const imageSource = {
+      uri: global._thumbUri,
+      name: imageName,
+      type: 'image/jpeg',
+    };
+    const videoName = Helper.getFile4Path(global._videoUri);
+    const videoSource = {
+      uri: global._videoUri,
+      name: videoName,
+      type: 'video/mp4',
+    };
+    showForcePageLoader(true);
+    const uploadedThumbUrl = await Global.uploadToCloudinary(
+      imageSource,
+      'productImages',
+      'image',
+    );
+    if (uploadedThumbUrl) {
+      const uploadedVideoUrl = await Global.uploadToCloudinary(
+        videoSource,
+        'products',
+        'video',
+      );
+      if (uploadedVideoUrl) {
+        this.setState(
+          {
+            uploadedThumbUrl,
+            uploadedVideoUrl,
+          },
+          this.uploadVideoToBackend,
+        );
+      }
+    }
+    showForcePageLoader(false);
   };
 
   onPressCancelUpload = () => {
@@ -555,10 +475,10 @@ class CameraUploadScreen extends React.Component {
     const { tags } = this.state;
     let errors = {};
 
-    // if (global.me?.userType === 0) {
-    //   warning(Constants.WARNING_TITLE, 'Guest can not upload video.');
-    //   return;
-    // }
+    if (global.me?.userType === 0) {
+      warning(Constants.WARNING_TITLE, 'Guest can not upload video.');
+      return;
+    }
 
     if (!global.me) {
       this.props.navigation.navigate('signin');
@@ -599,7 +519,7 @@ class CameraUploadScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={GStyles.container}>
+        <SafeAreaView style={[GStyles.container, { paddingBottom: 36 }]}>
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
@@ -718,7 +638,7 @@ class CameraUploadScreen extends React.Component {
   };
 
   _renderMainInputs = () => {
-    const { errors = {}, price, description } = this.state;
+    const { errors = {}, price, description, isPermanent } = this.state;
 
     return (
       <View>
@@ -750,6 +670,14 @@ class CameraUploadScreen extends React.Component {
           characterRestriction={120}
           error={errors.description}
         />
+        <View style={styles.checkboxContainer}>
+          <CheckBox
+            value={isPermanent}
+            onValueChange={this.setPermanent}
+            style={styles.checkbox}
+          />
+          <Text style={styles.label}>Keep the product permanently</Text>
+        </View>
       </View>
     );
   };
@@ -806,7 +734,7 @@ class CameraUploadScreen extends React.Component {
                 zIndex: 100,
                 elevation: 10,
               }}
-            ></View>
+            />
             <View
               style={{
                 position: 'absolute',
@@ -878,33 +806,23 @@ class CameraUploadScreen extends React.Component {
             </Dialog.Actions>
           </Dialog>
         </Portal>
-        {/* <Dialog.Container visible={isVisibleDialog}>
-          <View style={{...GStyles.rowContainer}}>
-            <FontAwesome
-              name="warning"
-              style={{
-                fontSize: 20,
-                color: '#f3430a',
-                marginLeft: Platform.OS == 'ios' ? 8 : 0,
-              }}
-            />
-            <Dialog.Title style={{marginLeft: 4}}>Video Upload</Dialog.Title>
-          </View>
-          <View>
-            <Dialog.Description>
-              ভিডিও আপলোড করার পর আপনি ভিডিও ডিলিট করতে পারবেন না. ৩০দিন পর
-              ভিডিও অটো ডিলিট হয়ে যাবে!
-            </Dialog.Description>
-          </View>
-          <Dialog.Button label="Upload" onPress={this.onPressUploadVideo} />
-          <Dialog.Button label="Cancel" onPress={this.onPressCancelUpload} />
-        </Dialog.Container> */}
       </View>
     );
   };
 }
 
-const styles = StyleSheet.create({});
+const styles = {
+  checkboxContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+  },
+  checkbox: {
+    alignSelf: "center",
+  },
+  label: {
+    margin: 8
+  }
+}
 
 const TCameraUploadScreen = (props) => {
   let navigation = useNavigation();

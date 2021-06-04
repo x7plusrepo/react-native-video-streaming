@@ -299,7 +299,7 @@ class CameraMainScreen extends Component {
           <TouchableOpacity onPress={this.toggleFlash}>
             <Image
               source={
-                flash == 'torch' ? ic_camera_flash_on : ic_camera_flash_off
+                flash === 'torch' ? ic_camera_flash_on : ic_camera_flash_off
               }
               style={{ ...GStyles.image, width: 32 }}
             />
