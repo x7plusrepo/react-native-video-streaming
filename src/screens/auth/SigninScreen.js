@@ -232,7 +232,6 @@ class SigninScreen extends React.Component {
               device_id: global._deviceId,
               device_type: Platform.OS === 'ios' ? '1' : '0',
             };
-            showForcePageLoader(true);
             Global.registerPushToken();
 
             this.props.navigation.navigate('main_tab_navigator');

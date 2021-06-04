@@ -1,10 +1,6 @@
 import React from 'react';
 import {
-  Alert,
-  Image,
   Linking,
-  NativeEventEmitter,
-  Platform,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -15,7 +11,7 @@ import { connect } from 'react-redux';
 
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import { TextField } from '../../lib/MaterialTextField/index';
 import {
@@ -30,7 +26,7 @@ import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
 import { setMyUserAction } from '../../redux/me/actions';
-import ChatStreamSocketManager from "../../utils/Message/SocketManager";
+import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 
 class ProfileEditScreen extends React.Component {
   constructor(props) {
@@ -44,14 +40,13 @@ class ProfileEditScreen extends React.Component {
   init = () => {
     console.log(global.me);
     const { user } = this.props;
-    const isGuest = user?.username?.match(/guest_/i)
+    const isGuest = user?.username?.match(/guest_/i);
     this.state = {
       secureTextEntry: !global.debug,
       userName: user?.username,
       phoneNumber: user?.phone,
       password: '',
       profilePhotoSelSource: null,
-      profilePhotoSelPath: '',
       photo: null,
       isGuest,
     };
@@ -150,17 +145,17 @@ class ProfileEditScreen extends React.Component {
       }
     });
 
-    if(password.length > 0 && password.length !== 4) {
+    if (password.length > 0 && password.length !== 4) {
       errors['password'] = 'Should be 4 digits';
     }
 
     const isUpdateGuest = userName?.match(/guest_/i);
     if (password && isUpdateGuest) {
-      errors['password'] = 'Guest user can not set password.'
+      errors['password'] = 'Guest user can not set password.';
     }
 
-    if(isGuest && !isUpdateGuest && password?.length < 1) {
-      errors['password'] = 'Password required.'
+    if (isGuest && !isUpdateGuest && password?.length < 1) {
+      errors['password'] = 'Password required.';
     }
 
     this.setState({ errors });
@@ -170,8 +165,9 @@ class ProfileEditScreen extends React.Component {
       showForcePageLoader(true);
       let uploadedUrl;
       if (profilePhotoSelSource) {
-        uploadedUrl = await Global.uploadImageToCloudinary(
+        uploadedUrl = await Global.uploadToCloudinary(
           profilePhotoSelSource,
+          'avatars',
         );
       }
       this.setState({ photo: uploadedUrl });
@@ -224,7 +220,6 @@ class ProfileEditScreen extends React.Component {
         cameraType: 'front',
       },
       (response) => {
-        console.log(response);
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorMessage) {
@@ -237,7 +232,6 @@ class ProfileEditScreen extends React.Component {
           };
           this.setState({
             profilePhotoSelSource: source,
-            profilePhotoSelPath: response.path,
             photo: null,
           });
         }

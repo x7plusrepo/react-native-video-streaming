@@ -7,7 +7,6 @@ const { width, height } = Dimensions.get('window');
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#3498db',
   },
   backgroundContainer: {
     flex: 1,
@@ -93,6 +92,7 @@ const styles = StyleSheet.create({
   },
   sheetWrapper: {
     backgroundColor: 'transparent',
+    overflow: 'visible',
   },
   sheetCommonContainer: {
     borderRadius: 32,
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
   sheetGiftContainer: {
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    backgroundColor: 'rgba(0, 0, 0, 0.9)',
+    backgroundColor: 'white',
     height: 360,
   },
 });

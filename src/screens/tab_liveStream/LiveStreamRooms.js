@@ -145,11 +145,6 @@ class LiveStreamRooms extends React.Component {
           contentContainerStyle={styles.flatListContentContainer}
           keyExtractor={(item, index) => `${item.id}-${index}`}
         />
-        {itemDatas?.length === 0 && (
-          <View style={{ flex: 1, ...GStyles.centerAlign }}>
-            <Text style={GStyles.notifyDescription}>Not found.</Text>
-          </View>
-        )}
       </View>
     );
   }

@@ -562,51 +562,43 @@ class PlayMainScreen extends Component {
     const { products } = this.props;
 
     return (
-      <>
-        {products?.length ? (
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            initialNumToRender={5}
-            pagingEnabled
-            onRefresh={() => {
-              this.onRefresh('pull');
-            }}
-            refreshing={isFetching}
-            ListFooterComponent={this._renderFooter}
-            onEndReachedThreshold={0.4}
-            onMomentumScrollBegin={() => {
-              this.setState({ onEndReachedDuringMomentuam: false });
-            }}
-            onEndReached={() => {
-              if (!this.state.onEndReachedDuringMomentum) {
-                this.setState({ onEndReachedDuringMomentum: true });
-                this.onRefresh('more');
-              }
-            }}
-            data={products}
-            renderItem={this._renderItem}
-            onViewableItemsChanged={this.onViewableItemsChanged}
-            viewabilityConfig={{
-              itemVisiblePercentThreshold: 60,
-            }}
-            keyExtractor={(item, index) => index.toString()}
-            style={{
-              width: '100%',
-              height: VIDEO_HEIGHT,
-              position: 'absolute',
-              left: 0,
-              top: 0,
-              backgroundColor: 'black',
-              zIndex: 1,
-              elevation: 1,
-            }}
-          />
-        ) : (
-          <View style={{ flex: 1, ...GStyles.centerAlign }}>
-            <Text style={[GStyles.notifyDescription, { color: 'white' }]}>Not found.</Text>
-          </View>
-        )}
-      </>
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        initialNumToRender={5}
+        pagingEnabled
+        onRefresh={() => {
+          this.onRefresh('pull');
+        }}
+        refreshing={isFetching}
+        ListFooterComponent={this._renderFooter}
+        onEndReachedThreshold={0.4}
+        onMomentumScrollBegin={() => {
+          this.setState({ onEndReachedDuringMomentuam: false });
+        }}
+        onEndReached={() => {
+          if (!this.state.onEndReachedDuringMomentum) {
+            this.setState({ onEndReachedDuringMomentum: true });
+            this.onRefresh('more');
+          }
+        }}
+        data={products}
+        renderItem={this._renderItem}
+        onViewableItemsChanged={this.onViewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 60,
+        }}
+        keyExtractor={(item, index) => index.toString()}
+        style={{
+          width: '100%',
+          height: VIDEO_HEIGHT,
+          position: 'absolute',
+          left: 0,
+          top: 0,
+          backgroundColor: 'black',
+          zIndex: 1,
+          elevation: 1,
+        }}
+      />
     );
   };
 
@@ -700,17 +692,19 @@ class PlayMainScreen extends Component {
                   />
                 </TouchableOpacity>
 
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressMessage(item);
-                  }}
-                  style={GStyles.videoActionButton}
-                >
-                  <Image
-                    source={ic_menu_messages}
-                    style={GStyles.actionIcons}
-                  />
-                </TouchableOpacity>
+                {user.id !== global.me?.id && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      this.onPressMessage(item);
+                    }}
+                    style={GStyles.videoActionButton}
+                  >
+                    <Image
+                      source={ic_menu_messages}
+                      style={GStyles.actionIcons}
+                    />
+                  </TouchableOpacity>
+                )}
 
                 <TouchableOpacity
                   onPress={() => {

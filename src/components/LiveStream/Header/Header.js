@@ -82,6 +82,12 @@ class Component extends React.Component {
     this.props.navigation.dispatch(pushAction);
   };
 
+  onPressProfileAction = () => {
+    const { onPressProfileAction } = this.props;
+    const user = this.props.room?.user;
+    onPressProfileAction && onPressProfileAction(user);
+  };
+
   render() {
     const { room, liveStatus, mode, goal } = this.props;
     const { showingRandomProduct, randomProduct } = this.state;
@@ -121,7 +127,10 @@ class Component extends React.Component {
                   </Text>
                 </View>
               </LinearGradient>
-              <Image source={avatarImage} style={styles.userAvatarImage} />
+              <TouchableOpacity style={styles.userAvatarImage} onPress={this.onPressProfileAction}>
+                <Image source={avatarImage} style={{ width: '100%', height: '100%' }} />
+              </TouchableOpacity>
+
             </View>
             <View style={styles.streamInfoWrapper}>
               <View style={styles.infoLabelWrapper}>

@@ -17,12 +17,14 @@ import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Gifts from '../../components/LiveStream/Gifts';
 import Header from '../../components/LiveStream/Header';
 import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
+import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
+
 import { setGifts } from '../../redux/liveStream/actions';
 import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
 import { Constants, Helper, Global, RestAPI } from '../../utils/Global';
 import styles from './styles';
-import CountDownAnimation from '../../components/LiveStream/Gifts/CountDownAnimation';
 import ic_audio from '../../assets/images/Icons/ic_audio_on.png';
+import { setMyUserAction } from '../../redux/me/actions';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -40,6 +42,7 @@ class ViewLive extends Component {
     };
     this.giftBottomSheet = React.createRef();
     this.messageBottomSheet = React.createRef();
+    this.profileSheet = React.createRef();
   }
 
   componentDidMount() {
@@ -232,6 +235,11 @@ class ViewLive extends Component {
     Global.inviteToLiveStream(room, user);
   };
 
+  onPressProfileAction = (user) => {
+    global._opponentUser = user || {};
+    this.profileSheet?.current?.open();
+  };
+
   onPressSendHeart = () => {
     const userId = this.props.user?.id;
     const { room } = this.state;
@@ -245,6 +253,9 @@ class ViewLive extends Component {
 
   onPressSendGift = (gift) => {
     const user = this.props.user || {};
+    if (user.diamond <= gift.diamond) {
+      return;
+    }
     const { room } = this.state;
     this.giftBottomSheet?.current?.close();
     SocketManager.instance.emitSendGift({
@@ -261,6 +272,14 @@ class ViewLive extends Component {
     };
     const messages = this.state.messages || [];
     this.setState({ messages: [message].concat(messages) });
+    this.props.setMyUserAction({
+      ...user,
+      diamond: (user.diamond || 0) - (gift.diamond || 0),
+    });
+  };
+
+  onCloseProfileSheet = () => {
+    this.profileSheet?.current?.close();
   };
 
   onDoubleTap = () => {
@@ -344,7 +363,11 @@ class ViewLive extends Component {
           )}
           <View style={styles.contentWrapper}>
             <View style={styles.header}>
-              <Header room={room} liveStatus={liveStatus} />
+              <Header
+                room={room}
+                liveStatus={liveStatus}
+                onPressProfileAction={this.onPressProfileAction}
+              />
             </View>
             <View style={styles.footer}>
               <BottomActionsGroup
@@ -362,7 +385,22 @@ class ViewLive extends Component {
             </View>
           </View>
         </TouchableOpacity>
-
+        <RBSheet
+          ref={this.profileSheet}
+          closeOnDragDown
+          openDuration={250}
+          customStyles={{
+            container: {
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              height: 420,
+              overflow: 'visible',
+            },
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
+          }}
+        >
+          <ProfileBottom onCloseProfileSheet={this.onCloseProfileSheet} />
+        </RBSheet>
         <RBSheet
           ref={this.giftBottomSheet}
           closeOnDragDown={false}
@@ -399,5 +437,5 @@ export default connect(
     user: state.me?.user || {},
     gifts: state.liveStream?.gifts || [],
   }),
-  { setGifts },
+  { setGifts, setMyUserAction },
 )(ViewLive);

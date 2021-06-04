@@ -1,7 +1,7 @@
 import React from 'react';
 import {
   Image,
-  SafeAreaView,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,17 +13,15 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
-import GHeaderBar from '../../components/GHeaderBar';
-import Avatar from '../../components/elements/Avatar';
+import { GStyle, GStyles, Helper, RestAPI } from '../../../utils/Global';
+import Avatar from '../../../components/elements/Avatar';
 import LinearGradient from 'react-native-linear-gradient';
-import avatars from '../../assets/avatars';
+import avatars from '../../../assets/avatars';
 
-const ic_plus_1 = require('../../assets/images/Icons/ic_plus_1.png');
-const ic_message = require('../../assets/images/Icons/ic_menu_messages.png');
+const ic_plus_1 = require('../../../assets/images/Icons/ic_plus_1.png');
+const ic_message = require('../../../assets/images/Icons/ic_menu_messages.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 10) / 3.0;
@@ -31,7 +29,7 @@ const CELL_WIDTH = (WINDOW_WIDTH - 32 - 10) / 3.0;
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
-class ProfileOtherScreen extends React.Component {
+class ProfileBottom extends React.Component {
   constructor(props) {
     super(props);
 
@@ -42,17 +40,10 @@ class ProfileOtherScreen extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('profile_other'));
-      Helper.setLightStatusBar();
-      this.onRefresh();
-    });
+    this.onRefresh();
   }
 
   componentWillUnmount() {
-    this.unsubscribe();
-
     this._isMounted = false;
   }
 
@@ -96,6 +87,7 @@ class ProfileOtherScreen extends React.Component {
     global._selIndex = itemDatas.findIndex((obj) => obj.id === value);
     global._profileOtherVideoDatas = itemDatas;
     global._prevScreen = 'profile_other';
+    this.props.onCloseProfileSheet && this.props.onCloseProfileSheet();
     const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);
   };
@@ -127,6 +119,7 @@ class ProfileOtherScreen extends React.Component {
     this.props.navigation.navigate('message_chat', {
       opponentUser: this.state.opponentUser || {},
     });
+    this.props.onCloseProfileSheet && this.props.onCloseProfileSheet();
   };
 
   onBack = () => {
@@ -135,29 +128,18 @@ class ProfileOtherScreen extends React.Component {
 
   render() {
     return (
-      <>
-        <SafeAreaView style={GStyles.statusBar} />
-        <SafeAreaView style={styles.container}>
-          {this._renderHeader()}
-          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-            {this._renderAvartar()}
+      <View style={styles.container}>
+        {this.state.opponentUser?.id && (
+          <>
+            {this._renderAvatar()}
+            {this._renderDetail()}
             {this._renderVideo()}
-          </KeyboardAwareScrollView>
-          {this._renderBottom()}
-        </SafeAreaView>
-      </>
+            {this._renderBottom()}
+          </>
+        )}
+      </View>
     );
   }
-
-  _renderHeader = () => {
-    return (
-      <GHeaderBar
-        headerTitle="Profile"
-        leftType="back"
-        onPressLeftButton={this.onBack}
-      />
-    );
-  };
 
   _renderBottom = () => {
     const { followed } = this.state;
@@ -189,12 +171,30 @@ class ProfileOtherScreen extends React.Component {
       </View>
     );
   };
-  _renderAvartar = () => {
+
+  _renderAvatar = () => {
     const { opponentUser } = this.state;
     const avatar = {
       uri: opponentUser?.photo ? opponentUser?.photo : randomImageUrl,
     };
 
+    return (
+      <View style={styles.avatar}>
+        <View
+          style={{
+            borderRadius: 120,
+            borderWidth: 2,
+            borderColor: GStyle.activeColor,
+          }}
+        >
+          <Avatar image={avatar} size={84} />
+        </View>
+      </View>
+    );
+  };
+
+  _renderDetail = () => {
+    const { opponentUser } = this.state;
     const lvl = Helper.getLvLGuest(opponentUser?.diamondSpent || 0);
 
     return (
@@ -206,32 +206,17 @@ class ProfileOtherScreen extends React.Component {
         ]}
         style={styles.gradient}
       >
-        <View style={styles.avatar}>
-          <Avatar image={avatar} size={84} />
-          <View style={styles.profileDetailWrapper}>
-            <View style={GStyles.rowCenterContainer}>
-              <Text
-                style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
-              >
-                {opponentUser?.username}
-              </Text>
-            </View>
-            <View style={[GStyles.rowCenterContainer]}>
-              <View style={{ flexShrink: 1 }}>
-                <Text
-                  style={styles.textID}
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                >
-                  ID: {opponentUser?.id}
-                </Text>
-              </View>
-              <TouchableOpacity style={styles.buttonCopy}>
-                <Text style={GStyles.elementLabel}>Copy</Text>
-              </TouchableOpacity>
-            </View>
+        <View style={styles.profileDetailWrapper}>
+          <Text style={[GStyles.mediumText, { textTransform: 'uppercase' }]}>
+            {opponentUser?.username}
+          </Text>
+          <View style={{ flexShrink: 1, marginTop: 12 }}>
+            <Text style={styles.textID} ellipsizeMode="tail" numberOfLines={1}>
+              ID: {opponentUser?.id}
+            </Text>
           </View>
         </View>
+
         <View style={GStyles.rowEvenlyContainer}>
           {opponentUser?.userType === 1 ? (
             <>
@@ -277,7 +262,7 @@ class ProfileOtherScreen extends React.Component {
     const { itemDatas } = this.state;
 
     return (
-      <View style={styles.videosWrapper}>
+      <ScrollView style={styles.videosWrapper} horizontal>
         {itemDatas?.map((item, i) => {
           return (
             <View
@@ -285,7 +270,7 @@ class ProfileOtherScreen extends React.Component {
               style={{
                 alignItems: 'center',
                 borderRadius: 4,
-                marginBottom: 4,
+                marginRight: 12,
                 overflow: 'hidden',
               }}
             >
@@ -309,7 +294,7 @@ class ProfileOtherScreen extends React.Component {
             </View>
           );
         })}
-      </View>
+      </ScrollView>
     );
   };
 }
@@ -321,37 +306,36 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: 'white',
     flex: 1,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   gradient: {
+    flex: 1,
     paddingHorizontal: 20,
-    paddingVertical: 24,
+    paddingBottom: 24,
+    paddingTop: 36,
+    borderTopLeftRadius: 16,
+    borderTopRightRadius: 16,
   },
   avatar: {
-    flexDirection: 'row',
-    marginBottom: 24,
+    ...GStyles.centerAlign,
+    width: '100%',
+    position: 'absolute',
+    top: -42,
+    marginBottom: 32,
+    zIndex: 9999,
   },
   textID: {
     ...GStyles.regularText,
     color: GStyle.grayColor,
   },
-  buttonCopy: {
-    ...GStyles.centerAlign,
-    padding: 4,
-    backgroundColor: 'white',
-    borderWidth: 0.5,
-    borderColor: GStyle.lineColor,
-    borderRadius: 4,
-    marginLeft: 12,
-  },
   profileDetailWrapper: {
-    marginLeft: 12,
-    ...GStyles.columnEvenlyContainer,
+    justifyContent: 'center',
+    alignItems: 'center',
     flex: 1,
   },
   videosWrapper: {
     flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
     flexWrap: 'wrap',
     paddingHorizontal: 16,
     paddingBottom: 24,
@@ -382,7 +366,5 @@ const styles = StyleSheet.create({
 export default function (props) {
   let navigation = useNavigation();
   let route = useRoute();
-  return (
-    <ProfileOtherScreen {...props} navigation={navigation} route={route} />
-  );
+  return <ProfileBottom {...props} navigation={navigation} route={route} />;
 }

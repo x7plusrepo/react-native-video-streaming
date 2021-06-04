@@ -60,7 +60,7 @@ const Global = {
       }
     });
   },
-  uploadImageToCloudinary: async (source, folder = 'images', public_id) => {
+  uploadToCloudinary: async (source, folder = '/', public_id) => {
     return new Promise((resolve, reject) => {
       const data = new FormData();
       data.append('file', source);

@@ -58,7 +58,7 @@ const RestAPI = {
 
   add_video: (params, callBack) => {
     const data = {
-      userId: params.user_id,
+      userId: params.userId,
       url: params.uploaded_url,
       tags: params.tags,
       price: params.price,

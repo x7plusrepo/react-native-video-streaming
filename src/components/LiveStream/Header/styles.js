@@ -45,6 +45,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: '50%',
     borderRadius: 48,
+    overflow: 'hidden',
     left: 0,
     transform: [{ translateX: 0 }, { translateY: -16 }],
   },

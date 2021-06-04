@@ -26,6 +26,7 @@ import { Constants, Global, Logger, RestAPI } from '../../utils/Global';
 import { setGifts } from '../../redux/liveStream/actions';
 import styles from './styles';
 import ic_audio from './../../assets/images/Icons/ic_audio_on.png';
+import ProfileBottom from "../../components/LiveStream/ProfileBottom/ProfileBottom";
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -53,6 +54,7 @@ class GoLive extends React.Component {
     };
     this.messageBottomSheet = React.createRef();
     this.taskBottomSheet = React.createRef();
+    this.profileSheet = React.createRef();
   }
 
   componentDidMount() {
@@ -161,6 +163,7 @@ class GoLive extends React.Component {
     SocketManager.instance.removeSendGift();
     SocketManager.instance.emitFinishLiveStream({ streamerId });
     SocketManager.instance.emitLeaveRoom({
+      userId: streamerId,
       streamerId,
     });
   }
@@ -177,6 +180,12 @@ class GoLive extends React.Component {
 
   onPressTaskAction = () => {
     this.taskBottomSheet?.current?.open();
+  };
+
+
+  onPressProfileAction = (user) => {
+    global._opponentUser = user || {};
+    this.profileSheet?.current?.open();
   };
 
   onPressSendHeart = () => {
@@ -241,6 +250,10 @@ class GoLive extends React.Component {
   onPressSetGoal = (goal) => {
     this.setState({ goal });
     this.taskBottomSheet?.current?.close();
+  };
+
+  onCloseProfileSheet = () => {
+    this.profileSheet?.current?.close();
   };
 
   onPressClose = () => {
@@ -395,6 +408,7 @@ class GoLive extends React.Component {
                 mode="streamer"
                 goal={goal}
                 onPressClose={this.onPressClose}
+                onPressProfileAction={this.onPressProfileAction}
               />
             </View>
             <View style={styles.footer}>
@@ -436,6 +450,22 @@ class GoLive extends React.Component {
           }}
         >
           <TaskInput onPressSetGoal={this.onPressSetGoal} goal={goal} />
+        </RBSheet>
+        <RBSheet
+          ref={this.profileSheet}
+          closeOnDragDown
+          openDuration={250}
+          customStyles={{
+            container: {
+              backgroundColor: 'rgba(0, 0, 0, 0)',
+              height: 420,
+              overflow: 'visible',
+            },
+            wrapper: styles.sheetWrapper,
+            draggableIcon: styles.sheetDragIcon,
+          }}
+        >
+          <ProfileBottom onCloseProfileSheet={this.onCloseProfileSheet} />
         </RBSheet>
         <FloatingHearts count={countHeart} />
       </SafeAreaView>

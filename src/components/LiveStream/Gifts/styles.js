@@ -35,7 +35,7 @@ const styles = StyleSheet.create({
   },
   sendText: {
     ...GStyles.textSmall,
-    color: GStyle.grayColor,
+    color: GStyle.whiteColor,
     ...GStyles.semiBoldText,
   },
 });

@@ -62,14 +62,8 @@ class MainTabNavigator extends Component {
     RestAPI.get_unread_count(params, (json, err) => {
       showForcePageLoader(false);
 
-      if (err !== null) {
-        Helper.alertNetworkError(err?.message);
-      } else {
-        if (json.status === 200) {
-          this.props.setUnreadCount(json.data?.unreadCount || 0);
-        } else {
-          Helper.alertServerDataError();
-        }
+      if (json.status === 200) {
+        this.props.setUnreadCount(json.data?.unreadCount || 0);
       }
     });
   };
