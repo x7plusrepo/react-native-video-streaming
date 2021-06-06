@@ -44,11 +44,6 @@ export default class BottomActionsGroup extends Component {
     onPressShareAction && onPressShareAction();
   };
 
-  onPressTaskAction = () => {
-    const { onPressTaskAction } = this.props;
-    onPressTaskAction && onPressTaskAction();
-  };
-
   onPressSwitchCamera = () => {
     const { onPressSwitchCamera } = this.props;
     onPressSwitchCamera && onPressSwitchCamera();
@@ -108,20 +103,16 @@ export default class BottomActionsGroup extends Component {
               icon={ic_share}
               onPress={this.onPressShareAction}
             />
-            {mode === 'streamer' && (
-              <GradientBackgroundIconButton
-                icon={ic_star}
-                onPress={this.onPressTaskAction}
-              />
-            )}
           </View>
 
           <View style={GStyles.rowBetweenContainer}>
-            <GradientBackgroundIconButton
-              icon={heart}
-              onPress={this.onPressSendHeart}
-              containerStyle={{ marginLeft: 8, marginRight: 0 }}
-            />
+            {mode === 'viewer' && (
+              <GradientBackgroundIconButton
+                icon={heart}
+                onPress={this.onPressSendHeart}
+                containerStyle={{ marginLeft: 8, marginRight: 0 }}
+              />
+            )}
             {mode === 'viewer' && (
               <GradientBackgroundIconButton
                 icon={ic_gift}

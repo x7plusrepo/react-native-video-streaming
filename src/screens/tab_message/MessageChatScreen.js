@@ -87,7 +87,7 @@ class MessageChatScreen extends Component {
       }
       this.setState({ isFetching: true });
     } else {
-      showForcePageLoader(true);
+      //showForcePageLoader(true);
     }
     SocketManager.instance.emitFetchMessages(params);
   };
@@ -157,7 +157,10 @@ class MessageChatScreen extends Component {
         createdAt: new Date(),
         user: {
           _id: item.sender?.id,
-          name: item.sender?.username,
+          name:
+            item?.sender?.userType === 0
+              ? item.sender?.displayName
+              : item.sender?.username,
           avatar: item.sender?.photo,
         },
       };
@@ -181,7 +184,10 @@ class MessageChatScreen extends Component {
           createdAt: new Date(item.createdAt),
           user: {
             _id: item.sender?.id,
-            name: item.sender?.username,
+            name:
+              item?.sender?.userType === 0
+                ? item.sender?.displayName
+                : item.sender?.username,
             avatar: item.sender?.photo,
           },
         };
@@ -223,10 +229,13 @@ class MessageChatScreen extends Component {
 
   _renderHeader = () => {
     const { opponentUser } = this.state;
-    console.log(opponentUser);
     return (
       <GHeaderBar
-        headerTitle={opponentUser?.username}
+        headerTitle={
+          opponentUser?.userType === 0
+            ? opponentUser?.displayName
+            : opponentUser?.username
+        }
         leftType="back"
         onPressLeftButton={this.onBack}
       />
@@ -268,7 +277,13 @@ class MessageChatScreen extends Component {
             this.onRefresh('more');
           }}
           isLoadingEarlier={isFetching}
-          user={{ _id: global.me?.id, name: global.me?.username }}
+          user={{
+            _id: global.me?.id,
+            name:
+              global.me?.userType === 0
+                ? global.me?.displayName
+                : global.me?.username,
+          }}
           renderBubble={this._renderBubble}
           placeholder="Type your message here..."
           showUserAvatar

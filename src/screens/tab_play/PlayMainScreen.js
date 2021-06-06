@@ -85,22 +85,13 @@ class PlayMainScreen extends Component {
       // this.onRefresh('init');
       this.checkSignin();
       this.setState({ isVideoPause: false });
-
-      if (this.props.navigation.canGoBack()) {
-        BackHandler.removeEventListener('hardwareBackPress', this.onBack);
-      } else {
-        BackHandler.removeEventListener('hardwareBackPress', this.onBack);
-        this.backHandler = BackHandler.addEventListener(
-          'hardwareBackPress',
-          this.onBack,
-        );
-      }
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
       if (this.state.isMounted) {
         this.setState({ isVideoPause: true });
       }
     });
+    BackHandler.addEventListener('hardwareBackPress', this.onBack);
 
     AppState.addEventListener('change', this.onChangeAppState);
   }

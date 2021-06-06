@@ -13,7 +13,6 @@ import {
 } from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
 import Moment from 'moment';
-import io from 'socket.io-client';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import RNFS from 'react-native-fs';
@@ -21,7 +20,6 @@ import DeviceInfo from 'react-native-device-info';
 import publicIP from 'react-native-public-ip';
 
 import Constants from './Constants';
-import branch from 'react-native-branch';
 
 const Helper = {
   //** window */
@@ -556,69 +554,9 @@ const Helper = {
     return skillName;
   },
   getLvLGuest: function (diamondSpent) {
-    const diamondLvLMap = [
-      {
-        lvl: 1,
-        diamond: 0,
-      },
-      {
-        lvl: 2,
-        diamond: 5,
-      },
-      {
-        lvl: 3,
-        diamond: 50,
-      },
-      {
-        lvl: 4,
-        diamond: 100,
-      },
-      {
-        lvl: 5,
-        diamond: 200,
-      },
-      {
-        lvl: 6,
-        diamond: 500,
-      },
-      {
-        lvl: 7,
-        diamond: 1000,
-      },
-      {
-        lvl: 8,
-        diamond: 2000,
-      },
-      {
-        lvl: 9,
-        diamond: 3000,
-      },
-      {
-        lvl: 10,
-        diamond: 5000,
-      },
-      {
-        lvl: 11,
-        diamond: 6000,
-      },
-      {
-        lvl: 12,
-        diamond: 7000,
-      },
-      {
-        lvl: 13,
-        diamond: 8000,
-      },
-      {
-        lvl: 14,
-        diamond: 9000,
-      },
-      {
-        lvl: 15,
-        diamond: 12000,
-      },
-    ];
-    const levels = diamondLvLMap.filter((item) => item.diamond <= diamondSpent);
+    const levels = Constants.diamondLvLMap.filter(
+      (item) => item.diamond <= diamondSpent,
+    );
     const level = Math.max.apply(
       Math,
       levels.map(function (o) {
@@ -629,73 +567,9 @@ const Helper = {
     return level || 1;
   },
   getLvlLiveStream: (elixir) => {
-    const elixirLvLMap = [
-      {
-        lvl: 0,
-        elixir: 0,
-      },
-      {
-        lvl: 1,
-        elixir: 24,
-      },
-      {
-        lvl: 2,
-        elixir: 150,
-      },
-      {
-        lvl: 3,
-        elixir: 500,
-      },
-      {
-        lvl: 4,
-        elixir: 1000,
-      },
-      {
-        lvl: 5,
-        elixir: 2000,
-      },
-      {
-        lvl: 6,
-        elixir: 3000,
-      },
-      {
-        lvl: 7,
-        elixir: 5000,
-      },
-      {
-        lvl: 8,
-        elixir: 10000,
-      },
-      {
-        lvl: 9,
-        elixir: 15000,
-      },
-      {
-        lvl: 10,
-        elixir: 25000,
-      },
-      {
-        lvl: 11,
-        elixir: 50000,
-      },
-      {
-        lvl: 12,
-        elixir: 100000,
-      },
-      {
-        lvl: 13,
-        elixir: 150000,
-      },
-      {
-        lvl: 14,
-        elixir: 200000,
-      },
-      {
-        lvl: 15,
-        elixir: 250000,
-      },
-    ];
-    const levels = elixirLvLMap.filter((item) => item.elixir <= elixir);
+    const levels = Constants.elixirLvLMap.filter(
+      (item) => item.elixir <= elixir,
+    );
     const level = Math.max.apply(
       Math,
       levels.map(function (o) {
@@ -704,6 +578,22 @@ const Helper = {
     );
 
     return level || 0;
+  },
+  getElixirFromLvl: (lvl) => {
+    const lvlItem = Constants.elixirLvLMap.find((level) => level.lvl === lvl);
+    const maxElixir = Math.max.apply(
+      Math,
+      Constants.elixirLvLMap.map((o) => o.elixir),
+    );
+
+    return lvlItem && lvl >= 0 ? lvlItem.elixir : maxElixir;
+  },
+  getProgress: (elixir, lvl) => {
+    const targetElixir = Helper.getElixirFromLvl(lvl + 1);
+    const lvlElixir = Helper.getElixirFromLvl(lvl);
+    const target = targetElixir - lvlElixir;
+    const current = elixir - lvlElixir;
+    return target <= 0 ? '100%' : `${Math.min(100, (current * 100) / target)}%`;
   },
 };
 

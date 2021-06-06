@@ -166,4 +166,5 @@ const THomeMainScreen = (props) => {
   let route = useRoute();
   return <HomeMainScreen {...props} navigation={navigation} route={route} />;
 };
+
 export default connect((state) => ({}), { setCategories })(THomeMainScreen);

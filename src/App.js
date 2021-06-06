@@ -38,7 +38,6 @@ const subscribeDeepLink = () => {
       // Route non-Branch URL if appropriate.
       return;
     }
-
     if (!params['+clicked_branch_link']) {
       // Indicates initialization success and some other conditions.
       // No link was opened.
@@ -63,63 +62,39 @@ function App() {
   const [initLoading, setInitLoading] = useState(true);
 
   useEffect(() => {
-    // OneSignal.setLogLevel(6, 0);
-
-    // // Replace 'YOUR_ONESIGNAL_APP_ID' with your OneSignal App ID.
-    // OneSignal.init('26974209-5e4f-40e7-a8ec-732b81998f01', {
-    //   kOSSettingsKeyAutoPrompt: false,
-    //   kOSSettingsKeyInAppLaunchURL: false,
-    //   kOSSettingsKeyInFocusDisplayOption: 2,
-    // });
-    // OneSignal.inFocusDisplaying(2); // Controls what should happen if a notification is received while the app is open. 2 means that the notification will go directly to the device's notification center.
-
-    // // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
-    // OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
-
-    // OneSignal.addEventListener('received', onReceived);
-    // OneSignal.addEventListener('opened', onOpened);
-    // OneSignal.addEventListener('ids', onIds);
-
+    const getDeviceState = async () => {
+      const deviceState = await OneSignal.getDeviceState();
+      console.log('Device info: ', deviceState);
+      global._pushToken = deviceState.pushToken;
+      global._pushAppId = deviceState.userId;
+    };
+    OneSignal.setLogLevel(6, 0);
+    OneSignal.setAppId('b90b63c2-bbc8-4c56-84fe-39298ff4ca45');
+    OneSignal.setNotificationWillShowInForegroundHandler(onReceived);
+    OneSignal.setNotificationOpenedHandler(onOpened);
+    // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
+    OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
+    getDeviceState();
     subscribeDeepLink();
-
     LiveStreamSocketManager.instance.connect();
     ChatStreamSocketManager.instance.connect();
 
     return () => {
       LiveStreamSocketManager.instance.disconnect();
       ChatStreamSocketManager.instance.disconnect();
-      // OneSignal.removeEventListener('received', onReceived);
-      // OneSignal.removeEventListener('opened', onOpened);
-      // OneSignal.removeEventListener('ids', onIds);
     };
   }, []);
 
-  const onReceived = (notification) => {
-    console.log('Notification received: ', notification);
-
-    if (notification.isAppInFocus) {
-      Helper.callFunc(global.onSetUnreadCount);
-    }
+  const onReceived = (notifReceivedEvent) => {
+    console.log('Notification received: ', notifReceivedEvent);
+    const notif = notifReceivedEvent.getNotification();
+    notifReceivedEvent.complete(notif);
+    Helper.callFunc(global.onSetUnreadCount);
   };
 
   const onOpened = async (openResult) => {
-    console.log('Message: ', openResult.notification.payload.body);
-    console.log('Data: ', openResult.notification.payload.additionalData);
-    console.log('isActive: ', openResult.notification.isAppInFocus);
-    console.log('openResult: ', openResult);
-
-    if (!openResult.notification.isAppInFocus) {
-      Helper.callFunc(global.onGotoMessage);
-    }
-    // else {
-    //   Helper.callFunc(global.onSetUnreadCount);
-    // }
-  };
-
-  const onIds = async (device) => {
-    console.log('Device info: ', device);
-    global._pushToken = device.pushToken;
-    global._pushAppId = device.userId;
+    console.log(openResult);
+    Helper.callFunc(global.onGotoMessage);
   };
 
   global.success = (title, text) => {

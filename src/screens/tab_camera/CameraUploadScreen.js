@@ -445,14 +445,12 @@ class CameraUploadScreen extends React.Component {
     showForcePageLoader(true);
     const uploadedThumbUrl = await Global.uploadToCloudinary(
       imageSource,
-      'productImages',
-      'image',
+      'temporary/productImages',
     );
     if (uploadedThumbUrl) {
       const uploadedVideoUrl = await Global.uploadToCloudinary(
         videoSource,
-        'products',
-        'video',
+        'temporary/products',
       );
       if (uploadedVideoUrl) {
         this.setState(

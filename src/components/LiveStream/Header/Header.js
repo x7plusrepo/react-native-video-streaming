@@ -95,8 +95,7 @@ class Component extends React.Component {
     const streamerName = streamer?.username;
     const avatarImage = { uri: streamer?.photo || randomImageUrl };
     const level = Helper.getLvlLiveStream(room?.elixir || 0);
-    const progress =
-      goal === 0 ? '100%' : `${Math.min(100, (level * 100) / goal)}%`;
+    const progress = Helper.getProgress(room?.elixir || 0, level);
 
     const badgeBackground =
       liveStatus === LIVE_STATUS.ON_LIVE
@@ -207,9 +206,8 @@ class Component extends React.Component {
                 ]}
               >
                 <View style={GStyles.rowContainer}>
-                  <Image source={ic_bean} style={styles.infoIcon} />
                   <Text style={styles.archiveText}>
-                    {randomProduct?.price || 0}
+                    ৳ {randomProduct?.price || 0}
                   </Text>
                 </View>
               </View>

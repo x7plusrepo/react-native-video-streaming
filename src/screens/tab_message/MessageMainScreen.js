@@ -25,6 +25,10 @@ class MessageMainScreen extends React.Component {
     this.onRefresh('init');
   }
 
+  componentWillUnmount() {
+    Helper.callFunc(global.onSetUnreadCount);
+  }
+
   init = () => {
     this.state = {
       isFetching: false,
@@ -42,7 +46,7 @@ class MessageMainScreen extends React.Component {
       return;
     }
 
-    console.log('clicked?')
+    console.log('clicked?');
     if (type === 'more') {
       curPage += 1;
       const maxPage =

@@ -44,7 +44,7 @@ import {
 import GHeaderBar from '../../components/GHeaderBar';
 import { connect } from 'react-redux';
 import { setMyUserAction } from '../../redux/me/actions';
-import ChatStreamSocketManager from "../../utils/Message/SocketManager";
+import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 
 const image_logo = require('../../assets/images/Icons/ic_logo.png');
 const image_google = require('../../assets/images/Icons/ic_google.png');
@@ -73,32 +73,12 @@ class SigninScreen extends React.Component {
 
   init = () => {
     this.state = {
-      secureTextEntry: global.debug ? false : true,
+      secureTextEntry: !global.debug,
       phoneNumber: '',
       password: '',
     };
 
     this.initRef();
-  };
-
-  onBack = () => {
-    if (this.props.navigation.isFocused()) {
-      if (global._prevScreen == 'profile_edit') {
-        Alert.alert(Constants.WARNING_TITLE, 'Are you sure to quit?', [
-          {
-            text: 'Cancel',
-            onPress: () => null,
-            style: 'cancel',
-          },
-          { text: 'YES', onPress: () => BackHandler.exitApp() },
-        ]);
-        return true;
-      } else {
-        // this.props.navigation.navigate('play');
-        this.props.navigation.goBack();
-        return true;
-      }
-    }
   };
 
   initRef = () => {
@@ -224,14 +204,7 @@ class SigninScreen extends React.Component {
             this.props.setMyUserAction(global.me);
             Helper.setLocalValue(Constants.KEY_USERNAME, user?.username);
             Helper.setLocalValue(Constants.KEY_PASSWORD, password);
-            
-            params = {
-              user_id: user.id,
-              one_signal_id: global._pushAppId,
-              token: global._pushToken,
-              device_id: global._deviceId,
-              device_type: Platform.OS === 'ios' ? '1' : '0',
-            };
+
             Global.registerPushToken();
 
             this.props.navigation.navigate('main_tab_navigator');
@@ -431,8 +404,8 @@ class SigninScreen extends React.Component {
 const styles = StyleSheet.create({});
 
 export default connect(
-    (state) => ({
-      user: state.me.user,
-    }),
-    { setMyUserAction },
+  (state) => ({
+    user: state.me.user,
+  }),
+  { setMyUserAction },
 )(SigninScreen);

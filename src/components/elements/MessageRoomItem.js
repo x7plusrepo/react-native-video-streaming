@@ -10,13 +10,18 @@ const randomImageUrl = avatars[randomNumber];
 
 const MessageRoomItem = ({ item, onPress }) => (
   <TouchableOpacity
-    style={{ marginTop: 24, paddingHorizontal: 16, flexDirection: 'row', alignItems: 'center' }}
+    style={{
+      marginTop: 24,
+      paddingHorizontal: 16,
+      flexDirection: 'row',
+      alignItems: 'center',
+    }}
     onPress={() => {
       onPress(item);
     }}
   >
     <Avatar
-      image={{ uri: item.photo || randomImageUrl }}
+      image={{ uri: item?.photo || randomImageUrl }}
       // status={item.opponent_status}
     />
     <View
@@ -29,7 +34,7 @@ const MessageRoomItem = ({ item, onPress }) => (
       <Text
         style={[GStyles.regularText, GStyles.boldText, GStyles.upperCaseText]}
       >
-        {item.username}
+        {item?.userType === 0 ? item?.displayName : item?.username}
       </Text>
       <View style={{ ...GStyles.rowBetweenContainer, marginTop: 5 }}>
         <Text
@@ -42,7 +47,7 @@ const MessageRoomItem = ({ item, onPress }) => (
             lineHeight: 16,
           }}
         >
-          {item.lastMessage}
+          {item?.lastMessage}
         </Text>
         <Text
           style={{
@@ -58,10 +63,8 @@ const MessageRoomItem = ({ item, onPress }) => (
     {item.unreadCount > 0 && (
       <View style={styles.messageBadgeContainer}>
         <View style={styles.messageBadgeWrapper}>
-          <Text
-            style={[GStyles.textExtraSmall, GStyles.boldText]}
-          >
-            {item.unreadCount}
+          <Text style={[GStyles.textExtraSmall, GStyles.boldText]}>
+            {item?.unreadCount}
           </Text>
         </View>
       </View>

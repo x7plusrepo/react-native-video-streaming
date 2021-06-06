@@ -170,7 +170,6 @@ class ProfileMainScreen extends React.Component {
       Helper.callFunc(global.setBottomTabName('profile'));
       Helper.setLightStatusBar();
       this.onRefresh();
-      Helper.callFunc(global.onSetUnreadCount);
     });
   }
 
@@ -195,8 +194,6 @@ class ProfileMainScreen extends React.Component {
     //showForcePageLoader(true);
     RestAPI.get_user_profile(params, (json, err) => {
       showForcePageLoader(false);
-      console.log(err);
-      console.log(json);
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
@@ -230,6 +227,9 @@ class ProfileMainScreen extends React.Component {
     const avatarImage = {
       uri: user?.photo ?? randomImageUrl,
     };
+
+    const displayName =
+      user?.userType === 0 ? user?.displayName : user?.username;
 
     const translateY = this.scrollAnimatedValue.interpolate({
       inputRange: [0, 180],
@@ -268,7 +268,7 @@ class ProfileMainScreen extends React.Component {
                   { marginTop: 16, textTransform: 'uppercase' },
                 ]}
               >
-                {user.username}
+                {displayName}
               </Text>
               <Text
                 style={[

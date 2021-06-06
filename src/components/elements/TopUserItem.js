@@ -6,7 +6,6 @@ import Avatar from './Avatar';
 import avatars from '../../assets/avatars';
 import GStyle from '../../utils/Global/Styles';
 import ic_sparkles from '../../assets/images/Icons/ic_sparkles.png';
-const ic_plus_1 = require('../../assets/images/Icons/ic_plus_1.png');
 const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
 const ic_rank_first = require('../../assets/images/Icons/ic_rank_first.png');
 const ic_rank_second = require('../../assets/images/Icons/ic_rank_second.png');
@@ -32,9 +31,9 @@ const numberMark = (index) => {
 };
 
 const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
-
   const icon = sortBy === 'elixir' ? ic_elixir : ic_diamond;
-  const iconText = sortBy === 'elixir' ? item?.elixir || 0 : item?.diamondSpent || 0;
+  const iconText =
+    sortBy === 'elixir' ? item?.elixir || 0 : item?.diamondSpent || 0;
 
   return (
     <TouchableOpacity
@@ -43,35 +42,24 @@ const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
       }}
     >
       <View style={[GStyles.rowCenterContainer, styles.container]}>
-        <View style={{ width: 36, ...GStyles.centerAlign}}>{numberMark(index)}</View>
+        <View style={{ width: 36, ...GStyles.centerAlign }}>
+          {numberMark(index)}
+        </View>
 
         <Avatar
           image={{ uri: item.photo || randomImageUrl }}
           containerStyle={{ marginLeft: 16 }}
         />
         <View style={styles.detailWrapper}>
-          <View style={GStyles.rowContainer}>
-            <Image
-              source={ic_sparkles}
-              style={{ width: 20, height: 20 }}
-              resizeMode="contain"
-            />
-            <Text
-              style={[
-                GStyles.mediumText,
-                GStyles.boldText,
-                GStyles.upperCaseText,
-                { marginHorizontal: 12 },
-              ]}
-            >
-              {item?.username}
-            </Text>
-            <Image
-              source={ic_sparkles}
-              style={{ width: 20, height: 20 }}
-              resizeMode="contain"
-            />
-          </View>
+          <Text
+            style={[
+              GStyles.mediumText,
+              GStyles.boldText,
+              GStyles.upperCaseText,
+            ]}
+          >
+            {item?.username}
+          </Text>
           <View style={[GStyles.rowContainer, { marginTop: 2 }]}>
             <Image
               source={icon}
@@ -83,11 +71,6 @@ const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
             </Text>
           </View>
         </View>
-        <Image
-          source={ic_plus_1}
-          style={{ width: 20, height: 20 }}
-          tintColor={GStyle.activeColor}
-        />
       </View>
     </TouchableOpacity>
   );

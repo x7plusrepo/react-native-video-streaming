@@ -196,6 +196,10 @@ class ProfileOtherScreen extends React.Component {
     };
 
     const lvl = Helper.getLvLGuest(opponentUser?.diamondSpent || 0);
+    const displayName =
+      opponentUser?.userType === 0
+        ? opponentUser?.displayName
+        : opponentUser?.username;
 
     return (
       <LinearGradient
@@ -213,17 +217,17 @@ class ProfileOtherScreen extends React.Component {
               <Text
                 style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
               >
-                {opponentUser?.username}
+                {displayName}
               </Text>
             </View>
             <View style={[GStyles.rowCenterContainer]}>
               <View style={{ flexShrink: 1 }}>
                 <Text
-                  style={styles.textID}
+                  style={styles.textId}
                   ellipsizeMode="tail"
                   numberOfLines={1}
                 >
-                  ID: {opponentUser?.id}
+                  ID: {opponentUser?.uniqueId}
                 </Text>
               </View>
               <TouchableOpacity style={styles.buttonCopy}>
@@ -330,7 +334,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginBottom: 24,
   },
-  textID: {
+  textId: {
     ...GStyles.regularText,
     color: GStyle.grayColor,
   },

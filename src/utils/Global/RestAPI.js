@@ -49,10 +49,14 @@ const RestAPI = {
       data.photo = params.photo;
     }
 
+    if (params.displayName) {
+      data.displayName = params.displayName;
+    }
+
     if (params.password) {
       data.password = params.password;
     }
-
+    console.log(data);
     formDataCall('api/profile', data, {}, callBack, 'put');
   },
 
@@ -192,7 +196,7 @@ const RestAPI = {
       deviceId: params.device_id,
       deviceType: params.device_type,
     };
-
+    console.log(data);
     formDataCall('api/auth/registerPushToken', data, {}, callBack, 'put');
   },
 
@@ -246,7 +250,7 @@ const RestAPI = {
       sticker: params.sticker,
     };
 
-    formDataCall('api/video/sticker', data, {}, callBack, 'patch');
+    formDataCall('api/video', data, {}, callBack, 'put');
   },
 
   get_user_profile: (params, callBack) => {

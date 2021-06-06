@@ -112,6 +112,134 @@ const Constants = {
     'Dec',
   ],
   Weeks3: ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
+  elixirLvLMap: [
+    {
+      lvl: 0,
+      elixir: 0,
+    },
+    {
+      lvl: 1,
+      elixir: 24,
+    },
+    {
+      lvl: 2,
+      elixir: 150,
+    },
+    {
+      lvl: 3,
+      elixir: 500,
+    },
+    {
+      lvl: 4,
+      elixir: 1000,
+    },
+    {
+      lvl: 5,
+      elixir: 2000,
+    },
+    {
+      lvl: 6,
+      elixir: 3000,
+    },
+    {
+      lvl: 7,
+      elixir: 5000,
+    },
+    {
+      lvl: 8,
+      elixir: 10000,
+    },
+    {
+      lvl: 9,
+      elixir: 15000,
+    },
+    {
+      lvl: 10,
+      elixir: 25000,
+    },
+    {
+      lvl: 11,
+      elixir: 50000,
+    },
+    {
+      lvl: 12,
+      elixir: 100000,
+    },
+    {
+      lvl: 13,
+      elixir: 150000,
+    },
+    {
+      lvl: 14,
+      elixir: 200000,
+    },
+    {
+      lvl: 15,
+      elixir: 250000,
+    },
+  ],
+  diamondLvLMap: [
+    {
+      lvl: 1,
+      diamond: 0,
+    },
+    {
+      lvl: 2,
+      diamond: 5,
+    },
+    {
+      lvl: 3,
+      diamond: 50,
+    },
+    {
+      lvl: 4,
+      diamond: 100,
+    },
+    {
+      lvl: 5,
+      diamond: 200,
+    },
+    {
+      lvl: 6,
+      diamond: 500,
+    },
+    {
+      lvl: 7,
+      diamond: 1000,
+    },
+    {
+      lvl: 8,
+      diamond: 2000,
+    },
+    {
+      lvl: 9,
+      diamond: 3000,
+    },
+    {
+      lvl: 10,
+      diamond: 5000,
+    },
+    {
+      lvl: 11,
+      diamond: 6000,
+    },
+    {
+      lvl: 12,
+      diamond: 7000,
+    },
+    {
+      lvl: 13,
+      diamond: 8000,
+    },
+    {
+      lvl: 14,
+      diamond: 9000,
+    },
+    {
+      lvl: 15,
+      diamond: 12000,
+    },
+  ],
 };
 
 export default Constants;

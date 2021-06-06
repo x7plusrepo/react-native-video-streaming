@@ -8,6 +8,7 @@ const ProductsList = forwardRef((props, ref) => {
     isFetching = false,
     onRefresh,
     onPressVideo,
+    onLongPressVideo,
     onEndReachedDuringMomentum,
     setOnEndReachedDuringMomentum,
   } = props;
@@ -24,9 +25,8 @@ const ProductsList = forwardRef((props, ref) => {
     return (
       <ExploreVideoItem
         item={item}
-        onPress={() => {
-          onPressVideo && onPressVideo(item);
-        }}
+        onPress={onPressVideo}
+        onLongPress={onLongPressVideo}
         index={index}
       />
     );
@@ -35,7 +35,6 @@ const ProductsList = forwardRef((props, ref) => {
   return (
     <FlatList
       ref={ref}
-      style={{ flex: 1 }}
       showsVerticalScrollIndicator={false}
       numColumns={2}
       onRefresh={() => {
@@ -50,8 +49,7 @@ const ProductsList = forwardRef((props, ref) => {
       onEndReached={() => {
         if (!onEndReachedDuringMomentum) {
           onRefresh && onRefresh('more');
-          setOnEndReachedDuringMomentum &&
-          setOnEndReachedDuringMomentum(true);
+          setOnEndReachedDuringMomentum && setOnEndReachedDuringMomentum(true);
         }
       }}
       data={products}

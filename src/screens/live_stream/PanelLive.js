@@ -7,8 +7,7 @@ import {
   View,
 } from 'react-native';
 import React, { useState } from 'react';
-import { useNavigation } from '@react-navigation/native';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
@@ -27,12 +26,12 @@ const PanelLive = (props) => {
   const onChangeText = (text) => setTopic(text);
   const onStart = async () => {
     showForcePageLoader(true);
-    const uploadedUrl = await Global.uploadToCloudinary(thumbnail, 'liveStreamImages', 'image');
+    const uploadedUrl = await Global.uploadToCloudinary(thumbnail, 'temporary/liveStreamImages');
     showForcePageLoader(false);
-    if (!uploadedUrl) {
-      alert('Thumbnail required.');
-      return;
-    }
+    // if (!uploadedUrl) {
+    //   alert('Thumbnail required.');
+    //   return;
+    // }
     onPressStart && onPressStart(topic, uploadedUrl, mode);
   };
   const onPressClose = () => {
@@ -41,7 +40,7 @@ const PanelLive = (props) => {
   };
 
   const onPressThumbnail = () => {
-    launchCamera(
+    launchImageLibrary(
       {
         height: 300,
         width: 300,

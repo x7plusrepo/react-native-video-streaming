@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   Alert,
+  BackHandler,
   Image,
   PermissionsAndroid,
   SafeAreaView,
@@ -26,7 +27,7 @@ import { Constants, Global, Logger, RestAPI } from '../../utils/Global';
 import { setGifts } from '../../redux/liveStream/actions';
 import styles from './styles';
 import ic_audio from './../../assets/images/Icons/ic_audio_on.png';
-import ProfileBottom from "../../components/LiveStream/ProfileBottom/ProfileBottom";
+import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -59,6 +60,7 @@ class GoLive extends React.Component {
 
   componentDidMount() {
     this.init();
+    BackHandler.addEventListener('hardwareBackPress', this.onPressClose);
   }
 
   init = () => {
@@ -166,6 +168,7 @@ class GoLive extends React.Component {
       userId: streamerId,
       streamerId,
     });
+    BackHandler.removeEventListener('hardwareBackPress', this.onPressClose);
   }
 
   onPressMessageAction = () => {
@@ -181,7 +184,6 @@ class GoLive extends React.Component {
   onPressTaskAction = () => {
     this.taskBottomSheet?.current?.open();
   };
-
 
   onPressProfileAction = (user) => {
     global._opponentUser = user || {};
@@ -247,11 +249,6 @@ class GoLive extends React.Component {
     this.messageBottomSheet?.current?.close();
   };
 
-  onPressSetGoal = (goal) => {
-    this.setState({ goal });
-    this.taskBottomSheet?.current?.close();
-  };
-
   onCloseProfileSheet = () => {
     this.profileSheet?.current?.close();
   };
@@ -266,8 +263,9 @@ class GoLive extends React.Component {
         },
         { text: 'YES', onPress: () => this.props.navigation.goBack() },
       ]);
+      return true;
     }
-    return true;
+    return false;
   };
 
   onPressStart = (topic, thumbnail, mode) => {
@@ -449,7 +447,7 @@ class GoLive extends React.Component {
             draggableIcon: styles.sheetDragIcon,
           }}
         >
-          <TaskInput onPressSetGoal={this.onPressSetGoal} goal={goal} />
+          <TaskInput />
         </RBSheet>
         <RBSheet
           ref={this.profileSheet}

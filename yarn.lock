@@ -6568,10 +6568,10 @@ react-native-nodemediaclient@^0.2.15:
   resolved "https://registry.yarnpkg.com/react-native-nodemediaclient/-/react-native-nodemediaclient-0.2.15.tgz#a4472be6e485a9dd60177b7e712615c1721b005d"
   integrity sha512-1B6vIq3D/GI1S0uaNJhC3pyqVVhpM6uhWbboH6UynYT+F4NpgJ3kYbGo1aHoBxW+moLEMpITLtxYa0+YkKCuuQ==
 
-react-native-onesignal@^4.0.8:
-  version "4.0.8"
-  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.0.8.tgz#258d8f0e394257c6368b19bd77e0677b6a1f9433"
-  integrity sha512-N80+WopFz/ztclF+a0RpSGEu+hArlWLOKSSLv/YvYvIttcXUSIr9CpRj9a4Zq6Sc75ns97HHJZ28xXGY88JFTg==
+react-native-onesignal@^4.1.1:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/react-native-onesignal/-/react-native-onesignal-4.1.1.tgz#c0e737eac020563f161c2da371b811fa3989e969"
+  integrity sha512-Rc9LmnT9Hpbz4AxbILnWg8ElbErhftFi+eDW54NoEMi6n5uDodGn5kEQv1nEcP3ET0CmTDNYClB4n8M12X6NgQ==
   dependencies:
     invariant "^2.2.2"
 

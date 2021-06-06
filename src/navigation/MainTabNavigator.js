@@ -99,7 +99,7 @@ class MainTabNavigator extends Component {
             roomId: global.me?.id,
             userId: global.me?.id,
           });
-          global.me = json.data || [];
+          global.me = json?.data?.user || {};
           ChatStreamSocketManager.instance.emitJoinRoom({
             roomId: global.me?.id,
             userId: global.me?.id,
@@ -146,11 +146,6 @@ class MainTabNavigator extends Component {
               <Image source={ic_tab_top} style={styles.tabIconImage} />
             ),
           }}
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              Global.registerPushToken();
-            },
-          })}
         />
         <Tab.Screen
           name="play"
@@ -162,11 +157,6 @@ class MainTabNavigator extends Component {
             ),
             tabBarVisible: curTabName !== 'profile_other',
           }}
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              Global.registerPushToken();
-            },
-          })}
         />
         <Tab.Screen
           name="home"
@@ -177,11 +167,6 @@ class MainTabNavigator extends Component {
               <Image source={ic_tab_home} style={styles.tabIconImage} />
             ),
           }}
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              Global.registerPushToken();
-            },
-          })}
         />
         <Tab.Screen
           name="live_stream"
@@ -198,7 +183,6 @@ class MainTabNavigator extends Component {
               if (!global.me) {
                 e.preventDefault();
                 this.props.navigation.navigate('signin');
-                Global.registerPushToken();
               }
             },
           })}
@@ -226,7 +210,6 @@ class MainTabNavigator extends Component {
               if (!global.me) {
                 e.preventDefault();
                 this.props.navigation.navigate('signin');
-                Global.registerPushToken();
               }
             },
           })}

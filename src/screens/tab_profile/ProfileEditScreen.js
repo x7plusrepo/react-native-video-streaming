@@ -38,12 +38,12 @@ class ProfileEditScreen extends React.Component {
   }
 
   init = () => {
-    console.log(global.me);
     const { user } = this.props;
-    const isGuest = user?.username?.match(/guest_/i);
+    const isGuest = user?.userType === 0;
     this.state = {
       secureTextEntry: !global.debug,
       userName: user?.username,
+      displayName: user?.displayName,
       phoneNumber: user?.phone,
       password: '',
       profilePhotoSelSource: null,
@@ -57,6 +57,9 @@ class ProfileEditScreen extends React.Component {
   initRef = () => {
     this.userNameRef = (ref) => {
       this.userName = ref;
+    };
+    this.displayNameRef = (ref) => {
+      this.displayName = ref;
     };
     this.phoneNumberRef = (ref) => {
       this.phoneNumber = ref;
@@ -72,7 +75,7 @@ class ProfileEditScreen extends React.Component {
     for (let name in errors) {
       let ref = this[name];
 
-      if (ref && ref.isFocused()) {
+      if (ref?.isFocused()) {
         delete errors[name];
       }
     }
@@ -81,25 +84,29 @@ class ProfileEditScreen extends React.Component {
   };
 
   onChangeText = (text) => {
-    ['userName', 'phoneNumber', 'password']
+    ['userName', 'displayName', 'phoneNumber', 'password']
       .map((name) => ({ name, ref: this[name] }))
       .forEach(({ name, ref }) => {
-        if (ref.isFocused()) {
+        if (ref?.isFocused()) {
           this.setState({ [name]: text });
         }
       });
   };
 
   onSubmitUserName = () => {
-    this.phoneNumber.focus();
+    this.phoneNumber?.focus();
+  };
+
+  onSubmitDisplayName = () => {
+    this.phoneNumber?.focus();
   };
 
   onSubmitPhoneNumber = () => {
-    this.password.focus();
+    this.password?.focus();
   };
 
   onSubmitPassword = () => {
-    this.password.blur();
+    this.password?.blur();
   };
 
   onAccessoryPress = () => {
@@ -125,37 +132,36 @@ class ProfileEditScreen extends React.Component {
   };
 
   onSubmit = async () => {
-    const { userName, phoneNumber, password, profilePhotoSelSource, isGuest } =
-      this.state;
+    const {
+      userName,
+      phoneNumber,
+      displayName,
+      password,
+      profilePhotoSelSource,
+      isGuest,
+    } = this.state;
 
     let errors = {};
 
-    ['userName', 'phoneNumber'].forEach((name) => {
-      let value = this[name].value();
+    if (!isGuest && !userName) {
+      errors.userName = 'user name should not be empty';
+    }
 
-      if (!value) {
-        errors[name] = 'Should not be empty';
-      } else {
-        if ('phoneNumber' === name) {
-          const isValidPhoneNumber = Helper.validatePhoneNumber(value);
-          if (!isValidPhoneNumber) {
-            errors[name] = 'Phone Number is invalid';
-          }
-        }
-      }
-    });
+    const isValidPhoneNumber = Helper.validatePhoneNumber(phoneNumber);
+    if (!isValidPhoneNumber && !isGuest) {
+      errors.phoneNumber = 'Phone Number is invalid';
+    }
+
+    if (isGuest && !displayName) {
+      errors.displayName = 'display name Should not be empty';
+    }
 
     if (password.length > 0 && password.length !== 4) {
-      errors['password'] = 'Should be 4 digits';
+      errors.password = 'Should be 4 digits';
     }
 
-    const isUpdateGuest = userName?.match(/guest_/i);
-    if (password && isUpdateGuest) {
-      errors['password'] = 'Guest user can not set password.';
-    }
-
-    if (isGuest && !isUpdateGuest && password?.length < 1) {
-      errors['password'] = 'Password required.';
+    if (password && isGuest) {
+      errors.password = 'Guest user can not set password.';
     }
 
     this.setState({ errors });
@@ -165,24 +171,26 @@ class ProfileEditScreen extends React.Component {
       showForcePageLoader(true);
       let uploadedUrl;
       if (profilePhotoSelSource) {
-        console.log(profilePhotoSelSource);
-        uploadedUrl = await Global.uploadToCloudinary(
-          profilePhotoSelSource,
-          'avatars',
-          'image',
-        );
+        try {
+          uploadedUrl = await Global.uploadToCloudinary(
+            profilePhotoSelSource,
+            'permanent/avatars',
+          );
+        } catch (error) {
+          console.log(error);
+        }
       }
       this.setState({ photo: uploadedUrl });
-      const updatePassword = isUpdateGuest ? userName : password;
 
       const params = {
         user_id: global.me?.id,
         username: userName,
+        displayName,
         phone: phoneNumber,
-        password: updatePassword,
+        password: isGuest ? '' : password,
         photo: uploadedUrl,
-        userType: isUpdateGuest ? 0 : 1,
       };
+      console.log(params);
 
       RestAPI.update_profile_with_image(params, (json, err) => {
         showForcePageLoader(false);
@@ -203,7 +211,7 @@ class ProfileEditScreen extends React.Component {
             });
             this.props.setMyUserAction(json.data || {});
             Helper.setLocalValue(Constants.KEY_USERNAME, userName);
-            Helper.setLocalValue(Constants.KEY_PASSWORD, updatePassword);
+            Helper.setLocalValue(Constants.KEY_PASSWORD, isGuest ? userName: password);
             success(Constants.SUCCESS_TITLE, 'Success to update your profile');
           } else {
             error(Constants.ERROR_TITLE, 'Failed to update your profile');
@@ -319,26 +327,45 @@ class ProfileEditScreen extends React.Component {
     const {
       errors = {},
       userName,
+      displayName,
       phoneNumber,
       password,
       secureTextEntry,
+      isGuest,
     } = this.state;
 
     return (
       <View style={{ marginTop: 50 }}>
-        <TextField
-          ref={this.userNameRef}
-          autoCapitalize="none"
-          autoCorrect={false}
-          enablesReturnKeyAutomatically={true}
-          onFocus={this.onFocus}
-          onChangeText={this.onChangeText}
-          onSubmitEditing={this.onSubmitUserName}
-          returnKeyType="next"
-          label="Username"
-          value={userName}
-          error={errors.userName}
-        />
+        {isGuest ? (
+          <TextField
+            ref={this.displayNameRef}
+            autoCapitalize="none"
+            autoCorrect={false}
+            enablesReturnKeyAutomatically={true}
+            onFocus={this.onFocus}
+            onChangeText={this.onChangeText}
+            onSubmitEditing={this.onSubmitDisplayName}
+            returnKeyType="next"
+            label="User Name"
+            value={displayName}
+            error={errors.displayName}
+          />
+        ) : (
+          <TextField
+            ref={this.userNameRef}
+            autoCapitalize="none"
+            autoCorrect={false}
+            enablesReturnKeyAutomatically={true}
+            onFocus={this.onFocus}
+            onChangeText={this.onChangeText}
+            onSubmitEditing={this.onSubmitUserName}
+            returnKeyType="next"
+            label="Username"
+            value={userName}
+            error={errors.userName}
+          />
+        )}
+
         <TextField
           ref={this.phoneNumberRef}
           keyboardType="phone-pad"

@@ -138,6 +138,11 @@ class MyProductsScreen extends React.Component {
     this.props.navigation.dispatch(pushAction);
   };
 
+  onLongPressVideo = (item) => {
+    this._selItem = item;
+    this.bottomMenu?.open();
+  };
+
   onPressOutStock = () => {
     const { itemDatas } = this.state;
 
@@ -224,7 +229,7 @@ class MyProductsScreen extends React.Component {
   _renderVideo = () => {
     const { isFetching, itemDatas, onEndReachedDuringMomentum } = this.state;
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, width: '100%' }}>
         <ProductsList
           products={itemDatas}
           ref={(ref) => {
@@ -233,6 +238,7 @@ class MyProductsScreen extends React.Component {
           onRefresh={this.onRefresh}
           isFetching={isFetching}
           onPressVideo={this.onPressVideo}
+          onLongPressVideo={this.onLongPressVideo}
           onEndReachedDuringMomentum={onEndReachedDuringMomentum}
           setOnEndReachedDuringMomentum={this.setOnEndReachedDuringMomentum}
         />
