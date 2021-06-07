@@ -42,7 +42,6 @@ const RestAPI = {
       userId: params.user_id,
       username: params.username,
       phone: params.phone,
-      userType: params.userType || 0,
     };
 
     if (params.photo) {

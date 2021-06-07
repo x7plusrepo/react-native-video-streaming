@@ -9,7 +9,7 @@ import {
 
 import PropTypes from 'prop-types';
 
-import Geolocation from '@react-native-community/geolocation';
+//import Geolocation from '@react-native-community/geolocation';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { GStyle } from '../../utils/Global';
 
@@ -72,18 +72,18 @@ class MessageActions extends Component {
             );
             break;
           case 2:
-            Geolocation.getCurrentPosition(
-              (position) => {
-                this.props.onSend({
-                  location: {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                  },
-                });
-              },
-              (error) => alert(error.message),
-              { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
-            );
+            // Geolocation.getCurrentPosition(
+            //   (position) => {
+            //     this.props.onSend({
+            //       location: {
+            //         latitude: position.coords.latitude,
+            //         longitude: position.coords.longitude,
+            //       },
+            //     });
+            //   },
+            //   (error) => alert(error.message),
+            //   { enableHighAccuracy: true, timeout: 20000, maximumAge: 1000 },
+            // );
             break;
           default:
             break;

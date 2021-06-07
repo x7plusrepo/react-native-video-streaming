@@ -1,8 +1,15 @@
 import React from 'react';
-import {Linking, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes,} from 'react-native';
+import {
+  Linking,
+  Platform,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+  ViewPropTypes,
+} from 'react-native';
 
 import PropTypes from 'prop-types';
-import MapView from 'react-native-maps';
+//import MapView from 'react-native-maps';
 
 class MessageView extends React.Component {
   render() {
@@ -12,29 +19,30 @@ class MessageView extends React.Component {
           style={{
             ...styles.container,
             ...this.props.containerStyle,
-          }}>
-          <MapView
-            style={{
-              ...styles.mapView,
-              ...this.props.mapViewStyle,
-            }}
-            region={{
-              latitude: this.props.currentMessage.location.latitude,
-              longitude: this.props.currentMessage.location.longitude,
-              latitudeDelta: 0.0922,
-              longitudeDelta: 0.0421,
-            }}
-            annotations={[
-              {
-                latitude: this.props.currentMessage.location.latitude,
-                longitude: this.props.currentMessage.location.longitude,
-                latitudeDelta: 0.0922,
-                longitudeDelta: 0.0421,
-              },
-            ]}
-            scrollEnabled={false}
-            zoomEnabled={false}
-          />
+          }}
+        >
+          {/*<MapView*/}
+          {/*  style={{*/}
+          {/*    ...styles.mapView,*/}
+          {/*    ...this.props.mapViewStyle,*/}
+          {/*  }}*/}
+          {/*  region={{*/}
+          {/*    latitude: this.props.currentMessage.location.latitude,*/}
+          {/*    longitude: this.props.currentMessage.location.longitude,*/}
+          {/*    latitudeDelta: 0.0922,*/}
+          {/*    longitudeDelta: 0.0421,*/}
+          {/*  }}*/}
+          {/*  annotations={[*/}
+          {/*    {*/}
+          {/*      latitude: this.props.currentMessage.location.latitude,*/}
+          {/*      longitude: this.props.currentMessage.location.longitude,*/}
+          {/*      latitudeDelta: 0.0922,*/}
+          {/*      longitudeDelta: 0.0421,*/}
+          {/*    },*/}
+          {/*  ]}*/}
+          {/*  scrollEnabled={false}*/}
+          {/*  zoomEnabled={false}*/}
+          {/*/>*/}
           <TouchableOpacity
             onPress={() => {
               const url = Platform.select({
@@ -57,7 +65,8 @@ class MessageView extends React.Component {
               height: '100%',
               left: 0,
               top: 0,
-            }}></TouchableOpacity>
+            }}
+          />
         </View>
       );
     } else {
@@ -88,4 +97,4 @@ MessageView.propTypes = {
   mapViewStyle: ViewPropTypes.style,
 };
 
-export default MessageView
+export default MessageView;
