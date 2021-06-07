@@ -269,7 +269,6 @@ const RestAPI = {
     const data = {
       userId: params.user_id,
       otherId: params.other_id,
-      type: params.type,
     };
 
     formDataCall('api/user/like', data, {}, callBack, 'put');

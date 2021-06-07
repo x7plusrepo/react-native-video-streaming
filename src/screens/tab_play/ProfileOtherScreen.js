@@ -59,7 +59,7 @@ class ProfileOtherScreen extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
-      followed: false,
+      isFollowing: false,
     };
     this._isMounted = false;
   };
@@ -101,7 +101,6 @@ class ProfileOtherScreen extends React.Component {
   };
 
   onChangeLike = (value) => {
-    this.setState({ followed: true });
     let params = {
       user_id: global.me ? global.me?.id : 0,
       other_id: global._opponentUser?.id,
@@ -113,7 +112,7 @@ class ProfileOtherScreen extends React.Component {
         if (json.status === 200) {
           if (this._isMounted) {
             this.setState({
-              likeCount: json.data.likeCount || 0,
+              isFollowing: json.data?.isFollowing || false,
             });
           }
         } else {
@@ -160,7 +159,7 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderBottom = () => {
-    const { followed } = this.state;
+    const { isFollowing } = this.state;
 
     return (
       <View style={[GStyles.rowEvenlyContainer, styles.bottom]}>
@@ -174,7 +173,7 @@ class ProfileOtherScreen extends React.Component {
             tintColor="white"
           />
           <Text style={[GStyles.regularText, { color: 'white' }]}>
-            {followed ? 'Followed' : 'Follow'}
+            {isFollowing ? 'Followed' : 'Follow'}
           </Text>
         </TouchableOpacity>
         <TouchableOpacity
