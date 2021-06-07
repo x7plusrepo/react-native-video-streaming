@@ -299,68 +299,68 @@ class TopUsersScreen extends React.Component {
 
     return (
       <View style={styles.listWrapper}>
-        <View
-          style={[
-            GStyles.rowBetweenContainer,
-            {
-              borderBottomWidth: 0.5,
-              borderBottomColor: GStyle.grayColor,
-              paddingVertical: 8,
-              paddingHorizontal: 16,
-            },
-          ]}
-        >
-          <View style={GStyles.rowCenterContainer}>
-            <Text
-              style={[
-                GStyles.textSmall,
-                GStyles.boldText,
-                { color: GStyle.grayColor },
-              ]}
-            >
-              Total:
-            </Text>
-            <Text
-              style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}
-            >
-              {' '}
-              {itemDatas.length}
-            </Text>
-          </View>
-          <View style={GStyles.rowCenterContainer}>
-            <Text
-              style={[
-                GStyles.textSmall,
-                GStyles.boldText,
-                { color: GStyle.grayColor },
-              ]}
-            >
-              You:{' '}
-            </Text>
-            <Image
-              source={ic_bean}
-              style={{ width: 12, height: 12 }}
-              resizeMode="contain"
-            />
-          </View>
-          <View style={GStyles.rowCenterContainer}>
-            <Text
-              style={[
-                GStyles.textSmall,
-                GStyles.boldText,
-                { color: GStyle.grayColor },
-              ]}
-            >
-              Rank:
-            </Text>
-            <Text
-              style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}
-            >
-              {' '}
-              100+
-            </Text>
-          </View>
-        </View>
+        {/*<View*/}
+        {/*  style={[*/}
+        {/*    GStyles.rowBetweenContainer,*/}
+        {/*    {*/}
+        {/*      borderBottomWidth: 0.5,*/}
+        {/*      borderBottomColor: GStyle.grayColor,*/}
+        {/*      paddingVertical: 8,*/}
+        {/*      paddingHorizontal: 16,*/}
+        {/*    },*/}
+        {/*  ]}*/}
+        {/*>*/}
+        {/*  <View style={GStyles.rowCenterContainer}>*/}
+        {/*    <Text*/}
+        {/*      style={[*/}
+        {/*        GStyles.textSmall,*/}
+        {/*        GStyles.boldText,*/}
+        {/*        { color: GStyle.grayColor },*/}
+        {/*      ]}*/}
+        {/*    >*/}
+        {/*      Total:*/}
+        {/*    </Text>*/}
+        {/*    <Text*/}
+        {/*      style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}*/}
+        {/*    >*/}
+        {/*      {' '}*/}
+        {/*      {itemDatas.length}*/}
+        {/*    </Text>*/}
+        {/*  </View>*/}
+        {/*  <View style={GStyles.rowCenterContainer}>*/}
+        {/*    <Text*/}
+        {/*      style={[*/}
+        {/*        GStyles.textSmall,*/}
+        {/*        GStyles.boldText,*/}
+        {/*        { color: GStyle.grayColor },*/}
+        {/*      ]}*/}
+        {/*    >*/}
+        {/*      You:{' '}*/}
+        {/*    </Text>*/}
+        {/*    <Image*/}
+        {/*      source={ic_bean}*/}
+        {/*      style={{ width: 12, height: 12 }}*/}
+        {/*      resizeMode="contain"*/}
+        {/*    />*/}
+        {/*  </View>*/}
+        {/*  <View style={GStyles.rowCenterContainer}>*/}
+        {/*    <Text*/}
+        {/*      style={[*/}
+        {/*        GStyles.textSmall,*/}
+        {/*        GStyles.boldText,*/}
+        {/*        { color: GStyle.grayColor },*/}
+        {/*      ]}*/}
+        {/*    >*/}
+        {/*      Rank:*/}
+        {/*    </Text>*/}
+        {/*    <Text*/}
+        {/*      style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}*/}
+        {/*    >*/}
+        {/*      {' '}*/}
+        {/*      100+*/}
+        {/*    </Text>*/}
+        {/*  </View>*/}
+        {/*</View>*/}
 
         {itemDatas?.length ? (
           <FlatList

@@ -59,7 +59,6 @@ class ProfileOtherScreen extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
-      isFollowing: false,
     };
     this._isMounted = false;
   };
@@ -72,17 +71,25 @@ class ProfileOtherScreen extends React.Component {
       page_number: '1',
       count_per_page: '1000',
     };
-    //showForcePageLoader(true);
+    showForcePageLoader(true);
     RestAPI.get_user_video_list(params, (json, err) => {
       showForcePageLoader(false);
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          if (this._isMounted) {
-            this.setState({
-              itemDatas: json.data.videoList || [],
-            });
+          if (this._isMounted && json?.data) {
+            if (json?.data?.videoList) {
+              this.setState({
+                itemDatas: json.data.videoList || [],
+              });
+            }
+
+            if (json?.data?.user) {
+              this.setState({
+                opponentUser: json.data.user,
+              });
+            }
           }
         } else {
           Helper.alertServerDataError();
@@ -100,7 +107,7 @@ class ProfileOtherScreen extends React.Component {
     this.props.navigation.dispatch(pushAction);
   };
 
-  onChangeLike = (value) => {
+  onChangeLike = () => {
     let params = {
       user_id: global.me ? global.me?.id : 0,
       other_id: global._opponentUser?.id,
@@ -110,9 +117,9 @@ class ProfileOtherScreen extends React.Component {
         Helper.alertNetworkError();
       } else {
         if (json.status === 200) {
-          if (this._isMounted) {
+          if (this._isMounted && json?.data) {
             this.setState({
-              isFollowing: json.data?.isFollowing || false,
+              opponentUser: json.data,
             });
           }
         } else {
@@ -159,32 +166,39 @@ class ProfileOtherScreen extends React.Component {
   };
 
   _renderBottom = () => {
-    const { isFollowing } = this.state;
+    const opponentUser = this.state.opponentUser;
+    const isFollowing = opponentUser?.isFollowing;
 
     return (
       <View style={[GStyles.rowEvenlyContainer, styles.bottom]}>
-        <TouchableOpacity
-          style={styles.followButtonWrapper}
-          onPress={this.onChangeLike}
-        >
-          <Image
-            source={ic_plus_1}
-            style={[styles.buttonIcons, { tintColor: 'white' }]}
-            tintColor="white"
-          />
-          <Text style={[GStyles.regularText, { color: 'white' }]}>
-            {isFollowing ? 'Followed' : 'Follow'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.chatButtonWrapper}
-          onPress={this.onPressChat}
-        >
-          <Image source={ic_message} style={styles.buttonIcons} />
-          <Text style={[GStyles.regularText, { color: GStyle.activeColor }]}>
-            Chat
-          </Text>
-        </TouchableOpacity>
+        {opponentUser && (
+          <>
+            <TouchableOpacity
+              style={styles.followButtonWrapper}
+              onPress={this.onChangeLike}
+            >
+              <Image
+                source={ic_plus_1}
+                style={[styles.buttonIcons, { tintColor: 'white' }]}
+                tintColor="white"
+              />
+              <Text style={[GStyles.regularText, { color: 'white' }]}>
+                {isFollowing ? 'Followed' : 'Follow'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.chatButtonWrapper}
+              onPress={this.onPressChat}
+            >
+              <Image source={ic_message} style={styles.buttonIcons} />
+              <Text
+                style={[GStyles.regularText, { color: GStyle.activeColor }]}
+              >
+                Chat
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     );
   };
@@ -209,69 +223,75 @@ class ProfileOtherScreen extends React.Component {
         ]}
         style={styles.gradient}
       >
-        <View style={styles.avatar}>
-          <Avatar image={avatar} size={84} />
-          <View style={styles.profileDetailWrapper}>
-            <View style={GStyles.rowCenterContainer}>
-              <Text
-                style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
-              >
-                {displayName}
-              </Text>
+        {opponentUser && (
+          <>
+            <View style={styles.avatar}>
+              <Avatar image={avatar} size={84} />
+              <View style={styles.profileDetailWrapper}>
+                <View style={GStyles.rowCenterContainer}>
+                  <Text
+                    style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
+                  >
+                    {displayName}
+                  </Text>
+                </View>
+                <View style={[GStyles.rowCenterContainer]}>
+                  <View style={{ flexShrink: 1 }}>
+                    <Text
+                      style={styles.textId}
+                      ellipsizeMode="tail"
+                      numberOfLines={1}
+                    >
+                      ID: {opponentUser?.uniqueId}
+                    </Text>
+                  </View>
+                  <TouchableOpacity style={styles.buttonCopy}>
+                    <Text style={GStyles.elementLabel}>Copy</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
             </View>
-            <View style={[GStyles.rowCenterContainer]}>
-              <View style={{ flexShrink: 1 }}>
-                <Text
-                  style={styles.textId}
-                  ellipsizeMode="tail"
-                  numberOfLines={1}
-                >
-                  ID: {opponentUser?.uniqueId}
-                </Text>
-              </View>
-              <TouchableOpacity style={styles.buttonCopy}>
-                <Text style={GStyles.elementLabel}>Copy</Text>
-              </TouchableOpacity>
+            <View style={GStyles.rowEvenlyContainer}>
+              {opponentUser?.userType === 1 ? (
+                <>
+                  <View style={GStyles.centerAlign}>
+                    <Text style={[GStyles.regularText, GStyles.boldText]}>
+                      {opponentUser?.elixir || 0}
+                    </Text>
+                    <Text style={GStyles.elementLabel}>Elixir</Text>
+                  </View>
+                  <View style={GStyles.centerAlign}>
+                    <Text style={[GStyles.regularText, GStyles.boldText]}>
+                      {opponentUser?.elixirFlame || 0}
+                    </Text>
+                    <Text style={GStyles.elementLabel}>Elixir Flames</Text>
+                  </View>
+                  <View style={GStyles.centerAlign}>
+                    <Text style={[GStyles.regularText, GStyles.boldText]}>
+                      {opponentUser?.fansCount || 0}
+                    </Text>
+                    <Text style={GStyles.elementLabel}>Fans</Text>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <View style={GStyles.centerAlign}>
+                    <Text style={[GStyles.regularText, GStyles.boldText]}>
+                      {opponentUser?.diamond || 0}
+                    </Text>
+                    <Text style={GStyles.elementLabel}>Diamonds</Text>
+                  </View>
+                  <View style={GStyles.centerAlign}>
+                    <Text style={[GStyles.regularText, GStyles.boldText]}>
+                      {lvl}
+                    </Text>
+                    <Text style={GStyles.elementLabel}>LvL</Text>
+                  </View>
+                </>
+              )}
             </View>
-          </View>
-        </View>
-        <View style={GStyles.rowEvenlyContainer}>
-          {opponentUser?.userType === 1 ? (
-            <>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.elixir || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Elixir</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.elixirFlame || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Elixir Flames</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>0</Text>
-                <Text style={GStyles.elementLabel}>Fans</Text>
-              </View>
-            </>
-          ) : (
-            <>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.diamond || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Diamonds</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {lvl}
-                </Text>
-                <Text style={GStyles.elementLabel}>LvL</Text>
-              </View>
-            </>
-          )}
-        </View>
+          </>
+        )}
       </LinearGradient>
     );
   };

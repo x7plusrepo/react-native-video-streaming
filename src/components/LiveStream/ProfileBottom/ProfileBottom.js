@@ -50,7 +50,6 @@ class ProfileBottom extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
-      followed: false,
     };
     this._isMounted = false;
   };
@@ -69,11 +68,19 @@ class ProfileBottom extends React.Component {
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 200) {
+        if (json.status === 200 && json?.data) {
           if (this._isMounted) {
-            this.setState({
-              itemDatas: json.data.videoList || [],
-            });
+            if (json?.data?.videoList) {
+              this.setState({
+                itemDatas: json.data.videoList || [],
+              });
+            }
+
+            if (json?.data?.user) {
+              this.setState({
+                opponentUser: json.data.user,
+              });
+            }
           }
         } else {
           Helper.alertServerDataError();
@@ -92,27 +99,26 @@ class ProfileBottom extends React.Component {
     this.props.navigation.dispatch(pushAction);
   };
 
-  onChangeLike = (value) => {
-    this.setState({ followed: true });
-    // let params = {
-    //   user_id: global.me ? global.me?.id : 0,
-    //   other_id: global._opponentUser?.id,
-    // };
-    // RestAPI.update_user_like(params, (json, err) => {
-    //   if (err !== null) {
-    //     Helper.alertNetworkError();
-    //   } else {
-    //     if (json.status === 200) {
-    //       if (this._isMounted) {
-    //         this.setState({
-    //           likeCount: json.data.likeCount || 0,
-    //         });
-    //       }
-    //     } else {
-    //       Helper.alertServerDataError();
-    //     }
-    //   }
-    // });
+  onChangeLike = () => {
+    let params = {
+      user_id: global.me ? global.me?.id : 0,
+      other_id: global._opponentUser?.id,
+    };
+    RestAPI.update_user_like(params, (json, err) => {
+      if (err !== null) {
+        Helper.alertNetworkError();
+      } else {
+        if (json.status === 200) {
+          if (this._isMounted && json?.data) {
+            this.setState({
+              opponentUser: json.data,
+            });
+          }
+        } else {
+          Helper.alertServerDataError();
+        }
+      }
+    });
   };
 
   onPressChat = () => {
@@ -142,32 +148,39 @@ class ProfileBottom extends React.Component {
   }
 
   _renderBottom = () => {
-    const { followed } = this.state;
+    const opponentUser = this.state.opponentUser;
+    const isFollowing = opponentUser?.isFollowing;
 
     return (
       <View style={[GStyles.rowEvenlyContainer, styles.bottom]}>
-        <TouchableOpacity
-          style={styles.followButtonWrapper}
-          onPress={this.onChangeLike}
-        >
-          <Image
-            source={ic_plus_1}
-            style={[styles.buttonIcons, { tintColor: 'white' }]}
-            tintColor="white"
-          />
-          <Text style={[GStyles.regularText, { color: 'white' }]}>
-            {followed ? 'Followed' : 'Follow'}
-          </Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={styles.chatButtonWrapper}
-          onPress={this.onPressChat}
-        >
-          <Image source={ic_message} style={styles.buttonIcons} />
-          <Text style={[GStyles.regularText, { color: GStyle.activeColor }]}>
-            Chat
-          </Text>
-        </TouchableOpacity>
+        {opponentUser && global.me?.id !== opponentUser?.id && (
+          <>
+            <TouchableOpacity
+              style={styles.followButtonWrapper}
+              onPress={this.onChangeLike}
+            >
+              <Image
+                source={ic_plus_1}
+                style={[styles.buttonIcons, { tintColor: 'white' }]}
+                tintColor="white"
+              />
+              <Text style={[GStyles.regularText, { color: 'white' }]}>
+                {isFollowing ? 'Followed' : 'Follow'}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.chatButtonWrapper}
+              onPress={this.onPressChat}
+            >
+              <Image source={ic_message} style={styles.buttonIcons} />
+              <Text
+                style={[GStyles.regularText, { color: GStyle.activeColor }]}
+              >
+                Chat
+              </Text>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
     );
   };
@@ -196,6 +209,10 @@ class ProfileBottom extends React.Component {
   _renderDetail = () => {
     const { opponentUser } = this.state;
     const lvl = Helper.getLvLGuest(opponentUser?.diamondSpent || 0);
+    const displayName =
+      opponentUser?.userType === 0
+        ? opponentUser?.displayName
+        : opponentUser?.username;
 
     return (
       <LinearGradient
@@ -208,11 +225,11 @@ class ProfileBottom extends React.Component {
       >
         <View style={styles.profileDetailWrapper}>
           <Text style={[GStyles.mediumText, { textTransform: 'uppercase' }]}>
-            {opponentUser?.username}
+            {displayName}
           </Text>
           <View style={{ flexShrink: 1, marginTop: 12 }}>
             <Text style={styles.textID} ellipsizeMode="tail" numberOfLines={1}>
-              ID: {opponentUser?.id}
+              ID: {opponentUser?.uniqueId}
             </Text>
           </View>
         </View>
@@ -233,7 +250,9 @@ class ProfileBottom extends React.Component {
                 <Text style={GStyles.elementLabel}>Elixir Flames</Text>
               </View>
               <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>0</Text>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.fansCount || 0}
+                </Text>
                 <Text style={GStyles.elementLabel}>Fans</Text>
               </View>
             </>
