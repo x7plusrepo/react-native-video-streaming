@@ -52,7 +52,6 @@ const PanelLive = (props) => {
         cameraType: 'front',
       },
       (response) => {
-        console.log(response);
         if (response.didCancel) {
           console.log('User cancelled image picker');
         } else if (response.errorMessage) {

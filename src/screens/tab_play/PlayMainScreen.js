@@ -135,7 +135,6 @@ class PlayMainScreen extends Component {
     await Helper.setDeviceId();
     Helper.hasPermissions();
 
-    console.log('--- univ_dev --- global._devId:', global._devId);
   };
 
   onRefresh = async (type) => {
@@ -195,7 +194,6 @@ class PlayMainScreen extends Component {
       } else {
         if (json.status === 200) {
           if (this.state.isMounted) {
-            console.log(json.data.videoList);
             this.setState({ totalCount: json.data.totalCounts });
             if (type === 'more') {
               let data = products.concat(json.data.videoList || []);
@@ -304,7 +302,6 @@ class PlayMainScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
-    console.log(isChecked);
     if (global.me) {
       const params = {
         user_id: global.me?.id,
@@ -392,7 +389,6 @@ class PlayMainScreen extends Component {
       };
       Share.shareSingle(shareOptions)
         .then((res) => {
-          console.log(res);
         })
         .catch((err) => {
           err && console.log(err);
@@ -479,7 +475,6 @@ class PlayMainScreen extends Component {
       })
       .progress((received, total) => {
         const percent = Math.round((received * 100) / total);
-        console.log('progress', percent);
         this.setState({ percent });
       })
       .then((resp) => {
@@ -515,7 +510,6 @@ class PlayMainScreen extends Component {
 
         showForcePageLoader(true);
         RNFFmpeg.execute(parameter).then((result) => {
-          console.log(`FFmpeg process exited with rc=${result}.`);
           CameraRoll.save(newPath, 'video')
             .then((gallery) => {
               resp.flush();

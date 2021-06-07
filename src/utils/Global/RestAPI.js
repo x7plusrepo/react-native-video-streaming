@@ -59,7 +59,6 @@ const RestAPI = {
     if (params.password) {
       data.password = params.password;
     }
-    console.log(data);
     formDataCall('api/profile', data, {}, callBack, 'put');
   },
 
@@ -199,7 +198,6 @@ const RestAPI = {
       deviceId: params.device_id,
       deviceType: params.device_type,
     };
-    console.log(data);
     formDataCall('api/auth/registerPushToken', data, {}, callBack, 'put');
   },
 
@@ -251,7 +249,6 @@ const RestAPI = {
   },
 
   update_video_view: (params, callBack) => {
-    console.log(params);
     const data = {
       videoId: params.video_id,
       ownerId: params.owner_id,

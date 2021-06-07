@@ -1,7 +1,7 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import {GStyles} from '../../utils/Global';
+import { GStyles } from '../../utils/Global';
 import Avatar from './Avatar';
 import avatars from '../../assets/avatars';
 import GStyle from '../../utils/Global/Styles';
@@ -34,6 +34,7 @@ const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
   const icon = sortBy === 'elixir' ? ic_elixir : ic_diamond;
   const iconText =
     sortBy === 'elixir' ? item?.elixir || 0 : item?.diamondSpent || 0;
+  const displayName = item?.userType === 0 ? item?.displayName : item?.username;
 
   return (
     <TouchableOpacity
@@ -58,7 +59,7 @@ const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
               GStyles.upperCaseText,
             ]}
           >
-            {item?.username}
+            {displayName}
           </Text>
           <View style={[GStyles.rowContainer, { marginTop: 2 }]}>
             <Image

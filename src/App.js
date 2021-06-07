@@ -59,7 +59,6 @@ function App() {
   useEffect(() => {
     const getDeviceState = async () => {
       const deviceState = await OneSignal.getDeviceState();
-      console.log('Device info: ', deviceState);
       global._pushToken = deviceState.pushToken;
       global._pushAppId = deviceState.userId;
     };
@@ -81,14 +80,12 @@ function App() {
   }, []);
 
   const onReceived = (notifReceivedEvent) => {
-    console.log('Notification received: ', notifReceivedEvent);
     const notif = notifReceivedEvent.getNotification();
     notifReceivedEvent.complete(notif);
     Helper.callFunc(global.onSetUnreadCount);
   };
 
   const onOpened = async (openResult) => {
-    console.log(openResult);
     Helper.callFunc(global.onGotoMessage);
   };
 

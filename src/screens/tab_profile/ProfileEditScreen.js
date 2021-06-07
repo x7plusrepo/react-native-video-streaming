@@ -190,7 +190,6 @@ class ProfileEditScreen extends React.Component {
         password: isGuest ? undefined : password,
         photo: uploadedUrl,
       };
-      console.log(params);
 
       RestAPI.update_profile_with_image(params, (json, err) => {
         showForcePageLoader(false);
