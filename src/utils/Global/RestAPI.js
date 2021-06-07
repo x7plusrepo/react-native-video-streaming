@@ -44,6 +44,10 @@ const RestAPI = {
       phone: params.phone,
     };
 
+    if (params.username) {
+      data.username = params.username;
+    }
+
     if (params.photo) {
       data.photo = params.photo;
     }

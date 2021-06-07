@@ -184,10 +184,10 @@ class ProfileEditScreen extends React.Component {
 
       const params = {
         user_id: global.me?.id,
-        username: userName,
+        username: isGuest ? undefined : userName,
         displayName,
         phone: phoneNumber,
-        password: isGuest ? '' : password,
+        password: isGuest ? undefined : password,
         photo: uploadedUrl,
       };
       console.log(params);
