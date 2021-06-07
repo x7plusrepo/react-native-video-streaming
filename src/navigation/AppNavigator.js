@@ -26,6 +26,8 @@ import ProfileOtherScreen from '../screens/tab_play/ProfileOtherScreen';
 import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
 import SavedProductsScreen from '../screens/tab_profile/SavedProductsScreen';
 import MyVideoScreen from '../screens/tab_profile/MyProductsScreen';
+import FansScreen from '../screens/tab_profile/FansScreen';
+import FollowingUsersScreen from '../screens/tab_profile/FollowingUsersScreen';
 import GoLive from '../screens/live_stream/GoLive';
 import ViewLive from '../screens/live_stream/ViewLive';
 
@@ -54,11 +56,11 @@ const config = {
 export default function App() {
   return (
     <NavigationContainer
-        theme={{ colors: { background: 'black' } }}
-        ref={navigationRef}
-        onReady={() => {
-            isReadyRef.current = true;
-        }}
+      theme={{ colors: { background: 'black' } }}
+      ref={navigationRef}
+      onReady={() => {
+        isReadyRef.current = true;
+      }}
     >
       <Stack.Navigator
         screenOptions={{
@@ -99,6 +101,8 @@ export default function App() {
           }}
         />
         <Stack.Screen name="profile_other" component={ProfileOtherScreen} />
+        <Stack.Screen name="fans_screen" component={FansScreen} />
+        <Stack.Screen name="following_users" component={FollowingUsersScreen} />
         <Stack.Screen name="saved_products" component={SavedProductsScreen} />
         <Stack.Screen name="my_products" component={MyVideoScreen} />
         <Stack.Screen name="go_live" component={GoLive} />

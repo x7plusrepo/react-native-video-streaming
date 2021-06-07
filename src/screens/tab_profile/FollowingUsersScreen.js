@@ -2,22 +2,18 @@ import React, { forwardRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
+  SafeAreaView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-import {
-  GStyles,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import { GStyles, Helper, Constants, RestAPI } from '../../utils/Global';
 import ExploreUserItem from '../../components/elements/ExploreUserItem';
+import GHeaderBar from '../../components/GHeaderBar';
 
-
-class HomeUsersScreen extends React.Component {
+class FollowingUsersScreen extends React.Component {
   constructor(props) {
     super(props);
 
@@ -29,17 +25,7 @@ class HomeUsersScreen extends React.Component {
   componentDidMount() {
     this._isMounted = true;
 
-    this.setState({ keyword: this.props.keyword }, () => {
-      this.onRefresh('init');
-    });
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.keyword !== this.props.keyword) {
-      this.setState({ keyword: this.props.keyword }, () => {
-        this.onRefresh('init');
-      });
-    }
+    this.onRefresh('init');
   }
 
   componentWillUnmount() {
@@ -51,14 +37,12 @@ class HomeUsersScreen extends React.Component {
       isFetching: false,
       totalCount: 0,
       curPage: 1,
-
-      keyword: '',
       itemDatas: [],
     };
   };
 
   onRefresh = (type) => {
-    let { isFetching, totalCount, curPage, itemDatas, keyword } = this.state;
+    let { isFetching, totalCount, curPage, itemDatas } = this.state;
 
     if (isFetching) {
       return;
@@ -82,12 +66,11 @@ class HomeUsersScreen extends React.Component {
       this.setState({ isFetching: true });
     }
     let params = {
-      keyword: keyword,
-      user_id: global.me ? global.me?.id : 0,
+      userId: global.me ? global.me?.id : 0,
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
-    RestAPI.get_filtered_user_list(params, (json, err) => {
+    RestAPI.get_following_list(params, (json, err) => {
       if (type === 'init') {
         showForcePageLoader(false);
       } else {
@@ -130,12 +113,17 @@ class HomeUsersScreen extends React.Component {
   };
 
   render() {
+    const { navigation } = this.props;
+
     return (
-      <>
-        <View style={{ flex: 1, backgroundColor: 'white' }}>
-          {this._renderUserList()}
-        </View>
-      </>
+      <SafeAreaView style={GStyles.container}>
+        <GHeaderBar
+          headerTitle="Stars I follow"
+          leftType="back"
+          navigation={navigation}
+        />
+        {this._renderUserList()}
+      </SafeAreaView>
     );
   }
 
@@ -143,7 +131,7 @@ class HomeUsersScreen extends React.Component {
     const { isFetching, itemDatas } = this.state;
 
     return (
-      <>
+      <View style={{ width: '100%', marginTop: 16 }}>
         {itemDatas?.length ? (
           <FlatList
             ref={(ref) => {
@@ -168,7 +156,7 @@ class HomeUsersScreen extends React.Component {
             <Text style={GStyles.notifyDescription}>Not found.</Text>
           </View>
         )}
-      </>
+      </View>
     );
   };
 
@@ -192,7 +180,7 @@ export default forwardRef((props, ref) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
-    <HomeUsersScreen
+    <FollowingUsersScreen
       {...props}
       ref={ref}
       navigation={navigation}

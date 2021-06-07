@@ -80,7 +80,7 @@ class HomeVideoSearch extends React.Component {
       count_per_page: Constants.COUNT_PER_PAGE,
       keyword,
     };
-    RestAPI.get_filtered_video_list(params, (json, err) => {
+    RestAPI.get_searched_video_list(params, (json, err) => {
       if (type === 'init') {
         showForcePageLoader(false);
       } else {

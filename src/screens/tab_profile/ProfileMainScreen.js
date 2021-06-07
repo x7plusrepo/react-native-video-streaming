@@ -27,12 +27,11 @@ import {
 } from '../../utils/Global';
 
 import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
-import ic_upload from '../../assets/images/Icons/ic_upload.png';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
 import ic_menu_messages from '../../assets/images/Icons/ic_menu_messages.png';
 import ic_menu_fans from '../../assets/images/Icons/ic_menu_fans.png';
 import ic_menu_drafts from '../../assets/images/Icons/ic_menu_drafts.png';
-import ic_tab_top from '../../assets/images/Icons/ic_tab_top.png';
+import ic_stars from '../../assets/images/Icons/ic_stars.png';
 import ic_menu_downloads from '../../assets/images/Icons/ic_menu_downloads.png';
 import ic_menu_saved_products from '../../assets/images/Icons/ic_menu_saved_products.png';
 import ic_my_products from '../../assets/images/Icons/ic_my_products.png';
@@ -78,7 +77,16 @@ const getMenuItems = (navigation, setMyUserAction) => {
       icon: ic_menu_fans,
       title: 'Fans',
       hideGuest: true,
-      onPress: () => {},
+      onPress: () => {
+        navigation.navigate('fans_screen');
+      },
+    },
+    {
+      icon: ic_stars,
+      title: 'Stars I follow',
+      onPress: () => {
+        navigation.navigate('following_users');
+      },
     },
     {
       icon: ic_menu_downloads,
@@ -92,11 +100,6 @@ const getMenuItems = (navigation, setMyUserAction) => {
       onPress: () => {
         navigation.navigate('camera_draft');
       },
-    },
-    {
-      icon: ic_tab_top,
-      title: 'Top',
-      onPress: () => {},
     },
     {
       icon: ic_support,

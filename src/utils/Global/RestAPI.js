@@ -71,7 +71,7 @@ const RestAPI = {
       thumb: params.thumb,
       category: params.category,
       subCategory: params.subCategory,
-      isPermanent: !!params.isPermanent
+      isPermanent: !!params.isPermanent,
     };
     formDataCall('api/video', data, {}, callBack, 'post');
   },
@@ -109,7 +109,7 @@ const RestAPI = {
     formDataCall('api/video/allVideo', data, {}, callBack, 'get');
   },
 
-  get_filtered_video_list: (params, callBack) => {
+  get_searched_video_list: (params, callBack) => {
     let data = {
       userId: params.user_id,
       page: params.page_number,
@@ -117,10 +117,10 @@ const RestAPI = {
       keyword: params.keyword,
     };
 
-    formDataCall('api/video/filteredVideo', data, {}, callBack, 'get');
+    formDataCall('api/video/searchVideo', data, {}, callBack, 'get');
   },
 
-  get_quick_search_video_list: (params, callBack) => {
+  get_category_video_list: (params, callBack) => {
     const data = {
       userId: params.user_id,
       page: params.page_number,
@@ -135,7 +135,7 @@ const RestAPI = {
       data.subCategory = params.subCategory;
     }
 
-    formDataCall('api/video/filteredVideo', data, {}, callBack, 'get');
+    formDataCall('api/video/categoryVideo', data, {}, callBack, 'get');
   },
 
   get_room_list: (params, callBack) => {
@@ -220,7 +220,23 @@ const RestAPI = {
 
     formDataCall('api/user/all', data, {}, callBack, 'get');
   },
+  get_fans_list: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      page: params.page_number,
+      amount: params.count_per_page,
+    };
+    formDataCall('api/user/fans', data, {}, callBack, 'get');
+  },
 
+  get_following_list: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      page: params.page_number,
+      amount: params.count_per_page,
+    };
+    formDataCall('api/user/followings', data, {}, callBack, 'get');
+  },
   get_top_user_list: (params, callBack) => {
     const data = {
       sortBy: params.sortBy || 'elixir',

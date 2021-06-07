@@ -50,7 +50,7 @@ const HomeVideoScreen = (props) => {
       category: category?.id,
       subCategory: currentSubCategory?.id,
     };
-    RestAPI.get_quick_search_video_list(params, (json, err) => {
+    RestAPI.get_category_video_list(params, (json, err) => {
       showForcePageLoader(false);
       setIsFetching(false);
 
