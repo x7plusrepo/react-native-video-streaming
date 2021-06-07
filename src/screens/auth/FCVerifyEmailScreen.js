@@ -222,7 +222,7 @@ class FCVerifyEmailScreen extends React.Component {
           </Text>
         )}
         <Text style={GStyles.titleText}>Verify your email address</Text>
-        <Text style={GStyles.titleDescription}>
+        <Text style={[GStyles.titleDescription, { marginTop: 20 }]}>
           Please check your email for a six-digit security code and enter it
           below.
         </Text>

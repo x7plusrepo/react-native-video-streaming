@@ -207,7 +207,7 @@ class FCRecoverPasswordScreen extends React.Component {
     return (
       <>
         <Text style={GStyles.titleText}>Recovery Password</Text>
-        <Text style={GStyles.titleDescription}>
+        <Text style={[GStyles.titleDescription, { marginTop: 20 }]}>
           Reset code was sent to your email. Please enter the code and create
           new password.
         </Text>

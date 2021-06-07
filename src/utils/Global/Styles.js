@@ -206,7 +206,6 @@ const GStyles = StyleSheet.create({
     color: GStyle.fontColor,
     fontSize: 15,
     lineHeight: 24,
-    marginTop: 20,
   },
   notifyTitle: {
     fontFamily: 'GothamPro-Medium',

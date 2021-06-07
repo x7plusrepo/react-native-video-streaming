@@ -29,6 +29,7 @@ import {
 } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from "../../components/elements/ProductsList";
+import ic_upload from "../../assets/images/Icons/ic_upload.png";
 
 
 class MyProductsScreen extends React.Component {
@@ -183,6 +184,11 @@ class MyProductsScreen extends React.Component {
     this.updateVideoSticker();
   };
 
+  onPressNewProduct = () => {
+    global._prevScreen = 'my_products';
+    this.props.navigation.navigate('camera_main');
+  };
+
   updateVideoSticker = () => {
     let params = {
       video_id: this._selItem.id,
@@ -254,6 +260,11 @@ class MyProductsScreen extends React.Component {
           headerTitle="My Products"
           leftType="back"
           navigation={navigation}
+          rightAvatar={
+            <TouchableOpacity onPress={this.onPressNewProduct}>
+              <Text style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}>Add New</Text>
+            </TouchableOpacity>
+          }
         />
         {this._renderVideo()}
         <RBSheet

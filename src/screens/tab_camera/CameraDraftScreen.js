@@ -141,7 +141,7 @@ class CameraDraftScreen extends React.Component {
   _renderVideo = () => {
     const { isFetching, itemDatas } = this.state;
     return (
-      <View style={{ flex: 1 }}>
+      <View style={{ flex: 1, width: '100%' }}>
         <ProductsList
           products={itemDatas}
           onRefresh={this.onRefresh}

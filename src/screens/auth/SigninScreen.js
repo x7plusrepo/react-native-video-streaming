@@ -261,7 +261,7 @@ class SigninScreen extends React.Component {
         <Text style={[GStyles.titleText, { fontSize: 30, lineHeight: 36 }]}>
           Welcome back!
         </Text>
-        <Text style={{ ...GStyles.titleDescription }}>
+        <Text style={{ ...GStyles.titleDescription, marginTop: 20 }}>
           Login to manage your account
         </Text>
       </>

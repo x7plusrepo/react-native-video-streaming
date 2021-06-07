@@ -51,19 +51,21 @@ const getMenuItems = (navigation, setMyUserAction) => {
       },
     },
     {
-      icon: ic_upload,
-      title: 'Upload Products',
+      icon: ic_my_products,
+      title: 'My Products',
       hideGuest: true,
       onPress: () => {
-        global._prevScreen = 'profile';
-        navigation.navigate('camera_main');
+        navigation.navigate('my_products');
       },
-    } /*
+    },
     {
-      icon: ic_tab_play,
-      title: 'Release Reels',
-      onPress: () => {},
-    },*/,
+      icon: ic_menu_saved_products,
+      title: 'Saved Products',
+      hideGuest: true,
+      onPress: () => {
+        navigation.navigate('saved_products');
+      },
+    },
     {
       icon: ic_menu_messages,
       title: 'Messages',
@@ -95,22 +97,6 @@ const getMenuItems = (navigation, setMyUserAction) => {
       icon: ic_tab_top,
       title: 'Top',
       onPress: () => {},
-    },
-    {
-      icon: ic_menu_saved_products,
-      title: 'Saved Products',
-      hideGuest: true,
-      onPress: () => {
-        navigation.navigate('saved_products');
-      },
-    },
-    {
-      icon: ic_my_products,
-      title: 'My Products',
-      hideGuest: true,
-      onPress: () => {
-        navigation.navigate('my_products');
-      },
     },
     {
       icon: ic_support,

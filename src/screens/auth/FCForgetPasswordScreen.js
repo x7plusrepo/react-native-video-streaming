@@ -154,7 +154,7 @@ class FCForgetPasswordScreen extends React.Component {
     return (
       <>
         <Text style={GStyles.titleText}>Forget Password</Text>
-        <Text style={GStyles.titleDescription}>
+        <Text style={[GStyles.titleDescription, { marginTop: 20 }]}>
           Please enter your email below to receive your password reset
           instructions.
         </Text>

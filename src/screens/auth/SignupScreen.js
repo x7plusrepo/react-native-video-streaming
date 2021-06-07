@@ -179,7 +179,7 @@ class SignupScreen extends React.Component {
         showForcePageLoader(false);
 
         if (err !== null) {
-          Helper.alertNetworkError();
+          Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 201) {
             ChatStreamSocketManager.instance.emitLeaveRoom({
@@ -244,7 +244,7 @@ class SignupScreen extends React.Component {
     return (
       <>
         <Text style={GStyles.titleText}>Hi, create your account</Text>
-        <View style={[GStyles.titleDescription, GStyles.rowContainer]}>
+        <View style={[GStyles.titleDescription, GStyles.rowContainer, { marginTop: 20 }]}>
           <Text style={GStyles.regularText}>Already have an account?</Text>
           <TouchableOpacity
             onPress={() => {

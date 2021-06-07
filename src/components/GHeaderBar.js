@@ -22,13 +22,7 @@ import {
 } from 'react-native-elements';
 
 import PropTypes from 'prop-types';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-} from '../utils/Global';
+import { GStyle, GStyles, Global, Helper, Constants } from '../utils/Global';
 
 const HeaderBarHeight = 46;
 
@@ -96,7 +90,6 @@ const RIGHT_TYPES = {
 };
 
 class GHeaderBar extends React.Component {
-
   constructor(props) {
     super(props);
 
@@ -113,9 +106,10 @@ class GHeaderBar extends React.Component {
         <View style={styles.headerView}>
           <View style={{ ...styles.headerContainer }}>
             {this._renderLeftPart()}
-            <Text style={{ ...styles.titleHeader }}>
-              {this.props.headerTitle}
-            </Text>
+            <View style={styles.titleHeaderContainer}>
+              <Text style={styles.titleHeader}>{this.props.headerTitle}</Text>
+            </View>
+
             {this._renderRightPart()}
           </View>
         </View>
@@ -135,7 +129,14 @@ class GHeaderBar extends React.Component {
             navigation.pop();
           }
         }}
-        style={{ ...GStyles.centerAlign, width: 50, height: '100%' }}
+        style={{
+          justifyContent: 'center',
+          alignItems: 'flex-start',
+          width: 50,
+          height: '100%',
+          flex: 1,
+          paddingLeft: 16,
+        }}
       >
         <Image
           source={LEFT_TYPES[leftType].image}
@@ -228,13 +229,13 @@ const styles = StyleSheet.create({
     marginTop: 4,
     zIndex: 99,
   },
-
+  titleHeaderContainer: {
+    textAlign: 'center',
+  },
   titleHeader: {
-    flex: 5,
     color: GStyle.blackColor,
     fontFamily: 'GothamPro-Medium',
     fontSize: 17,
-    textAlign: 'center',
   },
 
   leftButtonContainer: {

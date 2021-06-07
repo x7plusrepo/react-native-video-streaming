@@ -102,25 +102,25 @@ class ProfileOtherScreen extends React.Component {
 
   onChangeLike = (value) => {
     this.setState({ followed: true });
-    // let params = {
-    //   user_id: global.me ? global.me?.id : 0,
-    //   other_id: global._opponentUser?.id,
-    // };
-    // RestAPI.update_user_like(params, (json, err) => {
-    //   if (err !== null) {
-    //     Helper.alertNetworkError();
-    //   } else {
-    //     if (json.status === 200) {
-    //       if (this._isMounted) {
-    //         this.setState({
-    //           likeCount: json.data.likeCount || 0,
-    //         });
-    //       }
-    //     } else {
-    //       Helper.alertServerDataError();
-    //     }
-    //   }
-    // });
+    let params = {
+      user_id: global.me ? global.me?.id : 0,
+      other_id: global._opponentUser?.id,
+    };
+    RestAPI.update_user_like(params, (json, err) => {
+      if (err !== null) {
+        Helper.alertNetworkError();
+      } else {
+        if (json.status === 200) {
+          if (this._isMounted) {
+            this.setState({
+              likeCount: json.data.likeCount || 0,
+            });
+          }
+        } else {
+          Helper.alertServerDataError();
+        }
+      }
+    });
   };
 
   onPressChat = () => {
