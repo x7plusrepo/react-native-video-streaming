@@ -89,11 +89,6 @@ const getMenuItems = (navigation, setMyUserAction) => {
       },
     },
     {
-      icon: ic_menu_downloads,
-      title: 'Download',
-      onPress: () => {},
-    },
-    {
       icon: ic_menu_drafts,
       title: 'Drafts',
       hideGuest: true,
