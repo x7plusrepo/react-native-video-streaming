@@ -1,11 +1,10 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, Text, View } from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
 
 import LiveStreamRoom from './LiveStreamRoom';
 
-import { Helper, Constants, RestAPI } from '../../utils/Global';
+import { Constants, Helper, RestAPI } from '../../utils/Global';
 import styles from './styles';
-import { GStyles } from '../../utils/Global/Styles';
 
 class LiveStreamRooms extends React.Component {
   constructor(props) {

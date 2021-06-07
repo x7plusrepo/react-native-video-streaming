@@ -1,22 +1,14 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import { SafeAreaView, StyleSheet, View } from 'react-native';
 
 import {
   StackActions,
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import FastImage from 'react-native-fast-image';
 
 import { connect } from 'react-redux';
 import { setSavedCount } from '../../redux/me/actions';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';

@@ -1,9 +1,5 @@
-import React, { Component } from 'react';
-import {
-  Text,
-  View,
-  Platform,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Platform, Text, View,} from 'react-native';
 import TagInput from 'react-native-tag-input';
 
 const inputProps = {

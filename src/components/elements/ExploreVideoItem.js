@@ -1,10 +1,8 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
-import { GStyle, GStyles, Constants, Helper } from '../../utils/Global';
-import ic_eye from '../../assets/images/Icons/ic_eye.png';
-import ic_diamond from '../../assets/images/Icons/ic_diamond.png';
+import {Constants, GStyle, GStyles, Helper} from '../../utils/Global';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;

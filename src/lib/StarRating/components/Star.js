@@ -1,5 +1,5 @@
 import React, {PureComponent} from 'react';
-import {StyleSheet, Animated, TouchableOpacity} from 'react-native';
+import {Animated, StyleSheet, TouchableOpacity} from 'react-native';
 
 const STAR_IMAGE = require('../images/airbnb-star.png');
 const STAR_SELECTED_IMAGE = require('../images/airbnb-star-selected.png');

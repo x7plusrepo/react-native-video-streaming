@@ -1,11 +1,11 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import { GStyles } from '../../utils/Global';
+import {GStyles} from '../../utils/Global';
 import Avatar from './Avatar';
 import avatars from '../../assets/avatars';
 import GStyle from '../../utils/Global/Styles';
-import ic_sparkles from '../../assets/images/Icons/ic_sparkles.png';
+
 const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
 const ic_rank_first = require('../../assets/images/Icons/ic_rank_first.png');
 const ic_rank_second = require('../../assets/images/Icons/ic_rank_second.png');

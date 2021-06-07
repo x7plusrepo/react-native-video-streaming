@@ -3,30 +3,22 @@ import {
   Image,
   SafeAreaView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
 
 import { connect } from 'react-redux';
-import { setKeyword } from '../../redux/home/actions';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScrollableTabView, {
   ScrollableTabBar,
 } from 'react-native-scrollable-tab-view';
 
-import {
-  Constants,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
-const ic_search = require('../../assets/images/Icons/ic_search.png');
-
+import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
 import HomeVideoScreen from './HomeVideoScreen';
 import { setCategories } from '../../redux/categories/actions';
+
+const ic_search = require('../../assets/images/Icons/ic_search.png');
 
 class HomeMainScreen extends React.Component {
   constructor(props) {

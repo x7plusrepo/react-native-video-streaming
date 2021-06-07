@@ -1,14 +1,8 @@
 import React, {Component} from 'react';
 import Proptypes from 'prop-types';
-import {
-  Text,
-  TouchableWithoutFeedback,
-  View,
-  Image,
-  StyleSheet,
-} from 'react-native';
+import {Image, StyleSheet, Text, TouchableWithoutFeedback, View,} from 'react-native';
 import noop from 'lodash.noop';
-import { GStyle } from '../../../utils/Global';
+import {GStyle} from '../../../utils/Global';
 
 const image_active = require('../../../assets/images/ic_radio_active.png');
 const image_inactive = require('../../../assets/images/ic_radio_inactive.png');

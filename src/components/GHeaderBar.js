@@ -1,28 +1,8 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  SectionList,
-  Alert,
-  TouchableHighlight,
-  ActivityIndicator,
-  ViewPropTypes,
-  TouchableOpacity,
-} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {
-  ThemeProvider,
-  Image,
-  Button,
-  Icon,
-  SearchBar,
-  Avatar,
-} from 'react-native-elements';
-
-import PropTypes from 'prop-types';
-import { GStyle, GStyles, Global, Helper, Constants } from '../utils/Global';
+import {Image, ThemeProvider,} from 'react-native-elements';
+import {GStyle} from '../utils/Global';
 
 const HeaderBarHeight = 46;
 

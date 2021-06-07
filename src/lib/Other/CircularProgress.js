@@ -1,6 +1,6 @@
 import React from 'react';
 import {View} from 'react-native';
-import {Svg, Circle, Text as SVGText} from 'react-native-svg';
+import {Circle, Svg, Text as SVGText} from 'react-native-svg';
 
 const CircularProgress = props => {
   const {size, strokeWidth, text} = props;

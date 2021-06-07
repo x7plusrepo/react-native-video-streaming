@@ -1,14 +1,5 @@
 import React, {Component} from 'react';
-import {
-  View,
-  Text,
-  Image,
-  Modal,
-  TouchableHighlight,
-  Platform,
-  Animated,
-  Keyboard,
-} from 'react-native';
+import {Animated, Image, Keyboard, Modal, Platform, Text, TouchableHighlight, View,} from 'react-native';
 import PropTypes from 'prop-types';
 
 import Moment from 'moment';

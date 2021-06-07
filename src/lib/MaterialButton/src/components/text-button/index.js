@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import { Animated } from 'react-native';
+import React, {PureComponent} from 'react';
+import {Animated} from 'react-native';
 
 import Button from '../button';
-import { styles } from './styles';
+import {styles} from './styles';
 
 export default class TextButton extends PureComponent {
   static defaultProps = {

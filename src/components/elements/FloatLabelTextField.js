@@ -1,14 +1,7 @@
 import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  TextInput,
-  Animated,
-  Platform,
-} from 'react-native';
+import {Animated, StyleSheet, Text, TextInput, View,} from 'react-native';
 
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global';
+import {GStyle} from '../../utils/Global';
 
 class FloatingLabel extends Component {
   constructor(props) {

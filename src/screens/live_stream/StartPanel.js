@@ -1,14 +1,6 @@
-import React, { useState } from 'react';
-import PropTypes from 'prop-types';
-import {
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { StyleSheet, View } from 'react-native';
 import styles from './styles';
-import GStyles from '../../utils/Global/Styles';
 import { GStyle } from '../../utils/Global';
 import ScrollableTabView, {
   DefaultTabBar,

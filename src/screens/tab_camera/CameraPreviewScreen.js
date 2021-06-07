@@ -13,7 +13,8 @@ import RNFS from 'react-native-fs';
 
 import Video from 'react-native-video';
 
-import { GStyle, GStyles, Helper, Constants } from '../../utils/Global';
+import { Constants, GStyle, GStyles, Helper } from '../../utils/Global';
+
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 
 class CameraPreviewScreen extends Component {

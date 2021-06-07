@@ -1,5 +1,5 @@
-import { StyleSheet, Dimensions } from 'react-native';
-import { GStyles } from '../../../utils/Global/Styles';
+import {Dimensions, StyleSheet} from 'react-native';
+import {GStyles} from '../../../utils/Global/Styles';
 
 const { width: screenWidth } = Dimensions.get('window');
 

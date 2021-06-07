@@ -1,33 +1,7 @@
-import React, {Component} from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  BallIndicator,
-  BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
-  LayoutAnimation,
-  Linking,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import {View,} from 'react-native';
 
-import {GStyle, GStyles, Global, Helper} from '../utils/Global';
+import {GStyle} from '../utils/Global';
 import {SkypeIndicator} from 'react-native-indicators';
 
 const ModalIndicator = () => (

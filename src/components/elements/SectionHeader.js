@@ -1,22 +1,7 @@
-import React, {Component} from 'react';
-import {
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
-import CheckBox from '../../lib/Checkbox/index';
+import {GStyle, GStyles,} from '../../utils/Global';
 
 export default SectionHeader = ({title, count, onPress}) => (
   <View style={styles.titleContainer}>

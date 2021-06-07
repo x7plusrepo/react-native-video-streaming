@@ -1,10 +1,7 @@
 import React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import {
-  createStackNavigator,
-  CardStyleInterpolators,
-} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {CardStyleInterpolators, createStackNavigator,} from '@react-navigation/stack';
 
 import MainTabNavigator from './MainTabNavigator';
 
@@ -31,8 +28,8 @@ import FollowingUsersScreen from '../screens/tab_profile/FollowingUsersScreen';
 import GoLive from '../screens/live_stream/GoLive';
 import ViewLive from '../screens/live_stream/ViewLive';
 
-import { Helper } from '../utils/Global';
-import { navigationRef, isReadyRef } from './../utils/Global/RootNavigation';
+import {Helper} from '../utils/Global';
+import {isReadyRef, navigationRef} from './../utils/Global/RootNavigation';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';
 // import WorkScreen from '../screens/auth/FCAccountStep1Screen';

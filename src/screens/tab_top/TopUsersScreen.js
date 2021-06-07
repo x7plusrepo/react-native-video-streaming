@@ -12,17 +12,15 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 import {
+  Constants,
   GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
   RestAPI,
 } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import TopUserItem from '../../components/elements/TopUserItem';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
-import ic_bean from '../../assets/images/Icons/ic_bean.png';
 import ScrollableTabView, {
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view';

@@ -1,6 +1,7 @@
-import { StyleSheet } from 'react-native';
+import {StyleSheet} from 'react-native';
 import {GStyles, Helper} from './../../../utils/Global';
 import GStyle from "../../../utils/Global/Styles";
+
 const screenWidth = Helper.getWindowWidth();
 const giftSize = (screenWidth - 32) / 4;
 

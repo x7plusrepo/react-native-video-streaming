@@ -1,30 +1,7 @@
-import React, {Component} from 'react';
-import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
-  LayoutAnimation,
-  ListView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import {Image, Text, View,} from 'react-native';
 
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global';
-import CheckBox from '../../lib/Checkbox/index';
-import Avatar from './Avatar';
-import {JobItemProperty} from './JobItem';
+import {GStyle, GStyles} from '../../utils/Global';
 import {AirbnbRating} from '../../lib/StarRating/index';
 
 const ic_mini_dot = require('../../assets/images/ic_mini_dot.png');

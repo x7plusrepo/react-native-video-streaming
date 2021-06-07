@@ -5,7 +5,7 @@ import {
   CheckBox,
   Platform,
   SafeAreaView,
-  Text, TextInput,
+  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -15,7 +15,7 @@ import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scr
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import { Button, Paragraph, Dialog, Portal } from 'react-native-paper';
+import { Button, Dialog, Paragraph, Portal } from 'react-native-paper';
 import { createThumbnail } from 'react-native-create-thumbnail';
 import TagInput from '../../lib/react-native-tag-input/index';
 import RNFS from 'react-native-fs';
@@ -23,12 +23,12 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import { TextField } from '../../lib/MaterialTextField/index';
 import {
+  Constants,
+  Global,
   GStyle,
   GStyles,
   Helper,
-  Constants,
   RestAPI,
-  Global,
 } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 
@@ -424,8 +424,8 @@ class CameraUploadScreen extends React.Component {
 
   setPermanent = (isPermanent) => {
     this.setState({
-      isPermanent
-    })
+      isPermanent,
+    });
   };
 
   onPressUploadVideo = async () => {
@@ -811,16 +811,16 @@ class CameraUploadScreen extends React.Component {
 
 const styles = {
   checkboxContainer: {
-    flexDirection: "row",
+    flexDirection: 'row',
     marginBottom: 20,
   },
   checkbox: {
-    alignSelf: "center",
+    alignSelf: 'center',
   },
   label: {
-    margin: 8
-  }
-}
+    margin: 8,
+  },
+};
 
 const TCameraUploadScreen = (props) => {
   let navigation = useNavigation();

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Image, Text, StyleSheet, TouchableOpacity, View } from 'react-native';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 
-import { Helper, GStyle } from '../../utils/Global';
+import { GStyle, Helper } from '../../utils/Global';
 import { GStyles } from '../../utils/Global/Styles';
 
 import ic_speaker from '../../assets/images/Icons/ic_speaker.png';
@@ -22,11 +22,7 @@ const LiveStreamRoom = (props) => {
   };
 
   const streamModeIcon =
-    room?.mode === 0
-      ? ico_play
-      : room?.mode === 1
-      ? ic_audio_on
-      : ic_group;
+    room?.mode === 0 ? ico_play : room?.mode === 1 ? ic_audio_on : ic_group;
   const streamMode =
     room?.mode === 0
       ? 'Video-Live'

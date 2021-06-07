@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import { Button } from '../../../../MaterialButton/index';
+import React, {PureComponent} from 'react';
+import {Button} from '../../../../MaterialButton/index';
 
 import styles from './styles';
 

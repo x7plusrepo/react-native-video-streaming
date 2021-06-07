@@ -2,12 +2,11 @@ import React from 'react';
 import { SafeAreaView } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import ScrollableTabView, {
-  ScrollableTabBar,
   DefaultTabBar,
 } from 'react-native-scrollable-tab-view';
 import LiveStreamRooms from './LiveStreamRooms';
 
-import { GStyle, Helper } from '../../utils/Global';
+import { GStyle } from '../../utils/Global';
 import styles from './styles';
 
 class BrowseRooms extends React.Component {
@@ -30,7 +29,7 @@ class BrowseRooms extends React.Component {
       <SafeAreaView style={styles.container}>
         <ScrollableTabView
           initialPage={0}
-          tabBarBackgroundColor='white'
+          tabBarBackgroundColor="white"
           tabBarTextStyle={styles.tabBarTextStyle}
           tabBarInactiveTextColor={'black'}
           tabBarActiveTextColor={GStyle.activeColor}

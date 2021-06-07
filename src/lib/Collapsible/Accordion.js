@@ -1,9 +1,9 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {View, TouchableHighlight, Text, TouchableOpacity} from 'react-native';
+import {Text, TouchableHighlight, TouchableOpacity, View} from 'react-native';
 import Collapsible from './Collapsible';
 import {ViewPropTypes} from './config';
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global';
+import {GStyle, GStyles} from '../../utils/Global';
 
 const COLLAPSIBLE_PROPS = Object.keys(Collapsible.propTypes);
 const VIEW_PROPS = Object.keys(ViewPropTypes);

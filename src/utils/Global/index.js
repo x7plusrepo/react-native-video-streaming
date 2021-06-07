@@ -1,4 +1,4 @@
-import GStyle, { GStyles } from './Styles';
+import GStyle, {GStyles} from './Styles';
 import Global from './Global';
 import Helper from './Util';
 import Constants from './Constants';

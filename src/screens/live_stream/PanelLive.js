@@ -16,6 +16,7 @@ import GStyle, { GStyles } from '../../utils/Global/Styles';
 import styles from './styles';
 
 import ic_close from '../../assets/images/Icons/ic_close.png';
+
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
@@ -26,7 +27,10 @@ const PanelLive = (props) => {
   const onChangeText = (text) => setTopic(text);
   const onStart = async () => {
     showForcePageLoader(true);
-    const uploadedUrl = await Global.uploadToCloudinary(thumbnail, 'temporary/liveStreamImages');
+    const uploadedUrl = await Global.uploadToCloudinary(
+      thumbnail,
+      'temporary/liveStreamImages',
+    );
     showForcePageLoader(false);
     // if (!uploadedUrl) {
     //   alert('Thumbnail required.');

@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import { GStyle, GStyles, Helper } from '../../utils/Global';
+import {GStyle, GStyles, Helper} from '../../utils/Global';
 import Avatar from './Avatar';
 import avatars from '../../assets/avatars';
 

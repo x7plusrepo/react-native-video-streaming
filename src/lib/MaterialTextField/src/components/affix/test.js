@@ -1,6 +1,6 @@
 import 'react-native';
 import React from 'react';
-import { Animated } from 'react-native';
+import {Animated} from 'react-native';
 import renderer from 'react-test-renderer';
 
 import Affix from '.';

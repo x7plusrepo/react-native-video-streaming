@@ -1,5 +1,5 @@
-import { handleActions } from 'redux-actions';
-import { SAVED_COUNT, MY_POST_COUNT, SET_USER } from './types';
+import {handleActions} from 'redux-actions';
+import {MY_POST_COUNT, SAVED_COUNT, SET_USER} from './types';
 
 const INITIAL_STATE = {
   savedCount: 0,

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
-import {View, Animated, Easing} from 'react-native';
+import {Animated, Easing, View} from 'react-native';
 import Ripple from '../../../../MaterialRipple/index';
 
 import {styles} from './styles';

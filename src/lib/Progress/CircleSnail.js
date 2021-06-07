@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Animated, Easing } from 'react-native';
-import { Surface as ARTSurface } from '@react-native-community/art';
+import {Animated, Easing} from 'react-native';
+import {Surface as ARTSurface} from '@react-native-community/art';
 
 import Arc from './Shapes/Arc';
 

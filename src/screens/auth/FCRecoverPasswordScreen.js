@@ -1,46 +1,18 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   Alert,
-  Animated,
-  BallIndicator,
-  BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
-  LayoutAnimation,
-  Linking,
-  Modal,
-  Platform,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
-import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 
-import {TextField} from '../../lib/MaterialTextField/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import GHeaderBar from '../../components/GHeaderBar';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import { Constants, GStyles, RestAPI } from '../../utils/Global';
 
 class FCRecoverPasswordScreen extends React.Component {
   constructor(props) {
@@ -76,7 +48,7 @@ class FCRecoverPasswordScreen extends React.Component {
   };
 
   onFocus = () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     for (let name in errors) {
       let ref = this[name];
@@ -86,15 +58,15 @@ class FCRecoverPasswordScreen extends React.Component {
       }
     }
 
-    this.setState({errors});
+    this.setState({ errors });
   };
 
   onChangeText = (text) => {
     ['code', 'newPassword', 'confirmPassword']
-      .map((name) => ({name, ref: this[name]}))
-      .forEach(({name, ref}) => {
+      .map((name) => ({ name, ref: this[name] }))
+      .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
-          this.setState({[name]: text});
+          this.setState({ [name]: text });
         }
       });
   };
@@ -133,16 +105,16 @@ class FCRecoverPasswordScreen extends React.Component {
       }
     });
 
-    let {newPassword, confirmPassword} = this.state;
+    let { newPassword, confirmPassword } = this.state;
     if (newPassword !== confirmPassword) {
       errors['confirmPassword'] = 'Not match with password';
     }
 
-    this.setState({errors});
+    this.setState({ errors });
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      const {code, newPassword, confirmPassword} = this.state;
+      const { code, newPassword, confirmPassword } = this.state;
 
       showForcePageLoader(true);
       // TODO - hooks up recover password endpoint
@@ -183,7 +155,8 @@ class FCRecoverPasswordScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderTitle()}
             {this._renderInput()}
             {this._renderButton()}
@@ -216,7 +189,7 @@ class FCRecoverPasswordScreen extends React.Component {
   };
 
   _renderInput = () => {
-    const {code, newPassword, confirmPassword, errors = {}} = this.state;
+    const { code, newPassword, confirmPassword, errors = {} } = this.state;
 
     return (
       <>
@@ -232,7 +205,7 @@ class FCRecoverPasswordScreen extends React.Component {
           label="Code"
           value={code}
           error={errors.code}
-          containerStyle={{marginTop: 24}}
+          containerStyle={{ marginTop: 24 }}
         />
         <TextField
           ref={this.newPasswordRef}
@@ -248,7 +221,7 @@ class FCRecoverPasswordScreen extends React.Component {
           label="New Password"
           value={newPassword}
           error={errors.newPassword}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
         <TextField
           ref={this.confirmPasswordRef}
@@ -264,7 +237,7 @@ class FCRecoverPasswordScreen extends React.Component {
           label="Confirm Password"
           value={confirmPassword}
           error={errors.confirmPassword}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
       </>
     );
@@ -272,7 +245,7 @@ class FCRecoverPasswordScreen extends React.Component {
 
   _renderButton = () => {
     return (
-      <View style={{marginVertical: 40}}>
+      <View style={{ marginVertical: 40 }}>
         <TouchableOpacity onPress={this.onChangePassword}>
           <View style={GStyles.buttonFill}>
             <Text style={GStyles.textFill}>Change Password</Text>

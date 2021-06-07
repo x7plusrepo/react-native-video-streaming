@@ -1,11 +1,10 @@
 import React, { Component } from 'react';
 import {
-  Modal,
   StyleSheet,
+  Text,
   TouchableOpacity,
   View,
   ViewPropTypes,
-  Text,
 } from 'react-native';
 
 import PropTypes from 'prop-types';

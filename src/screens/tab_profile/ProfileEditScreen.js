@@ -15,12 +15,12 @@ import { launchImageLibrary } from 'react-native-image-picker';
 
 import { TextField } from '../../lib/MaterialTextField/index';
 import {
+  Constants,
+  Global,
   GStyle,
   GStyles,
   Helper,
-  Constants,
   RestAPI,
-  Global,
 } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
@@ -211,7 +211,10 @@ class ProfileEditScreen extends React.Component {
             });
             this.props.setMyUserAction(json.data || {});
             Helper.setLocalValue(Constants.KEY_USERNAME, userName);
-            Helper.setLocalValue(Constants.KEY_PASSWORD, isGuest ? userName: password);
+            Helper.setLocalValue(
+              Constants.KEY_PASSWORD,
+              isGuest ? userName : password,
+            );
             success(Constants.SUCCESS_TITLE, 'Success to update your profile');
           } else {
             error(Constants.ERROR_TITLE, 'Failed to update your profile');

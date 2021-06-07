@@ -4,7 +4,7 @@
  * width : height = 21 : 15
  */
 import React, {Component} from 'react';
-import {View, Text, Image, TouchableOpacity} from 'react-native';
+import {Image, TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
 import {getFlagByDollarCode} from './index';
 

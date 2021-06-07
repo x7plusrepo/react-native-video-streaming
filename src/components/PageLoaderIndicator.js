@@ -1,22 +1,7 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Text,
-  View,
-  Dimensions,
-  ScrollView,
-  Modal,
-} from 'react-native';
-import { ThemeProvider, Image, Button } from 'react-native-elements';
-import { BallIndicator } from 'react-native-indicators';
+import {View,} from 'react-native';
+import {BallIndicator} from 'react-native-indicators';
 import PropTypes from 'prop-types';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-} from '../utils/Global';
 
 const PageLoaderIndicator = ({ isPageLoader = false }) => {
   if (!isPageLoader) {

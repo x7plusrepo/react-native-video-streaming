@@ -1,21 +1,10 @@
 import React from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../../utils/Global';
+import {GStyle, GStyles, Helper, RestAPI} from '../../../utils/Global';
 import Avatar from '../../../components/elements/Avatar';
 import LinearGradient from 'react-native-linear-gradient';
 import avatars from '../../../assets/avatars';

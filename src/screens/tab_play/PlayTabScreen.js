@@ -1,8 +1,5 @@
 import React, { Component } from 'react';
-import {
-  LogBox,
-  StyleSheet,
-} from 'react-native';
+import { LogBox, StyleSheet } from 'react-native';
 
 import { createMaterialTopTabNavigator } from '@react-navigation/material-top-tabs';
 
@@ -32,15 +29,15 @@ class PlayTabScreen extends Component {
 
   render() {
     return (
-        <Tab.Navigator
-            initialRouteName="home_main"
-            tabBarOptions={{
-              style: { height: 0 },
-            }}
-        >
-          <Tab.Screen name="home_main" component={PlayMainScreen} />
-          <Tab.Screen name="profile_other" component={ProfileOtherScreen} />
-        </Tab.Navigator>
+      <Tab.Navigator
+        initialRouteName="home_main"
+        tabBarOptions={{
+          style: { height: 0 },
+        }}
+      >
+        <Tab.Screen name="home_main" component={PlayMainScreen} />
+        <Tab.Screen name="profile_other" component={ProfileOtherScreen} />
+      </Tab.Navigator>
     );
   }
 }

@@ -1,6 +1,5 @@
 import io from 'socket.io-client';
-import { Logger } from '../Global';
-import { Constants } from '../Global';
+import {Constants, Logger} from '../Global';
 
 const EVENT_JOIN_ROOM = 'join-room';
 const EVENT_LEAVE_ROOM = 'leave-room';

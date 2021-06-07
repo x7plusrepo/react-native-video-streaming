@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
-import { GStyles, Helper, Constants, RestAPI } from '../../utils/Global';
+import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import ExploreUserItem from '../../components/elements/ExploreUserItem';
 import GHeaderBar from '../../components/GHeaderBar';
 

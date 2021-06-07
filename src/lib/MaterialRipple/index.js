@@ -1,15 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import {
-  View,
-  Animated,
-  Easing,
-  Platform,
-  TouchableWithoutFeedback,
-  I18nManager,
-} from 'react-native';
+import React, {PureComponent} from 'react';
+import {Animated, Easing, I18nManager, Platform, TouchableWithoutFeedback, View,} from 'react-native';
 
-import { styles, radius } from './styles.js';
+import {radius, styles} from './styles.js';
 
 export default class Ripple extends PureComponent {
   static defaultProps = {

@@ -8,7 +8,7 @@ import {
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { connect } from 'react-redux';
 
-import { GStyles, Helper, Constants, RestAPI } from '../../utils/Global';
+import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import MessageRoomItem from '../../components/elements/MessageRoomItem';
 

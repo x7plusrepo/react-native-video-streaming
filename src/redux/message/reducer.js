@@ -1,5 +1,5 @@
-import { handleActions } from 'redux-actions';
-import { UNREAD_COUNT } from './types';
+import {handleActions} from 'redux-actions';
+import {UNREAD_COUNT} from './types';
 
 const INITIAL_STATE = {
   unreadCount: null,

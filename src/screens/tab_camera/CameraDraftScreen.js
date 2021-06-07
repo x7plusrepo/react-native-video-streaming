@@ -1,31 +1,21 @@
 import React from 'react';
-import {
-  Alert,
-  SafeAreaView,
-  StyleSheet,
-  View,
-} from 'react-native';
+import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
 
-import {useNavigation, useRoute, StackActions} from '@react-navigation/native';
+import {
+  NavigationContext,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 
-import {NavigationContext} from '@react-navigation/native';
-
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-} from '../../utils/Global';
+import { Constants, GStyles, Helper } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
-import Avatar from '../../components/elements/Avatar';
-import ProductsList from "../../components/elements/ProductsList";
+import ProductsList from '../../components/elements/ProductsList';
 
 const img_default_avatar = require('../../assets/images/Icons/ic_default_avatar.png');
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
-const CELL_WIDTH = (WINDOW_WIDTH - 24 ) / 3.0;
+const CELL_WIDTH = (WINDOW_WIDTH - 24) / 3.0;
 
 class CameraDraftScreen extends React.Component {
   static contextType = NavigationContext;
@@ -65,7 +55,7 @@ class CameraDraftScreen extends React.Component {
 
       if (videoDraft !== null) {
         const itemDatas = JSON.parse(videoDraft);
-        this.setState({itemDatas});
+        this.setState({ itemDatas });
       }
     } catch (e) {
       // error reading value
@@ -78,7 +68,6 @@ class CameraDraftScreen extends React.Component {
 
     global._prevScreen = 'camera_draft';
     this.props.navigation.navigate('camera_preview');
-
   };
 
   onBack = () => {
@@ -94,9 +83,9 @@ class CameraDraftScreen extends React.Component {
           text: 'Cancel',
           style: 'cancel',
         },
-        {text: 'Yes', onPress: () => this.clearVideo()},
+        { text: 'Yes', onPress: () => this.clearVideo() },
       ],
-      {cancelable: true},
+      { cancelable: true },
     );
   };
 
@@ -111,7 +100,7 @@ class CameraDraftScreen extends React.Component {
 
     RNFS.unlink(Helper.getDraftDirectoryPath());
 
-    this.setState({itemDatas});
+    this.setState({ itemDatas });
 
     showForcePageLoader(false);
   };

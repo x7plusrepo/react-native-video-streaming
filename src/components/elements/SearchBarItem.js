@@ -1,40 +1,8 @@
-import React, { Component } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  Animated,
-  BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
-  LayoutAnimation,
-  ListView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableHighlight,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { SearchBar } from 'react-native-elements';
+import React, {Component} from 'react';
+import {Image, StyleSheet,} from 'react-native';
+import {SearchBar} from 'react-native-elements';
 
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import {GStyles,} from '../../utils/Global';
 
 const ic_search = require('../../assets/images/Icons/ic_search.png');
 

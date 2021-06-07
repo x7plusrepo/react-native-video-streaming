@@ -1,9 +1,9 @@
 import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import { Animated } from 'react-native';
+import React, {PureComponent} from 'react';
+import {Animated} from 'react-native';
 
 import RaisedButton from '../raised-button';
-import { styles } from './styles';
+import {styles} from './styles';
 
 export default class RaisedTextButton extends PureComponent {
   static defaultProps = {

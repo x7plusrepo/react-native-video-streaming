@@ -1,4 +1,4 @@
-import { formDataCall } from './ApiBase';
+import {formDataCall} from './ApiBase';
 
 const RestAPI = {
   ErrCode: {

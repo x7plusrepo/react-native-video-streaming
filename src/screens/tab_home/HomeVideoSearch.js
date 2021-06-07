@@ -1,8 +1,12 @@
 import React, { forwardRef } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-import { StackActions, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 
-import { Helper, Constants, RestAPI, GStyles } from '../../utils/Global';
+import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import ProductsList from '../../components/elements/ProductsList';
 
 class HomeVideoSearch extends React.Component {
@@ -177,7 +181,14 @@ const styles = StyleSheet.create({});
 const THomeVideoSearch = forwardRef((props, ref) => {
   let navigation = useNavigation();
   let route = useRoute();
-  return <HomeVideoSearch ref={ref} {...props} navigation={navigation} route={route} />;
+  return (
+    <HomeVideoSearch
+      ref={ref}
+      {...props}
+      navigation={navigation}
+      route={route}
+    />
+  );
 });
 
 export default THomeVideoSearch;

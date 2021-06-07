@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Shape as ARTShape, Path as ARTPath } from '@react-native-community/art';
+import {Path as ARTPath, Shape as ARTShape} from '@react-native-community/art';
 
 function makeCirclePath(x, y, radius, direction) {
   const arcMethod = direction === 'counter-clockwise' ? 'counterArc' : 'arc';

@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {
-  StatusBar,
-  View,
-  TouchableOpacity,
-  SafeAreaView,
   Image,
+  SafeAreaView,
+  StatusBar,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 import { connect } from 'react-redux';
 import get from 'lodash/get';
@@ -21,7 +21,7 @@ import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBott
 
 import { setGifts } from '../../redux/liveStream/actions';
 import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
-import { Constants, Helper, Global, RestAPI } from '../../utils/Global';
+import { Constants, Global, RestAPI } from '../../utils/Global';
 import styles from './styles';
 import ic_audio from '../../assets/images/Icons/ic_audio_on.png';
 import { setMyUserAction } from '../../redux/me/actions';

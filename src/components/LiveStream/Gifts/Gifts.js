@@ -1,10 +1,10 @@
-import React, { Component } from 'react';
-import { Image, FlatList, TouchableOpacity, Text, View } from 'react-native';
+import React, {Component} from 'react';
+import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
-import { GStyle } from '../../../utils/Global';
-import { GStyles } from '../../../utils/Global/Styles';
+import {GStyle} from '../../../utils/Global';
+import {GStyles} from '../../../utils/Global/Styles';
 import diamond from './../../../assets/images/Icons/ic_diamond.png';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
 class Gifts extends Component {
   constructor(props) {

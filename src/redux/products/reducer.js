@@ -1,5 +1,5 @@
-import { handleActions } from 'redux-actions';
-import { SET_PRODUCTS, UPDATE_PRODUCT } from './types';
+import {handleActions} from 'redux-actions';
+import {SET_PRODUCTS, UPDATE_PRODUCT} from './types';
 
 const INITIAL_STATE = {
   products: [],

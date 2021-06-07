@@ -1,7 +1,5 @@
 import React from 'react';
 import {
-  ActivityIndicator,
-  FlatList,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -28,9 +26,7 @@ import {
   RestAPI,
 } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
-import ProductsList from "../../components/elements/ProductsList";
-import ic_upload from "../../assets/images/Icons/ic_upload.png";
-
+import ProductsList from '../../components/elements/ProductsList';
 
 class MyProductsScreen extends React.Component {
   static contextType = NavigationContext;
@@ -231,7 +227,7 @@ class MyProductsScreen extends React.Component {
       onEndReachedDuringMomentum,
     });
   };
-  
+
   _renderVideo = () => {
     const { isFetching, itemDatas, onEndReachedDuringMomentum } = this.state;
     return (
@@ -262,7 +258,15 @@ class MyProductsScreen extends React.Component {
           navigation={navigation}
           rightAvatar={
             <TouchableOpacity onPress={this.onPressNewProduct}>
-              <Text style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}>Add New</Text>
+              <Text
+                style={[
+                  GStyles.textSmall,
+                  GStyles.boldText,
+                  { color: 'black' },
+                ]}
+              >
+                Add New
+              </Text>
             </TouchableOpacity>
           }
         />

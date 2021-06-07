@@ -1,4 +1,4 @@
-import { StyleSheet, Platform } from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 import RN from 'react-native/package.json';
 
 let style = {};

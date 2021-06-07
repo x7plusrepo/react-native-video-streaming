@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Animated, Easing } from 'react-native';
+import {Animated, Easing} from 'react-native';
 
 export default function withAnimation(WrappedComponent, indeterminateProgress) {
   const wrappedComponentName =

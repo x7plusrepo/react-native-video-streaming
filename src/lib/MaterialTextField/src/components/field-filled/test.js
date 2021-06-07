@@ -1,4 +1,4 @@
-import { Image } from 'react-native';
+import {Image} from 'react-native';
 import React from 'react';
 import renderer from 'react-test-renderer';
 

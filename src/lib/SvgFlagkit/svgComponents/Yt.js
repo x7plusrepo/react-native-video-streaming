@@ -1,14 +1,5 @@
 import React from 'react'
-import Svg, {
-    Defs,
-    LinearGradient,
-    Stop,
-    Path,
-    G,
-    Mask,
-    Use,
-    Circle,
-} from 'react-native-svg'
+import Svg, {Circle, Defs, G, LinearGradient, Mask, Path, Stop, Use,} from 'react-native-svg'
 /* SVGR has dropped some elements not supported by react-native-svg: filter */
 
 const SvgYt = props => (

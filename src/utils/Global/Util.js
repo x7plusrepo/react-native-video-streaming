@@ -1,16 +1,6 @@
-import {
-  Alert,
-  Dimensions,
-  PermissionsAndroid,
-  Platform,
-  StatusBar,
-} from 'react-native';
+import {Alert, Dimensions, PermissionsAndroid, Platform, StatusBar,} from 'react-native';
 
-import {
-  PERMISSIONS,
-  requestMultiple,
-  RESULTS,
-} from 'react-native-permissions';
+import {PERMISSIONS, requestMultiple, RESULTS,} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
 import Moment from 'moment';
 import changeNavigationBarColor from 'react-native-navigation-bar-color';

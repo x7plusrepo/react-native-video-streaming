@@ -1,4 +1,5 @@
 import Swiper from './src/'
+
 /**
  * Resolve ES6 and CommonJS compatibility issues
  * 1. CommonJS code

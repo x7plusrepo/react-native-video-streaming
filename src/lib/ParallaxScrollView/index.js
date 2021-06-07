@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Animated, Dimensions, View, ViewPropTypes} from 'react-native';
+import {bool, func, number, string} from 'prop-types';
 
 const styles = require('./styles');
-
-import {bool, func, number, string} from 'prop-types';
 
 const window = Dimensions.get('window');
 

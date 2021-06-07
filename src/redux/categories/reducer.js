@@ -1,5 +1,5 @@
-import { handleActions } from 'redux-actions';
-import { SET_CATEGORIES } from './types';
+import {handleActions} from 'redux-actions';
+import {SET_CATEGORIES} from './types';
 
 const INITIAL_STATE = {
   categories: [],

@@ -1,8 +1,7 @@
 'use strict';
 
 import React, {Component} from 'react';
-import PropTypes from 'prop-types';
-import {Animated, View, Text, TouchableHighlight, Image} from 'react-native';
+import {Animated, Image, Text, TouchableHighlight, View} from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import styles from './style';
 

@@ -1,13 +1,5 @@
-import React, { Component } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Animated,
-  PanResponder,
-  TouchableWithoutFeedback,
-  ViewPropTypes
-} from "react-native";
+import React, {Component} from "react";
+import {Animated, StyleSheet, Text, TouchableWithoutFeedback} from "react-native";
 import PropTypes from "prop-types";
 
 export class Switch extends Component {

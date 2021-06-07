@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Proptypes from 'prop-types';
-import {View, StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import map from 'lodash.map';
 import noop from 'lodash.noop';
 import result from 'lodash.result';

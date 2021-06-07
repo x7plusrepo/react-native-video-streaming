@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import { GStyles } from '../../../utils/Global';
+import {StyleSheet} from 'react-native';
+import {GStyles} from '../../../utils/Global';
 
 const styles = StyleSheet.create({
   wrapper: {

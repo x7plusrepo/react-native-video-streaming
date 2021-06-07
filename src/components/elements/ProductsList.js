@@ -1,5 +1,5 @@
-import React, { forwardRef } from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import React, {forwardRef} from 'react';
+import {ActivityIndicator, FlatList} from 'react-native';
 import ExploreVideoItem from './ExploreVideoItem';
 
 const ProductsList = forwardRef((props, ref) => {

@@ -1,34 +1,7 @@
-import React, { Component, isValidElement } from 'react';
-import {
-  Alert,
-  BackHandler,
-  Button,
-  Dimensions,
-  FlatList,
-  Image,
-  LayoutAnimation,
-  ListView,
-  Modal,
-  Platform,
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React from 'react';
+import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import { GStyle, GStyles, Helper } from '../../utils/Global';
 import CheckBox from '../../lib/Checkbox/index';
 import Avatar from './Avatar';
 import Flag from '../../lib/SvgFlagkit/Flag';

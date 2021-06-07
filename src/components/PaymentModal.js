@@ -1,22 +1,10 @@
 import React from 'react';
-import {
-    Text, View,
-} from 'react-native';
+import {TouchableOpacity,} from 'react-native';
 import PropTypes from 'prop-types';
-import {  Icon } from 'react-native-elements';
+import {Icon} from 'react-native-elements';
 import Modal from "react-native-modal";
 import GStyle from "../assets/Styles";
 import PaymentScreen from "../screens/PaymentScreen";
-import {
-    StyleSheet,    
-    Dimensions,
-    SectionList,
-    Alert,
-    TouchableOpacity,
-    ActivityIndicator,
-    ScrollView,
-
-} from 'react-native';
 
 export default class PaymentModal extends React.Component {
 

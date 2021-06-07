@@ -1,8 +1,8 @@
-import React, { useEffect, useState, useRef, forwardRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation, StackActions } from '@react-navigation/native';
+import { StackActions, useNavigation } from '@react-navigation/native';
 
-import { Helper, Constants, RestAPI } from '../../utils/Global';
+import { Constants, Helper, RestAPI } from '../../utils/Global';
 import GStyle, { GStyles } from '../../utils/Global/Styles';
 import ProductsList from '../../components/elements/ProductsList';
 

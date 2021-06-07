@@ -1,5 +1,5 @@
-import { handleActions } from 'redux-actions';
-import { SET_ROOMS, SET_GIFTS } from './types';
+import {handleActions} from 'redux-actions';
+import {SET_GIFTS, SET_ROOMS} from './types';
 
 const INITIAL_STATE = {
   rooms: [],

@@ -1,24 +1,19 @@
-import React, { useState, useEffect } from 'react';
-import { Image, StatusBar, StyleSheet, View } from 'react-native';
-import branch, { BranchEvent } from 'react-native-branch';
+import React, {useEffect, useState} from 'react';
+import {Image, StatusBar, StyleSheet, View} from 'react-native';
+import branch from 'react-native-branch';
 
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
-
+import {Provider} from 'react-redux';
+import {store} from './redux/store';
 // import RestAPI from './DB/RestAPI';
 // import Constants from './DB/Constants';
-import { Helper, Constants } from './utils/Global';
+import {Constants, Helper} from './utils/Global';
 
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 import AppNavigator from './navigation/AppNavigator';
-import { MenuProvider } from 'react-native-popup-menu';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {Provider as PaperProvider} from 'react-native-paper';
 import * as RootNavigation from './utils/Global/RootNavigation';
 
-import FlashMessage, {
-  showMessage,
-  hideMessage,
-} from 'react-native-flash-message';
+import FlashMessage, {showMessage,} from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
 import LiveStreamSocketManager from './utils/LiveStream/SocketManager';
@@ -136,9 +131,7 @@ function App() {
     <Provider store={store}>
       <View style={styles.container}>
         <PaperProvider>
-          <MenuProvider>
-            <AppNavigator />
-          </MenuProvider>
+          <AppNavigator />
         </PaperProvider>
         <FlashMessage position="top" />
         <PageLoaderIndicator isPageLoader={isShowPageLoader} />

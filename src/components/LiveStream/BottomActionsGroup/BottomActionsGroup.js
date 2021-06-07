@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
-import { View, Platform } from 'react-native';
-import KeyboardAccessory from 'react-native-sticky-keyboard-accessory';
-import { GStyles } from '../../../utils/Global/Styles';
+import React, {Component} from 'react';
+import {View} from 'react-native';
+import {GStyles} from '../../../utils/Global/Styles';
 import GradientBackgroundIconButton from './GradientBackgroundIconButton';
 import MessagesList from '../MessagesList';
 
@@ -12,6 +11,7 @@ import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import ic_join from '../../../assets/images/Icons/ic_join.png';
 import ic_signOut from '../../../assets/images/Icons/ic_signout.png';
 import heart from '../../../assets/images/gifts/heart.png';
+
 const ic_audio_on = require('../../../assets/images/Icons/ic_audio_on.png');
 const ic_audio_off = require('../../../assets/images/Icons/ic_audio_off.png');
 const ic_star = require('../../../assets/images/Icons/ic_star.png');

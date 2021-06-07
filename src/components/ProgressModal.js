@@ -1,18 +1,8 @@
 import React from 'react';
-import {
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
-  Switch,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Text, View,} from 'react-native';
 
 import ProgressBar from '../lib/Progress/Bar';
-import {GStyle, GStyles, Global, Helper, Constants} from '../utils/Global';
+import {GStyle, GStyles, Helper} from '../utils/Global';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 

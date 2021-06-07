@@ -1,7 +1,7 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { Animated, StyleSheet, View } from 'react-native';
-import { Surface as ARTSurface } from '@react-native-community/art';
+import {Animated, StyleSheet, View} from 'react-native';
+import {Surface as ARTSurface} from '@react-native-community/art';
 
 import Circle from './Shapes/Circle';
 import Sector from './Shapes/Sector';

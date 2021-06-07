@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import {
-  AppState,
   ActivityIndicator,
   Alert,
+  AppState,
   BackHandler,
   FlatList,
   Image,
@@ -18,12 +18,12 @@ import {
 import SplashScreen from 'react-native-splash-screen';
 import { connect } from 'react-redux';
 import convertToProxyURL from 'react-native-video-cache';
-import Share, { ShareSheet } from 'react-native-share';
+import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { ShareDialog, MessageDialog } from 'react-native-fbsdk';
+import { MessageDialog, ShareDialog } from 'react-native-fbsdk';
 
 import { RNFFmpeg } from 'react-native-ffmpeg';
 
@@ -38,11 +38,11 @@ import Avatar from '../../components/elements/Avatar';
 import ProgressModal from '../../components/ProgressModal';
 
 import {
+  Constants,
+  Global,
   GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
   RestAPI,
 } from '../../utils/Global';
 import ChatStreamSocketManager from './../../utils/Message/SocketManager';

@@ -1,46 +1,18 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   Alert,
-  Animated,
-  BallIndicator,
-  BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
-  FlatList,
-  Image,
-  ImageBackground,
-  KeyboardAvoidingView,
-  LayoutAnimation,
-  Linking,
-  Modal,
-  Platform,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
-  useColorScheme,
   View,
 } from 'react-native';
 
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 
-import {TextField} from '../../lib/MaterialTextField/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import GHeaderBar from '../../components/GHeaderBar';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constants,
-  RestAPI,
-} from '../../utils/Global';
+import { Constants, GStyle, GStyles, RestAPI } from '../../utils/Global';
 
 class FCVerifyEmailScreen extends React.Component {
   constructor(props) {
@@ -66,7 +38,7 @@ class FCVerifyEmailScreen extends React.Component {
   };
 
   onFocus = () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     for (let name in errors) {
       let ref = this[name];
@@ -76,15 +48,15 @@ class FCVerifyEmailScreen extends React.Component {
       }
     }
 
-    this.setState({errors});
+    this.setState({ errors });
   };
 
   onChangeText = (text) => {
     ['code']
-      .map((name) => ({name, ref: this[name]}))
-      .forEach(({name, ref}) => {
+      .map((name) => ({ name, ref: this[name] }))
+      .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
-          this.setState({[name]: text});
+          this.setState({ [name]: text });
         }
       });
   };
@@ -117,7 +89,7 @@ class FCVerifyEmailScreen extends React.Component {
   };
 
   onVerify = () => {
-    const {code} = this.state;
+    const { code } = this.state;
 
     showForcePageLoader(true);
     RestAPI.verify_email(code, (json, err) => {
@@ -144,7 +116,7 @@ class FCVerifyEmailScreen extends React.Component {
   };
 
   onNext = () => {
-    const {code} = this.state;
+    const { code } = this.state;
     let errors = {};
 
     ['code'].forEach((name) => {
@@ -155,7 +127,7 @@ class FCVerifyEmailScreen extends React.Component {
       }
     });
 
-    this.setState({errors});
+    this.setState({ errors });
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
@@ -192,7 +164,8 @@ class FCVerifyEmailScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderTitle()}
             {this._renderInput()}
             {this._renderSendAgain()}
@@ -217,7 +190,7 @@ class FCVerifyEmailScreen extends React.Component {
     return (
       <>
         {global.roleId == 2 && (
-          <Text style={[GStyles.regularText, {marginTop: 12}]}>
+          <Text style={[GStyles.regularText, { marginTop: 12 }]}>
             Step 2 of 2
           </Text>
         )}
@@ -231,7 +204,7 @@ class FCVerifyEmailScreen extends React.Component {
   };
 
   _renderInput = () => {
-    let {code, errors = {}} = this.state;
+    let { code, errors = {} } = this.state;
 
     return (
       <TextField
@@ -247,15 +220,15 @@ class FCVerifyEmailScreen extends React.Component {
         label="Enter code"
         value={code}
         error={errors.code}
-        containerStyle={{marginTop: 36}}
+        containerStyle={{ marginTop: 36 }}
       />
     );
   };
 
   _renderSendAgain = () => {
     return (
-      <View style={[GStyles.rowCenterContainer, {height: 30, marginTop: 25}]}>
-        <Text style={[GStyles.regularText, {fontSize: 13, height: '100%'}]}>
+      <View style={[GStyles.rowCenterContainer, { height: 30, marginTop: 25 }]}>
+        <Text style={[GStyles.regularText, { fontSize: 13, height: '100%' }]}>
           Didn`t get a code?
         </Text>
         <TouchableOpacity onPress={this.onSendAgain}>
@@ -266,7 +239,8 @@ class FCVerifyEmailScreen extends React.Component {
               flex: 1,
               color: GStyle.linkColor,
               marginLeft: 5,
-            }}>
+            }}
+          >
             Send again
           </Text>
         </TouchableOpacity>
@@ -276,7 +250,7 @@ class FCVerifyEmailScreen extends React.Component {
 
   _renderButton = () => {
     return (
-      <View style={{marginVertical: 50}}>
+      <View style={{ marginVertical: 50 }}>
         <TouchableOpacity onPress={this.onVerify}>
           <View style={GStyles.buttonFill}>
             <Text style={GStyles.textFill}>Verify</Text>

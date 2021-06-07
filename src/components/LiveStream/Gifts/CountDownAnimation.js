@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Animated, Text, View } from 'react-native';
+import {Animated, StyleSheet, Text, View} from 'react-native';
 
 const GO = 'GO!';
 

@@ -1,13 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Image,
-  Keyboard,
-  KeyboardAvoidingView,
-  Platform,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Image, Keyboard, KeyboardAvoidingView, Platform, TextInput, TouchableOpacity,} from 'react-native';
 
 import styles from './styles';
 

@@ -1,5 +1,5 @@
-import { createAction } from 'redux-actions';
-import { SAVED_COUNT, MY_POST_COUNT, SET_USER } from './types';
+import {createAction} from 'redux-actions';
+import {MY_POST_COUNT, SAVED_COUNT, SET_USER} from './types';
 
 const setSavedCountAction = createAction(SAVED_COUNT);
 export const setSavedCount = (count) => (dispatch) => {

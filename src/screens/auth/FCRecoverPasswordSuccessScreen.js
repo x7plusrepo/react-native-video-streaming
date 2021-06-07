@@ -1,15 +1,14 @@
 import React from 'react';
 import {
-  View,
-  Dimensions,
   Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  SafeAreaView,
+  View,
 } from 'react-native';
 
-import {GStyle, GStyles, Global, Helper, Constants, RestAPI} from '../../utils/Global';
+import { GStyles } from '../../utils/Global';
 
 const ic_success = require('../../assets/images/ic_success.png');
 
@@ -41,13 +40,15 @@ class FCRecoverPasswordSuccessScreen extends React.Component {
   }
 
   _renderImage = () => {
-    return <Image source={ic_success} style={[GStyles.image, {width: 100}]} />;
+    return (
+      <Image source={ic_success} style={[GStyles.image, { width: 100 }]} />
+    );
   };
 
   _renderMessage = () => {
     return (
       <>
-        <Text style={[GStyles.notifyTitle, {fontSize: 24}]}>
+        <Text style={[GStyles.notifyTitle, { fontSize: 24 }]}>
           Congratulations!
         </Text>
         <Text style={GStyles.notifyDescription}>
@@ -60,11 +61,12 @@ class FCRecoverPasswordSuccessScreen extends React.Component {
 
   _renderButton = () => {
     return (
-      <View style={{marginTop: 40}}>
+      <View style={{ marginTop: 40 }}>
         <TouchableOpacity
           onPress={() => {
             this.props.navigation.navigate('fc_signin');
-          }}>
+          }}
+        >
           <View style={GStyles.buttonFill}>
             <Text style={GStyles.textFill}>Login</Text>
           </View>

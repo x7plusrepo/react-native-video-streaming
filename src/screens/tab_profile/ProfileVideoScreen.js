@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
-  AppState,
   ActivityIndicator,
+  AppState,
   FlatList,
   Image,
   Linking,
@@ -14,9 +14,9 @@ import {
 } from 'react-native';
 
 import {
+  StackActions,
   useNavigation,
   useRoute,
-  StackActions,
 } from '@react-navigation/native';
 import convertToProxyURL from 'react-native-video-cache';
 import Share from 'react-native-share';
@@ -24,26 +24,26 @@ import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
 import RBSheet from 'react-native-raw-bottom-sheet';
-import { ShareDialog, MessageDialog } from 'react-native-fbsdk';
+import { MessageDialog, ShareDialog } from 'react-native-fbsdk';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Fontisto from 'react-native-vector-icons/Fontisto';
 
-import { LogLevel, RNFFmpeg } from 'react-native-ffmpeg';
+import { RNFFmpeg } from 'react-native-ffmpeg';
 
 import Video from 'react-native-video';
 import Avatar from '../../components/elements/Avatar';
 import ProgressModal from '../../components/ProgressModal';
 
 import {
+  Constants,
   GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
   RestAPI,
 } from '../../utils/Global';
 import avatars from '../../assets/avatars';
+
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 

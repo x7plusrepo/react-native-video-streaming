@@ -1,25 +1,17 @@
 import React from 'react';
 import {
-  View,
-  Dimensions,
-  Image,
+  SafeAreaView,
   StyleSheet,
   Text,
   TouchableOpacity,
-  SafeAreaView,
+  View,
 } from 'react-native';
 
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 
-import {TextField} from '../../lib/MaterialTextField/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import GHeaderBar from '../../components/GHeaderBar';
-import {
-  GStyle,
-  GStyles,
-  Global,
-  Helper,
-  Constant,
-} from '../../utils/Global';
+import { Constant, GStyles } from '../../utils/Global';
 
 class FCForgetPasswordScreen extends React.Component {
   constructor(props) {
@@ -49,7 +41,7 @@ class FCForgetPasswordScreen extends React.Component {
   };
 
   onFocus = () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     for (let name in errors) {
       let ref = this[name];
@@ -59,15 +51,15 @@ class FCForgetPasswordScreen extends React.Component {
       }
     }
 
-    this.setState({errors});
+    this.setState({ errors });
   };
 
   onChangeText = (text) => {
     ['email']
-      .map((name) => ({name, ref: this[name]}))
-      .forEach(({name, ref}) => {
+      .map((name) => ({ name, ref: this[name] }))
+      .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
-          this.setState({[name]: text});
+          this.setState({ [name]: text });
         }
       });
   };
@@ -81,7 +73,7 @@ class FCForgetPasswordScreen extends React.Component {
   };
 
   onNext = () => {
-    const {email} = this.state;
+    const { email } = this.state;
     let errors = {};
 
     ['email'].forEach((name) => {
@@ -92,7 +84,7 @@ class FCForgetPasswordScreen extends React.Component {
       }
     });
 
-    this.setState({errors});
+    this.setState({ errors });
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
@@ -130,7 +122,8 @@ class FCForgetPasswordScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderTitle()}
             {this._renderEmail()}
             {this._renderButton()}
@@ -163,7 +156,7 @@ class FCForgetPasswordScreen extends React.Component {
   };
 
   _renderEmail = () => {
-    let {email, errors = {}} = this.state;
+    let { email, errors = {} } = this.state;
 
     return (
       <TextField
@@ -179,14 +172,14 @@ class FCForgetPasswordScreen extends React.Component {
         label="Email"
         value={email}
         error={errors.email}
-        containerStyle={{marginTop: 36}}
+        containerStyle={{ marginTop: 36 }}
       />
     );
   };
 
   _renderButton = () => {
     return (
-      <View style={{marginVertical: 40}}>
+      <View style={{ marginVertical: 40 }}>
         <TouchableOpacity onPress={this.onNext}>
           <View style={GStyles.buttonFill}>
             <Text style={GStyles.textFill}>Next</Text>

@@ -1,7 +1,7 @@
 /* eslint-disable */
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import { View, Animated, StyleSheet, ViewPropTypes } from 'react-native';
+import {Animated, StyleSheet, View, ViewPropTypes} from 'react-native';
 
 import HeartShape from './HeartShape';
 

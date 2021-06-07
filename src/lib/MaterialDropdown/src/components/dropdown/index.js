@@ -1,16 +1,16 @@
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
 import {
-  Text,
-  View,
-  FlatList,
   Animated,
-  Modal,
-  TouchableWithoutFeedback,
   Dimensions,
-  Platform,
-  ViewPropTypes,
+  FlatList,
   I18nManager,
+  Modal,
+  Platform,
+  Text,
+  TouchableWithoutFeedback,
+  View,
+  ViewPropTypes,
 } from 'react-native';
 import Ripple from '../../../../MaterialRipple/index';
 import {TextField} from '../../../../MaterialTextField/index';

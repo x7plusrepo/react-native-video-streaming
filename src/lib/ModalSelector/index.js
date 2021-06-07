@@ -4,12 +4,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 
 import {
-  View,
   Modal,
-  Text,
   ScrollView,
+  Text,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  View,
   ViewPropTypes as RNViewPropTypes,
 } from 'react-native';
 

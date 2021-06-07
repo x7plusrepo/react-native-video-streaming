@@ -1,16 +1,8 @@
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  Image,
-  Keyboard,
-  Platform,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useEffect, useRef, useState} from 'react';
+import {Keyboard, Platform, Text, TextInput, TouchableOpacity, View,} from 'react-native';
 
 import styles from './styles';
-import { GStyles } from '../../../utils/Global/Styles';
+import {GStyles} from '../../../utils/Global/Styles';
 
 const TaskInput = (props) => {
   const [goal, setGoal] = useState(props.goal || 0);

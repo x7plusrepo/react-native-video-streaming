@@ -8,18 +8,11 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {
-  useNavigation,
-  useRoute,
-  StackActions,
-} from '@react-navigation/native';
-
-import { connect } from 'react-redux';
-import { setKeyword } from '../../redux/home/actions';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import ScrollableTabView, { DefaultTabBar } from 'rn-collapsing-tab-bar';
 
-import { GStyle, GStyles, Helper } from '../../utils/Global';
+import { GStyle, GStyles } from '../../utils/Global';
 import SearchBarItem from '../../components/elements/SearchBarItem';
 import { TouchableNativeFeedback } from 'react-native-gesture-handler';
 
@@ -95,7 +88,7 @@ class HomeSearchScreen extends React.Component {
       this.usersListRef.scrollToTop();
     }
     if (this.videosListRef) {
-      this.videosListRef.scrollToTop()
+      this.videosListRef.scrollToTop();
     }
 
     const { searchText } = this.state;
@@ -113,7 +106,7 @@ class HomeSearchScreen extends React.Component {
     } else {
       keyword = '';
     }
-    this.setState({ keyword })
+    this.setState({ keyword });
   };
 
   render() {
@@ -151,9 +144,7 @@ class HomeSearchScreen extends React.Component {
             onPress={this.onSubmitSearchText}
             style={{ ...GStyles.centerAlign, height: 50 }}
           >
-            <Text style={{ ...GStyles.regularText, color: 'red' }}>
-              Search
-            </Text>
+            <Text style={{ ...GStyles.regularText, color: 'red' }}>Search</Text>
           </TouchableNativeFeedback>
         </View>
       </View>
@@ -207,4 +198,4 @@ const THomeSearchScreen = function (props) {
   let route = useRoute();
   return <HomeSearchScreen {...props} navigation={navigation} route={route} />;
 };
-export default THomeSearchScreen
+export default THomeSearchScreen;

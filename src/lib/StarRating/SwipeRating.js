@@ -1,11 +1,8 @@
-import React, { Component } from 'react';
+import React, {Component} from 'react';
 import times from 'lodash/times';
 import PropTypes from 'prop-types';
 
-import {
-  View, Text, Animated, PanResponder, Image,
-  StyleSheet, Platform
-} from 'react-native';
+import {Animated, Image, PanResponder, Platform, StyleSheet, Text, View} from 'react-native';
 
 // RATING IMAGES WITH STATIC BACKGROUND COLOR (white)
 const STAR_IMAGE = require('./images/star.png');

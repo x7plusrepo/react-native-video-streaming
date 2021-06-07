@@ -1,5 +1,5 @@
-import { createAction } from 'redux-actions';
-import { SET_ROOMS, SET_GIFTS } from './types';
+import {createAction} from 'redux-actions';
+import {SET_GIFTS, SET_ROOMS} from './types';
 
 const setLiveStreamRoomsAction = createAction(SET_ROOMS);
 const setGiftsAction = createAction(SET_GIFTS);

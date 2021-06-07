@@ -1,8 +1,8 @@
 import PropTypes from 'prop-types';
-import React, { Fragment, PureComponent } from 'react';
-import { View, Animated, I18nManager } from 'react-native';
+import React, {Fragment, PureComponent} from 'react';
+import {Animated, I18nManager, View} from 'react-native';
 
-import styles, { borderRadius } from './styles';
+import styles, {borderRadius} from './styles';
 
 export default class Line extends PureComponent {
   static defaultProps = {

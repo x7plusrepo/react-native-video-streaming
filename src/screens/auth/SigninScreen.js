@@ -1,29 +1,11 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   Alert,
-  Animated,
-  BallIndicator,
   BackHandler,
-  Button,
-  Clipboard,
-  Dimensions,
-  FlatList,
   Image,
-  ImageBackground,
-  LayoutAnimation,
-  Linking,
-  LogBox,
-  Modal,
-  Platform,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Switch,
   Text,
-  TextInput,
-  TouchableHighlight,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -33,11 +15,11 @@ import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scr
 import { TextField } from '../../lib/MaterialTextField/index';
 
 import {
+  Constants,
+  Global,
   GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
   RestAPI,
 } from '../../utils/Global';
 

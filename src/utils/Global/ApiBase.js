@@ -1,5 +1,3 @@
-import RNFetchBlob from 'rn-fetch-blob';
-import Constants from './Constants';
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
 

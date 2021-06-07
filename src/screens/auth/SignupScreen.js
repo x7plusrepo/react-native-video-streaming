@@ -9,20 +9,19 @@ import {
   View,
 } from 'react-native';
 
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-import {TextField} from '../../lib/MaterialTextField/index';
+import { TextField } from '../../lib/MaterialTextField/index';
 import GHeaderBar from '../../components/GHeaderBar';
 import {
+  Constants,
   GStyle,
   GStyles,
-  Global,
   Helper,
-  Constants,
   RestAPI,
 } from '../../utils/Global';
-import ChatStreamSocketManager from "../../utils/Message/SocketManager";
+import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 
 class SignupScreen extends React.Component {
   constructor(props) {
@@ -69,7 +68,7 @@ class SignupScreen extends React.Component {
   };
 
   onFocus = () => {
-    let {errors = {}} = this.state;
+    let { errors = {} } = this.state;
 
     for (let name in errors) {
       let ref = this[name];
@@ -79,15 +78,15 @@ class SignupScreen extends React.Component {
       }
     }
 
-    this.setState({errors});
+    this.setState({ errors });
   };
 
   onChangeText = (text) => {
     ['userName', 'phoneNumber', 'password', 'confirmPassword']
-      .map((name) => ({name, ref: this[name]}))
-      .forEach(({name, ref}) => {
+      .map((name) => ({ name, ref: this[name] }))
+      .forEach(({ name, ref }) => {
         if (ref.isFocused()) {
-          this.setState({[name]: text});
+          this.setState({ [name]: text });
         }
       });
   };
@@ -109,11 +108,13 @@ class SignupScreen extends React.Component {
   };
 
   onAccessoryPress = () => {
-    this.setState(({secureTextEntry}) => ({secureTextEntry: !secureTextEntry}));
+    this.setState(({ secureTextEntry }) => ({
+      secureTextEntry: !secureTextEntry,
+    }));
   };
 
   renderPasswordAccessory = () => {
-    let {secureTextEntry} = this.state;
+    let { secureTextEntry } = this.state;
 
     let name = secureTextEntry ? 'visibility' : 'visibility-off';
 
@@ -157,16 +158,16 @@ class SignupScreen extends React.Component {
       },
     );
 
-    let {password, confirmPassword} = this.state;
+    let { password, confirmPassword } = this.state;
     if (password !== confirmPassword) {
       errors['confirmPassword'] = 'Not match with password';
     }
 
-    this.setState({errors});
+    this.setState({ errors });
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      const {password, userName, phoneNumber} = this.state;
+      const { password, userName, phoneNumber } = this.state;
 
       const params = {
         username: userName,
@@ -219,7 +220,8 @@ class SignupScreen extends React.Component {
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}>
+            style={GStyles.elementContainer}
+          >
             {this._renderTitle()}
             {this._renderInput()}
             {this._renderButton()}
@@ -244,17 +246,25 @@ class SignupScreen extends React.Component {
     return (
       <>
         <Text style={GStyles.titleText}>Hi, create your account</Text>
-        <View style={[GStyles.titleDescription, GStyles.rowContainer, { marginTop: 20 }]}>
+        <View
+          style={[
+            GStyles.titleDescription,
+            GStyles.rowContainer,
+            { marginTop: 20 },
+          ]}
+        >
           <Text style={GStyles.regularText}>Already have an account?</Text>
           <TouchableOpacity
             onPress={() => {
               this.props.navigation.navigate('signin');
-            }}>
+            }}
+          >
             <Text
               style={[
                 GStyles.regularText,
-                {color: GStyle.linkColor, paddingLeft: 5},
-              ]}>
+                { color: GStyle.linkColor, paddingLeft: 5 },
+              ]}
+            >
               Log in
             </Text>
           </TouchableOpacity>
@@ -287,7 +297,7 @@ class SignupScreen extends React.Component {
           label="Username"
           value={userName}
           error={errors.userName}
-          containerStyle={{marginTop: 24}}
+          containerStyle={{ marginTop: 24 }}
         />
         <TextField
           ref={this.phoneNumberRef}
@@ -301,7 +311,7 @@ class SignupScreen extends React.Component {
           label="Phone Number"
           value={phoneNumber}
           error={errors.phoneNumber}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
         <TextField
           ref={this.passwordRef}
@@ -320,7 +330,7 @@ class SignupScreen extends React.Component {
           error={errors.password}
           renderRightAccessory={this.renderPasswordAccessory}
           maxLength={4}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
         <TextField
           ref={this.confirmPasswordRef}
@@ -338,7 +348,7 @@ class SignupScreen extends React.Component {
           value={confirmPassword}
           error={errors.confirmPassword}
           maxLength={4}
-          containerStyle={{marginTop: 8}}
+          containerStyle={{ marginTop: 8 }}
         />
       </>
     );
@@ -346,7 +356,7 @@ class SignupScreen extends React.Component {
 
   _renderButton = () => {
     return (
-      <View style={{marginVertical: 50}}>
+      <View style={{ marginVertical: 50 }}>
         <TouchableOpacity onPress={this.onSubmit}>
           <View style={GStyles.buttonFill}>
             <Text style={GStyles.textFill}>Sign Up</Text>
@@ -358,14 +368,15 @@ class SignupScreen extends React.Component {
 
   _renderBottom = () => {
     return (
-      <View style={{height: 50}}>
+      <View style={{ height: 50 }}>
         <Text
           style={{
             fontFamily: 'GothamPro',
             fontSize: 13,
             lineHeight: 22,
             color: GStyle.grayColor,
-          }}>
+          }}
+        >
           By signing up, you agree to Stars
         </Text>
         <View style={GStyles.rowCenterContainer}>
@@ -377,7 +388,8 @@ class SignupScreen extends React.Component {
                 lineHeight: 22,
                 color: GStyle.linkColor,
                 paddingLeft: 5,
-              }}>
+              }}
+            >
               Term of Service
             </Text>
           </TouchableOpacity>
@@ -388,7 +400,8 @@ class SignupScreen extends React.Component {
               lineHeight: 22,
               color: GStyle.grayColor,
               paddingLeft: 5,
-            }}>
+            }}
+          >
             and
           </Text>
           <TouchableOpacity onPress={this.onPrivacy}>
@@ -399,7 +412,8 @@ class SignupScreen extends React.Component {
                 lineHeight: 22,
                 color: GStyle.linkColor,
                 paddingLeft: 5,
-              }}>
+              }}
+            >
               Privacy Policy
             </Text>
           </TouchableOpacity>

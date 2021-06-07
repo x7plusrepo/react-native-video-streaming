@@ -1,9 +1,8 @@
 import _ from 'lodash';
 
-import React, { Component } from 'react';
-import PropTypes from 'prop-types';
+import React, {Component} from 'react';
 
-import { StyleSheet, Text, View } from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 
 import Star from './components/Star'
 

@@ -6,7 +6,6 @@ import {
   PermissionsAndroid,
   SafeAreaView,
   StatusBar,
-  Text,
   TouchableOpacity,
   View,
 } from 'react-native';
