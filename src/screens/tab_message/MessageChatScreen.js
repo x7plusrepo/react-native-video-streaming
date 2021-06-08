@@ -17,7 +17,7 @@ import GHeaderBar from '../../components/GHeaderBar';
 import CustomActions from '../../components/elements/MessageActions';
 import CustomView from '../../components/elements/MessageView';
 
-import { Constants, GStyle, GStyles, Helper } from '../../utils/Global';
+import { Constants, GStyle, GStyles, Helper, Global } from '../../utils/Global';
 import SocketManager from './../../utils/Message/SocketManager';
 import get from 'lodash/get';
 
@@ -79,21 +79,17 @@ class MessageChatScreen extends Component {
         return;
       }
       this.setState({ isFetching: true });
-    } else {
-      //showForcePageLoader(true);
     }
     SocketManager.instance.emitFetchMessages(params);
   };
 
   onSocketError = () => {
-    showForcePageLoader(false);
     this.setState({ isFetching: false });
 
     Helper.alertNetworkError();
   };
 
   onFetchMessageList = (response) => {
-    showForcePageLoader(false);
     this.setState({ isFetching: false });
 
     this.setState({ totalCount: response?.totalCount || 0 });
@@ -101,32 +97,45 @@ class MessageChatScreen extends Component {
   };
 
   onReceiveMessageList = (response) => {
-    showForcePageLoader(false);
-
     const messages = response.messages || [];
 
     this.onReceive(messages);
   };
 
   onBack = () => {
-    // let params = {
-    //   user_id: global.me?.id,
-    //   other_id: global._roomId,
-    // };
-    //RestAPI.set_read_status(params, (json, err) => {});
-
     this.props.navigation.goBack();
   };
 
   onSend = (messages = []) => {
     if (messages.length > 0) {
-      //showForcePageLoader(true);
       SocketManager.instance.emitSendMessage({
         senderId: global.me?.id,
         receiverId: this.state?.opponentUser?.id,
         messageType: Constants.MESSAGE_TYPE_TEXT,
         roomType: 0,
-        message: messages[0].text,
+        message: messages[0]?.text,
+        createdAt: new Date(),
+      });
+
+      const newMessages = [
+        {
+          _id: Global.makeId(10),
+          text: messages[0]?.text,
+          createdAt: new Date(),
+          user: {
+            _id: global.me?.id,
+            name:
+              global.me?.userType === 0
+                ? global.me?.displayName
+                : global.me?.username,
+            avatar: global.me?.photo,
+          },
+        },
+      ];
+      this.setState((oldState) => {
+        return {
+          messages: GiftedChat.append(oldState.messages, newMessages),
+        };
       });
     }
   };

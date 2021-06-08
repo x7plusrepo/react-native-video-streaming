@@ -180,8 +180,8 @@ class SigninScreen extends React.Component {
             const user = json.data?.user || {};
             global.me = user;
             ChatStreamSocketManager.instance.emitJoinRoom({
-              roomId: global.me?.id,
-              userId: global.me?.id,
+              roomId: user?.id,
+              userId: user?.id,
             });
             this.props.setMyUserAction(global.me);
             Helper.setLocalValue(Constants.KEY_USERNAME, user?.username);

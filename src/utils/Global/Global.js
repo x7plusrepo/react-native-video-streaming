@@ -1,5 +1,5 @@
-import {Platform} from 'react-native';
-import {Helper, RestAPI} from './index';
+import { Platform } from 'react-native';
+import { Helper, RestAPI } from './index';
 import branch from 'react-native-branch';
 import axios from 'axios';
 
@@ -122,6 +122,18 @@ const Global = {
       linkProperties,
       controlParams,
     );
+  },
+  makeId: (length) => {
+    const result = [];
+    const characters =
+      'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    for (let i = 0; i < length; i++) {
+      result.push(
+        characters.charAt(Math.floor(Math.random() * charactersLength)),
+      );
+    }
+    return result.join('');
   },
 };
 

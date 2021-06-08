@@ -66,47 +66,8 @@ class MainTabNavigator extends Component {
     await Helper.hasPermissions();
 
     showForcePageLoader(true);
+    this.props.navigation.navigate('message');
 
-    const storageUsername = await Helper.getLocalValue(Constants.KEY_USERNAME);
-    const storagePassword = await Helper.getLocalValue(Constants.KEY_PASSWORD);
-
-    const guestUsername = 'guest_' + global._devId;
-    const guestPassword = 'guest_' + global._devId;
-
-    const username = storageUsername || guestUsername;
-    const password = storagePassword || guestPassword;
-
-    let params = {
-      username,
-      password,
-    };
-
-    RestAPI.signin_or_signup(params, (json, err) => {
-      showForcePageLoader(false);
-
-      if (err !== null) {
-        Helper.alertNetworkError();
-      } else {
-        if (json.status === 200) {
-          ChatStreamSocketManager.instance.emitLeaveRoom({
-            roomId: global.me?.id,
-            userId: global.me?.id,
-          });
-          global.me = json?.data?.user || {};
-          ChatStreamSocketManager.instance.emitJoinRoom({
-            roomId: global.me?.id,
-            userId: global.me?.id,
-          });
-          this.props.setMyUserAction(global.me);
-          Helper.setLocalValue(Constants.KEY_USERNAME, username);
-          Helper.setLocalValue(Constants.KEY_PASSWORD, password);
-          Global.registerPushToken();
-          this.props.navigation.navigate('message');
-        } else {
-          Helper.alertServerDataError();
-        }
-      }
-    });
   };
 
   render() {

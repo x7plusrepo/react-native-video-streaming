@@ -198,16 +198,7 @@ class ProfileEditScreen extends React.Component {
           error(Constants.ERROR_TITLE, 'Failed to update your profile');
         } else {
           if (json.status === 200) {
-            ChatStreamSocketManager.instance.emitLeaveRoom({
-              roomId: global.me?.id,
-              userId: global.me?.id,
-            });
-
             global.me = json.data || {};
-            ChatStreamSocketManager.instance.emitJoinRoom({
-              roomId: global.me?.id,
-              userId: global.me?.id,
-            });
             this.props.setMyUserAction(json.data || {});
             Helper.setLocalValue(Constants.KEY_USERNAME, userName);
             Helper.setLocalValue(

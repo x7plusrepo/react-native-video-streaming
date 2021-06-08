@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import {Constants, Logger} from '../Global';
+import { Constants, Logger } from '../Global';
 import Helper from '../Global/Util';
 
 class SocketManager {
@@ -105,7 +105,7 @@ class SocketManager {
     this.socket?.removeAllListeners(Constants.SOCKET_FETCH_MESSAGE_LIST);
   };
 
-  listenReceiveMessages(callback =  null) {
+  listenReceiveMessages(callback = null) {
     this.socket?.on(Constants.SOCKET_NEW_MESSAGE, (data) => {
       Logger.instance.log(`${Constants.SOCKET_NEW_MESSAGE} :`);
       return callback
@@ -118,13 +118,21 @@ class SocketManager {
     this.socket?.removeAllListeners(Constants.SOCKET_NEW_MESSAGE);
   };
 
-  emitSendMessage({ roomId, senderId, receiverId, message, messageType = 1 }) {
+  emitSendMessage({
+    roomId,
+    senderId,
+    receiverId,
+    message,
+    messageType = 1,
+    createdAt,
+  }) {
     this.socket?.emit(Constants.SOCKET_SEND_MESSAGE, {
       roomId,
       senderId,
       receiverId,
       message,
       messageType,
+      createdAt: createdAt ? new Date(createdAt) : new Date(),
     });
   }
 

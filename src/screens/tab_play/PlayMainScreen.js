@@ -8,6 +8,7 @@ import {
   Image,
   Linking,
   Platform,
+  SafeAreaView,
   StatusBar,
   StyleSheet,
   Text,
@@ -134,7 +135,6 @@ class PlayMainScreen extends Component {
 
     await Helper.setDeviceId();
     Helper.hasPermissions();
-
   };
 
   onRefresh = async (type) => {
@@ -200,13 +200,13 @@ class PlayMainScreen extends Component {
               this.props.setProducts(data);
             } else {
               this.props.setProducts(json.data.videoList || []);
-              if (!global.me) {
+              if (json.data?.loginResult?.user) {
                 ChatStreamSocketManager.instance.emitLeaveRoom({
                   roomId: global.me?.id,
                   userId: global.me?.id,
                 });
 
-                global.me = json.data.loginResult.user || {};
+                global.me = json.data?.loginResult?.user;
 
                 ChatStreamSocketManager.instance.emitJoinRoom({
                   roomId: global.me?.id,
@@ -238,9 +238,10 @@ class PlayMainScreen extends Component {
         },
         { text: 'YES', onPress: () => BackHandler.exitApp() },
       ]);
+      return true;
     }
 
-    return true;
+    return false;
   };
 
   onVideoReadyForDisplay = (item) => {
@@ -388,8 +389,7 @@ class PlayMainScreen extends Component {
         social: Share.Social.FACEBOOK,
       };
       Share.shareSingle(shareOptions)
-        .then((res) => {
-        })
+        .then((res) => {})
         .catch((err) => {
           err && console.log(err);
         });
@@ -534,11 +534,11 @@ class PlayMainScreen extends Component {
 
   render() {
     return (
-      <>
+      <SafeAreaView style={GStyles.container}>
         {this._renderVideo()}
         {this._renderShare()}
         {this._renderProgress()}
-      </>
+      </SafeAreaView>
     );
   }
 
@@ -633,13 +633,13 @@ class PlayMainScreen extends Component {
             ref={(ref) => {
               this.player = ref;
             }}
-            //resizeMode="contain"
             repeat
             paused={paused}
             playWhenInactive={false}
             playInBackground={false}
             poster={item.thumb}
-            posterResizeMode="cover"
+            resizeMode="cover"
+            posterResizeMode="contain"
             onBuffer={this.onVideoBuffer}
             onLoad={this.onVideoLoad}
             onProgress={this.onVideoProgress}
@@ -651,12 +651,9 @@ class PlayMainScreen extends Component {
               bufferForPlaybackAfterRebufferMs: 5000,
             }}
             style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
               backgroundColor: 'black',
+              width: '100%',
+              height: '100%',
             }}
           />
           <View style={GStyles.playInfoWrapper}>

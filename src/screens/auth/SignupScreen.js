@@ -183,15 +183,7 @@ class SignupScreen extends React.Component {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 201) {
-            ChatStreamSocketManager.instance.emitLeaveRoom({
-              roomId: global.me?.id,
-              userId: global.me?.id,
-            });
             global.me = json.data;
-            ChatStreamSocketManager.instance.emitJoinRoom({
-              roomId: global.me?.id,
-              userId: global.me?.id,
-            });
             success(Constants.SUCCESS_TITLE, 'Success to signup');
             this.props.navigation.navigate('signin');
           } else {
