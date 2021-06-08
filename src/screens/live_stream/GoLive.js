@@ -18,7 +18,6 @@ import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Header from '../../components/LiveStream/Header';
 import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
-import TaskInput from '../../components/LiveStream/BottomActionsGroup/TaskInput';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
@@ -180,22 +179,9 @@ class GoLive extends React.Component {
     Global.inviteToLiveStream(room, user);
   };
 
-  onPressTaskAction = () => {
-    this.taskBottomSheet?.current?.open();
-  };
-
   onPressProfileAction = (user) => {
     global._opponentUser = user || {};
     this.profileSheet?.current?.open();
-  };
-
-  onPressSendHeart = () => {
-    const user = this.props.user || {};
-    const { id: streamerId } = user;
-    SocketManager.instance.emitSendHeart({
-      streamerId,
-      userId: streamerId,
-    });
   };
 
   onPressSwitchCamera = () => {
@@ -211,18 +197,6 @@ class GoLive extends React.Component {
       //   samplerate: 44100,
       // },
       isMuted: !isMuted,
-    });
-  };
-
-  onDoubleTap = () => {
-    const delta = new Date().getTime() - this.state.lastPress;
-
-    if (delta < 300) {
-      this.onPressSendHeart();
-    }
-
-    this.setState({
-      lastPress: new Date().getTime(),
     });
   };
 
@@ -368,61 +342,54 @@ class GoLive extends React.Component {
     return (
       <SafeAreaView style={styles.container}>
         <StatusBar hidden />
-        <TouchableOpacity
-          style={{ flex: 1 }}
-          activeOpacity={1}
-          onPress={this.onDoubleTap}
-        >
-          <NodeCameraView
-            style={[styles.streamerView, mode === 1 && { width: 0, height: 0 }]}
-            ref={this.setCameraRef}
-            outputUrl={outputUrl}
-            camera={{ cameraId: 0, cameraFrontMirror: true }}
-            audio={audioConfig}
-            video={videoConfig}
-            scaleMode={'ScaleAspectFit'}
-            smoothSkinLevel={3}
-            autopreview={false}
-          />
-          {liveStatus === LIVE_STATUS.ON_LIVE && mode === 1 && (
-            <View style={styles.audioLiveContainer}>
-              <Image source={ic_audio} style={{ width: 24, height: 24 }} />
-            </View>
-          )}
-
-          {(liveStatus === LIVE_STATUS.PREPARE || liveStatus === -1) && (
-            <StartPanel
-              liveStatus={liveStatus}
-              onPressStart={this.onPressStart}
-              onPressClose={this.onPressClose}
-            />
-          )}
-          <View style={styles.contentWrapper}>
-            <View style={styles.header}>
-              <Header
-                room={room}
-                liveStatus={liveStatus}
-                mode="streamer"
-                goal={goal}
-                onPressClose={this.onPressClose}
-                onPressProfileAction={this.onPressProfileAction}
-              />
-            </View>
-            <View style={styles.footer}>
-              <BottomActionsGroup
-                onPressSendHeart={this.onPressSendHeart}
-                onPressSwitchCamera={this.onPressSwitchCamera}
-                onPressSwitchAudio={this.onPressSwitchAudio}
-                onPressMessageAction={this.onPressMessageAction}
-                onPressShareAction={this.onPressShareAction}
-                onPressTaskAction={this.onPressTaskAction}
-                mode="streamer"
-                isMuted={isMuted}
-                messages={messages}
-              />
-            </View>
+        <NodeCameraView
+          style={[styles.streamerView, mode === 1 && { width: 0, height: 0 }]}
+          ref={this.setCameraRef}
+          outputUrl={outputUrl}
+          camera={{ cameraId: 0, cameraFrontMirror: true }}
+          audio={audioConfig}
+          video={videoConfig}
+          scaleMode={'ScaleAspectFit'}
+          smoothSkinLevel={3}
+          autopreview={false}
+        />
+        {liveStatus === LIVE_STATUS.ON_LIVE && mode === 1 && (
+          <View style={styles.audioLiveContainer}>
+            <Image source={ic_audio} style={{ width: 24, height: 24 }} />
           </View>
-        </TouchableOpacity>
+        )}
+
+        {(liveStatus === LIVE_STATUS.PREPARE || liveStatus === -1) && (
+          <StartPanel
+            liveStatus={liveStatus}
+            onPressStart={this.onPressStart}
+            onPressClose={this.onPressClose}
+          />
+        )}
+        <View style={styles.contentWrapper}>
+          <View style={styles.header}>
+            <Header
+              room={room}
+              liveStatus={liveStatus}
+              mode="streamer"
+              goal={goal}
+              onPressClose={this.onPressClose}
+              onPressProfileAction={this.onPressProfileAction}
+            />
+          </View>
+          <View style={styles.footer}>
+            <BottomActionsGroup
+              onPressSwitchCamera={this.onPressSwitchCamera}
+              onPressSwitchAudio={this.onPressSwitchAudio}
+              onPressMessageAction={this.onPressMessageAction}
+              onPressShareAction={this.onPressShareAction}
+              onPressTaskAction={this.onPressTaskAction}
+              mode="streamer"
+              isMuted={isMuted}
+              messages={messages}
+            />
+          </View>
+        </View>
         <RBSheet
           ref={this.messageBottomSheet}
           closeOnDragDown
@@ -435,18 +402,6 @@ class GoLive extends React.Component {
           }}
         >
           <MessageBox onPressSendMessage={this.onPressSendMessage} />
-        </RBSheet>
-        <RBSheet
-          ref={this.taskBottomSheet}
-          closeOnDragDown
-          openDuration={250}
-          customStyles={{
-            container: styles.sheetCommonContainer,
-            wrapper: styles.sheetWrapper,
-            draggableIcon: styles.sheetDragIcon,
-          }}
-        >
-          <TaskInput />
         </RBSheet>
         <RBSheet
           ref={this.profileSheet}
