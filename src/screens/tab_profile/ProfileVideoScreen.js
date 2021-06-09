@@ -436,7 +436,7 @@ class ProfileVideoScreen extends Component {
         item={item}
         state={this.state}
         index={index}
-        action={actions}
+        actions={actions}
         detailStyle={{ bottom: 36 }}
       />
     );

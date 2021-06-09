@@ -16,7 +16,7 @@ import avatars from '../assets/avatars';
 import {setMyUserAction} from '../redux/me/actions';
 import ChatStreamSocketManager from '../utils/Message/SocketManager';
 
-const ic_tab_play = require('../assets/images/Icons/ic_red_flame.png');
+const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/Icons/ic_gift.png');
 const ic_tab_top = require('../assets/images/Icons/ic_tab_top.png');
 const ic_tab_liveStream = require('../assets/images/Icons/ic_tab_liveStream.png');
