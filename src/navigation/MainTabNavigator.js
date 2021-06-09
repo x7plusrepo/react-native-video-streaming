@@ -81,7 +81,7 @@ class MainTabNavigator extends Component {
           inactiveTintColor: curTabName === 'play' ? 'white' : GStyle.grayColor,
           style: {
             height: BOTTOM_TAB_HEIGHT,
-            backgroundColor: curTabName === 'play' ? 'black' : 'white',
+            backgroundColor: curTabName === 'play' ? 'transparent' : 'white',
             position:
               curTabName === 'play' || curTabName === 'profile_other'
                 ? 'absolute'
