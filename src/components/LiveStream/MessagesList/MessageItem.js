@@ -1,16 +1,23 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Image, Text, View } from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 import styles from './styles';
 
 const MessageItem = (props) => {
   const { message } = props;
   const { sender } = message;
+  const senderName =
+    sender?.userType === 0 ? sender?.displayName : sender?.username;
+  const onPressProfileAction = () => {
+    props.onPressProfileAction && props.onPressProfileAction(sender);
+  };
 
   return (
     <View style={styles.chatItem}>
       <View style={styles.messageItem}>
-        <Text style={styles.name}>{sender?.username}</Text>
+        <TouchableOpacity onPress={onPressProfileAction}>
+          <Text style={styles.name}>{senderName}</Text>
+        </TouchableOpacity>
         <Text style={styles.content}>{message?.message}</Text>
       </View>
       {message?.giftIcon && (

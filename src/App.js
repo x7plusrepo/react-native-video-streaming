@@ -1,23 +1,24 @@
-import React, {useEffect, useState} from 'react';
-import {Image, StatusBar, StyleSheet, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import branch from 'react-native-branch';
 
-import {Provider} from 'react-redux';
-import {store} from './redux/store';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 // import RestAPI from './DB/RestAPI';
 // import Constants from './DB/Constants';
-import {Constants, Helper} from './utils/Global';
+import { Constants, Helper } from './utils/Global';
 
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 import AppNavigator from './navigation/AppNavigator';
-import {Provider as PaperProvider} from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import * as RootNavigation from './utils/Global/RootNavigation';
 
-import FlashMessage, {showMessage,} from 'react-native-flash-message';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
 import LiveStreamSocketManager from './utils/LiveStream/SocketManager';
 import ChatStreamSocketManager from './utils/Message/SocketManager';
+import GStyle from './utils/Global/Styles';
 
 const subscribeDeepLink = () => {
   branch.subscribe(({ error, params, uri }) => {
@@ -66,8 +67,10 @@ function App() {
     OneSignal.setAppId('b90b63c2-bbc8-4c56-84fe-39298ff4ca45');
     OneSignal.setNotificationWillShowInForegroundHandler(onReceived);
     OneSignal.setNotificationOpenedHandler(onOpened);
-    // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
-    OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
+    if (Platform.OS !== 'ios') {
+      // The promptForPushNotifications function code will show the iOS push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission (See step below)
+      OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
+    }
     getDeviceState();
     subscribeDeepLink();
     LiveStreamSocketManager.instance.connect();
@@ -155,7 +158,7 @@ const styles = StyleSheet.create({
   },
   splashContainer: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: GStyle.activeColor,
     position: 'absolute',
     top: 0,
     left: 0,

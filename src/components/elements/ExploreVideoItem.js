@@ -29,8 +29,8 @@ const ExploreVideoItem = ({ item, index, onPress, onLongPress }) => {
         <View style={GStyles.rowBetweenContainer}>
           <View style={{ flex: 1 }} />
           {item.sticker > 0 && (
-            <View style={styles.stickerContainer}>
-              <Text style={styles.stickerText}>
+            <View style={GStyles.stickerContainer}>
+              <Text style={GStyles.stickerText}>
                 {Constants.STICKER_NAME_LIST[item.sticker]}
               </Text>
             </View>
@@ -83,16 +83,6 @@ const styles = StyleSheet.create({
   textLabel: {
     ...GStyles.textSmall,
     color: GStyle.activeColor,
-  },
-  stickerContainer: {
-    ...GStyles.rowContainer,
-    backgroundColor: 'white',
-    padding: 4,
-    borderRadius: 120,
-  },
-  stickerText: {
-    ...GStyles.textExtraSmall,
-    color: 'black',
   },
 });
 

@@ -75,6 +75,7 @@ class HomeVideoSearch extends React.Component {
 
     if (type === 'init') {
       //showForcePageLoader(true);
+      this.setState({ isFetching: true });
     } else {
       this.setState({ isFetching: true });
     }
@@ -85,12 +86,10 @@ class HomeVideoSearch extends React.Component {
       keyword,
     };
     RestAPI.get_searched_video_list(params, (json, err) => {
-      if (type === 'init') {
-        showForcePageLoader(false);
-      } else {
-        if (this._isMounted) {
-          this.setState({ isFetching: false });
-        }
+      showForcePageLoader(false);
+
+      if (this._isMounted) {
+        this.setState({ isFetching: false });
       }
 
       if (err !== null) {
@@ -168,7 +167,10 @@ class HomeVideoSearch extends React.Component {
           />
         ) : (
           <View style={{ flex: 1, ...GStyles.centerAlign }}>
-            <Text style={GStyles.notifyDescription}>Not found.</Text>
+            <Text style={GStyles.notifyDescription}>
+              {' '}
+              {isFetching ? '' : 'Not found.'}
+            </Text>
           </View>
         )}
       </View>

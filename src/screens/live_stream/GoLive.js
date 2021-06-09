@@ -52,7 +52,6 @@ class GoLive extends React.Component {
       goal: 0,
     };
     this.messageBottomSheet = React.createRef();
-    this.taskBottomSheet = React.createRef();
     this.profileSheet = React.createRef();
   }
 
@@ -383,7 +382,7 @@ class GoLive extends React.Component {
               onPressSwitchAudio={this.onPressSwitchAudio}
               onPressMessageAction={this.onPressMessageAction}
               onPressShareAction={this.onPressShareAction}
-              onPressTaskAction={this.onPressTaskAction}
+              onPressProfileAction={this.onPressProfileAction}
               mode="streamer"
               isMuted={isMuted}
               messages={messages}

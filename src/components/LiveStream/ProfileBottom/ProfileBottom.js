@@ -1,13 +1,25 @@
 import React from 'react';
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 
-import {GStyle, GStyles, Helper, RestAPI} from '../../../utils/Global';
+import { GStyle, GStyles, Helper, RestAPI } from '../../../utils/Global';
 import Avatar from '../../../components/elements/Avatar';
 import LinearGradient from 'react-native-linear-gradient';
 import avatars from '../../../assets/avatars';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 
 const ic_plus_1 = require('../../../assets/images/Icons/ic_plus_1.png');
 const ic_message = require('../../../assets/images/Icons/ic_menu_messages.png');
@@ -39,21 +51,26 @@ class ProfileBottom extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
+      opponentUser: null,
+      isLoading: false,
     };
     this._isMounted = false;
   };
 
   onRefresh = () => {
-    this.setState({ opponentUser: global._opponentUser || {} });
+    if (!global._opponentUser?.id) {
+      return;
+    }
+
     let params = {
       me_id: global.me ? global.me?.id : 0,
       user_id: global._opponentUser?.id,
-      page_number: '1',
-      count_per_page: '1000',
+      page_number: 1,
+      count_per_page: 20,
     };
-    //showForcePageLoader(true);
+    this.setState({ isLoading: true });
     RestAPI.get_user_video_list(params, (json, err) => {
-      showForcePageLoader(false);
+      this.setState({ isLoading: false });
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
@@ -122,15 +139,19 @@ class ProfileBottom extends React.Component {
   };
 
   render() {
+    const { isLoading, opponentUser } = this.state;
+
     return (
       <View style={styles.container}>
-        {this.state.opponentUser?.id && (
+        {!isLoading && opponentUser ? (
           <>
             {this._renderAvatar()}
             {this._renderDetail()}
             {this._renderVideo()}
             {this._renderBottom()}
           </>
+        ) : (
+          <View style={{ width: 100, height: 100, backgroundColor: 'red' }} />
         )}
       </View>
     );

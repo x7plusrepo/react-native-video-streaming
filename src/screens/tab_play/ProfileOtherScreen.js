@@ -21,6 +21,7 @@ import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import LinearGradient from 'react-native-linear-gradient';
 import avatars from '../../assets/avatars';
+import PlaceHolder from './PlaceHolder';
 
 const ic_plus_1 = require('../../assets/images/Icons/ic_plus_1.png');
 const ic_message = require('../../assets/images/Icons/ic_menu_messages.png');
@@ -42,16 +43,25 @@ class ProfileOtherScreen extends React.Component {
 
   componentDidMount() {
     this._isMounted = true;
-
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('profile_other'));
-      Helper.setLightStatusBar();
-      this.onRefresh();
+      if (global._prevScreen === 'play_main') {
+        this.onRefresh();
+      }
     });
+    this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
+      if (this.isMounted) {
+        global._prevScreen = 'profile_other';
+        this.setState({ opponentUser: null });
+      }
+    });
+    if (global._prevScreen && !global._prevScreen === 'play_main') {
+      this.onRefresh();
+    }
   }
 
   componentWillUnmount() {
     this.unsubscribe();
+    this.unsubscribeBlur();
 
     this._isMounted = false;
   }
@@ -59,21 +69,27 @@ class ProfileOtherScreen extends React.Component {
   init = () => {
     this.state = {
       itemDatas: [],
+      opponentUser: null,
+      isLoading: false,
     };
     this._isMounted = false;
   };
 
   onRefresh = () => {
-    this.setState({ opponentUser: global._opponentUser || {} });
+    if (!global._opponentUser?.id) {
+      return;
+    }
+
     let params = {
       me_id: global.me ? global.me?.id : 0,
       user_id: global._opponentUser?.id,
-      page_number: '1',
-      count_per_page: '1000',
+      page_number: 1,
+      count_per_page: 20,
     };
-    showForcePageLoader(true);
+    this.setState({ isLoading: true });
     RestAPI.get_user_video_list(params, (json, err) => {
-      showForcePageLoader(false);
+      this.setState({ isLoading: false });
+
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
@@ -140,16 +156,24 @@ class ProfileOtherScreen extends React.Component {
   };
 
   render() {
+    const { isLoading, opponentUser } = this.state;
+
     return (
       <>
         <SafeAreaView style={GStyles.statusBar} />
         <SafeAreaView style={styles.container}>
           {this._renderHeader()}
-          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-            {this._renderAvartar()}
-            {this._renderVideo()}
-          </KeyboardAwareScrollView>
-          {this._renderBottom()}
+          {!isLoading && opponentUser ? (
+            <>
+              <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+                {this._renderAvartar()}
+                {this._renderVideo()}
+              </KeyboardAwareScrollView>
+              {this._renderBottom()}
+            </>
+          ) : (
+            <View style={{ width: 100, height: 100, backgroundColor: 'red' }} />
+          )}
         </SafeAreaView>
       </>
     );
@@ -213,7 +237,6 @@ class ProfileOtherScreen extends React.Component {
       opponentUser?.userType === 0
         ? opponentUser?.displayName
         : opponentUser?.username;
-
     return (
       <LinearGradient
         colors={[
@@ -223,75 +246,71 @@ class ProfileOtherScreen extends React.Component {
         ]}
         style={styles.gradient}
       >
-        {opponentUser && (
-          <>
-            <View style={styles.avatar}>
-              <Avatar image={avatar} size={84} />
-              <View style={styles.profileDetailWrapper}>
-                <View style={GStyles.rowCenterContainer}>
-                  <Text
-                    style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
-                  >
-                    {displayName}
-                  </Text>
-                </View>
-                <View style={[GStyles.rowCenterContainer]}>
-                  <View style={{ flexShrink: 1 }}>
-                    <Text
-                      style={styles.textId}
-                      ellipsizeMode="tail"
-                      numberOfLines={1}
-                    >
-                      ID: {opponentUser?.uniqueId}
-                    </Text>
-                  </View>
-                  <TouchableOpacity style={styles.buttonCopy}>
-                    <Text style={GStyles.elementLabel}>Copy</Text>
-                  </TouchableOpacity>
-                </View>
+        <View style={styles.avatar}>
+          <Avatar image={avatar} size={84} />
+          <View style={styles.profileDetailWrapper}>
+            <View style={GStyles.rowCenterContainer}>
+              <Text
+                style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
+              >
+                {displayName}
+              </Text>
+            </View>
+            <View style={[GStyles.rowCenterContainer]}>
+              <View style={{ flexShrink: 1 }}>
+                <Text
+                  style={styles.textId}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                >
+                  ID: {opponentUser?.uniqueId}
+                </Text>
               </View>
+              <TouchableOpacity style={styles.buttonCopy}>
+                <Text style={GStyles.elementLabel}>Copy</Text>
+              </TouchableOpacity>
             </View>
-            <View style={GStyles.rowEvenlyContainer}>
-              {opponentUser?.userType === 1 ? (
-                <>
-                  <View style={GStyles.centerAlign}>
-                    <Text style={[GStyles.regularText, GStyles.boldText]}>
-                      {opponentUser?.elixir || 0}
-                    </Text>
-                    <Text style={GStyles.elementLabel}>Elixir</Text>
-                  </View>
-                  <View style={GStyles.centerAlign}>
-                    <Text style={[GStyles.regularText, GStyles.boldText]}>
-                      {opponentUser?.elixirFlame || 0}
-                    </Text>
-                    <Text style={GStyles.elementLabel}>Elixir Flames</Text>
-                  </View>
-                  <View style={GStyles.centerAlign}>
-                    <Text style={[GStyles.regularText, GStyles.boldText]}>
-                      {opponentUser?.fansCount || 0}
-                    </Text>
-                    <Text style={GStyles.elementLabel}>Fans</Text>
-                  </View>
-                </>
-              ) : (
-                <>
-                  <View style={GStyles.centerAlign}>
-                    <Text style={[GStyles.regularText, GStyles.boldText]}>
-                      {opponentUser?.diamond || 0}
-                    </Text>
-                    <Text style={GStyles.elementLabel}>Diamonds</Text>
-                  </View>
-                  <View style={GStyles.centerAlign}>
-                    <Text style={[GStyles.regularText, GStyles.boldText]}>
-                      {lvl}
-                    </Text>
-                    <Text style={GStyles.elementLabel}>LvL</Text>
-                  </View>
-                </>
-              )}
-            </View>
-          </>
-        )}
+          </View>
+        </View>
+        <View style={GStyles.rowEvenlyContainer}>
+          {opponentUser?.userType === 1 ? (
+            <>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.elixir || 0}
+                </Text>
+                <Text style={GStyles.elementLabel}>Elixir</Text>
+              </View>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.elixirFlame || 0}
+                </Text>
+                <Text style={GStyles.elementLabel}>Elixir Flames</Text>
+              </View>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.fansCount || 0}
+                </Text>
+                <Text style={GStyles.elementLabel}>Fans</Text>
+              </View>
+            </>
+          ) : (
+            <>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {opponentUser?.diamond || 0}
+                </Text>
+                <Text style={GStyles.elementLabel}>Diamonds</Text>
+              </View>
+              <View style={GStyles.centerAlign}>
+                <Text style={[GStyles.regularText, GStyles.boldText]}>
+                  {lvl}
+                </Text>
+                <Text style={GStyles.elementLabel}>LvL</Text>
+              </View>
+            </>
+          )}
+        </View>
       </LinearGradient>
     );
   };

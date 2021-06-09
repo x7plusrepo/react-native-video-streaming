@@ -71,7 +71,8 @@ class HomeUsersScreen extends React.Component {
     this.setState({ curPage });
 
     if (type === 'init') {
-      showForcePageLoader(true);
+      //showForcePageLoader(true);
+      this.setState({ isFetching: true });
     } else {
       this.setState({ isFetching: true });
     }
@@ -82,11 +83,8 @@ class HomeUsersScreen extends React.Component {
       count_per_page: Constants.COUNT_PER_PAGE,
     };
     RestAPI.get_filtered_user_list(params, (json, err) => {
-      if (type === 'init') {
-        showForcePageLoader(false);
-      } else {
-        this.setState({ isFetching: false });
-      }
+      this.setState({ isFetching: false });
+      showForcePageLoader(false);
 
       if (err !== null) {
         Helper.alertNetworkError();
@@ -159,7 +157,10 @@ class HomeUsersScreen extends React.Component {
           />
         ) : (
           <View style={{ flex: 1, ...GStyles.centerAlign }}>
-            <Text style={GStyles.notifyDescription}>Not found.</Text>
+            <Text style={GStyles.notifyDescription}>
+              {' '}
+              {isFetching ? '' : 'Not found.'}
+            </Text>
           </View>
         )}
       </>

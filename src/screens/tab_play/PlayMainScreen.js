@@ -5,65 +5,32 @@ import {
   AppState,
   BackHandler,
   FlatList,
-  Image,
-  Linking,
   Platform,
   SafeAreaView,
   StatusBar,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
 } from 'react-native';
 
 import SplashScreen from 'react-native-splash-screen';
 import { connect } from 'react-redux';
-import convertToProxyURL from 'react-native-video-cache';
-import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import { MessageDialog, ShareDialog } from 'react-native-fbsdk';
 
 import { RNFFmpeg } from 'react-native-ffmpeg';
 
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Fontisto from 'react-native-vector-icons/Fontisto';
-
-import Video from 'react-native-video';
 import { setMyUserAction } from '../../redux/me/actions';
 import { setProducts, updateProduct } from '../../redux/products/actions';
 
-import Avatar from '../../components/elements/Avatar';
 import ProgressModal from '../../components/ProgressModal';
 
 import {
   Constants,
   Global,
-  GStyle,
   GStyles,
   Helper,
   RestAPI,
 } from '../../utils/Global';
 import ChatStreamSocketManager from './../../utils/Message/SocketManager';
-
-import avatars from '../../assets/avatars';
-
-const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
-
-const ic_eye = require('../../assets/images/Icons/ic_eye.png');
-const heart = require('../../assets/images/gifts/heart.png');
-const ic_menu_messages = require('../../assets/images/Icons/ic_menu_messages.png');
-const ic_share = require('../../assets/images/Icons/ic_share.png');
-const ic_support = require('../../assets/images/Icons/ic_support.png');
-const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
-
-const WINDOW_HEIGHT = Helper.getWindowHeight();
-const STATUS_BAR_HEIGHT = Helper.getStatusBarHeight();
-const BOTTOM_BAR_HEIGHT = Helper.getBottomBarHeight();
-const VIDEO_HEIGHT = WINDOW_HEIGHT - STATUS_BAR_HEIGHT - BOTTOM_BAR_HEIGHT;
 
 class PlayMainScreen extends Component {
   constructor(props) {
@@ -83,13 +50,13 @@ class PlayMainScreen extends Component {
     this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('play'));
       Helper.setDarkStatusBar();
-      // this.onRefresh('init');
       this.checkSignin();
       this.setState({ isVideoPause: false });
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
       if (this.state.isMounted) {
         this.setState({ isVideoPause: true });
+        global._prevScreen = 'play_main';
       }
     });
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
@@ -244,39 +211,17 @@ class PlayMainScreen extends Component {
     return false;
   };
 
-  onVideoReadyForDisplay = (item) => {
-    console.log('---onVideoReadyForDisplay');
-    this.setState({ isVideoLoading: false });
-  };
-
-  onVideoBuffer = () => {};
-
-  onVideoError = () => {
-    console.log('---onVideoError');
-  };
-
-  onVideoLoad = () => {
-    //this.setState({ isVideoLoading: false });
-    console.log('---onVideoLoad');
-    this.player.presentFullscreenPlayer();
-  };
-
-  onVideoProgress = (value) => {};
-
-  onVideoEnd = () => {};
-
   onViewableItemsChanged = ({ changed }) => {
     if (changed.length > 0) {
       const focused = changed[0];
       const item = focused?.item || {};
       this.setState({ curIndex: focused.index });
-
       if (this.state.item?.id === item.id) {
         return;
       }
 
       this.setState({ item });
-
+      global._opponentUser = item.user;
       let params = {
         video_id: item.id,
         owner_id: item.user?.id,
@@ -309,7 +254,6 @@ class PlayMainScreen extends Component {
         video_id: item.id,
         is_like: isChecked,
       };
-      //showForcePageLoader(true);
       RestAPI.update_like_video(params, (json, err) => {
         showForcePageLoader(false);
 
@@ -347,113 +291,15 @@ class PlayMainScreen extends Component {
   };
 
   onPressShare = (item) => {
-    if (global.me) {
-      this.setState({ item });
-      this.Scrollable.open();
-    } else {
-      this.props.navigation.navigate('signin');
-    }
-  };
-
-  onShareFacebook = async () => {
-    this.Scrollable.close();
-    const user = this.state.item?.user || {};
-
-    if (Platform.OS === 'android') {
-      const SHARE_LINK_CONTENT = {
-        contentType: 'link',
-        contentUrl: Constants.GOOGLE_PLAY_URL,
-        quote: '@' + user.username + ' #' + this.state.item?.number,
-      };
-
-      const canShow = await ShareDialog.canShow(SHARE_LINK_CONTENT);
-      if (canShow) {
-        try {
-          const { isCancelled, postId } = await ShareDialog.show(
-            SHARE_LINK_CONTENT,
-          );
-          if (isCancelled) {
-            warning(Constants.WARNING_TITLE, 'Share cancelled');
-          } else {
-            success(Constants.SUCCESS_TITLE, 'Success to share');
-          }
-        } catch (error) {
-          error(Constants.ERROR_TITLE, 'Failed to share');
-        }
-      }
-    } else {
-      const shareOptions = {
-        title: 'Share to Facebook',
-        message: '@' + user.username + ' #' + this.state.item.number,
-        url: Constants.GOOGLE_PLAY_URL,
-        social: Share.Social.FACEBOOK,
-      };
-      Share.shareSingle(shareOptions)
-        .then((res) => {})
-        .catch((err) => {
-          err && console.log(err);
-        });
-    }
-  };
-
-  onShareFacebookMessenger = async () => {
-    this.Scrollable.close();
-    const user = this.state.item?.user || {};
-
-    const SHARE_LINK_CONTENT = {
-      contentType: 'link',
-      contentUrl: Constants.GOOGLE_PLAY_URL,
-      quote: '@' + user.username + ' #' + this.state.item?.number,
-    };
-
-    const canShow = await MessageDialog.canShow(SHARE_LINK_CONTENT);
-    if (canShow) {
-      try {
-        const { isCancelled, postId } = await MessageDialog.show(
-          SHARE_LINK_CONTENT,
-        );
-        if (isCancelled) {
-          warning(Constants.WARNING_TITLE, 'Share cancelled');
-        } else {
-          success(Constants.SUCCESS_TITLE, 'Success to share');
-        }
-      } catch (error) {
-        error(Constants.ERROR_TITLE, 'Failed to share');
-      }
-    }
-  };
-
-  onShareWhatsApp = async () => {
-    this.Scrollable.close();
-
-    if (Platform.OS === 'android') {
-      const shareOptions = {
-        title: 'Share to WhatsApp',
-        // message: '@' + this.state.item?.username + ' #' + this.state.item?.number,
-        url: Constants.GOOGLE_PLAY_URL,
-        social: Share.Social.WHATSAPP,
-      };
-      Share.shareSingle(shareOptions)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          err && console.log(err);
-        });
-    } else {
-      let url = 'whatsapp://send?text=' + Constants.GOOGLE_PLAY_URL;
-      Linking.openURL(url)
-        .then((data) => {
-          console.log('WhatsApp Opened');
-        })
-        .catch(() => {
-          alert('Make sure Whatsapp installed on your device');
-        });
-    }
+    // TODO
+    // if (global.me) {
+    //   this.setState({ item });
+    // } else {
+    //   this.props.navigation.navigate('signin');
+    // }
   };
 
   onDownloadVideo = async () => {
-    this.Scrollable.close();
     const item = this.state.item || {};
     const user = item?.user || {};
 
@@ -535,8 +381,8 @@ class PlayMainScreen extends Component {
   render() {
     return (
       <SafeAreaView style={GStyles.container}>
+        {this.___renderStatusBar()}
         {this._renderVideo()}
-        {this._renderShare()}
         {this._renderProgress()}
       </SafeAreaView>
     );
@@ -573,16 +419,7 @@ class PlayMainScreen extends Component {
           itemVisiblePercentThreshold: 60,
         }}
         keyExtractor={(item, index) => index.toString()}
-        style={{
-          width: '100%',
-          height: VIDEO_HEIGHT,
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          backgroundColor: 'black',
-          zIndex: 1,
-          elevation: 1,
-        }}
+        style={{ height: '100%', width: '100%' }}
       />
     );
   };
@@ -595,344 +432,13 @@ class PlayMainScreen extends Component {
   };
 
   _renderItem = ({ item, index }) => {
-    const { isVideoPause } = this.state;
-    const paused = isVideoPause || this.state.curIndex !== index;
-    const user = item.user || {};
-    if (Math.abs(this.state.curIndex - index) > 2) {
-      return (
-        <View
-          style={{
-            width: '100%',
-            height: VIDEO_HEIGHT,
-            borderWidth: 1,
-            borderColor: 'black',
-          }}
-        />
-      );
-    } else {
-      const isLike = !!item.isLiked;
-      const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
-      const categoryName = item?.category?.title || '';
-      const subCategoryName = item?.subCategory?.title || '';
-
-      if (this.state.curIndex === index) {
-        global._opponentUser = user;
-      }
-
-      return (
-        <View
-          style={{
-            width: '100%',
-            height: VIDEO_HEIGHT,
-            borderWidth: 1,
-            borderColor: 'black',
-          }}
-        >
-          <Video
-            source={{ uri: convertToProxyURL(item.url || '') }}
-            ref={(ref) => {
-              this.player = ref;
-            }}
-            repeat
-            paused={paused}
-            playWhenInactive={false}
-            playInBackground={false}
-            poster={item.thumb}
-            resizeMode="cover"
-            posterResizeMode="contain"
-            onBuffer={this.onVideoBuffer}
-            onLoad={this.onVideoLoad}
-            onProgress={this.onVideoProgress}
-            onEnd={this.onVideoEnd}
-            bufferConfig={{
-              minBufferMs: 15000,
-              maxBufferMs: 30000,
-              bufferForPlaybackMs: 5000,
-              bufferForPlaybackAfterRebufferMs: 5000,
-            }}
-            style={{
-              backgroundColor: 'black',
-              width: '100%',
-              height: '100%',
-            }}
-          />
-          <View style={GStyles.playInfoWrapper}>
-            <View style={GStyles.rowEndContainer}>
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressLike(!isLike, item);
-                  }}
-                  style={[GStyles.videoActionButton]}
-                >
-                  <Image
-                    source={heart}
-                    style={{
-                      ...GStyles.actionIcons,
-                      tintColor: isLike ? GStyle.primaryColor : 'white',
-                    }}
-                  />
-                </TouchableOpacity>
-
-                {user.id !== global.me?.id && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.onPressMessage(item);
-                    }}
-                    style={GStyles.videoActionButton}
-                  >
-                    <Image
-                      source={ic_menu_messages}
-                      style={GStyles.actionIcons}
-                    />
-                  </TouchableOpacity>
-                )}
-
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressShare(item);
-                  }}
-                  style={GStyles.videoActionButton}
-                >
-                  <Image source={ic_share} style={GStyles.actionIcons} />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                <View style={GStyles.rowContainer}>
-                  <View style={GStyles.playInfoTextWrapper}>
-                    <Text style={GStyles.playInfoText}>৳{item.price}</Text>
-                  </View>
-                  <View
-                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
-                  >
-                    <Image
-                      source={ic_support}
-                      style={{ width: 12, height: 12, marginRight: 4 }}
-                    />
-                    <Text style={GStyles.playInfoText}>01913379598 </Text>
-                  </View>
-                  <View
-                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
-                  >
-                    <Image
-                      source={ic_diamond}
-                      style={{ width: 12, height: 12, marginRight: 4 }}
-                    />
-                    <Text style={GStyles.playInfoText}>{item.price / 10}</Text>
-                  </View>
-                </View>
-                <View style={GStyles.playInfoTextWrapper}>
-                  <Text style={GStyles.playInfoText}>lorem ipsum</Text>
-                </View>
-              </View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                <View style={GStyles.playInfoTextWrapper}>
-                  <Text numberOfLines={3} style={GStyles.playInfoText}>
-                    {newTagList} {''} {categoryName} {''} {subCategoryName}
-                  </Text>
-                </View>
-
-                <View style={GStyles.playInfoTextWrapper}>
-                  <Text style={GStyles.playInfoText}>#{item.number}</Text>
-                </View>
-              </View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                {!!item?.description ? (
-                  <View style={GStyles.playInfoTextWrapper}>
-                    <Text numberOfLines={5} style={GStyles.playInfoText}>
-                      {item.description}
-                    </Text>
-                  </View>
-                ) : (
-                  <View />
-                )}
-
-                <View style={GStyles.centerAlign}>
-                  <Avatar
-                    image={{
-                      uri: user.photo ? user.photo : randomImageUrl,
-                    }}
-                    size={48}
-                    onPress={() => {
-                      this.onPressAvatar(item);
-                    }}
-                    containerStyle={{ marginBottom: 4 }}
-                  />
-                  <Text style={GStyles.textSmall}>{user.username}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      );
-    }
-  };
-
-  _renderShare = () => {
-    return (
-      <View style={{ ...GStyles.centerAlign, ...GStyles.absoluteContainer }}>
-        <RBSheet
-          ref={(ref) => {
-            this.Scrollable = ref;
-          }}
-          //height={180}
-          closeOnDragDown
-          openDuration={250}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            },
-          }}
-        >
-          {this._renderShareTitle()}
-          <View
-            style={{ ...GStyles.rowContainer, justifyContent: 'space-around' }}
-          >
-            {this._renderShareFacebook()}
-            {this._renderShareFacebookMessenger()}
-            {this._renderShareWhatsApp()}
-            {this._renderShareDownload()}
-          </View>
-        </RBSheet>
-      </View>
-    );
-  };
-
-  _renderShareTitle = () => {
-    return (
-      <View style={{ ...GStyles.centerAlign }}>
-        <Text style={{ ...GStyles.regularText }}>Share to</Text>
-      </View>
-    );
-  };
-
-  _renderShareFacebook = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onShareFacebook}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#3b5998',
-          }}
-        >
-          <FontAwesome
-            name="facebook"
-            style={{ fontSize: 30, color: 'white' }}
-          />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          Facebook
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  _renderShareFacebookMessenger = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onShareFacebookMessenger}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#006fff',
-          }}
-        >
-          <Fontisto name="messenger" style={{ fontSize: 30, color: 'white' }} />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          Messenger
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  _renderShareWhatsApp = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onShareWhatsApp}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#25D366',
-          }}
-        >
-          <FontAwesome
-            name="whatsapp"
-            style={{ fontSize: 30, color: 'white' }}
-          />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          WhatsApp
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  _renderShareDownload = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onDownloadVideo}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: GStyle.grayBackColor,
-          }}
-        >
-          <FontAwesome
-            name="download"
-            style={{ fontSize: 30, color: '#333' }}
-          />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          Save video
-        </Text>
-      </TouchableOpacity>
-    );
+    const actions = {
+      onPressLike: this.onPressLike,
+      onPressMessage: this.onPressMessage,
+      onPressShare: this.onPressShare,
+      onPressAvatar: this.onPressAvatar,
+    };
+    return Global.renderVideo(item, this.state, index, actions);
   };
 
   _renderProgress = () => {
@@ -942,11 +448,9 @@ class PlayMainScreen extends Component {
   };
 
   ___renderStatusBar = () => {
-    return <StatusBar backgroundColor="red" barStyle="light-content" />;
+    return <StatusBar hidden />;
   };
 }
-
-const styles = StyleSheet.create({});
 
 export default connect(
   (state) => ({

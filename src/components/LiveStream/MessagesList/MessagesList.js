@@ -1,11 +1,17 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {FlatList, View} from 'react-native';
+import { FlatList, View } from 'react-native';
 import styles from './styles';
 import MessageItem from './MessageItem';
 
 export default class MessagesList extends Component {
-  renderItem = ({ item }) => <MessageItem message={item} />;
+  renderItem = ({ item }) => (
+    <MessageItem
+      message={item}
+      onPressProfileAction={this.props.onPressProfileAction}
+    />
+  );
+
   flatList = React.createRef();
 
   render() {

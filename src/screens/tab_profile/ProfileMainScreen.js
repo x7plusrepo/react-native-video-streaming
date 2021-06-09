@@ -32,7 +32,6 @@ import ic_menu_messages from '../../assets/images/Icons/ic_menu_messages.png';
 import ic_menu_fans from '../../assets/images/Icons/ic_menu_fans.png';
 import ic_menu_drafts from '../../assets/images/Icons/ic_menu_drafts.png';
 import ic_stars from '../../assets/images/Icons/ic_stars.png';
-import ic_menu_downloads from '../../assets/images/Icons/ic_menu_downloads.png';
 import ic_menu_saved_products from '../../assets/images/Icons/ic_menu_saved_products.png';
 import ic_my_products from '../../assets/images/Icons/ic_my_products.png';
 import ic_support from '../../assets/images/Icons/ic_support.png';
@@ -59,8 +58,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
     },
     {
       icon: ic_menu_saved_products,
-      title: 'Saved Products',
-      hideGuest: true,
+      title: 'Liked Products',
       onPress: () => {
         navigation.navigate('saved_products');
       },
@@ -164,10 +162,6 @@ class ProfileMainScreen extends React.Component {
   init = () => {
     this.state = {
       allViewCount: 0,
-      monthViewCountList: [],
-
-      tabOneHeight: WINDOW_HEIGHT,
-      tabTwoHeight: WINDOW_HEIGHT,
     };
   };
 
@@ -185,10 +179,6 @@ class ProfileMainScreen extends React.Component {
           const user = json.data || {};
           this.props.setMyUserAction(user);
           global.me.photo = json.data.photo;
-          this.setState({
-            allViewCount: json.data?.allViewCount,
-            monthViewCountList: json.data?.monthViews,
-          });
         } else {
           Helper.alertServerDataError();
         }
@@ -254,14 +244,15 @@ class ProfileMainScreen extends React.Component {
               >
                 {displayName}
               </Text>
-              <Text
-                style={[
-                  GStyles.regularText,
-                  { fontSize: 13, color: GStyle.linkColor, marginTop: 16 },
-                ]}
-              >
-                Edit profile
-              </Text>
+              <View style={{ flexShrink: 1, marginTop: 8 }}>
+                <Text
+                  style={{ ...GStyles.regularText, color: GStyle.grayColor }}
+                  ellipsizeMode="tail"
+                  numberOfLines={1}
+                >
+                  ID: {user?.uniqueId}
+                </Text>
+              </View>
             </TouchableOpacity>
             {global.me?.userType === 1 && (
               <View style={styles.detailContainer}>

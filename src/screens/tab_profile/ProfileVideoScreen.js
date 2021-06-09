@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
-  AppState,
+  AppState, Dimensions,
   FlatList,
   Image,
   Linking,
@@ -18,47 +18,25 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import convertToProxyURL from 'react-native-video-cache';
-import Share from 'react-native-share';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import { MessageDialog, ShareDialog } from 'react-native-fbsdk';
-
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import Fontisto from 'react-native-vector-icons/Fontisto';
 
 import { RNFFmpeg } from 'react-native-ffmpeg';
 
-import Video from 'react-native-video';
-import Avatar from '../../components/elements/Avatar';
 import ProgressModal from '../../components/ProgressModal';
 
 import {
   Constants,
-  GStyle,
+  Global,
   GStyles,
   Helper,
   RestAPI,
 } from '../../utils/Global';
-import avatars from '../../assets/avatars';
-
-const randomNumber = Math.floor(Math.random() * avatars.length);
-const randomImageUrl = avatars[randomNumber];
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
-const heart = require('../../assets/images/gifts/heart.png');
-const ic_menu_messages = require('../../assets/images/Icons/ic_menu_messages.png');
-const ic_share = require('../../assets/images/Icons/ic_share.png');
-const ic_support = require('../../assets/images/Icons/ic_support.png');
-const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
-const ic_win = require('../../assets/images/Icons/ic_win.png');
 
-const WINDOW_HEIGHT = Helper.getWindowHeight();
-const STATUS_BAR_HEIGHT = Helper.getStatusBarHeight();
-const BOTTOM_BAR_HEIGHT = Helper.getBottomBarHeight();
-const VIDEO_HEIGHT = WINDOW_HEIGHT - STATUS_BAR_HEIGHT - BOTTOM_BAR_HEIGHT;
+const VIDEO_HEIGHT = Dimensions.get('screen').height;
 
 class ProfileVideoScreen extends Component {
   constructor(props) {
@@ -91,7 +69,6 @@ class ProfileVideoScreen extends Component {
         } else {
           itemDatas = [];
         }
-        console.log(itemDatas, '--------');
 
         this.setState({ itemDatas: itemDatas });
       }
@@ -208,28 +185,6 @@ class ProfileVideoScreen extends Component {
     this.props.navigation.goBack();
   };
 
-  onVideoReadyForDisplay = (item) => {
-    console.log('---onVideoReadyForDisplay');
-    this.setState({ isVideoLoading: false });
-  };
-
-  onVideoBuffer = () => {};
-
-  onVideoError = () => {
-    console.log('---onVideoError');
-  };
-
-  onVideoLoad = () => {
-    this.setState({ isVideoLoading: false });
-    console.log('---onVideoLoad');
-  };
-
-  onVideoProgress = (value) => {
-    //this.setState({ isVideoLoading: false });
-  };
-
-  onVideoEnd = () => {};
-
   onViewableItemsChanged = ({ changed }) => {
     if (changed.length > 0) {
       const focused = changed[0];
@@ -241,6 +196,7 @@ class ProfileVideoScreen extends Component {
       }
 
       this.setState({ item });
+      global._opponentUser = item.user;
 
       let params = {
         video_id: item?.id,
@@ -281,7 +237,6 @@ class ProfileVideoScreen extends Component {
         video_id: item.id,
         is_like: isChecked,
       };
-      //showForcePageLoader(true);
       RestAPI.update_like_video(params, (json, err) => {
         showForcePageLoader(false);
 
@@ -314,116 +269,15 @@ class ProfileVideoScreen extends Component {
   };
 
   onPressShare = (item) => {
-    if (global.me) {
-      this.setState({ item });
-      this.Scrollable.open();
-    } else {
-      this.props.navigation.navigate('signin');
-    }
-  };
-
-  onShareFacebook = async () => {
-    this.Scrollable.close();
-    const item = this.state.item || {};
-    const user = item?.userId || {};
-
-    if (Platform.OS === 'android') {
-      const SHARE_LINK_CONTENT = {
-        contentType: 'link',
-        contentUrl: Constants.GOOGLE_PLAY_URL,
-        quote: '@' + user.username + ' #' + item.number,
-      };
-
-      const canShow = await ShareDialog.canShow(SHARE_LINK_CONTENT);
-      if (canShow) {
-        try {
-          const { isCancelled, postId } = await ShareDialog.show(
-            SHARE_LINK_CONTENT,
-          );
-          if (isCancelled) {
-            warning(Constants.WARNING_TITLE, 'Share cancelled');
-          } else {
-            success(Constants.SUCCESS_TITLE, 'Success to share');
-          }
-        } catch (error) {
-          error(Constants.ERROR_TITLE, 'Failed to share');
-        }
-      }
-    } else {
-      const shareOptions = {
-        title: 'Share to Facebook',
-        message: '@' + user.username + ' #' + item.number,
-        url: Constants.GOOGLE_PLAY_URL,
-        social: Share.Social.FACEBOOK,
-      };
-      Share.shareSingle(shareOptions)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          err && console.log(err);
-        });
-    }
-  };
-
-  onShareFacebookMessenger = async () => {
-    this.Scrollable.close();
-    const user = this.state.item?.userId || {};
-
-    const SHARE_LINK_CONTENT = {
-      contentType: 'link',
-      contentUrl: Constants.GOOGLE_PLAY_URL,
-      quote: '@' + user.username + ' #' + this.state.item?.number,
-    };
-
-    const canShow = await MessageDialog.canShow(SHARE_LINK_CONTENT);
-    if (canShow) {
-      try {
-        const { isCancelled, postId } = await MessageDialog.show(
-          SHARE_LINK_CONTENT,
-        );
-        if (isCancelled) {
-          warning(Constants.WARNING_TITLE, 'Share cancelled');
-        } else {
-          success(Constants.SUCCESS_TITLE, 'Success to share');
-        }
-      } catch (error) {
-        error(Constants.ERROR_TITLE, 'Failed to share');
-      }
-    }
-  };
-
-  onShareWhatsApp = async () => {
-    this.Scrollable.close();
-
-    if (Platform.OS === 'android') {
-      const shareOptions = {
-        title: 'Share to WhatsApp',
-        // message: '@' + this._state.item.user_name + ' #' + this.state.item.number,
-        url: Constants.GOOGLE_PLAY_URL,
-        social: Share.Social.WHATSAPP,
-      };
-      Share.shareSingle(shareOptions)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          err && console.log(err);
-        });
-    } else {
-      let url = 'whatsapp://send?text=' + Constants.GOOGLE_PLAY_URL;
-      Linking.openURL(url)
-        .then((data) => {
-          console.log('WhatsApp Opened');
-        })
-        .catch(() => {
-          alert('Make sure Whatsapp installed on your device');
-        });
-    }
+    // TODO
+    // if (global.me) {
+    //   this.setState({ item });
+    // } else {
+    //   this.props.navigation.navigate('signin');
+    // }
   };
 
   onDownloadVideo = async () => {
-    this.Scrollable.close();
     const item = this.state.item || {};
     const user = item?.userId || {};
 
@@ -500,437 +354,84 @@ class ProfileVideoScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView>
+      <SafeAreaView style={[GStyles.container, { backgroundColor: 'red' }]}>
+        {this.___renderStatusBar()}
+        {this._renderBack()}
         {this._renderVideo()}
-        {this._renderShare()}
         {this._renderProgress()}
       </SafeAreaView>
     );
   }
 
+  _renderBack = () => {
+    return (
+      <TouchableOpacity
+        style={GStyles.backButtonContainer}
+        onPress={this.onBack}
+      >
+        <Image
+          source={ic_back}
+          style={{ width: 16, height: 16, tintColor: 'white' }}
+          resizeMode={'contain'}
+        />
+      </TouchableOpacity>
+    );
+  };
   _renderVideo = () => {
     const { isFetching, itemDatas } = this.state;
 
     return (
-      <>
-        <FlatList
-          showsVerticalScrollIndicator={false}
-          initialScrollIndex={
-            itemDatas.length > global._selIndex ? global._selIndex : 0
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        initialScrollIndex={
+          itemDatas.length > global._selIndex ? global._selIndex : 0
+        }
+        getItemLayout={(data, index) => ({
+          length: VIDEO_HEIGHT,
+          offset: VIDEO_HEIGHT * index,
+          index,
+        })}
+        pagingEnabled
+        onRefresh={() => {
+          this.onRefresh('pull');
+        }}
+        refreshing={isFetching}
+        onEndReachedThreshold={0.4}
+        onMomentumScrollBegin={() => {
+          this.setState({ onEndReachedDuringMomentum: false });
+        }}
+        onEndReached={() => {
+          if (!this.state.onEndReachedDuringMomentum) {
+            this.setState({ onEndReachedDuringMomentum: true });
+            this.onRefresh('more');
           }
-          getItemLayout={(data, index) => ({
-            length: VIDEO_HEIGHT,
-            offset: VIDEO_HEIGHT * index,
-            index,
-          })}
-          pagingEnabled
-          onRefresh={() => {
-            this.onRefresh('pull');
-          }}
-          refreshing={isFetching}
-          //ListFooterComponent={this._renderFooter}
-          onEndReachedThreshold={0.4}
-          onMomentumScrollBegin={() => {
-            this.setState({ onEndReachedDuringMomentum: false });
-          }}
-          onEndReached={() => {
-            if (!this.state.onEndReachedDuringMomentum) {
-              this.setState({ onEndReachedDuringMomentum: true });
-              this.onRefresh('more');
-            }
-          }}
-          data={itemDatas}
-          renderItem={this._renderItem}
-          onViewableItemsChanged={this.onViewableItemsChanged}
-          viewabilityConfig={{
-            itemVisiblePercentThreshold: 60,
-          }}
-          keyExtractor={(item, index) => index.toString()}
-          style={{
-            width: '100%',
-            height: VIDEO_HEIGHT,
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            backgroundColor: 'black',
-            zIndex: 1,
-            elevation: 1,
-          }}
-        />
-        <TouchableOpacity
-          style={{
-            position: 'absolute',
-            left: 16,
-            top: 32,
-            zIndex: 1,
-            elevation: 1,
-            ...GStyles.centerAlign,
-            width: 48,
-            height: 48,
-            backgroundColor: 'rgba(0, 0, 0, 0.5)',
-            borderRadius: 120,
-          }}
-          onPress={this.onBack}
-        >
-          <Image
-            source={ic_back}
-            style={{ width: 18, height: 18, tintColor: 'white' }}
-            resizeMode={'contain'}
-          />
-        </TouchableOpacity>
-      </>
+        }}
+        data={itemDatas}
+        renderItem={this._renderItem}
+        onViewableItemsChanged={this.onViewableItemsChanged}
+        viewabilityConfig={{
+          itemVisiblePercentThreshold: 60,
+        }}
+        keyExtractor={(item, index) => index.toString()}
+        style={{
+          width: '100%',
+          height: '100%',
+          backgroundColor: 'black',
+          zIndex: 1,
+          elevation: 1,
+        }}
+      />
     );
-  };
-
-  _renderFooter = () => {
-    const { isFetching } = this.state;
-
-    if (!isFetching) return null;
-    return <ActivityIndicator style={{ color: '#000' }} />;
   };
 
   _renderItem = ({ item, index }) => {
-    const { isVideoPause } = this.state;
-    const user = item.userId || {};
-    const paused = isVideoPause || this.state.curIndex !== index;
-    if (Math.abs(this.state.curIndex - index) > 2) {
-      return (
-        <View
-          style={{
-            width: '100%',
-            height: VIDEO_HEIGHT,
-            borderWidth: 1,
-            borderColor: 'black',
-          }}
-        />
-      );
-    } else {
-      const isLike = !!item.isLiked;
-      const newTagList = item.tagList?.map((tag) => tag.name)?.join(' ');
-      const categoryName = item?.category?.title || '';
-      const subCategoryName = item?.subCategory?.title || '';
-
-      return (
-        <View
-          style={{
-            width: '100%',
-            height: VIDEO_HEIGHT,
-            borderWidth: 1,
-            borderColor: 'black',
-          }}
-        >
-          <Video
-            source={{ uri: convertToProxyURL(item?.url || '') }}
-            ref={(ref) => {
-              this.player = ref;
-            }}
-            resizeMode="contain"
-            repeat
-            paused={paused}
-            playWhenInactive={false}
-            playInBackground={false}
-            poster={item.thumb}
-            posterResizeMode="contain"
-            onBuffer={this.onVideoBuffer}
-            onLoad={this.onVideoLoad}
-            onProgress={this.onVideoProgress}
-            onEnd={this.onVideoEnd}
-            // bufferConfig={{
-            //   // minBufferMs: 15000,
-            //   // maxBufferMs: 30000,
-            //   // bufferForPlaybackMs: 5000,
-            //   // bufferForPlaybackAfterRebufferMs: 5000,
-            //   minBufferMs: 150,
-            //   maxBufferMs: 300,
-            //   bufferForPlaybackMs: 500,
-            //   bufferForPlaybackAfterRebufferMs: 500,
-            // }}
-            style={{
-              position: 'absolute',
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-              backgroundColor: 'black',
-            }}
-          />
-          <View style={GStyles.playInfoWrapper}>
-            <View style={GStyles.rowEndContainer}>
-              <View>
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressLike(!isLike, item);
-                  }}
-                  style={[GStyles.videoActionButton]}
-                >
-                  <Image
-                    source={heart}
-                    style={{
-                      ...GStyles.actionIcons,
-                      tintColor: isLike ? GStyle.primaryColor : 'white',
-                    }}
-                  />
-                </TouchableOpacity>
-
-                {user.id !== global.me?.id && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      this.onPressMessage(item);
-                    }}
-                    style={GStyles.videoActionButton}
-                  >
-                    <Image
-                      source={ic_menu_messages}
-                      style={GStyles.actionIcons}
-                    />
-                  </TouchableOpacity>
-                )}
-
-                <TouchableOpacity
-                  onPress={() => {
-                    this.onPressShare(item);
-                  }}
-                  style={GStyles.videoActionButton}
-                >
-                  <Image source={ic_share} style={GStyles.actionIcons} />
-                </TouchableOpacity>
-              </View>
-            </View>
-
-            <View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                <View style={GStyles.rowContainer}>
-                  <View style={GStyles.playInfoTextWrapper}>
-                    <Text style={GStyles.playInfoText}>৳{item.price}</Text>
-                  </View>
-                  <View
-                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
-                  >
-                    <Image
-                      source={ic_support}
-                      style={{ width: 12, height: 12, marginRight: 4 }}
-                    />
-                    <Text style={GStyles.playInfoText}>01913379598 </Text>
-                  </View>
-                  <View
-                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
-                  >
-                    <Image
-                      source={ic_diamond}
-                      style={{ width: 12, height: 12, marginRight: 4 }}
-                    />
-                    <Text style={GStyles.playInfoText}>{item.price / 10}</Text>
-                  </View>
-                </View>
-                <View style={GStyles.playInfoTextWrapper}>
-                  <Text style={GStyles.playInfoText}>lorem ipsum</Text>
-                </View>
-              </View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                <View style={GStyles.playInfoTextWrapper}>
-                  <Text numberOfLines={3} style={GStyles.playInfoText}>
-                    {newTagList} {''} {categoryName} {''} {subCategoryName}
-                  </Text>
-                </View>
-
-                <View style={GStyles.playInfoTextWrapper}>
-                  <Text style={GStyles.playInfoText}>#{item.number}</Text>
-                </View>
-              </View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                {!!item?.description ? (
-                  <View style={GStyles.playInfoTextWrapper}>
-                    <Text numberOfLines={5} style={GStyles.playInfoText}>
-                      {item.description}
-                    </Text>
-                  </View>
-                ) : (
-                  <View />
-                )}
-
-                <View style={GStyles.centerAlign}>
-                  <Avatar
-                    image={{
-                      uri: user.photo ? user.photo : randomImageUrl,
-                    }}
-                    size={48}
-                    onPress={() => {
-                      this.onPressAvatar(item);
-                    }}
-                    containerStyle={{ marginBottom: 4 }}
-                  />
-                  <Text style={GStyles.textSmall}>{user.username}</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-      );
-    }
-  };
-
-  _renderShare = () => {
-    return (
-      <View style={{ ...GStyles.centerAlign, ...GStyles.absoluteContainer }}>
-        <RBSheet
-          ref={(ref) => {
-            this.Scrollable = ref;
-          }}
-          height={180}
-          closeOnDragDown
-          openDuration={250}
-          customStyles={{
-            container: {
-              borderTopLeftRadius: 10,
-              borderTopRightRadius: 10,
-            },
-          }}
-        >
-          {this._renderShareTitle()}
-          <View
-            style={{ ...GStyles.rowContainer, justifyContent: 'space-around' }}
-          >
-            {this._renderShareFacebook()}
-            {this._renderShareFacebookMessenger()}
-            {this._renderShareWhatsApp()}
-            {this._renderShareDownload()}
-          </View>
-        </RBSheet>
-      </View>
-    );
-  };
-
-  _renderShareTitle = () => {
-    return (
-      <View style={{ ...GStyles.centerAlign }}>
-        <Text style={{ ...GStyles.regularText }}>Share to</Text>
-      </View>
-    );
-  };
-
-  _renderShareFacebook = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onShareFacebook}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#3b5998',
-          }}
-        >
-          <FontAwesome
-            name="facebook"
-            style={{ fontSize: 30, color: 'white' }}
-          />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          Facebook
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  _renderShareFacebookMessenger = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onShareFacebookMessenger}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#006fff',
-          }}
-        >
-          <Fontisto name="messenger" style={{ fontSize: 30, color: 'white' }} />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          Messenger
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  _renderShareWhatsApp = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onShareWhatsApp}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: '#25D366',
-          }}
-        >
-          <FontAwesome
-            name="whatsapp"
-            style={{ fontSize: 30, color: 'white' }}
-          />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          WhatsApp
-        </Text>
-      </TouchableOpacity>
-    );
-  };
-
-  _renderShareDownload = () => {
-    return (
-      <TouchableOpacity
-        onPress={this.onDownloadVideo}
-        style={{
-          marginTop: 20,
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-      >
-        <View
-          style={{
-            width: 50,
-            height: 50,
-            borderRadius: 25,
-            justifyContent: 'center',
-            alignItems: 'center',
-            backgroundColor: GStyle.grayBackColor,
-          }}
-        >
-          <FontAwesome
-            name="download"
-            style={{ fontSize: 30, color: '#333' }}
-          />
-        </View>
-        <Text style={{ fontSize: 14, paddingTop: 10, color: '#333' }}>
-          Save video
-        </Text>
-      </TouchableOpacity>
-    );
+    const actions = {
+      onPressLike: this.onPressLike,
+      onPressMessage: this.onPressMessage,
+      onPressShare: this.onPressShare,
+      onPressAvatar: this.onPressAvatar,
+    };
+    return Global.renderVideo(item, this.state, index, actions);
   };
 
   _renderProgress = () => {
@@ -940,11 +441,9 @@ class ProfileVideoScreen extends Component {
   };
 
   ___renderStatusBar = () => {
-    return <StatusBar backgroundColor="red" barStyle="light-content" />;
+    return <StatusBar hidden />;
   };
 }
-
-const styles = {};
 
 export default function (props) {
   let navigation = useNavigation();

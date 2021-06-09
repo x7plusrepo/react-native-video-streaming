@@ -40,6 +40,7 @@ const HomeVideoScreen = (props) => {
 
     if (type === 'init') {
       //showForcePageLoader(true);
+      setIsFetching(true);
     } else {
       setIsFetching(true);
     }
@@ -99,7 +100,9 @@ const HomeVideoScreen = (props) => {
           />
         ) : (
           <View style={{ flex: 1, ...GStyles.centerAlign }}>
-            <Text style={GStyles.notifyDescription}>Not found.</Text>
+            <Text style={GStyles.notifyDescription}>
+              {isFetching ? '' : 'Not found.'}
+            </Text>
           </View>
         )}
       </View>

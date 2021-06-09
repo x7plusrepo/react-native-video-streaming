@@ -121,7 +121,7 @@ class GHeaderBar extends React.Component {
         <Image
           source={LEFT_TYPES[leftType].image}
           style={
-            leftType == 'logo'
+            leftType === 'logo'
               ? {
                   width: 24,
                   height: 26,

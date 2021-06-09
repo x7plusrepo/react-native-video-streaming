@@ -8,13 +8,10 @@ import ic_switch_camera from '../../../assets/images/Icons/ic_switch_camera.png'
 import ic_menu_messages from '../../../assets/images/Icons/ic_menu_messages.png';
 import ic_share from '../../../assets/images/Icons/ic_share.png';
 import ic_gift from '../../../assets/images/Icons/ic_gift.png';
-import ic_join from '../../../assets/images/Icons/ic_join.png';
-import ic_signOut from '../../../assets/images/Icons/ic_signout.png';
 import heart from '../../../assets/images/gifts/heart.png';
 
 const ic_audio_on = require('../../../assets/images/Icons/ic_audio_on.png');
 const ic_audio_off = require('../../../assets/images/Icons/ic_audio_off.png');
-const ic_star = require('../../../assets/images/Icons/ic_star.png');
 
 export default class BottomActionsGroup extends Component {
   constructor(props) {
@@ -55,10 +52,8 @@ export default class BottomActionsGroup extends Component {
   };
 
   renderContent() {
-    const { mode, isJoined, onPressJoin, onExit, isMuted, messages } =
+    const { mode, isMuted, messages } =
       this.props;
-    const onPressJoinButton = isJoined ? onExit : onPressJoin;
-    const joinLeaveIcon = isJoined ? ic_signOut : ic_join;
 
     return (
       <>
@@ -68,7 +63,7 @@ export default class BottomActionsGroup extends Component {
             { alignItems: 'flex-end', marginBottom: 24 },
           ]}
         >
-          <MessagesList messages={messages} />
+          <MessagesList messages={messages} onPressProfileAction={this.props.onPressProfileAction} />
           {mode === 'streamer' && (
             <View>
               <GradientBackgroundIconButton
@@ -92,12 +87,6 @@ export default class BottomActionsGroup extends Component {
               onPress={this.onPressMessageAction}
               icon={ic_menu_messages}
             />
-            {/*{mode === 'viewer' && (*/}
-            {/*  <GradientBackgroundIconButton*/}
-            {/*    onPress={onPressJoinButton}*/}
-            {/*    icon={joinLeaveIcon}*/}
-            {/*  />*/}
-            {/*)}*/}
 
             <GradientBackgroundIconButton
               icon={ic_share}

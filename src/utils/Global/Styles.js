@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {Platform, StyleSheet} from 'react-native';
 
 import Helper from './Util';
 
@@ -303,7 +303,7 @@ const GStyles = StyleSheet.create({
   playInfoWrapper: {
     position: 'absolute',
     width: '100%',
-    bottom: 64,
+    bottom: 36,
     left: 0,
     paddingHorizontal: 16,
   },
@@ -322,6 +322,36 @@ const GStyles = StyleSheet.create({
   upperCaseText: {
     textTransform: 'uppercase',
   },
+  stickerContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: 'white',
+    paddingVertical: 4,
+    paddingHorizontal: 8,
+    borderRadius: 4,
+  },
+  stickerText: {
+    fontFamily: 'GothamPro',
+    fontWeight: '400',
+    fontSize: 10,
+    color: 'black',
+  },
+  stickerWrapper: {
+    position: 'absolute',
+    right: 16,
+    top: Helper.getStatusBarHeight() + 16,
+  },
+  backButtonContainer: {
+    position: 'absolute',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 42,
+    height: 42,
+    left: 16,
+    top: Helper.getStatusBarHeight() + 16,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    borderRadius: 120,
+  }
 });
 export default GStyle;
 export { GStyles };

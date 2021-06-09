@@ -377,6 +377,7 @@ class ViewLive extends Component {
                 onPressGiftAction={this.onPressGiftAction}
                 onPressMessageAction={this.onPressMessageAction}
                 onPressShareAction={this.onPressShareAction}
+                onPressProfileAction={this.onPressProfileAction}
                 isJoined={isJoined}
                 liveStatus={liveStatus}
                 mode="viewer"

@@ -1,15 +1,15 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import { Image, Text, TouchableOpacity, View } from 'react-native';
 
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import {StackActions, useNavigation} from '@react-navigation/native';
+import { StackActions, useNavigation } from '@react-navigation/native';
 
 import styles from './styles';
-import {GStyles} from '../../../utils/Global';
+import { GStyles } from '../../../utils/Global';
 import GStyle from '../../../utils/Global/Styles';
 
-import {LIVE_STATUS} from '../../../utils/LiveStream/Constants';
+import { LIVE_STATUS } from '../../../utils/LiveStream/Constants';
 import ic_love from '../../../assets/images/Icons/ic_love-potion.png';
 import ic_star from '../../../assets/images/Icons/ic_star.png';
 import ic_flame from '../../../assets/images/Icons/ic_flame.png';
@@ -33,7 +33,7 @@ class Component extends React.Component {
   }
 
   componentDidMount(): void {
-    this.interval = setInterval(this.onRandomProduct, 60000);
+    this.interval = setInterval(this.onRandomProduct, 20000);
   }
 
   componentWillUnmount(): void {
@@ -50,7 +50,7 @@ class Component extends React.Component {
       randomProduct,
     });
 
-    this.timer = setTimeout(this.onHideProduct, 5000);
+    this.timer = setTimeout(this.onHideProduct, 10000);
   };
 
   onHideProduct = () => {
@@ -123,25 +123,28 @@ class Component extends React.Component {
                   </Text>
                 </View>
               </LinearGradient>
-              <TouchableOpacity style={styles.userAvatarImage} onPress={this.onPressProfileAction}>
-                <Image source={avatarImage} style={{ width: '100%', height: '100%' }} />
+              <TouchableOpacity
+                style={styles.userAvatarImage}
+                onPress={this.onPressProfileAction}
+              >
+                <Image
+                  source={avatarImage}
+                  style={{ width: '100%', height: '100%' }}
+                />
               </TouchableOpacity>
-
             </View>
             <View style={styles.streamInfoWrapper}>
               <View style={styles.infoLabelWrapper}>
                 <Image source={ic_love} style={styles.infoIcon} />
                 <Text style={styles.archiveText}>{room?.elixir || 0}</Text>
               </View>
-              {mode === 'streamer' && (
-                <View style={styles.progressWrapper}>
-                  <View style={[styles.infoLabelWrapper, { marginRight: 0 }]}>
-                    <Image source={ic_star} style={styles.infoIcon} />
-                    <Text style={styles.infoText}>{level} Star</Text>
-                  </View>
-                  <View style={[styles.progress, { width: progress }]} />
+              <View style={styles.progressWrapper}>
+                <View style={[styles.infoLabelWrapper, { marginRight: 0 }]}>
+                  <Image source={ic_star} style={styles.infoIcon} />
+                  <Text style={styles.infoText}>{level} Star</Text>
                 </View>
-              )}
+                <View style={[styles.progress, { width: progress }]} />
+              </View>
               <View style={styles.infoLabelWrapper}>
                 <Image source={ic_flame} style={styles.infoIcon} />
                 <Text style={styles.infoText}>{room?.elixirFlame || 0}</Text>
