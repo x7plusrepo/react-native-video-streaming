@@ -15,13 +15,15 @@ import {
 } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
 
 import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
-import LinearGradient from 'react-native-linear-gradient';
-import avatars from '../../assets/avatars';
+import Achievements from '../../components/profile/Achievements';
 import PlaceHolder from './PlaceHolder';
+
+import avatars from '../../assets/avatars';
 
 const ic_plus_1 = require('../../assets/images/Icons/ic_plus_1.png');
 const ic_message = require('../../assets/images/Icons/ic_menu_messages.png');
@@ -163,16 +165,15 @@ class ProfileOtherScreen extends React.Component {
         <SafeAreaView style={GStyles.statusBar} />
         <SafeAreaView style={styles.container}>
           {this._renderHeader()}
+          {this._renderAvartar()}
           {!isLoading && opponentUser ? (
             <>
-              <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
-                {this._renderAvartar()}
-                {this._renderVideo()}
-              </KeyboardAwareScrollView>
+              <Achievements opponentUser={opponentUser} />
+              {this._renderVideo()}
               {this._renderBottom()}
             </>
           ) : (
-            <View style={{ width: 100, height: 100, backgroundColor: 'red' }} />
+            <PlaceHolder />
           )}
         </SafeAreaView>
       </>
@@ -232,7 +233,6 @@ class ProfileOtherScreen extends React.Component {
       uri: opponentUser?.photo ? opponentUser?.photo : randomImageUrl,
     };
 
-    const lvl = Helper.getLvLGuest(opponentUser?.diamondSpent || 0);
     const displayName =
       opponentUser?.userType === 0
         ? opponentUser?.displayName
@@ -246,16 +246,12 @@ class ProfileOtherScreen extends React.Component {
         ]}
         style={styles.gradient}
       >
-        <View style={styles.avatar}>
-          <Avatar image={avatar} size={84} />
+        <Avatar image={avatar} size={84} />
+        {opponentUser && (
           <View style={styles.profileDetailWrapper}>
-            <View style={GStyles.rowCenterContainer}>
-              <Text
-                style={[GStyles.mediumText, { textTransform: 'uppercase' }]}
-              >
-                {displayName}
-              </Text>
-            </View>
+            <Text style={[GStyles.mediumText, { textTransform: 'uppercase' }]}>
+              {displayName}
+            </Text>
             <View style={[GStyles.rowCenterContainer]}>
               <View style={{ flexShrink: 1 }}>
                 <Text
@@ -271,46 +267,7 @@ class ProfileOtherScreen extends React.Component {
               </TouchableOpacity>
             </View>
           </View>
-        </View>
-        <View style={GStyles.rowEvenlyContainer}>
-          {opponentUser?.userType === 1 ? (
-            <>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.elixir || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Elixir</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.elixirFlame || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Elixir Flames</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.fansCount || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Fans</Text>
-              </View>
-            </>
-          ) : (
-            <>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.diamond || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Diamonds</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {lvl}
-                </Text>
-                <Text style={GStyles.elementLabel}>LvL</Text>
-              </View>
-            </>
-          )}
-        </View>
+        )}
       </LinearGradient>
     );
   };
@@ -367,11 +324,9 @@ const styles = StyleSheet.create({
   gradient: {
     paddingHorizontal: 20,
     paddingVertical: 24,
-  },
-  avatar: {
     flexDirection: 'row',
-    marginBottom: 24,
   },
+
   textId: {
     ...GStyles.regularText,
     color: GStyle.grayColor,
@@ -397,6 +352,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     paddingHorizontal: 16,
     paddingBottom: 24,
+    marginTop: 16,
   },
   followButtonWrapper: {
     ...GStyles.rowCenterContainer,

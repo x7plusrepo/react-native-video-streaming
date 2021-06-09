@@ -31,6 +31,7 @@ import {
   RestAPI,
 } from '../../utils/Global';
 import ChatStreamSocketManager from './../../utils/Message/SocketManager';
+import RenderProducts from '../../components/products/RenderProduct';
 
 class PlayMainScreen extends Component {
   constructor(props) {
@@ -291,12 +292,11 @@ class PlayMainScreen extends Component {
   };
 
   onPressShare = (item) => {
-    // TODO
-    // if (global.me) {
-    //   this.setState({ item });
-    // } else {
-    //   this.props.navigation.navigate('signin');
-    // }
+    if (global.me) {
+      Global.shareProduct(item, global.me);
+    } else {
+      this.props.navigation.navigate('signin');
+    }
   };
 
   onDownloadVideo = async () => {
@@ -438,7 +438,14 @@ class PlayMainScreen extends Component {
       onPressShare: this.onPressShare,
       onPressAvatar: this.onPressAvatar,
     };
-    return Global.renderVideo(item, this.state, index, actions);
+    return (
+      <RenderProducts
+        item={item}
+        state={this.state}
+        index={index}
+        actions={actions}
+      />
+    );
   };
 
   _renderProgress = () => {

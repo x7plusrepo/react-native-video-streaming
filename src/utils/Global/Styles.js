@@ -303,7 +303,7 @@ const GStyles = StyleSheet.create({
   playInfoWrapper: {
     position: 'absolute',
     width: '100%',
-    bottom: 36,
+    bottom: 64 + Helper.getBottomBarHeight(),
     left: 0,
     paddingHorizontal: 16,
   },
@@ -345,6 +345,7 @@ const GStyles = StyleSheet.create({
     position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
+    zIndex: 999,
     width: 42,
     height: 42,
     left: 16,

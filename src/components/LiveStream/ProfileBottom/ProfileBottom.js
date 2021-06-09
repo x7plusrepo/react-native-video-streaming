@@ -14,12 +14,14 @@ import {
   useRoute,
 } from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
+import LinearGradient from 'react-native-linear-gradient';
+
+import Avatar from '../../../components/elements/Avatar';
+import Achievements from '../../profile/Achievements';
+import PlaceHolder from '../../profile/PlaceHolder';
 
 import { GStyle, GStyles, Helper, RestAPI } from '../../../utils/Global';
-import Avatar from '../../../components/elements/Avatar';
-import LinearGradient from 'react-native-linear-gradient';
 import avatars from '../../../assets/avatars';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 
 const ic_plus_1 = require('../../../assets/images/Icons/ic_plus_1.png');
 const ic_message = require('../../../assets/images/Icons/ic_menu_messages.png');
@@ -143,16 +145,18 @@ class ProfileBottom extends React.Component {
 
     return (
       <View style={styles.container}>
-        {!isLoading && opponentUser ? (
-          <>
-            {this._renderAvatar()}
-            {this._renderDetail()}
-            {this._renderVideo()}
-            {this._renderBottom()}
-          </>
-        ) : (
-          <View style={{ width: 100, height: 100, backgroundColor: 'red' }} />
-        )}
+        {this._renderAvatar()}
+        <ScrollView>
+          {!isLoading && opponentUser ? (
+            <>
+              {this._renderDetail()}
+              {this._renderVideo()}
+              {this._renderBottom()}
+            </>
+          ) : (
+            <PlaceHolder />
+          )}
+        </ScrollView>
       </View>
     );
   }
@@ -218,7 +222,6 @@ class ProfileBottom extends React.Component {
 
   _renderDetail = () => {
     const { opponentUser } = this.state;
-    const lvl = Helper.getLvLGuest(opponentUser?.diamondSpent || 0);
     const displayName =
       opponentUser?.userType === 0
         ? opponentUser?.displayName
@@ -237,52 +240,13 @@ class ProfileBottom extends React.Component {
           <Text style={[GStyles.mediumText, { textTransform: 'uppercase' }]}>
             {displayName}
           </Text>
-          <View style={{ flexShrink: 1, marginTop: 12 }}>
+          <View style={{ flexShrink: 1, marginVertical: 12 }}>
             <Text style={styles.textID} ellipsizeMode="tail" numberOfLines={1}>
               ID: {opponentUser?.uniqueId}
             </Text>
           </View>
         </View>
-
-        <View style={GStyles.rowEvenlyContainer}>
-          {opponentUser?.userType === 1 ? (
-            <>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.elixir || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Elixir</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.elixirFlame || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Elixir Flames</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.fansCount || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Fans</Text>
-              </View>
-            </>
-          ) : (
-            <>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {opponentUser?.diamond || 0}
-                </Text>
-                <Text style={GStyles.elementLabel}>Diamonds</Text>
-              </View>
-              <View style={GStyles.centerAlign}>
-                <Text style={[GStyles.regularText, GStyles.boldText]}>
-                  {lvl}
-                </Text>
-                <Text style={GStyles.elementLabel}>LvL</Text>
-              </View>
-            </>
-          )}
-        </View>
+        <Achievements opponentUser={opponentUser} />
       </LinearGradient>
     );
   };
@@ -341,8 +305,7 @@ const styles = StyleSheet.create({
   gradient: {
     flex: 1,
     paddingHorizontal: 20,
-    paddingBottom: 24,
-    paddingTop: 36,
+    paddingTop: 60,
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
   },
@@ -367,6 +330,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexWrap: 'wrap',
     paddingHorizontal: 16,
+    marginTop: 16,
     paddingBottom: 24,
   },
   followButtonWrapper: {

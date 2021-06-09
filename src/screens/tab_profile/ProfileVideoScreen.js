@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import {
   ActivityIndicator,
-  AppState, Dimensions,
+  AppState,
+  Dimensions,
   FlatList,
   Image,
   Linking,
@@ -33,6 +34,7 @@ import {
   Helper,
   RestAPI,
 } from '../../utils/Global';
+import RenderProducts from '../../components/products/RenderProduct';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -48,7 +50,7 @@ class ProfileVideoScreen extends Component {
   }
 
   componentDidMount() {
-    this.setState({ isMounted: true });
+    this.isMounted = true;
 
     this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
       let { itemDatas } = this.state;
@@ -76,7 +78,7 @@ class ProfileVideoScreen extends Component {
       this.setState({ isVideoPause: false });
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
-      if (this.state.isMounted) {
+      if (this.isMounted) {
         this.setState({ isVideoPause: true });
       }
     });
@@ -88,7 +90,7 @@ class ProfileVideoScreen extends Component {
     this.unsubscribeFocus();
     this.unsubscribeBlur();
     AppState.removeEventListener('change', this.onChangeAppState);
-    this.setState({ isMounted: false });
+    this.isMounted = false;
   }
 
   onChangeAppState = (nextAppState) => {
@@ -115,7 +117,6 @@ class ProfileVideoScreen extends Component {
       keyword: global._keyword ? global._keyword : '',
       itemDatas: [],
       onEndReachedDuringMomentum: true,
-      isMounted: false,
       curIndex: -1,
       item: {},
     };
@@ -155,7 +156,7 @@ class ProfileVideoScreen extends Component {
       if (type === 'init') {
         showForcePageLoader(false);
       } else {
-        if (this.state.isMounted) {
+        if (this.isMounted) {
           this.setState({ isFetching: false });
         }
       }
@@ -164,7 +165,7 @@ class ProfileVideoScreen extends Component {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          if (this.state.isMounted) {
+          if (this.isMounted) {
             this.setState({ totalCount: json.data.totalCount });
             if (type === 'more') {
               let data = itemDatas.concat(json.data.videoList);
@@ -269,12 +270,11 @@ class ProfileVideoScreen extends Component {
   };
 
   onPressShare = (item) => {
-    // TODO
-    // if (global.me) {
-    //   this.setState({ item });
-    // } else {
-    //   this.props.navigation.navigate('signin');
-    // }
+    if (global.me) {
+      Global.shareProduct(item, global.me);
+    } else {
+      this.props.navigation.navigate('signin');
+    }
   };
 
   onDownloadVideo = async () => {
@@ -356,9 +356,9 @@ class ProfileVideoScreen extends Component {
     return (
       <SafeAreaView style={[GStyles.container, { backgroundColor: 'red' }]}>
         {this.___renderStatusBar()}
-        {this._renderBack()}
         {this._renderVideo()}
         {this._renderProgress()}
+        {this._renderBack()}
       </SafeAreaView>
     );
   }
@@ -431,7 +431,15 @@ class ProfileVideoScreen extends Component {
       onPressShare: this.onPressShare,
       onPressAvatar: this.onPressAvatar,
     };
-    return Global.renderVideo(item, this.state, index, actions);
+    return (
+      <RenderProducts
+        item={item}
+        state={this.state}
+        index={index}
+        action={actions}
+        detailStyle={{ bottom: 36 }}
+      />
+    );
   };
 
   _renderProgress = () => {

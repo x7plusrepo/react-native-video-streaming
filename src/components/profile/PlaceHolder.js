@@ -16,13 +16,14 @@ const PlaceHolder = (props) => {
   const containerWidth = WINDOW_WIDTH - 2 * CONTAINER_PADDING;
   const containerHeight = itemSizeWithMargin * 2;
 
-  const initial = 32;
+  const initial = 96;
   const covers = Array(columns * rows).fill(1);
 
   return (
     <View
       style={{
-        paddingHorizontal: 16,
+        padding: 16,
+        paddingTop: 60,
       }}
     >
       <ContentLoader
@@ -33,7 +34,25 @@ const PlaceHolder = (props) => {
         secondaryColor="#343d4c"
         {...props}
       >
-        <Rect x={0} y="0" rx="0" ry="0" width={containerWidth} height="20" />
+        <Rect
+          x={(containerWidth - 120) / 2}
+          y="0"
+          rx="0"
+          ry="0"
+          width={120}
+          height="20"
+        />
+
+        <Rect
+          x={(containerWidth - 80) / 2}
+          y="32"
+          rx="0"
+          ry="0"
+          width={80}
+          height="20"
+        />
+
+        <Rect x={0} y="64" rx="0" ry="0" width={containerWidth} height="20" />
 
         {covers.map((g, i) => {
           let vy = Math.floor(i / columns) * itemSizeWithMargin + initial;

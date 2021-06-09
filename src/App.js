@@ -49,7 +49,9 @@ const subscribeDeepLink = () => {
     // const image = params.$og_image_url;
     // const inviterId = params.inviterId;
     const roomId = params.roomId;
-    RootNavigation.navigate('view_live', { roomId });
+    if (roomId) {
+      RootNavigation.navigate('view_live', { roomId });
+    }
   });
 };
 
