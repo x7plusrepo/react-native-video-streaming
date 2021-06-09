@@ -83,7 +83,7 @@ class TopUsersScreen extends React.Component {
     this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init') {
-      showForcePageLoader(true);
+      //showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }

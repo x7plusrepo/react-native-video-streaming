@@ -32,10 +32,10 @@ const PanelLive = (props) => {
       'temporary/liveStreamImages',
     );
     showForcePageLoader(false);
-    // if (!uploadedUrl) {
-    //   alert('Thumbnail required.');
-    //   return;
-    // }
+    if (!uploadedUrl) {
+      alert('Thumbnail required.');
+      return;
+    }
     onPressStart && onPressStart(topic, uploadedUrl, mode);
   };
   const onPressClose = () => {

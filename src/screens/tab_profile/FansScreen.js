@@ -61,7 +61,7 @@ class FansScreen extends React.Component {
     this.setState({ curPage });
 
     if (type === 'init') {
-      showForcePageLoader(true);
+      //showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
