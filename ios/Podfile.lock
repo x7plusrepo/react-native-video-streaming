@@ -1,27 +1,5 @@
 PODS:
   - boost-for-react-native (1.63.0)
-  - Braintree (4.36.1):
-    - Braintree/Card (= 4.36.1)
-    - Braintree/Core (= 4.36.1)
-    - Braintree/PayPal (= 4.36.1)
-    - Braintree/UI (= 4.36.1)
-  - Braintree/Card (4.36.1):
-    - Braintree/Core
-  - Braintree/Core (4.36.1)
-  - Braintree/PayPal (4.36.1):
-    - Braintree/Core
-    - Braintree/PayPalOneTouch
-  - Braintree/PayPalDataCollector (4.36.1):
-    - Braintree/Core
-    - Braintree/PayPalUtils
-  - Braintree/PayPalOneTouch (4.36.1):
-    - Braintree/Core
-    - Braintree/PayPalDataCollector
-    - Braintree/PayPalUtils
-  - Braintree/PayPalUtils (4.36.1)
-  - Braintree/UI (4.36.1):
-    - Braintree/Card
-    - Braintree/Core
   - Branch (1.39.2)
   - BVLinearGradient (2.5.6):
     - React
@@ -124,7 +102,7 @@ PODS:
   - libwebp/webp (1.1.0)
   - mobile-ffmpeg-https (4.4)
   - NodeMediaClient (2.9.4)
-  - OneSignal (3.4.3)
+  - OneSignalXCFramework (3.4.4)
   - OpenSSL-Universal (1.0.2.20):
     - OpenSSL-Universal/Static (= 1.0.2.20)
   - OpenSSL-Universal/Static (1.0.2.20)
@@ -375,8 +353,6 @@ PODS:
     - React
   - react-native-image-picker (3.3.2):
     - React-Core
-  - react-native-maps (0.27.1):
-    - React
   - react-native-nodemediaclient (0.2.15):
     - NodeMediaClient (= 2.9.4)
     - React
@@ -384,8 +360,8 @@ PODS:
   - react-native-nodemediaclient/RCTNodeMediaClient (0.2.15):
     - NodeMediaClient (= 2.9.4)
     - React
-  - react-native-onesignal (4.0.8):
-    - OneSignal (= 3.4.3)
+  - react-native-onesignal (4.1.1):
+    - OneSignalXCFramework (= 3.4.4)
     - React (< 1.0.0, >= 0.13.0)
   - react-native-safe-area-context (3.2.0):
     - React-Core
@@ -486,13 +462,8 @@ PODS:
     - React
   - RNGestureHandler (1.10.3):
     - React-Core
-  - RNPaypal (2.2.0):
-    - Braintree
-    - React
   - RNPermissions (3.0.1):
     - React-Core
-  - RNRate (1.2.4):
-    - React
   - RNReanimated (1.13.3):
     - React-Core
   - RNScreens (2.18.1):
@@ -589,7 +560,6 @@ DEPENDENCIES:
   - react-native-ffmpeg (from `../node_modules/react-native-ffmpeg`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
-  - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-nodemediaclient (from `../node_modules/react-native-nodemediaclient`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -618,9 +588,7 @@ DEPENDENCIES:
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - RNFS (from `../node_modules/react-native-fs`)
   - RNGestureHandler (from `../node_modules/react-native-gesture-handler`)
-  - RNPaypal (from `../node_modules/react-native-paypal/ios`)
   - RNPermissions (from `../node_modules/react-native-permissions`)
-  - RNRate (from `../node_modules/react-native-rate`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
   - RNShare (from `../node_modules/react-native-share`)
@@ -633,7 +601,6 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - boost-for-react-native
-    - Braintree
     - Branch
     - Cloudinary
     - CocoaAsyncSocket
@@ -653,7 +620,7 @@ SPEC REPOS:
     - libwebp
     - mobile-ffmpeg-https
     - NodeMediaClient
-    - OneSignal
+    - OneSignalXCFramework
     - OpenSSL-Universal
     - SDWebImage
     - SDWebImageWebPCoder
@@ -751,8 +718,6 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
-  react-native-maps:
-    :path: "../node_modules/react-native-maps"
   react-native-nodemediaclient:
     :path: "../node_modules/react-native-nodemediaclient"
   react-native-onesignal:
@@ -809,12 +774,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-fs"
   RNGestureHandler:
     :path: "../node_modules/react-native-gesture-handler"
-  RNPaypal:
-    :path: "../node_modules/react-native-paypal/ios"
   RNPermissions:
     :path: "../node_modules/react-native-permissions"
-  RNRate:
-    :path: "../node_modules/react-native-rate"
   RNReanimated:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
@@ -834,7 +795,6 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   boost-for-react-native: 39c7adb57c4e60d6c5479dd8623128eb5b3f0f2c
-  Braintree: f7e0e9a5030e22b8ad77e617f27ac9327d7bc004
   Branch: 6a281514287f99d707615ac62c2cca69e0213df0
   BVLinearGradient: e3aad03778a456d77928f594a649e96995f1c872
   Cloudinary: 8e9511826bd58df6b14f0c6c042f2c5a034081f4
@@ -860,7 +820,7 @@ SPEC CHECKSUMS:
   libwebp: 946cb3063cea9236285f7e9a8505d806d30e07f3
   mobile-ffmpeg-https: 311fc4a8f671cf36d1d6b8f421e8246b790978d9
   NodeMediaClient: 588fe0f1e023a60c61a9d9ce6e602eb5806f8308
-  OneSignal: e4dfb1912410f302dc9661ce98fc829f6c18ff6a
+  OneSignalXCFramework: eaf286b7438aa1f030f03e5fa9f1c79ede5d8f04
   OpenSSL-Universal: ff34003318d5e1163e9529b08470708e389ffcdd
   Permission-AppTrackingTransparency: b529454e0fa560f0dcb7c4fd74399417cc1e674b
   Permission-BluetoothPeripheral: 9f0bd529583f759e49fdc60eaa1191b8be69f709
@@ -901,9 +861,8 @@ SPEC CHECKSUMS:
   react-native-ffmpeg: 9fbe53d5afd6f35978804756f58238cf9340d1d8
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-image-picker: b42940647478bf106ad3c491d6f5d9d40916d865
-  react-native-maps: f4b89da81626ad7f151a8bfcb79733295d31ce5c
   react-native-nodemediaclient: 6edfb967a99ae8229c96f02316a3ab91b50267ec
-  react-native-onesignal: 50b047c674b79ba700218338fdefb45220da4db5
+  react-native-onesignal: 2a7c3a5f2aa1c599d94cda6cc583205e1548828d
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
   react-native-simple-toast: bf002828cf816775a6809f7a9ec3907509bce11f
   react-native-slider: e99fc201cefe81270fc9d81714a7a0f5e566b168
@@ -930,9 +889,7 @@ SPEC CHECKSUMS:
   RNFastImage: d4870d58f5936111c56218dbd7fcfc18e65b58ff
   RNFS: 93d5b5535eb39d98e6b19009faa8fe717f7ea45d
   RNGestureHandler: a479ebd5ed4221a810967000735517df0d2db211
-  RNPaypal: 74bfd3d27267955f08b42842b46b279e17335717
   RNPermissions: 4c8a37b4dde50f1f152bf8cd08c4a43d2355829e
-  RNRate: 15b861025a7821730761fce7f44561ce7e0b2de0
   RNReanimated: 514a11da3a2bcc6c3dfd9de32b38e2b9bf101926
   RNScreens: f7ad633b2e0190b77b6a7aab7f914fad6f198d8d
   RNShare: d22507fa5e80c72f236b5622556cf831de5b1e93
@@ -948,4 +905,4 @@ SPEC CHECKSUMS:
 
 PODFILE CHECKSUM: c5b9fc64507a80774a50d04da569c5b7c8e31f8d
 
-COCOAPODS: 1.10.0
+COCOAPODS: 1.10.1

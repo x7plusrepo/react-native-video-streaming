@@ -354,12 +354,12 @@ class ProfileVideoScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={[GStyles.container, { backgroundColor: 'red' }]}>
+      <View style={GStyles.container}>
         {this.___renderStatusBar()}
         {this._renderVideo()}
         {this._renderProgress()}
         {this._renderBack()}
-      </SafeAreaView>
+      </View>
     );
   }
 

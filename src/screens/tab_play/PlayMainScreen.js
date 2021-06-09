@@ -8,6 +8,7 @@ import {
   Platform,
   SafeAreaView,
   StatusBar,
+  View,
 } from 'react-native';
 
 import SplashScreen from 'react-native-splash-screen';
@@ -380,11 +381,11 @@ class PlayMainScreen extends Component {
 
   render() {
     return (
-      <SafeAreaView style={GStyles.container}>
+      <View style={GStyles.container}>
         {this.___renderStatusBar()}
         {this._renderVideo()}
         {this._renderProgress()}
-      </SafeAreaView>
+      </View>
     );
   }
 
