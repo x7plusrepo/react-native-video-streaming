@@ -62,6 +62,10 @@ const Global = {
     });
   },
   uploadToCloudinary: async (source, folder = 'unknown') => {
+    if (Platform.OS === 'ios') {
+      console.log(source);
+      source.uri = source?.uri?.replace('file://', '/');
+    }
     return new Promise((resolve, reject) => {
       const data = new FormData();
       data.append('file', source);
