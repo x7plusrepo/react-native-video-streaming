@@ -219,9 +219,9 @@ class ProfileVideoScreen extends Component {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = user;
-        // this.props.navigation.navigate('profile_other');
-        const pushAction = StackActions.push('profile_other', null);
-        this.props.navigation.dispatch(pushAction);
+        this.props.navigation.navigate('profile_other');
+        //const pushAction = StackActions.push('profile_other', null);
+        //this.props.navigation.dispatch(pushAction);
       }
     } else {
       this.props.navigation.navigate('signin');

@@ -79,7 +79,7 @@
 	<key>NSCalendarsUsageDescription</key>
 	<string>This app requires calendar access to function properly.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>We use this to record the video</string>
+	<string>We need to access your camera for product upload and live broadcasting.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>This app requires contacts access to function properly.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -87,13 +87,13 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>We use this for third-party SDK</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>We use this to record the video.</string>
+	<string>We need to access your microphone to record audio for product upload and live broadcasting.</string>
 	<key>NSMotionUsageDescription</key>
 	<string>This app requires motion access to function properly.</string>
 	<key>NSPhotoLibraryAddUsageDescription</key>
-	<string>For getting profile image</string>
+	<string>We need to save photos in your device so we can save draft products.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We use this to look for pictures.</string>
+	<string>We need to access your photos so you can upload profile pictures and live broadcasting thumbnails.</string>
 	<key>NSSiriUsageDescription</key>
 	<string>This app requires siri access to function properly.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
