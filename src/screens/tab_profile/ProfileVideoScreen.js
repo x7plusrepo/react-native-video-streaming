@@ -82,26 +82,13 @@ class ProfileVideoScreen extends Component {
         this.setState({ isVideoPause: true });
       }
     });
-
-    AppState.addEventListener('change', this.onChangeAppState);
   }
 
   componentWillUnmount() {
-    this.unsubscribeFocus();
-    this.unsubscribeBlur();
-    AppState.removeEventListener('change', this.onChangeAppState);
+    this.unsubscribeFocus && this.unsubscribeFocus();
+    this.unsubscribeBlur && this.unsubscribeBlur();
     this.isMounted = false;
   }
-
-  onChangeAppState = (nextAppState) => {
-    if (nextAppState === 'active') {
-      if (this.props.navigation.isFocused()) {
-        this.setState({ isVideoPause: false });
-      }
-    } else {
-      this.setState({ isVideoPause: true });
-    }
-  };
 
   init = () => {
     this.state = {
@@ -219,6 +206,7 @@ class ProfileVideoScreen extends Component {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = user;
+        global._prevScreen = 'profile_video';
         this.props.navigation.navigate('profile_other');
         //const pushAction = StackActions.push('profile_other', null);
         //this.props.navigation.dispatch(pushAction);

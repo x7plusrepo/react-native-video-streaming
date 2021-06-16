@@ -101,6 +101,7 @@ class FansScreen extends React.Component {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = item;
+        global._prevScreen = 'fans_screen';
         this.props.navigation.navigate('profile_other');
       }
     } else {

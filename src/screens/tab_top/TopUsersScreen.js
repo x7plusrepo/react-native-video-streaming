@@ -123,6 +123,7 @@ class TopUsersScreen extends React.Component {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = item;
+        global._prevScreen = 'top_users';
         this.props.navigation.navigate('profile_other');
       }
     } else {

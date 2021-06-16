@@ -67,8 +67,8 @@ class PlayMainScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.unsubscribeFocus();
-    this.unsubscribeBlur();
+    this.unsubscribeFocus && this.unsubscribeFocus();
+    this.unsubscribeBlur && this.unsubscribeBlur();
     BackHandler.removeEventListener('hardwareBackPress', this.onBack);
     AppState.removeEventListener('change', this.onChangeAppState);
 

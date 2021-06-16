@@ -44,17 +44,16 @@ export default class SearchBarItem extends Component {
         containerStyle={{
           ...GStyles.shadow,
           height: 48,
-          backgroundColor: 'transparent',
+          backgroundColor: 'white',
           justifyContent: 'center',
           borderRadius: 32,
           borderTopWidth: 0,
           borderBottomWidth: 0
         }}
-        inputStyle={{ border : 0}}
         inputContainerStyle={{
-          backgroundColor: 'white',
           height: 44,
           borderRadius: 120,
+          backgroundColor: 'white',
         }}
         rightIconContainerStyle={{ paddingLeft: 4 }}
       />

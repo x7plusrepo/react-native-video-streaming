@@ -110,6 +110,7 @@ class HomeUsersScreen extends React.Component {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = item;
+        global._prevScreen = 'home_users';
         this.props.navigation.navigate('profile_other');
       }
     } else {

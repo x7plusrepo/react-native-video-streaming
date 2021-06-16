@@ -46,6 +46,7 @@ class ProfileOtherScreen extends React.Component {
   componentDidMount() {
     this._isMounted = true;
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
+      Helper.callFunc(global.setBottomTabName('profile_other'));
       if (global._prevScreen === 'play_main') {
         this.onRefresh();
       }
@@ -56,7 +57,8 @@ class ProfileOtherScreen extends React.Component {
         this.setState({ opponentUser: null });
       }
     });
-    if (global._prevScreen && !global._prevScreen === 'play_main') {
+    console.log(global._prevScreen);
+    if (global._prevScreen !== 'play_main') {
       this.onRefresh();
     }
   }
@@ -78,6 +80,7 @@ class ProfileOtherScreen extends React.Component {
   };
 
   onRefresh = () => {
+    console.log(!global._opponentUser)
     if (!global._opponentUser?.id) {
       return;
     }
