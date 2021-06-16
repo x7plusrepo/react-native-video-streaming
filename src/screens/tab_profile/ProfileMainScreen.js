@@ -178,7 +178,7 @@ class ProfileMainScreen extends React.Component {
         if (json.status === 200) {
           const user = json.data || {};
           this.props.setMyUserAction(user);
-          global.me.photo = json.data.photo;
+          global.me = user
         } else {
           Helper.alertServerDataError();
         }

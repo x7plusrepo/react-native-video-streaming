@@ -283,7 +283,7 @@ class CameraUploadScreen extends React.Component {
       tags: tagSet,
       price: parseInt(price) || 0,
       description: description,
-      number: (Number(global.me.uploadCount || 0) + 1).toString(),
+      number: (Number(global.me?.uploadCount || 0) + 1).toString(),
       category,
       subCategory,
       isPermanent,
@@ -299,7 +299,9 @@ class CameraUploadScreen extends React.Component {
         }
       } else {
         if (json.status === 201) {
-          global.me.uploadCount = Number(global.me.uploadCount || 0) + 1;
+          if (global.me) {
+            global.me.uploadCount = Number(global.me?.uploadCount || 0) + 1;
+          }
           success(Constants.SUCCESS_TITLE, 'Success to upload video');
           await this.deleteVideo();
           if (global._prevScreen === 'camera_main') {
