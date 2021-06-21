@@ -150,6 +150,15 @@ const RestAPI = {
     formDataCall('api/productChat/roomList', data, {}, callBack, 'get');
   },
 
+  get_message_list: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      otherId: params.otherId,
+      lastMessageCreatedAt: params.lastMessageCreatedAt,
+    };
+    formDataCall('api/productChat/messageList', data, {}, callBack, 'get');
+  },
+
   get_liveStream_list: (params, callBack) => {
     const data = {
       userId: params.user_id,

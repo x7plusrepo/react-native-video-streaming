@@ -17,7 +17,14 @@ import GHeaderBar from '../../components/GHeaderBar';
 import CustomActions from '../../components/elements/MessageActions';
 import CustomView from '../../components/elements/MessageView';
 
-import { Constants, GStyle, GStyles, Helper, Global } from '../../utils/Global';
+import {
+  Constants,
+  GStyle,
+  GStyles,
+  Helper,
+  Global,
+  RestAPI,
+} from '../../utils/Global';
 import SocketManager from './../../utils/Message/SocketManager';
 import get from 'lodash/get';
 
@@ -53,8 +60,6 @@ class MessageChatScreen extends Component {
       messages: [],
       typingText: null,
     };
-    SocketManager.instance.listenFetchMessages(this.onFetchMessageList);
-    global.onReceiveMessageList = this.onReceiveMessageList;
     this.onRefresh('init');
   };
 
@@ -80,7 +85,14 @@ class MessageChatScreen extends Component {
       }
       this.setState({ isFetching: true });
     }
-    SocketManager.instance.emitFetchMessages(params);
+
+    RestAPI.get_message_list(params, (json, err) => {
+      this.setState({ isFetching: false });
+
+      if (json.status === 200) {
+        this.onFetchMessageList(json?.data || {});
+      }
+    });
   };
 
   onSocketError = () => {

@@ -93,18 +93,6 @@ class SocketManager {
     this.socket?.emit(Constants.SOCKET_USER_LEFT, { roomId, userId });
   }
 
-  listenFetchMessages(callback = () => null) {
-    this.socket?.on(Constants.SOCKET_FETCH_MESSAGE_LIST, (response) => {
-      //global._fetchedMessageList = response?.messages || [];
-      return callback(response);
-      //Helper.callFunc(global.onFetchMessageList);
-    });
-  }
-
-  removeFetchMessages = () => {
-    this.socket?.removeAllListeners(Constants.SOCKET_FETCH_MESSAGE_LIST);
-  };
-
   listenReceiveMessages() {
     this.socket?.on(Constants.SOCKET_NEW_MESSAGE, (data) => {
       Logger.instance.log(`${Constants.SOCKET_NEW_MESSAGE} :`);
