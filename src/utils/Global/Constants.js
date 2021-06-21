@@ -9,6 +9,7 @@ const Constants = {
   //** local save key */
   KEY_USERNAME: 'KEY_USERNAME',
   KEY_PASSWORD: 'KEY_PASSWORD',
+  KEY_USER: 'KEY_USER',
   KEY_VIDEO_DRAFT: 'KEY_VIDEO_DRAFT',
 
   //** url */
@@ -91,7 +92,7 @@ const Constants = {
   SUCCESS_TITLE: 'Success!',
   WARNING_TITLE: 'Warning!',
   ERROR_TITLE: 'Oops!',
-  COUNT_PER_PAGE: 12,
+  COUNT_PER_PAGE: 10,
   BOTTOM_TAB_HEIGHT: 50,
   KEY_UNREAD_MESSAGE_COUNT: 'KEY_UNREAD_MESSAGE_COUNT',
   DELAY_FOR_RENDER: 30,

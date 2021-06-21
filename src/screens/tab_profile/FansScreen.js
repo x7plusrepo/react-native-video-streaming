@@ -23,12 +23,7 @@ class FansScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
     this.onRefresh('init');
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   init = () => {

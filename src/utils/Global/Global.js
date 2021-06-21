@@ -130,7 +130,6 @@ const Global = {
   },
   shareProduct: async (product, user) => {
     const userId = user?.id;
-    const productId = product?.id;
 
     const newTagList = product.tagList?.map((tag) => tag.name)?.join(' ');
     const image = product?.thumb;
@@ -151,7 +150,7 @@ const Global = {
     };
     const linkProperties = { feature: 'share', channel: 'facebook' };
     let controlParams = {
-      productId,
+      product: JSON.stringify(product),
       inviterId: userId,
     };
 

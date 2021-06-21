@@ -28,7 +28,6 @@ class HomeMainScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
 
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('home'));
@@ -40,7 +39,6 @@ class HomeMainScreen extends React.Component {
   componentWillUnmount() {
     this.unsubscribe();
 
-    this._isMounted = false;
   }
 
   init = () => {
@@ -49,7 +47,6 @@ class HomeMainScreen extends React.Component {
       categories: [],
     };
 
-    this._isMounted = false;
   };
 
   refreshCategories = () => {

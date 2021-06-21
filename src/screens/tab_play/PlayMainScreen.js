@@ -62,28 +62,15 @@ class PlayMainScreen extends Component {
       }
     });
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
-
-    AppState.addEventListener('change', this.onChangeAppState);
   }
 
   componentWillUnmount() {
     this.unsubscribeFocus && this.unsubscribeFocus();
     this.unsubscribeBlur && this.unsubscribeBlur();
     BackHandler.removeEventListener('hardwareBackPress', this.onBack);
-    AppState.removeEventListener('change', this.onChangeAppState);
 
     this.setState({ isMounted: false });
   }
-
-  onChangeAppState = (nextAppState) => {
-    if (nextAppState === 'active') {
-      if (this.props.navigation.isFocused()) {
-        this.setState({ isVideoPause: false });
-      }
-    } else {
-      this.setState({ isVideoPause: true });
-    }
-  };
 
   init = async () => {
     this.state = {
@@ -175,7 +162,7 @@ class PlayMainScreen extends Component {
                   userId: global.me?.id,
                 });
 
-                global.me = json.data?.loginResult?.user;
+                global.me = json.data?.loginResult?.user || {};
 
                 ChatStreamSocketManager.instance.emitJoinRoom({
                   roomId: global.me?.id,
@@ -185,6 +172,10 @@ class PlayMainScreen extends Component {
                 this.props.setMyUserAction(global.me);
                 Helper.setLocalValue(Constants.KEY_USERNAME, username);
                 Helper.setLocalValue(Constants.KEY_PASSWORD, password);
+                Helper.setLocalValue(
+                  Constants.KEY_USER,
+                  JSON.stringify(global.me),
+                );
                 Helper.callFunc(global.onSetUnreadCount);
                 Global.registerPushToken();
               }

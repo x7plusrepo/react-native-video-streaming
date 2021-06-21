@@ -63,7 +63,6 @@ class CameraUploadScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
 
     this.onRefresh();
 
@@ -76,7 +75,6 @@ class CameraUploadScreen extends React.Component {
 
   componentWillUnmount() {
     this.backHandler?.remove();
-    this._isMounted = false;
   }
 
   refreshCategories = () => {
@@ -191,7 +189,6 @@ class CameraUploadScreen extends React.Component {
       openSubCategoryDropdown: false,
     };
 
-    this._isMounted = false;
 
     this.initRef();
   };

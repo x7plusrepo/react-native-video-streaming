@@ -44,7 +44,6 @@ class ProfileOtherScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('profile_other'));
       if (global._prevScreen === 'play_main') {
@@ -52,12 +51,9 @@ class ProfileOtherScreen extends React.Component {
       }
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
-      if (this.isMounted) {
-        global._prevScreen = 'profile_other';
-        this.setState({ opponentUser: null });
-      }
+      global._prevScreen = 'profile_other';
+      this.setState({ opponentUser: null });
     });
-    console.log(global._prevScreen);
     if (global._prevScreen !== 'play_main') {
       this.onRefresh();
     }
@@ -67,7 +63,6 @@ class ProfileOtherScreen extends React.Component {
     this.unsubscribe();
     this.unsubscribeBlur();
 
-    this._isMounted = false;
   }
 
   init = () => {
@@ -76,11 +71,9 @@ class ProfileOtherScreen extends React.Component {
       opponentUser: null,
       isLoading: false,
     };
-    this._isMounted = false;
   };
 
   onRefresh = () => {
-    console.log(!global._opponentUser)
     if (!global._opponentUser?.id) {
       return;
     }
@@ -99,7 +92,7 @@ class ProfileOtherScreen extends React.Component {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          if (this._isMounted && json?.data) {
+          if (json?.data) {
             if (json?.data?.videoList) {
               this.setState({
                 itemDatas: json.data.videoList || [],
@@ -137,12 +130,10 @@ class ProfileOtherScreen extends React.Component {
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 200) {
-          if (this._isMounted && json?.data) {
-            this.setState({
-              opponentUser: json.data,
-            });
-          }
+        if (json.status === 200 && json?.data) {
+          this.setState({
+            opponentUser: json.data,
+          });
         } else {
           Helper.alertServerDataError();
         }

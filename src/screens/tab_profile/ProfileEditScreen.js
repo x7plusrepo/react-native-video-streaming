@@ -205,6 +205,7 @@ class ProfileEditScreen extends React.Component {
               Constants.KEY_PASSWORD,
               isGuest ? userName : password,
             );
+            Helper.setLocalValue(Constants.KEY_USER, JSON.stringify(global.me));
             success(Constants.SUCCESS_TITLE, 'Success to update your profile');
           } else {
             error(Constants.ERROR_TITLE, 'Failed to update your profile');

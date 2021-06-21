@@ -1,5 +1,5 @@
 import { Text, View } from 'react-native';
-import {GStyles, Helper} from '../../utils/Global';
+import { GStyles, Helper } from '../../utils/Global';
 import React from 'react';
 
 const Achievements = (props) => {
@@ -7,7 +7,7 @@ const Achievements = (props) => {
   const lvl = Helper.getLvLGuest(opponentUser?.diamondSpent || 0);
 
   return (
-    <View style={GStyles.rowEvenlyContainer}>
+    <View style={[GStyles.rowEvenlyContainer, { width: '100%' }]}>
       {opponentUser?.userType === 1 ? (
         <>
           <View style={GStyles.centerAlign}>
@@ -22,6 +22,15 @@ const Achievements = (props) => {
             </Text>
             <Text style={GStyles.elementLabel}>Elixir Flames</Text>
           </View>
+          {
+            props.showDiamond &&
+            <View style={GStyles.centerAlign}>
+              <Text style={[GStyles.regularText, GStyles.boldText]}>
+                {opponentUser?.diamond || 0}
+              </Text>
+              <Text style={GStyles.elementLabel}>Diamond</Text>
+            </View>
+          }
           <View style={GStyles.centerAlign}>
             <Text style={[GStyles.regularText, GStyles.boldText]}>
               {opponentUser?.fansCount || 0}

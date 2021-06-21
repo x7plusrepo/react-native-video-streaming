@@ -11,13 +11,11 @@ class LiveStreamRooms extends React.Component {
     super(props);
 
     console.log('LiveStreamRoom start');
-    this._isMounted = false;
 
     this.init();
   }
 
   componentDidMount() {
-    this._isMounted = true;
     this.onRefresh('init');
   }
 
@@ -29,10 +27,6 @@ class LiveStreamRooms extends React.Component {
         });
       }
     }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   init = () => {
@@ -84,23 +78,19 @@ class LiveStreamRooms extends React.Component {
       if (type === 'init') {
         showForcePageLoader(false);
       } else {
-        if (this._isMounted) {
-          this.setState({ isFetching: false });
-        }
+        this.setState({ isFetching: false });
       }
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          if (this._isMounted) {
-            this.setState({ totalCount: json.data.totalCount });
-            if (type === 'more') {
-              let data = itemDatas.concat(json.data.rooms || []);
-              this.setState({ itemDatas: data });
-            } else {
-              this.setState({ itemDatas: json.data.rooms });
-            }
+          this.setState({ totalCount: json.data.totalCount });
+          if (type === 'more') {
+            let data = itemDatas.concat(json.data.rooms || []);
+            this.setState({ itemDatas: data });
+          } else {
+            this.setState({ itemDatas: json.data.rooms });
           }
         } else {
           Helper.alertServerDataError();

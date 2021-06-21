@@ -186,6 +186,7 @@ class SigninScreen extends React.Component {
             this.props.setMyUserAction(global.me);
             Helper.setLocalValue(Constants.KEY_USERNAME, user?.username);
             Helper.setLocalValue(Constants.KEY_PASSWORD, password);
+            Helper.setLocalValue(Constants.KEY_USER, JSON.stringify(global.me));
 
             Global.registerPushToken();
 

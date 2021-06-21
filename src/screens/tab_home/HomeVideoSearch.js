@@ -19,7 +19,6 @@ class HomeVideoSearch extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
     this.setState({ keyword: this.props.keyword }, () => {
       this.onRefresh('init');
     });
@@ -31,10 +30,6 @@ class HomeVideoSearch extends React.Component {
         this.onRefresh('init');
       });
     }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   init = () => {
@@ -50,7 +45,6 @@ class HomeVideoSearch extends React.Component {
       onEndReachedDuringMomentum: true,
     };
 
-    this._isMounted = false;
   };
 
   onRefresh = (type) => {
@@ -88,22 +82,18 @@ class HomeVideoSearch extends React.Component {
     RestAPI.get_searched_video_list(params, (json, err) => {
       showForcePageLoader(false);
 
-      if (this._isMounted) {
-        this.setState({ isFetching: false });
-      }
+      this.setState({ isFetching: false });
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          if (this._isMounted) {
-            this.setState({ totalCount: json.data.totalCount });
-            if (type === 'more') {
-              let data = itemDatas.concat(json.data.videoList);
-              this.setState({ itemDatas: data });
-            } else {
-              this.setState({ itemDatas: json.data.videoList });
-            }
+          this.setState({ totalCount: json.data.totalCount });
+          if (type === 'more') {
+            let data = itemDatas.concat(json.data.videoList);
+            this.setState({ itemDatas: data });
+          } else {
+            this.setState({ itemDatas: json.data.videoList });
           }
         } else {
           Helper.alertServerDataError();

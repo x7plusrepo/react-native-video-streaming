@@ -42,12 +42,7 @@ class ProfileBottom extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
     this.onRefresh();
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   init = () => {
@@ -56,7 +51,6 @@ class ProfileBottom extends React.Component {
       opponentUser: null,
       isLoading: false,
     };
-    this._isMounted = false;
   };
 
   onRefresh = () => {
@@ -77,18 +71,16 @@ class ProfileBottom extends React.Component {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200 && json?.data) {
-          if (this._isMounted) {
-            if (json?.data?.videoList) {
-              this.setState({
-                itemDatas: json.data.videoList || [],
-              });
-            }
+          if (json?.data?.videoList) {
+            this.setState({
+              itemDatas: json.data.videoList || [],
+            });
+          }
 
-            if (json?.data?.user) {
-              this.setState({
-                opponentUser: json.data.user,
-              });
-            }
+          if (json?.data?.user) {
+            this.setState({
+              opponentUser: json.data.user,
+            });
           }
         } else {
           Helper.alertServerDataError();
@@ -116,12 +108,10 @@ class ProfileBottom extends React.Component {
       if (err !== null) {
         Helper.alertNetworkError();
       } else {
-        if (json.status === 200) {
-          if (this._isMounted && json?.data) {
-            this.setState({
-              opponentUser: json.data,
-            });
-          }
+        if (json.status === 200 && json?.data) {
+          this.setState({
+            opponentUser: json.data,
+          });
         } else {
           Helper.alertServerDataError();
         }

@@ -30,14 +30,6 @@ class HomeSearchScreen extends React.Component {
     this.init();
   }
 
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
-  }
-
   init = () => {
     this.state = {
       isFetching: false,
@@ -47,8 +39,6 @@ class HomeSearchScreen extends React.Component {
       keyword: '',
       itemDatas: [],
     };
-
-    this._isMounted = false;
   };
 
   onBack = () => {

@@ -36,7 +36,6 @@ api.interceptors.response.use(
 
 const futch = async (url, opts = {}, onProgress) => {
   global._url = url;
-  console.log(url, opts);
   let apiCall = api.get;
   if (opts.method === 'post') {
     apiCall = api.post;

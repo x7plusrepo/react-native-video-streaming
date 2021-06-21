@@ -13,15 +13,6 @@ class BrowseRooms extends React.Component {
   constructor(props) {
     super(props);
     console.log('BrowseRooms start');
-    this._isMounted = false;
-  }
-
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   render() {

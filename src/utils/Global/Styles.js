@@ -342,16 +342,16 @@ const GStyles = StyleSheet.create({
     top: Helper.getStatusBarHeight() + 16,
   },
   backButtonContainer: {
-    position: 'absolute',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 999,
+    zIndex: 10000,
     width: 42,
     height: 42,
     left: 16,
     top: Helper.getStatusBarHeight() + 16,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 120,
+    position: 'absolute',
   }
 });
 export default GStyle;

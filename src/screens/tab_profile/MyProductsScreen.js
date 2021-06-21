@@ -40,7 +40,6 @@ class MyProductsScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
 
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('profile'));
@@ -50,8 +49,6 @@ class MyProductsScreen extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribe();
-
-    this._isMounted = false;
   }
 
   init = () => {
@@ -63,7 +60,6 @@ class MyProductsScreen extends React.Component {
       onEndReachedDuringMomentum: true,
     };
 
-    this._isMounted = false;
     this._selItem = null;
   };
 
@@ -102,22 +98,19 @@ class MyProductsScreen extends React.Component {
       if (type === 'init') {
         showForcePageLoader(false);
       } else {
-        if (this._isMounted) {
-          this.setState({ isFetching: false });
-        }
+        this.setState({ isFetching: false });
       }
+
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          if (this._isMounted) {
-            this.setState({ totalCount: json.data.totalCount });
-            if (type === 'more') {
-              let data = itemDatas.concat(json.data.videoList);
-              this.setState({ itemDatas: data });
-            } else {
-              this.setState({ itemDatas: json.data.videoList });
-            }
+          this.setState({ totalCount: json.data.totalCount });
+          if (type === 'more') {
+            let data = itemDatas.concat(json.data.videoList);
+            this.setState({ itemDatas: data });
+          } else {
+            this.setState({ itemDatas: json.data.videoList });
           }
         } else {
           Helper.alertServerDataError();

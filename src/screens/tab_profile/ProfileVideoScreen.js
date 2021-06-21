@@ -35,6 +35,7 @@ import {
   RestAPI,
 } from '../../utils/Global';
 import RenderProducts from '../../components/products/RenderProduct';
+import get from 'lodash/get';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -50,44 +51,30 @@ class ProfileVideoScreen extends Component {
   }
 
   componentDidMount() {
-    this.isMounted = true;
+    let itemDatas = [];
+    if (global._prevScreen === 'home_main_video') {
+      itemDatas = global._exploreMainVideoDatas;
+    } else if (global._prevScreen === 'profile_my_video') {
+      itemDatas = global._profileMyVideoDatas;
+    } else if (global._prevScreen === 'profile_liked_video') {
+      itemDatas = global._profileLikedVideoDatas;
+    } else if (global._prevScreen === 'profile_other') {
+      itemDatas = global._profileOtherVideoDatas;
+    } else if (global._prevScreen === 'stream_header') {
+      itemDatas = global._randomProducts;
+    } else if (global._prevScreen === 'deep_link') {
+      itemDatas = global._invitedProduct;
+    } else {
+      itemDatas = [];
+    }
+    const { route } = this.props;
+    const isDeepLinking = get(route, 'params.isDeepLinking');
+    if (isDeepLinking) {
+      itemDatas = global._invitedProduct;
+    }
 
-    this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
-      let { itemDatas } = this.state;
-
-      Helper.setDarkStatusBar();
-
-      if (itemDatas.length < 1) {
-        if (global._prevScreen === 'home_main_video') {
-          itemDatas = global._exploreMainVideoDatas;
-        } else if (global._prevScreen === 'profile_my_video') {
-          itemDatas = global._profileMyVideoDatas;
-        } else if (global._prevScreen === 'profile_liked_video') {
-          itemDatas = global._profileLikedVideoDatas;
-        } else if (global._prevScreen === 'profile_other') {
-          itemDatas = global._profileOtherVideoDatas;
-        } else if (global._prevScreen === 'stream_header') {
-          itemDatas = global._randomProducts;
-        } else {
-          itemDatas = [];
-        }
-
-        this.setState({ itemDatas: itemDatas });
-      }
-
-      this.setState({ isVideoPause: false });
-    });
-    this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
-      if (this.isMounted) {
-        this.setState({ isVideoPause: true });
-      }
-    });
-  }
-
-  componentWillUnmount() {
-    this.unsubscribeFocus && this.unsubscribeFocus();
-    this.unsubscribeBlur && this.unsubscribeBlur();
-    this.isMounted = false;
+    this.setState({ itemDatas: itemDatas });
+    Helper.setDarkStatusBar();
   }
 
   init = () => {
@@ -103,73 +90,12 @@ class ProfileVideoScreen extends Component {
       curPage: global._curPage ? global._curPage : '1',
       keyword: global._keyword ? global._keyword : '',
       itemDatas: [],
-      onEndReachedDuringMomentum: true,
       curIndex: -1,
       item: {},
     };
   };
 
-  onRefresh = (type) => {
-    let { isFetching, totalCount, curPage, itemDatas, keyword } = this.state;
-
-    if (isFetching) {
-      return;
-    }
-
-    if (type === 'more') {
-      curPage += 1;
-      const maxPage =
-        (totalCount + Constants.COUNT_PER_PAGE - 1) / Constants.COUNT_PER_PAGE;
-      if (curPage > maxPage) {
-        return;
-      }
-    } else {
-      curPage = 1;
-    }
-    this.setState({ curPage, onEndReachedDuringMomentum: true });
-
-    if (type === 'init') {
-      //showForcePageLoader(true);
-    } else {
-      this.setState({ isFetching: true });
-    }
-    let params = {
-      user_id: global.me?.id,
-      page_number: type === 'more' ? curPage : '1',
-      count_per_page: Constants.COUNT_PER_PAGE,
-      keyword: keyword,
-    };
-    RestAPI.get_searched_video_list(params, (json, err) => {
-      if (type === 'init') {
-        showForcePageLoader(false);
-      } else {
-        if (this.isMounted) {
-          this.setState({ isFetching: false });
-        }
-      }
-
-      if (err !== null) {
-        Helper.alertNetworkError(err?.message);
-      } else {
-        if (json.status === 200) {
-          if (this.isMounted) {
-            this.setState({ totalCount: json.data.totalCount });
-            if (type === 'more') {
-              let data = itemDatas.concat(json.data.videoList);
-              this.setState({ itemDatas: data });
-            } else {
-              this.setState({ itemDatas: json.data.videoList });
-            }
-          }
-        } else {
-          Helper.alertServerDataError();
-        }
-      }
-    });
-  };
-
   onBack = () => {
-    this.setState({ isVideoPause: true });
     this.props.navigation.goBack();
   };
 
@@ -208,8 +134,6 @@ class ProfileVideoScreen extends Component {
         global._opponentUser = user;
         global._prevScreen = 'profile_video';
         this.props.navigation.navigate('profile_other');
-        //const pushAction = StackActions.push('profile_other', null);
-        //this.props.navigation.dispatch(pushAction);
       }
     } else {
       this.props.navigation.navigate('signin');
@@ -361,6 +285,7 @@ class ProfileVideoScreen extends Component {
           source={ic_back}
           style={{ width: 16, height: 16, tintColor: 'white' }}
           resizeMode={'contain'}
+          tintColor={'white'}
         />
       </TouchableOpacity>
     );
@@ -380,20 +305,8 @@ class ProfileVideoScreen extends Component {
           index,
         })}
         pagingEnabled
-        onRefresh={() => {
-          this.onRefresh('pull');
-        }}
         refreshing={isFetching}
         onEndReachedThreshold={0.4}
-        onMomentumScrollBegin={() => {
-          this.setState({ onEndReachedDuringMomentum: false });
-        }}
-        onEndReached={() => {
-          if (!this.state.onEndReachedDuringMomentum) {
-            this.setState({ onEndReachedDuringMomentum: true });
-            this.onRefresh('more');
-          }
-        }}
         data={itemDatas}
         renderItem={this._renderItem}
         onViewableItemsChanged={this.onViewableItemsChanged}
@@ -406,7 +319,6 @@ class ProfileVideoScreen extends Component {
           height: '100%',
           backgroundColor: 'black',
           zIndex: 1,
-          elevation: 1,
         }}
       />
     );
@@ -422,7 +334,7 @@ class ProfileVideoScreen extends Component {
     return (
       <RenderProducts
         item={item}
-        state={this.state}
+        state={{ ...this.state }}
         index={index}
         actions={actions}
         detailStyle={{ bottom: 36 }}

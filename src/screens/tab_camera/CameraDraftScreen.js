@@ -29,7 +29,6 @@ class CameraDraftScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
 
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       this.onRefresh();
@@ -38,15 +37,12 @@ class CameraDraftScreen extends React.Component {
 
   componentWillUnmount() {
     this.unsubscribe();
-    this._isMounted = false;
   }
 
   init = () => {
     this.state = {
       itemDatas: [],
     };
-
-    this._isMounted = false;
   };
 
   onRefresh = async () => {

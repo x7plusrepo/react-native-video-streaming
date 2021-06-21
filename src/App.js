@@ -48,7 +48,21 @@ const subscribeDeepLink = () => {
     // const url = params.$canonical_url;
     // const image = params.$og_image_url;
     // const inviterId = params.inviterId;
-    const roomId = params.roomId;
+    const { roomId, product } = params;
+    if (product) {
+      try {
+        global._selIndex = 0;
+
+        if (typeof product === 'string') {
+          global._invitedProduct = [JSON.parse(product)];
+        } else {
+          global._invitedProduct = [product];
+        }
+      } catch (error) {}
+
+      RootNavigation.navigate('profile_video', { isDeepLinking: true });
+    }
+
     if (roomId) {
       RootNavigation.navigate('view_live', { roomId });
     }
@@ -93,9 +107,14 @@ function App() {
   };
 
   const onOpened = async (openResult) => {
-    setTimeout(() => {
-      Helper.callFunc(global.onGotoMessage);
-    }, 8000)
+    if (!global.me) {
+      try {
+        const userString = await Helper.getLocalValue(Constants.KEY_USER);
+        if (userString) global.me = JSON.parse(userString);
+      } catch (error) {}
+    }
+
+    Helper.callFunc(global.onGotoMessage);
   };
 
   global.success = (title, text) => {

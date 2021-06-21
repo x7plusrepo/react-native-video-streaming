@@ -37,6 +37,7 @@ import ic_my_products from '../../assets/images/Icons/ic_my_products.png';
 import ic_support from '../../assets/images/Icons/ic_support.png';
 import ic_sign from '../../assets/images/Icons/ic_vip.png';
 import ChatStreamSocketManager from '../../utils/Message/SocketManager';
+import Achievements from '../../components/profile/Achievements';
 
 const getMenuItems = (navigation, setMyUserAction) => {
   let menu = [
@@ -125,6 +126,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
             setMyUserAction(null);
             await Helper.removeLocalValue(Constants.KEY_USERNAME);
             await Helper.removeLocalValue(Constants.KEY_PASSWORD);
+            await Helper.removeLocalValue(Constants.KEY_USER);
 
             global._prevScreen = 'profile_edit';
             navigation.navigate('play');
@@ -178,7 +180,8 @@ class ProfileMainScreen extends React.Component {
         if (json.status === 200) {
           const user = json.data || {};
           this.props.setMyUserAction(user);
-          global.me = user
+          global.me = user;
+          Helper.setLocalValue(Constants.KEY_USER, JSON.stringify(global.me));
         } else {
           Helper.alertServerDataError();
         }
@@ -254,32 +257,8 @@ class ProfileMainScreen extends React.Component {
                 </Text>
               </View>
             </TouchableOpacity>
-            {global.me?.userType === 1 && (
-              <View style={styles.detailContainer}>
-                <View style={GStyles.centerAlign}>
-                  <Text style={[GStyles.regularText, GStyles.boldText]}>
-                    {user?.elixir || 0}
-                  </Text>
-                  <Text style={GStyles.elementLabel}>Elixir</Text>
-                </View>
-                <View style={GStyles.centerAlign}>
-                  <Text style={[GStyles.regularText, GStyles.boldText]}>
-                    {user?.elixirFlame || 0}
-                  </Text>
-                  <Text style={GStyles.elementLabel}>Elixir Flames</Text>
-                </View>
-                <View style={GStyles.centerAlign}>
-                  <Text style={[GStyles.regularText, GStyles.boldText]}>
-                    {user?.diamond || 0}
-                  </Text>
-                  <Text style={GStyles.elementLabel}>Diamond</Text>
-                </View>
-                <View style={GStyles.centerAlign}>
-                  <Text style={[GStyles.regularText, GStyles.boldText]}>0</Text>
-                  <Text style={GStyles.elementLabel}>Fans</Text>
-                </View>
-              </View>
-            )}
+            <Achievements opponentUser={user} showDiamond={true} />
+
           </Animated.View>
           <Animated.ScrollView
             contentContainerStyle={[

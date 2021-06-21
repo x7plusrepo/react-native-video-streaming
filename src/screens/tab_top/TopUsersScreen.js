@@ -38,7 +38,6 @@ class TopUsersScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
 
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('top'));
@@ -48,7 +47,6 @@ class TopUsersScreen extends React.Component {
   }
 
   componentWillUnmount() {
-    this._isMounted = false;
     this.unsubscribe();
   }
 

@@ -39,13 +39,7 @@ class MessageChatScreen extends Component {
     this.init();
   }
 
-  componentDidMount() {
-    this._isMounted = true;
-  }
-
   componentWillUnmount() {
-    this._isMounted = false;
-    SocketManager.instance.removeFetchMessages();
     global.onReceiveMessageList = null;
   }
 
@@ -60,6 +54,7 @@ class MessageChatScreen extends Component {
       messages: [],
       typingText: null,
     };
+    global.onReceiveMessageList = this.onReceiveMessageList;
     this.onRefresh('init');
   };
 

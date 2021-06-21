@@ -21,7 +21,6 @@ class HomeUsersScreen extends React.Component {
   }
 
   componentDidMount() {
-    this._isMounted = true;
 
     this.setState({ keyword: this.props.keyword }, () => {
       this.onRefresh('init');
@@ -34,10 +33,6 @@ class HomeUsersScreen extends React.Component {
         this.onRefresh('init');
       });
     }
-  }
-
-  componentWillUnmount() {
-    this._isMounted = false;
   }
 
   init = () => {

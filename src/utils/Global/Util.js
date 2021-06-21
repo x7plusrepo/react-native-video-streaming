@@ -53,12 +53,10 @@ const Helper = {
 
   alertNetworkError: function (message = 'Network error.') {
     Alert.alert('Error', message);
-    console.log('--- univ_dev --- :', global._url);
   },
 
   alertServerDataError: function () {
     Alert.alert(Constants.ERROR_TITLE, 'Failed to get data from server');
-    console.log('--- univ_dev --- :', global._url);
   },
 
   //** string */
@@ -514,7 +512,6 @@ const Helper = {
         global._deviceId = ipId;
         global._devId = ipId.substr(ip.length - 8);
       }
-      console.log('--- univ_dev --- ip:', ip);
     } else {
       global._deviceId = deviceId;
       global._devId = deviceId.substr(deviceId.length - 8);
