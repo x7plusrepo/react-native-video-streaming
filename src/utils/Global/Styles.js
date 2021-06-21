@@ -325,16 +325,16 @@ const GStyles = StyleSheet.create({
   stickerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: GStyle.activeColor,
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 4,
   },
   stickerText: {
     fontFamily: 'GothamPro',
-    fontWeight: '400',
+    fontWeight: '700',
     fontSize: 10,
-    color: 'black',
+    color: '#000000',
   },
   stickerWrapper: {
     position: 'absolute',

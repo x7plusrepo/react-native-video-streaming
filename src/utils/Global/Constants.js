@@ -1,4 +1,4 @@
-import {Dimensions} from 'react-native';
+import { Dimensions } from 'react-native';
 
 const Constants = {
   //** key */
@@ -97,7 +97,23 @@ const Constants = {
   KEY_UNREAD_MESSAGE_COUNT: 'KEY_UNREAD_MESSAGE_COUNT',
   DELAY_FOR_RENDER: 30,
 
-  STICKER_NAME_LIST: ['', 'Out of stock', 'Special offer', 'Free delivery'],
+  STICKER_NAME_LIST: [
+    '',
+    'Out of stock',
+    'Special offer',
+    'Free delivery',
+    'Was ৳500',
+    'Was ৳700',
+    'Was ৳1000',
+    'Was ৳1500',
+    'Was ৳2000',
+    'Was ৳2500',
+    'Was ৳3000',
+    'Was ৳4000',
+    'Was ৳5000',
+    'Was ৳8000',
+    'Was ৳10000',
+  ],
   Months3: [
     'Jan',
     'Feb',

@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  ScrollView,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -40,7 +41,6 @@ class MyProductsScreen extends React.Component {
   }
 
   componentDidMount() {
-
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.callFunc(global.setBottomTabName('profile'));
     });
@@ -133,40 +133,10 @@ class MyProductsScreen extends React.Component {
     this.bottomMenu?.open();
   };
 
-  onPressOutStock = () => {
+  onPressOutStock = (sticker) => {
     const { itemDatas } = this.state;
 
-    this._selItem.sticker = 1;
-    this.bottomMenu.close();
-    this.setState({ itemDatas });
-
-    this.updateVideoSticker();
-  };
-
-  onPressSpecialOffer = () => {
-    const { itemDatas } = this.state;
-
-    this._selItem.sticker = 2;
-    this.bottomMenu.close();
-    this.setState({ itemDatas });
-
-    this.updateVideoSticker();
-  };
-
-  onPressFreeDelivery = () => {
-    const { itemDatas } = this.state;
-
-    this._selItem.sticker = 3;
-    this.bottomMenu.close();
-    this.setState({ itemDatas });
-
-    this.updateVideoSticker();
-  };
-
-  onPressNoSticker = () => {
-    const { itemDatas } = this.state;
-
-    this._selItem.sticker = 0;
+    this._selItem.sticker = sticker;
     this.bottomMenu.close();
     this.setState({ itemDatas });
 
@@ -187,32 +157,20 @@ class MyProductsScreen extends React.Component {
   };
 
   _renderBottomMenu = () => (
-    <View style={{ width: '100%' }}>
-      <TouchableOpacity
-        onPress={this.onPressOutStock}
-        style={{ ...styles.panelButton }}
-      >
-        <Text style={styles.panelButtonTitle}>Out of stock</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={this.onPressSpecialOffer}
-        style={styles.panelButton}
-      >
-        <Text style={styles.panelButtonTitle}>Special offer</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={this.onPressFreeDelivery}
-        style={styles.panelButton}
-      >
-        <Text style={styles.panelButtonTitle}>Free delivery</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={this.onPressNoSticker}
-        style={styles.panelButton}
-      >
-        <Text style={styles.panelButtonTitle}>No Sticker</Text>
-      </TouchableOpacity>
-    </View>
+    <ScrollView style={{ width: '100%' }}>
+      {Constants.STICKER_NAME_LIST?.map((sticker, index) => {
+        return (
+          <TouchableOpacity
+            onPress={() => this.onPressOutStock(index)}
+            style={{ ...styles.panelButton }}
+          >
+            <Text style={styles.panelButtonTitle}>
+              {sticker ? sticker : 'No Sticker'}
+            </Text>
+          </TouchableOpacity>
+        );
+      })}
+    </ScrollView>
   );
 
   setOnEndReachedDuringMomentum = (onEndReachedDuringMomentum) => {
@@ -268,7 +226,7 @@ class MyProductsScreen extends React.Component {
           ref={(ref) => {
             this.bottomMenu = ref;
           }}
-          height={200}
+          height={300}
           closeOnDragDown
           openDuration={250}
           customStyles={{
