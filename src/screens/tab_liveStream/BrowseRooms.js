@@ -1,12 +1,10 @@
 import React from 'react';
-import { SafeAreaView } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
-import ScrollableTabView, {
-  DefaultTabBar,
-} from 'react-native-scrollable-tab-view';
+import {SafeAreaView} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import ScrollableTabView, {DefaultTabBar,} from 'react-native-scrollable-tab-view';
 import LiveStreamRooms from './LiveStreamRooms';
 
-import { GStyle } from '../../utils/Global';
+import {GStyle} from '../../utils/Global';
 import styles from './styles';
 
 class BrowseRooms extends React.Component {

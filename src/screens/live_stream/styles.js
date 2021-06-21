@@ -1,6 +1,6 @@
-import { Dimensions, StyleSheet } from 'react-native';
-import { Helper } from '../../utils/Global';
-import { GStyles } from '../../utils/Global/Styles';
+import {Dimensions, StyleSheet} from 'react-native';
+import {Helper} from '../../utils/Global';
+import {GStyles} from '../../utils/Global/Styles';
 
 const { width, height } = Dimensions.get('window');
 

@@ -1,17 +1,10 @@
-import React, { Component } from 'react';
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewPropTypes,
-} from 'react-native';
+import React, {Component} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View, ViewPropTypes,} from 'react-native';
 
 import PropTypes from 'prop-types';
-
 //import Geolocation from '@react-native-community/geolocation';
-import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
-import { GStyle } from '../../utils/Global';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {GStyle} from '../../utils/Global';
 
 class MessageActions extends Component {
   constructor(props) {

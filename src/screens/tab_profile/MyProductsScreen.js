@@ -1,31 +1,13 @@
 import React from 'react';
-import {
-  ScrollView,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {
-  NavigationContext,
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {NavigationContext, StackActions, useNavigation, useRoute,} from '@react-navigation/native';
 
-import { connect } from 'react-redux';
-import { setMyPostCount } from '../../redux/me/actions';
+import {connect} from 'react-redux';
+import {setMyPostCount} from '../../redux/me/actions';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import {
-  Constants,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
 
@@ -162,6 +144,7 @@ class MyProductsScreen extends React.Component {
         return (
           <TouchableOpacity
             onPress={() => this.onPressOutStock(index)}
+            key={index.toString()}
             style={{ ...styles.panelButton }}
           >
             <Text style={styles.panelButtonTitle}>

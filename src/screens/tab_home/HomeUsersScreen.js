@@ -1,14 +1,8 @@
-import React, { forwardRef } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  StyleSheet,
-  Text,
-  View,
-} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, {forwardRef} from 'react';
+import {ActivityIndicator, FlatList, StyleSheet, Text, View,} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
 import ExploreUserItem from '../../components/elements/ExploreUserItem';
 
 class HomeUsersScreen extends React.Component {

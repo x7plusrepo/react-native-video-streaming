@@ -1,45 +1,22 @@
-import React, { Component } from 'react';
-import {
-  ActivityIndicator,
-  AppState,
-  Dimensions,
-  FlatList,
-  Image,
-  Linking,
-  Platform,
-  SafeAreaView,
-  StatusBar,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Dimensions, FlatList, Image, Platform, StatusBar, TouchableOpacity, View,} from 'react-native';
 
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {useNavigation, useRoute,} from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
 
-import { RNFFmpeg } from 'react-native-ffmpeg';
+import {RNFFmpeg} from 'react-native-ffmpeg';
 
 import ProgressModal from '../../components/ProgressModal';
 
-import {
-  Constants,
-  Global,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, Global, GStyles, Helper, RestAPI,} from '../../utils/Global';
 import RenderProducts from '../../components/products/RenderProduct';
 import get from 'lodash/get';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
-const VIDEO_HEIGHT = Dimensions.get('screen').height;
+const VIDEO_HEIGHT = Dimensions.get('window').height;
 
 class ProfileVideoScreen extends Component {
   constructor(props) {

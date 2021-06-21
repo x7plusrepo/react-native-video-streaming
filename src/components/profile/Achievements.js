@@ -1,5 +1,5 @@
-import { Text, View } from 'react-native';
-import { GStyles, Helper } from '../../utils/Global';
+import {Text, View} from 'react-native';
+import {GStyles, Helper} from '../../utils/Global';
 import React from 'react';
 
 const Achievements = (props) => {

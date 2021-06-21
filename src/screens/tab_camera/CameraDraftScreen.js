@@ -1,14 +1,10 @@
 import React from 'react';
-import { Alert, SafeAreaView, StyleSheet, View } from 'react-native';
+import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
 
-import {
-  NavigationContext,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {NavigationContext, useNavigation, useRoute,} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 
-import { Constants, GStyles, Helper } from '../../utils/Global';
+import {Constants, GStyles, Helper} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
 

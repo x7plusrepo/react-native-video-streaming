@@ -1,5 +1,5 @@
 import io from 'socket.io-client';
-import { Constants, Logger } from '../Global';
+import {Constants, Logger} from '../Global';
 import Helper from '../Global/Util';
 
 class SocketManager {

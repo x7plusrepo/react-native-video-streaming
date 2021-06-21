@@ -1,30 +1,15 @@
 import React from 'react';
-import {
-  Animated,
-  Image,
-  Linking,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Animated, Image, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import { connect } from 'react-redux';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {connect} from 'react-redux';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
 
-import { setMyUserAction } from '../../redux/me/actions';
+import {setMyUserAction} from '../../redux/me/actions';
 
-import {
-  Constants,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 
 import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';

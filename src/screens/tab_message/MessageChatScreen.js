@@ -1,30 +1,16 @@
-import React, { Component } from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
 import Video from 'react-native-video';
-import { IconButton } from 'react-native-paper';
-import { Bubble, GiftedChat, Send } from 'react-native-gifted-chat';
+import {IconButton} from 'react-native-paper';
+import {Bubble, GiftedChat, Send} from 'react-native-gifted-chat';
 import Sound from 'react-native-sound';
 
 import GHeaderBar from '../../components/GHeaderBar';
 import CustomActions from '../../components/elements/MessageActions';
 import CustomView from '../../components/elements/MessageView';
 
-import {
-  Constants,
-  GStyle,
-  GStyles,
-  Helper,
-  Global,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, Global, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 import SocketManager from './../../utils/Message/SocketManager';
 import get from 'lodash/get';
 

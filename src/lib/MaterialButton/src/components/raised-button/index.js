@@ -1,7 +1,7 @@
-import React, { PureComponent } from 'react';
-import { Animated, Platform } from 'react-native';
+import React, {PureComponent} from 'react';
+import {Animated, Platform} from 'react-native';
 
-import { styles } from './styles';
+import {styles} from './styles';
 import Button from '../button';
 
 export default class RaisedButton extends PureComponent {

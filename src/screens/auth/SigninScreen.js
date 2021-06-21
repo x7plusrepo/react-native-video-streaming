@@ -1,31 +1,15 @@
 import React from 'react';
-import {
-  Alert,
-  BackHandler,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, BackHandler, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
-import { TextField } from '../../lib/MaterialTextField/index';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import {TextField} from '../../lib/MaterialTextField/index';
 
-import {
-  Constants,
-  Global,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, Global, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 
 import GHeaderBar from '../../components/GHeaderBar';
-import { connect } from 'react-redux';
-import { setMyUserAction } from '../../redux/me/actions';
+import {connect} from 'react-redux';
+import {setMyUserAction} from '../../redux/me/actions';
 import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 
 const image_logo = require('../../assets/images/Icons/ic_logo.png');

@@ -1,14 +1,8 @@
 import React from 'react';
-import {
-  Linking,
-  Platform,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-  ViewPropTypes,
-} from 'react-native';
+import {Linking, Platform, StyleSheet, TouchableOpacity, View, ViewPropTypes,} from 'react-native';
 
 import PropTypes from 'prop-types';
+
 //import MapView from 'react-native-maps';
 
 class MessageView extends React.Component {

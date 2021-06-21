@@ -1,27 +1,12 @@
 import React from 'react';
-import {
-  Alert,
-  Linking,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
 
-import { TextField } from '../../lib/MaterialTextField/index';
+import {TextField} from '../../lib/MaterialTextField/index';
 import GHeaderBar from '../../components/GHeaderBar';
-import {
-  Constants,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
-import ChatStreamSocketManager from '../../utils/Message/SocketManager';
+import {Constants, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 
 class SignupScreen extends React.Component {
   constructor(props) {

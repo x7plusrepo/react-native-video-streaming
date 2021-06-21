@@ -1,20 +1,19 @@
-import React, { Component } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import React, {Component} from 'react';
+import {Image, StyleSheet} from 'react-native';
 
-import { Constants, Global, GStyle, Helper, RestAPI } from '../utils/Global';
-import PlayTabScreen from '../screens/tab_play/PlayTabScreen';
+import {GStyle, Helper, RestAPI} from '../utils/Global';
 import TopUsersScreen from '../screens/tab_top/TopUsersScreen';
 import HomeMainScreen from '../screens/tab_home/HomeMainScreen';
 import BrowseRooms from '../screens/tab_liveStream/BrowseRooms';
 import ProfileMainScreen from '../screens/tab_profile/ProfileMainScreen';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import { connect } from 'react-redux';
-import { setUnreadCount } from '../redux/message/actions';
+import {connect} from 'react-redux';
+import {setUnreadCount} from '../redux/message/actions';
 import avatars from '../assets/avatars';
-import { setMyUserAction } from '../redux/me/actions';
-import ChatStreamSocketManager from '../utils/Message/SocketManager';
+import {setMyUserAction} from '../redux/me/actions';
+import PlayMainScreen from '../screens/tab_play/PlayMainScreen';
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/Icons/ic_gift.png');
@@ -103,7 +102,7 @@ class MainTabNavigator extends Component {
         />
         <Tab.Screen
           name="play"
-          component={PlayTabScreen}
+          component={PlayMainScreen}
           options={{
             tabBarLabel: 'Play',
             tabBarIcon: ({ color, size }) => (

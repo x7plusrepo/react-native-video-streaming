@@ -1,9 +1,9 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
-import { GStyle, Helper } from '../../utils/Global';
-import { GStyles } from '../../utils/Global/Styles';
+import {GStyle, Helper} from '../../utils/Global';
+import {GStyles} from '../../utils/Global/Styles';
 
 import ic_speaker from '../../assets/images/Icons/ic_speaker.png';
 import ic_eye from '../../assets/images/Icons/ic_eye.png';

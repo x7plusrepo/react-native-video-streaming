@@ -1,9 +1,9 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import React, {useEffect, useRef, useState} from 'react';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 
-import { Constants, Helper, RestAPI } from '../../utils/Global';
-import GStyle, { GStyles } from '../../utils/Global/Styles';
+import {Constants, Helper, RestAPI} from '../../utils/Global';
+import GStyle, {GStyles} from '../../utils/Global/Styles';
 import ProductsList from '../../components/elements/ProductsList';
 
 const HomeVideoScreen = (props) => {

@@ -1,5 +1,5 @@
-import { Platform } from 'react-native';
-import { Helper, RestAPI } from './index';
+import {Platform} from 'react-native';
+import {Helper, RestAPI} from './index';
 import branch from 'react-native-branch';
 import axios from 'axios';
 import React from 'react';

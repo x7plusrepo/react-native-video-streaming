@@ -1,15 +1,15 @@
 import React from 'react';
-import { Image, Text, TouchableOpacity, View } from 'react-native';
+import {Image, Text, TouchableOpacity, View} from 'react-native';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import { StackActions, useNavigation } from '@react-navigation/native';
+import {StackActions, useNavigation} from '@react-navigation/native';
 
 import styles from './styles';
-import { GStyles } from '../../../utils/Global';
+import {GStyles} from '../../../utils/Global';
 import GStyle from '../../../utils/Global/Styles';
 
-import { LIVE_STATUS } from '../../../utils/LiveStream/Constants';
+import {LIVE_STATUS} from '../../../utils/LiveStream/Constants';
 import ic_love from '../../../assets/images/Icons/ic_love-potion.png';
 import ic_star from '../../../assets/images/Icons/ic_star.png';
 import ic_flame from '../../../assets/images/Icons/ic_flame.png';

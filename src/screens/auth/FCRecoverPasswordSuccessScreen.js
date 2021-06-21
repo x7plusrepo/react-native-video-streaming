@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import { GStyles } from '../../utils/Global';
+import {GStyles} from '../../utils/Global';
 
 const ic_success = require('../../assets/images/ic_success.png');
 

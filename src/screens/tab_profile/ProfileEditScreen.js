@@ -1,32 +1,17 @@
 import React from 'react';
-import {
-  Linking,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { connect } from 'react-redux';
+import {Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {connect} from 'react-redux';
 
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {launchImageLibrary} from 'react-native-image-picker';
 
-import { TextField } from '../../lib/MaterialTextField/index';
-import {
-  Constants,
-  Global,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {TextField} from '../../lib/MaterialTextField/index';
+import {Constants, Global, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
-import { setMyUserAction } from '../../redux/me/actions';
-import ChatStreamSocketManager from '../../utils/Message/SocketManager';
+import {setMyUserAction} from '../../redux/me/actions';
 
 class ProfileEditScreen extends React.Component {
   constructor(props) {

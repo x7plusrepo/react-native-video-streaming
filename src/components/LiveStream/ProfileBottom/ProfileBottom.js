@@ -1,18 +1,7 @@
 import React from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -20,7 +9,7 @@ import Avatar from '../../../components/elements/Avatar';
 import Achievements from '../../profile/Achievements';
 import PlaceHolder from '../../profile/PlaceHolder';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../../utils/Global';
+import {GStyle, GStyles, Helper, RestAPI} from '../../../utils/Global';
 import avatars from '../../../assets/avatars';
 
 const ic_plus_1 = require('../../../assets/images/Icons/ic_plus_1.png');

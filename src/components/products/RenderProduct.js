@@ -1,10 +1,11 @@
 import React from 'react';
-import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
 import Video from 'react-native-video';
 import convertToProxyURL from 'react-native-video-cache';
-import { Constants, GStyle, GStyles, Helper } from '../../utils/Global';
+import {Constants, GStyle, GStyles} from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
+
 const heart = require('../../assets/images/gifts/heart.png');
 const ic_menu_messages = require('../../assets/images/Icons/ic_menu_messages.png');
 const ic_share = require('../../assets/images/Icons/ic_share.png');

@@ -1,17 +1,11 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 
-import { TextField } from '../../lib/MaterialTextField/index';
+import {TextField} from '../../lib/MaterialTextField/index';
 import GHeaderBar from '../../components/GHeaderBar';
-import { Constant, GStyles } from '../../utils/Global';
+import {Constant, GStyles} from '../../utils/Global';
 
 class FCForgetPasswordScreen extends React.Component {
   constructor(props) {

@@ -1,15 +1,11 @@
 import React from 'react';
-import { SafeAreaView, StyleSheet, View } from 'react-native';
+import {SafeAreaView, StyleSheet, View} from 'react-native';
 
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
 
-import { connect } from 'react-redux';
-import { setSavedCount } from '../../redux/me/actions';
-import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {connect} from 'react-redux';
+import {setSavedCount} from '../../redux/me/actions';
+import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
 

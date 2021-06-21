@@ -1,39 +1,23 @@
 import React from 'react';
-import {
-  Alert,
-  BackHandler,
-  CheckBox,
-  Platform,
-  SafeAreaView,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, BackHandler, CheckBox, Platform, SafeAreaView, Text, TouchableOpacity, View,} from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import { Button, Dialog, Paragraph, Portal } from 'react-native-paper';
-import { createThumbnail } from 'react-native-create-thumbnail';
+import {Button, Dialog, Paragraph, Portal} from 'react-native-paper';
+import {createThumbnail} from 'react-native-create-thumbnail';
 import TagInput from '../../lib/react-native-tag-input/index';
 import RNFS from 'react-native-fs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { TextField } from '../../lib/MaterialTextField/index';
-import {
-  Constants,
-  Global,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {TextField} from '../../lib/MaterialTextField/index';
+import {Constants, Global, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 
-import { connect } from 'react-redux';
-import { setCategories } from '../../redux/categories/actions';
+import {connect} from 'react-redux';
+import {setCategories} from '../../redux/categories/actions';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 

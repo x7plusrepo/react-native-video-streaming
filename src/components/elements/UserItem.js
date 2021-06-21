@@ -1,7 +1,7 @@
 import React from 'react';
-import { Image, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import { GStyle, GStyles, Helper } from '../../utils/Global';
+import {GStyle, GStyles, Helper} from '../../utils/Global';
 import CheckBox from '../../lib/Checkbox/index';
 import Avatar from './Avatar';
 import Flag from '../../lib/SvgFlagkit/Flag';

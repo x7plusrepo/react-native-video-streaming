@@ -1,5 +1,5 @@
-import { StyleSheet } from 'react-native';
-import GStyle, { GStyles } from '../../../utils/Global/Styles';
+import {StyleSheet} from 'react-native';
+import GStyle, {GStyles} from '../../../utils/Global/Styles';
 
 const styles = StyleSheet.create({
   messageInput: {

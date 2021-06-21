@@ -1,22 +1,14 @@
-import React, { Component } from 'react';
-import {
-  Dimensions,
-  Image,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Dimensions, Image, Platform, SafeAreaView, StyleSheet, TouchableOpacity, View,} from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import { RNCamera } from 'react-native-camera';
+import {RNCamera} from 'react-native-camera';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { GStyles, Helper } from '../../utils/Global';
+import {GStyles, Helper} from '../../utils/Global';
 
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 const ic_camera_flip = require('../../assets/images/Icons/ic_camera_flip.png');

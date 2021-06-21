@@ -1,9 +1,9 @@
 import React from 'react';
-import { ActivityIndicator, FlatList, View } from 'react-native';
+import {ActivityIndicator, FlatList, View} from 'react-native';
 
 import LiveStreamRoom from './LiveStreamRoom';
 
-import { Constants, Helper, RestAPI } from '../../utils/Global';
+import {Constants, Helper, RestAPI} from '../../utils/Global';
 import styles from './styles';
 
 class LiveStreamRooms extends React.Component {

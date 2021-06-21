@@ -1,7 +1,8 @@
 import React from 'react';
-import ContentLoader, { Rect } from 'react-content-loader/native';
-import { Helper } from '../../utils/Global';
-import { View } from 'react-native';
+import ContentLoader, {Rect} from 'react-content-loader/native';
+import {Helper} from '../../utils/Global';
+import {View} from 'react-native';
+
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CONTAINER_PADDING = 16;
 const ITEMS_MARGIN = 12;

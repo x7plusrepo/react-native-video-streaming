@@ -1,19 +1,12 @@
-import React, { Component } from 'react';
-import {
-  Alert,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Alert, Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 
 import Video from 'react-native-video';
 
-import { Constants, GStyle, GStyles, Helper } from '../../utils/Global';
+import {Constants, GStyle, GStyles, Helper} from '../../utils/Global';
 
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 

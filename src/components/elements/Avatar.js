@@ -1,5 +1,5 @@
 import React from 'react';
-import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
+import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 import GStyle from '../../utils/Global/Styles';

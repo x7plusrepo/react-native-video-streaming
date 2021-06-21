@@ -1,23 +1,11 @@
 import React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
 
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import Avatar from '../../components/elements/Avatar';
 import Achievements from '../../components/profile/Achievements';
@@ -44,25 +32,8 @@ class ProfileOtherScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('profile_other'));
-      if (global._prevScreen === 'play_main') {
-        this.onRefresh();
-      }
-    });
-    this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
-      global._prevScreen = 'profile_other';
-      this.setState({ opponentUser: null });
-    });
-    if (global._prevScreen !== 'play_main') {
-      this.onRefresh();
-    }
-  }
-
-  componentWillUnmount() {
-    this.unsubscribe();
-    this.unsubscribeBlur();
-
+    Helper.callFunc(global.setBottomTabName('profile_other'));
+    this.onRefresh();
   }
 
   init = () => {
@@ -91,19 +62,17 @@ class ProfileOtherScreen extends React.Component {
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
-        if (json.status === 200) {
-          if (json?.data) {
-            if (json?.data?.videoList) {
-              this.setState({
-                itemDatas: json.data.videoList || [],
-              });
-            }
+        if (json.status === 200 && json?.data) {
+          if (json?.data?.videoList) {
+            this.setState({
+              itemDatas: json.data.videoList || [],
+            });
+          }
 
-            if (json?.data?.user) {
-              this.setState({
-                opponentUser: json.data.user,
-              });
-            }
+          if (json?.data?.user) {
+            this.setState({
+              opponentUser: json.data.user,
+            });
           }
         } else {
           Helper.alertServerDataError();

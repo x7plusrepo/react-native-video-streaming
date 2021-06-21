@@ -1,20 +1,12 @@
 import React from 'react';
-import {
-  Image,
-  Keyboard,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {Image, Keyboard, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-import ScrollableTabView, { DefaultTabBar } from 'rn-collapsing-tab-bar';
+import ScrollableTabView, {DefaultTabBar} from 'rn-collapsing-tab-bar';
 
-import { GStyle, GStyles } from '../../utils/Global';
+import {GStyle, GStyles} from '../../utils/Global';
 import SearchBarItem from '../../components/elements/SearchBarItem';
-import { TouchableNativeFeedback } from 'react-native-gesture-handler';
+import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 
 import HomeVideoSearch from './HomeVideoSearch';
 import HomeUsersScreen from './HomeUsersScreen';

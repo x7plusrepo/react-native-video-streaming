@@ -1,19 +1,19 @@
-import React, { useEffect, useState } from 'react';
-import { Image, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Image, Platform, StatusBar, StyleSheet, View} from 'react-native';
 import branch from 'react-native-branch';
 
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import {Provider} from 'react-redux';
+import {store} from './redux/store';
 // import RestAPI from './DB/RestAPI';
 // import Constants from './DB/Constants';
-import { Constants, Helper } from './utils/Global';
+import {Constants, Helper} from './utils/Global';
 
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 import AppNavigator from './navigation/AppNavigator';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {Provider as PaperProvider} from 'react-native-paper';
 import * as RootNavigation from './utils/Global/RootNavigation';
 
-import FlashMessage, { showMessage } from 'react-native-flash-message';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
 import LiveStreamSocketManager from './utils/LiveStream/SocketManager';

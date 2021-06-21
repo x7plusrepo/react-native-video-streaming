@@ -1,22 +1,14 @@
 import React from 'react';
-import {
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Image, SafeAreaView, StyleSheet, TouchableOpacity, View,} from 'react-native';
 
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
-import ScrollableTabView, {
-  ScrollableTabBar,
-} from 'react-native-scrollable-tab-view';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 import HomeVideoScreen from './HomeVideoScreen';
-import { setCategories } from '../../redux/categories/actions';
+import {setCategories} from '../../redux/categories/actions';
 
 const ic_search = require('../../assets/images/Icons/ic_search.png');
 
@@ -98,7 +90,7 @@ class HomeMainScreen extends React.Component {
     const { categories } = this.state;
 
     return (
-      <SafeAreaView style={{ flex: 1, backgroundColor: 'white' }}>
+      <SafeAreaView style={{ flex: 1, backgroundColor: 'white', paddingTop: 16 }}>
         <ScrollableTabView
           initialPage={0}
           tabBarBackgroundColor="white"
