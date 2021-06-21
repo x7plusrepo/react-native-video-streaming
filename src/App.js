@@ -77,10 +77,12 @@ function App() {
     subscribeDeepLink();
     LiveStreamSocketManager.instance.connect();
     ChatStreamSocketManager.instance.connect();
+    ChatStreamSocketManager.instance.listenReceiveMessages();
 
     return () => {
       LiveStreamSocketManager.instance.disconnect();
       ChatStreamSocketManager.instance.disconnect();
+      ChatStreamSocketManager.instance.removeReceiveMessages();
     };
   }, []);
 
@@ -91,7 +93,9 @@ function App() {
   };
 
   const onOpened = async (openResult) => {
-    Helper.callFunc(global.onGotoMessage);
+    setTimeout(() => {
+      Helper.callFunc(global.onGotoMessage);
+    }, 8000)
   };
 
   global.success = (title, text) => {

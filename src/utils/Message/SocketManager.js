@@ -105,11 +105,11 @@ class SocketManager {
     this.socket?.removeAllListeners(Constants.SOCKET_FETCH_MESSAGE_LIST);
   };
 
-  listenReceiveMessages(callback = null) {
+  listenReceiveMessages() {
     this.socket?.on(Constants.SOCKET_NEW_MESSAGE, (data) => {
       Logger.instance.log(`${Constants.SOCKET_NEW_MESSAGE} :`);
-      return callback
-        ? callback(data)
+      return global.onReceiveMessageList
+        ? global.onReceiveMessageList(data)
         : Helper.callFunc(global.onSetUnreadCount);
     });
   }

@@ -384,7 +384,7 @@ class TopUsersScreen extends React.Component {
             }}
             data={itemDatas}
             renderItem={this._renderItem}
-            keyExtractor={(item) => item.id}
+            keyExtractor={(item, index) => item.id + index}
           />
         ) : (
           <View style={{ flex: 1, ...GStyles.centerAlign }}>
