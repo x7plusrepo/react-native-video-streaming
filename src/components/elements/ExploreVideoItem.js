@@ -1,8 +1,8 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 
 import FastImage from 'react-native-fast-image';
-import {Constants, GStyle, GStyles, Helper} from '../../utils/Global';
+import { Constants, GStyle, GStyles, Helper } from '../../utils/Global';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;
@@ -39,7 +39,9 @@ const ExploreVideoItem = ({ item, index, onPress, onLongPress }) => {
         <View style={{ flex: 1 }} />
         <View style={GStyles.rowBetweenContainer}>
           <View style={GStyles.rowContainer}>
-            <Text style={styles.textLabel}>৳ {item?.price || 0}</Text>
+            <View style={GStyles.stickerContainer}>
+              <Text style={styles.textPrice}>৳ {item?.price || 0}</Text>
+            </View>
           </View>
         </View>
       </View>
@@ -80,9 +82,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     padding: 6,
   },
-  textLabel: {
+  textPrice: {
     ...GStyles.textSmall,
-    color: GStyle.activeColor,
+    color: 'white',
   },
 });
 

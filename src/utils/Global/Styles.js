@@ -280,8 +280,9 @@ const GStyles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: 'rgba(200, 58, 132, 0.71)',
-    padding: 10,
-    marginBottom: 16,
+    width: 32,
+    height: 32,
+    marginTop: 16,
     borderRadius: 32,
   },
   playInfoTextWrapper: {
@@ -325,7 +326,7 @@ const GStyles = StyleSheet.create({
   stickerContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: GStyle.activeColor,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     paddingVertical: 4,
     paddingHorizontal: 8,
     borderRadius: 4,
@@ -334,12 +335,7 @@ const GStyles = StyleSheet.create({
     fontFamily: 'GothamPro',
     fontWeight: '700',
     fontSize: 10,
-    color: '#000000',
-  },
-  stickerWrapper: {
-    position: 'absolute',
-    right: 16,
-    top: Helper.getStatusBarHeight() + 16,
+    color: 'white',
   },
   backButtonContainer: {
     justifyContent: 'center',

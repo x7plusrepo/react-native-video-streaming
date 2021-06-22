@@ -1,18 +1,18 @@
-import React, {Component} from 'react';
-import {Image, StyleSheet} from 'react-native';
+import React, { Component } from 'react';
+import { Image, StyleSheet } from 'react-native';
 
-import {GStyle, Helper, RestAPI} from '../utils/Global';
+import { GStyle, Helper, RestAPI } from '../utils/Global';
 import TopUsersScreen from '../screens/tab_top/TopUsersScreen';
 import HomeMainScreen from '../screens/tab_home/HomeMainScreen';
 import BrowseRooms from '../screens/tab_liveStream/BrowseRooms';
 import ProfileMainScreen from '../screens/tab_profile/ProfileMainScreen';
 
-import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import {connect} from 'react-redux';
-import {setUnreadCount} from '../redux/message/actions';
+import { connect } from 'react-redux';
+import { setUnreadCount } from '../redux/message/actions';
 import avatars from '../assets/avatars';
-import {setMyUserAction} from '../redux/me/actions';
+import { setMyUserAction } from '../redux/me/actions';
 import PlayMainScreen from '../screens/tab_play/PlayMainScreen';
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
@@ -71,6 +71,7 @@ class MainTabNavigator extends Component {
   render() {
     const { curTabName } = this.state;
     const user = this.props.user;
+    const unreadCount = this.props.unreadCount || 0;
 
     return (
       <Tab.Navigator
@@ -157,6 +158,8 @@ class MainTabNavigator extends Component {
                 />
               );
             },
+            ...(unreadCount > 0 && { tabBarBadge: unreadCount }),
+            tabBarBadgeStyle: { backgroundColor: 'red', fontSize: 12 },
           }}
           listeners={({ navigation, route }) => ({
             tabPress: (e) => {
@@ -172,10 +175,16 @@ class MainTabNavigator extends Component {
   }
 }
 
-export default connect((state) => ({ user: state.me?.user }), {
-  setUnreadCount,
-  setMyUserAction,
-})(MainTabNavigator);
+export default connect(
+  (state) => ({
+    user: state.me?.user,
+    unreadCount: state.message?.unreadCount || 0,
+  }),
+  {
+    setUnreadCount,
+    setMyUserAction,
+  },
+)(MainTabNavigator);
 
 const styles = StyleSheet.create({
   tabIconImage: {

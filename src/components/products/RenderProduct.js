@@ -1,8 +1,8 @@
 import React from 'react';
-import {Dimensions, Image, Text, TouchableOpacity, View} from 'react-native';
+import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
 import Video from 'react-native-video';
 import convertToProxyURL from 'react-native-video-cache';
-import {Constants, GStyle, GStyles} from '../../utils/Global';
+import { Constants, GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
 
@@ -59,18 +59,22 @@ const RenderProducts = (props) => {
               height: '100%',
             }}
           />
-          <View style={GStyles.stickerWrapper}>
-            {item.sticker > 0 && (
-              <View style={GStyles.stickerContainer}>
-                <Text style={GStyles.stickerText}>
-                  {Constants.STICKER_NAME_LIST[item.sticker]}
-                </Text>
-              </View>
-            )}
-          </View>
           <View style={[GStyles.playInfoWrapper, detailStyle]}>
             <View style={GStyles.rowEndContainer}>
-              <View>
+              <View
+                style={{
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                  marginBottom: 16,
+                }}
+              >
+                {item.sticker > 0 && (
+                  <View style={GStyles.stickerContainer}>
+                    <Text style={GStyles.stickerText}>
+                      {Constants.STICKER_NAME_LIST[item.sticker]}
+                    </Text>
+                  </View>
+                )}
                 <TouchableOpacity
                   onPress={() => {
                     actions.onPressLike(!isLike, item);
