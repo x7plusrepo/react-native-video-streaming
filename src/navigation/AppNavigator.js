@@ -1,7 +1,10 @@
 import React from 'react';
 
-import {NavigationContainer} from '@react-navigation/native';
-import {CardStyleInterpolators, createStackNavigator,} from '@react-navigation/stack';
+import { NavigationContainer } from '@react-navigation/native';
+import {
+  CardStyleInterpolators,
+  createStackNavigator,
+} from '@react-navigation/stack';
 
 import MainTabNavigator from './MainTabNavigator';
 
@@ -28,8 +31,8 @@ import FollowingUsersScreen from '../screens/tab_profile/FollowingUsersScreen';
 import GoLive from '../screens/live_stream/GoLive';
 import ViewLive from '../screens/live_stream/ViewLive';
 
-import {Helper} from '../utils/Global';
-import {isReadyRef, navigationRef} from './../utils/Global/RootNavigation';
+import { Helper } from '../utils/Global';
+import { isReadyRef, navigationRef } from './../utils/Global/RootNavigation';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';
 // import WorkScreen from '../screens/auth/FCAccountStep1Screen';
@@ -62,7 +65,10 @@ export default function App() {
       <Stack.Navigator
         screenOptions={{
           headerShown: false,
-          gestureEnabled: false,
+          gestureEnabled: true,
+          gestureDirection: 'horizontal',
+          gestureResponseDistance: { horizontal: WINDOW_HEIGHT },
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
       >
         {/* --- start --- */}
@@ -87,16 +93,7 @@ export default function App() {
 
         {/* --- profile tab --- */}
         <Stack.Screen name="profile_edit" component={ProfileEditScreen} />
-        <Stack.Screen
-          name="profile_video"
-          component={ProfileVideoScreen}
-          options={{
-            gestureEnabled: true,
-            gestureDirection: 'horizontal',
-            gestureResponseDistance: { horizontal: WINDOW_HEIGHT },
-            cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
-          }}
-        />
+        <Stack.Screen name="profile_video" component={ProfileVideoScreen} />
         <Stack.Screen name="profile_other" component={ProfileOtherScreen} />
         <Stack.Screen name="fans_screen" component={FansScreen} />
         <Stack.Screen name="following_users" component={FollowingUsersScreen} />

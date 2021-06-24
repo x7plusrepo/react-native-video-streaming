@@ -72,12 +72,12 @@ export default class BottomActionsGroup extends Component {
                 iconStyle={{ tintColor: 'white' }}
                 containerStyle={{ marginRight: 0, marginBottom: 8 }}
               />
-              <GradientBackgroundIconButton
-                onPress={this.onPressSwitchAudio}
-                icon={isMuted ? ic_audio_off : ic_audio_on}
-                iconStyle={{ tintColor: 'white' }}
-                containerStyle={{ marginRight: 0 }}
-              />
+              {/*<GradientBackgroundIconButton*/}
+              {/*  onPress={this.onPressSwitchAudio}*/}
+              {/*  icon={isMuted ? ic_audio_off : ic_audio_on}*/}
+              {/*  iconStyle={{ tintColor: 'white' }}*/}
+              {/*  containerStyle={{ marginRight: 0 }}*/}
+              {/*/>*/}
             </View>
           )}
         </View>
