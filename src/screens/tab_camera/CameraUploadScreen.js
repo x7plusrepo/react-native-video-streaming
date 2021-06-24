@@ -1,5 +1,6 @@
 import React from 'react';
-import {Alert, BackHandler, CheckBox, Platform, SafeAreaView, Text, TouchableOpacity, View,} from 'react-native';
+import {Alert, BackHandler, Platform, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import CheckBox from 'react-native-check-box';
 
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
@@ -653,8 +654,8 @@ class CameraUploadScreen extends React.Component {
         />
         <View style={styles.checkboxContainer}>
           <CheckBox
-            value={isPermanent}
-            onValueChange={this.setPermanent}
+            isChecked={isPermanent}
+            onClick={() => this.setPermanent(!isPermanent)}
             style={styles.checkbox}
           />
           <Text style={styles.label}>Keep the product permanently</Text>
@@ -665,7 +666,7 @@ class CameraUploadScreen extends React.Component {
 
   _renderButtons = () => {
     return (
-      <>
+      <View style={{ zIndex: -1 }}>
         <View style={{ marginTop: 50 }}>
           <TouchableOpacity onPress={this.onPressPreview}>
             <View style={GStyles.buttonFill}>
@@ -692,7 +693,7 @@ class CameraUploadScreen extends React.Component {
             </View>
           </TouchableOpacity>
         </View>
-      </>
+      </View>
     );
   };
 
