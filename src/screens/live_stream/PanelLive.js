@@ -69,7 +69,7 @@ const PanelLive = (props) => {
         <View style={[GStyles.rowEndContainer, { paddingHorizontal: 16 }]}>
           <TouchableOpacity onPress={onPressClose}>
             <Image
-              style={GStyles.actionIcons}
+              style={[[GStyles.actionIcons, { tintColor: 'white' }]]}
               source={ic_close}
               tintColor="white"
             />
