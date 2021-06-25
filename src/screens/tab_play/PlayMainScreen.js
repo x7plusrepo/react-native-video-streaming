@@ -1,20 +1,34 @@
-import React, {Component} from 'react';
-import {ActivityIndicator, Alert, BackHandler, FlatList, Platform, StatusBar, View,} from 'react-native';
+import React, { Component } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  BackHandler,
+  FlatList,
+  Platform,
+  StatusBar,
+  View,
+} from 'react-native';
 
 import SplashScreen from 'react-native-splash-screen';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
 
-import {RNFFmpeg} from 'react-native-ffmpeg';
+import { RNFFmpeg } from 'react-native-ffmpeg';
 
-import {setMyUserAction} from '../../redux/me/actions';
-import {setProducts, updateProduct} from '../../redux/products/actions';
+import { setMyUserAction } from '../../redux/me/actions';
+import { setProducts, updateProduct } from '../../redux/products/actions';
 
 import ProgressModal from '../../components/ProgressModal';
 
-import {Constants, Global, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import {
+  Constants,
+  Global,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global';
 import ChatStreamSocketManager from './../../utils/Message/SocketManager';
 import RenderProducts from '../../components/products/RenderProduct';
 

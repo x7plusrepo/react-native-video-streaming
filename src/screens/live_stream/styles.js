@@ -1,9 +1,9 @@
-import {Dimensions, StyleSheet} from 'react-native';
-import {Helper} from '../../utils/Global';
-import {GStyles} from '../../utils/Global/Styles';
+import { Dimensions, StyleSheet } from 'react-native';
+import { Helper } from '../../utils/Global';
+import { GStyles } from '../../utils/Global/Styles';
 
-const { width, height } = Dimensions.get('window');
-
+const width = Helper.getWindowWidth();
+const height = Helper.getWindowHeight();
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    height: '100%',
+    height,
     width,
     backgroundColor: 'black',
   },
@@ -36,8 +36,8 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 0,
     left: 0,
-    width: Helper.getWindowWidth(),
-    height: Helper.getWindowHeight(),
+    width,
+    height,
   },
   audioLiveContainer: {
     position: 'absolute',
@@ -46,8 +46,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.9)',
     ...GStyles.centerAlign,
-    width: Helper.getWindowWidth(),
-    height: Helper.getWindowHeight(),
+    width,
+    height,
   },
   bottomGroup: {
     justifyContent: 'center',
@@ -69,8 +69,8 @@ const styles = StyleSheet.create({
   },
   wrapperStartPanel: {
     position: 'absolute',
-    width: '100%',
-    height: '100%',
+    width,
+    height,
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     zIndex: 9999,
   },

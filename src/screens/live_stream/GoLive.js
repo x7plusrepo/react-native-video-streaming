@@ -1,7 +1,15 @@
 import React from 'react';
-import {Alert, BackHandler, Image, PermissionsAndroid, SafeAreaView, StatusBar, View,} from 'react-native';
-import {NodeCameraView} from 'react-native-nodemediaclient';
-import {connect} from 'react-redux';
+import {
+  Alert,
+  BackHandler,
+  Image,
+  PermissionsAndroid,
+  SafeAreaView,
+  StatusBar,
+  View,
+} from 'react-native';
+import { NodeCameraView } from 'react-native-nodemediaclient';
+import { connect } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import StartPanel from './StartPanel';
@@ -11,9 +19,9 @@ import Header from '../../components/LiveStream/Header';
 import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
-import {LIVE_STATUS} from '../../utils/LiveStream/Constants';
-import {Constants, Global, Logger, RestAPI} from '../../utils/Global';
-import {setGifts} from '../../redux/liveStream/actions';
+import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
+import { Constants, Global, Logger, RestAPI } from '../../utils/Global';
+import { setGifts } from '../../redux/liveStream/actions';
 import styles from './styles';
 import ic_audio from './../../assets/images/Icons/ic_audio_on.png';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
