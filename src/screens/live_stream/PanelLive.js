@@ -1,11 +1,18 @@
-import {Image, StyleSheet, Text, TextInput, TouchableOpacity, View,} from 'react-native';
-import React, {useState} from 'react';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import React, { useState } from 'react';
+import { launchImageLibrary } from 'react-native-image-picker';
 
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
-import {Global} from '../../utils/Global';
-import GStyle, {GStyles} from '../../utils/Global/Styles';
+import { Global } from '../../utils/Global';
+import GStyle, { GStyles } from '../../utils/Global/Styles';
 import styles from './styles';
 
 import ic_close from '../../assets/images/Icons/ic_close.png';
@@ -36,29 +43,34 @@ const PanelLive = (props) => {
     onPressClose && onPressClose();
   };
 
-  const onPressThumbnail = () => {
-    launchImageLibrary(
-      {
-        height: 300,
-        width: 300,
-        mediaType: 'photo',
-        cameraType: 'front',
-      },
-      (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-          console.log('ImagePicker Error: ', response.error);
-        } else {
-          const source = {
-            uri: response.uri,
-            type: response.type,
-            name: response.fileName,
-          };
-          setThumbnail(source);
-        }
-      },
-    );
+  const onPressThumbnail = async () => {
+    const granted = await Global.checkPermissionsForProfile();
+    if (granted) {
+      launchImageLibrary(
+        {
+          height: 300,
+          width: 300,
+          mediaType: 'photo',
+          cameraType: 'front',
+        },
+        (response) => {
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.errorMessage) {
+            console.log('ImagePicker Error: ', response.error);
+          } else {
+            const source = {
+              uri: response.uri,
+              type: response.type,
+              name: response.fileName,
+            };
+            setThumbnail(source);
+          }
+        },
+      );
+    } else {
+      global.warning('Warning', 'Permission is denied.');
+    }
   };
 
   const avatar = { uri: thumbnail ? thumbnail.uri : randomImageUrl };

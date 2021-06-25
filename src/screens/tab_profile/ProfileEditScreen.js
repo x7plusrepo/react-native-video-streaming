@@ -35,7 +35,6 @@ class ProfileEditScreen extends React.Component {
       photo: null,
       isGuest,
     };
-
     this.initRef();
   };
 
@@ -200,32 +199,38 @@ class ProfileEditScreen extends React.Component {
     }
   };
 
-  onPressProfilePhoto = () => {
-    launchImageLibrary(
-      {
-        height: 300,
-        width: 300,
-        mediaType: 'photo',
-        cameraType: 'front',
-      },
-      (response) => {
-        if (response.didCancel) {
-          console.log('User cancelled image picker');
-        } else if (response.errorMessage) {
-          console.log('ImagePicker Error: ', response.error);
-        } else {
-          const source = {
-            uri: response.uri,
-            type: response.type,
-            name: response.fileName,
-          };
-          this.setState({
-            profilePhotoSelSource: source,
-            photo: null,
-          });
-        }
-      },
-    );
+  onPressProfilePhoto = async () => {
+    const granted = await Global.checkPermissionsForProfile();
+    if (granted) {
+      launchImageLibrary(
+        {
+          height: 300,
+          width: 300,
+          mediaType: 'photo',
+          cameraType: 'front',
+        },
+        (response) => {
+          if (response.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response.errorMessage) {
+            console.log('ImagePicker Error: ', response.error);
+          } else {
+            const source = {
+              uri: response.uri,
+              type: response.type,
+              name: response.fileName,
+            };
+            this.setState({
+              profilePhotoSelSource: source,
+              photo: null,
+            });
+          }
+        },
+      );
+    } else {
+      global.warning('Warning', 'Permission is denied.')
+    }
+
   };
 
   onBack = () => {

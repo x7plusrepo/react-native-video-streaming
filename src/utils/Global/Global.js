@@ -1,8 +1,15 @@
-import {Platform} from 'react-native';
-import {Helper, RestAPI} from './index';
-import branch from 'react-native-branch';
-import axios from 'axios';
 import React from 'react';
+import { Platform } from 'react-native';
+import branch from 'react-native-branch';
+import {
+  RESULTS,
+  PERMISSIONS,
+  requestMultiple,
+  requestNotifications,
+} from 'react-native-permissions';
+import axios from 'axios';
+
+import { Helper, RestAPI } from './index';
 
 const Global = {
   email: '',
@@ -171,6 +178,63 @@ const Global = {
       );
     }
     return result.join('');
+  },
+  checkPermissionsForVideo: async () => {
+    try {
+      const permissions =
+        Platform.OS === 'ios'
+          ? [PERMISSIONS.IOS.CAMERA, PERMISSIONS.IOS.MICROPHONE]
+          : [PERMISSIONS.ANDROID.CAMERA, PERMISSIONS.ANDROID.RECORD_AUDIO];
+      const statues = (await requestMultiple(permissions)) || {};
+      console.log(statues);
+      if (Platform.OS === 'ios') {
+        return (
+          statues[PERMISSIONS.IOS.CAMERA] === RESULTS.GRANTED &&
+          statues[PERMISSIONS.IOS.MICROPHONE] === RESULTS.GRANTED
+        );
+      }
+      if (Platform.OS === 'android') {
+        return (
+          statues[PERMISSIONS.ANDROID.CAMERA] === RESULTS.GRANTED &&
+          statues[PERMISSIONS.ANDROID.RECORD_AUDIO] === RESULTS.GRANTED
+        );
+      }
+    } catch (error) {
+      return false;
+    }
+  },
+  checkPermissionsForProfile: async () => {
+    try {
+      const permissions =
+        Platform.OS === 'ios'
+          ? [PERMISSIONS.IOS.PHOTO_LIBRARY]
+          : [
+              PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE,
+              PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE,
+            ];
+      const statues = await requestMultiple(permissions);
+      if (Platform.OS === 'ios') {
+        return statues[PERMISSIONS.IOS.PHOTO_LIBRARY] === RESULTS.GRANTED;
+      }
+      if (Platform.OS === 'android') {
+        return (
+          statues[PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE] ===
+            RESULTS.GRANTED &&
+          statues[PERMISSIONS.ANDROID.WRITE_EXTERNAL_STORAGE] ===
+            RESULTS.GRANTED
+        );
+      }
+    } catch (error) {
+      return false;
+    }
+  },
+  checkPermissionsForNotification: async () => {
+    try {
+      const result = await requestNotifications();
+      return result?.status;
+    } catch (error) {
+      return '';
+    }
   },
 };
 

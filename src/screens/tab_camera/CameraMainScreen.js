@@ -1,14 +1,23 @@
-import React, {Component} from 'react';
-import {Dimensions, Image, Platform, SafeAreaView, StyleSheet, TouchableOpacity, View,} from 'react-native';
+import React, { Component } from 'react';
+import {
+  Alert,
+  Dimensions,
+  Image,
+  Platform,
+  SafeAreaView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import {RNCamera} from 'react-native-camera';
+import { RNCamera } from 'react-native-camera';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {GStyles, Helper} from '../../utils/Global';
+import { Constants, Global, GStyles, Helper } from '../../utils/Global';
 
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 const ic_camera_flip = require('../../assets/images/Icons/ic_camera_flip.png');
@@ -38,8 +47,26 @@ class CameraMainScreen extends Component {
       Helper.callFunc(global.setBottomTabName('camera'));
       Helper.setDarkStatusBar();
     });
-    //this.props.navigation.navigate('camera_upload');
+    this.requestCameraPermission();
   }
+
+  requestCameraPermission = async () => {
+    const granted = await Global.checkPermissionsForVideo();
+    if (!granted) {
+      Alert.alert(
+        Constants.WARNING_TITLE,
+        'Camera or Microphone permission is not granted. You can not record properly. Continue? ',
+        [
+          {
+            text: 'NO',
+            onPress: () => this.props.navigation.goBack(),
+            style: 'cancel',
+          },
+          { text: 'YES', onPress: () => null },
+        ],
+      );
+    }
+  };
 
   componentWillUnmount() {
     this.unsubscribe();

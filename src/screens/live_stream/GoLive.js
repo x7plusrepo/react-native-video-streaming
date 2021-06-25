@@ -3,7 +3,6 @@ import {
   Alert,
   BackHandler,
   Image,
-  PermissionsAndroid,
   SafeAreaView,
   StatusBar,
   View,
@@ -291,33 +290,20 @@ class GoLive extends React.Component {
   };
 
   requestCameraPermission = async () => {
-    try {
-      const granted = await PermissionsAndroid.requestMultiple(
+    const granted = await Global.checkPermissionsForVideo();
+    if (!granted) {
+      Alert.alert(
+        Constants.WARNING_TITLE,
+        'Camera or Microphone permission is not granted. You can not record properly. Continue? ',
         [
-          PermissionsAndroid.PERMISSIONS.CAMERA,
-          PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+          {
+            text: 'NO',
+            onPress: () => this.props.navigation.goBack(),
+            style: 'cancel',
+          },
+          { text: 'YES', onPress: () => null },
         ],
-        {
-          title: 'LiveStreamExample need Camera And Microphone Permission',
-          message:
-            'LiveStreamExample needs access to your camera so you can take awesome pictures.',
-          buttonNeutral: 'Ask Me Later',
-          buttonNegative: 'Cancel',
-          buttonPositive: 'OK',
-        },
       );
-      if (
-        granted['android.permission.CAMERA'] ===
-          PermissionsAndroid.RESULTS.GRANTED &&
-        granted['android.permission.RECORD_AUDIO'] ===
-          PermissionsAndroid.RESULTS.GRANTED
-      ) {
-        //if (this.nodeCameraViewRef) this.nodeCameraViewRef.startPreview();
-      } else {
-        Logger?.instance?.log('Camera permission denied');
-      }
-    } catch (err) {
-      Logger?.instance?.log(err);
     }
   };
 
