@@ -86,7 +86,7 @@ class Component extends React.Component {
   };
 
   render() {
-    const { room, liveStatus, mode, goal } = this.props;
+    const { room, liveStatus, mode } = this.props;
     const { showingRandomProduct, randomProduct } = this.state;
     const streamer = room?.user || {};
     const streamerName = streamer?.username;

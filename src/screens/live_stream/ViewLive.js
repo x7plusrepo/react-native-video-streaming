@@ -236,9 +236,6 @@ class ViewLive extends Component {
 
   onPressSendHeart = () => {
     const userId = this.props.user?.id;
-    const { room } = this.state;
-    console.log(this.state.room?.user?.id, '---xxx');
-    console.log(userId, '---xxx');
     SocketManager.instance.emitSendHeart({
       streamerId: this.state.room?.user?.id,
       userId,

@@ -48,7 +48,6 @@ class GoLive extends React.Component {
         videoFrontMirror: false,
       },
       lastPress: 0,
-      goal: 0,
     };
     this.messageBottomSheet = React.createRef();
     this.profileSheet = React.createRef();
@@ -315,10 +314,10 @@ class GoLive extends React.Component {
       ) {
         //if (this.nodeCameraViewRef) this.nodeCameraViewRef.startPreview();
       } else {
-        Logger.log('Camera permission denied');
+        Logger?.instance?.log('Camera permission denied');
       }
     } catch (err) {
-      Logger.warn(err);
+      Logger?.instance?.log(err);
     }
   };
 
@@ -327,8 +326,7 @@ class GoLive extends React.Component {
   };
 
   render() {
-    const { messages, audioConfig, videoConfig, isMuted, room, goal } =
-      this.state;
+    const { messages, audioConfig, videoConfig, isMuted, room } = this.state;
     const user = this.props.user || {};
     const countHeart = room?.countHeart || 0;
     const liveStatus = room?.liveStatus || 0;
@@ -370,7 +368,6 @@ class GoLive extends React.Component {
               room={room}
               liveStatus={liveStatus}
               mode="streamer"
-              goal={goal}
               onPressClose={this.onPressClose}
               onPressProfileAction={this.onPressProfileAction}
             />
