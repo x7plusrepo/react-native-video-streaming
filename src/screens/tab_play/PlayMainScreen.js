@@ -43,8 +43,6 @@ class PlayMainScreen extends Component {
   }
 
   componentDidMount() {
-    this.setState({ isMounted: true });
-
     this.onRefresh('init');
 
     this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
@@ -54,10 +52,8 @@ class PlayMainScreen extends Component {
       this.setState({ isVideoPause: false });
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
-      if (this.state.isMounted) {
-        this.setState({ isVideoPause: true });
-        global._prevScreen = 'play_main';
-      }
+      this.setState({ isVideoPause: true });
+      global._prevScreen = 'play_main';
     });
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
   }
@@ -66,8 +62,6 @@ class PlayMainScreen extends Component {
     this.unsubscribeFocus && this.unsubscribeFocus();
     this.unsubscribeBlur && this.unsubscribeBlur();
     BackHandler.removeEventListener('hardwareBackPress', this.onBack);
-
-    this.setState({ isMounted: false });
   }
 
   init = async () => {
@@ -84,7 +78,6 @@ class PlayMainScreen extends Component {
       item: {},
       onEndReachedDuringMomentum: true,
       curIndex: null,
-      isMounted: false,
     };
 
     await Helper.setDeviceId();
@@ -136,46 +129,44 @@ class PlayMainScreen extends Component {
     RestAPI.get_all_video_list(params, async (json, err) => {
       if (type === 'init') {
         showForcePageLoader(false);
-        setIsInitLoading(false);
       } else {
-        if (this.state.isMounted) {
-          this.setState({ isFetching: false });
-        }
+        this.setState({ isFetching: false });
       }
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else {
         if (json.status === 200) {
-          if (this.state.isMounted) {
-            this.setState({ totalCount: json.data.totalCounts });
-            if (type === 'more') {
-              let data = products.concat(json.data.videoList || []);
-              this.props.setProducts(data);
-            } else {
-              this.props.setProducts(json.data.videoList || []);
-              if (json.data?.loginResult?.user) {
-                ChatStreamSocketManager.instance.emitLeaveRoom({
-                  roomId: global.me?.id,
-                  userId: global.me?.id,
-                });
+          this.setState({ totalCount: json.data.totalCounts });
+          if (type === 'more') {
+            let data = products.concat(json.data.videoList || []);
+            this.props.setProducts(data);
+          } else {
+            this.props.setProducts(json.data.videoList || []);
+            if (json.data?.loginResult?.user) {
+              ChatStreamSocketManager.instance.emitLeaveRoom({
+                roomId: global.me?.id,
+                userId: global.me?.id,
+              });
 
-                global.me = json.data?.loginResult?.user || {};
+              global.me = json.data?.loginResult?.user || {};
 
-                ChatStreamSocketManager.instance.emitJoinRoom({
-                  roomId: global.me?.id,
-                  userId: global.me?.id,
-                });
+              ChatStreamSocketManager.instance.emitJoinRoom({
+                roomId: global.me?.id,
+                userId: global.me?.id,
+              });
 
-                this.props.setMyUserAction(global.me);
-                Helper.setLocalValue(Constants.KEY_USERNAME, username);
-                Helper.setLocalValue(Constants.KEY_PASSWORD, password);
-                Helper.setLocalValue(
-                  Constants.KEY_USER,
-                  JSON.stringify(global.me),
-                );
-                Helper.callFunc(global.onSetUnreadCount);
-                Global.registerPushToken();
+              this.props.setMyUserAction(global.me);
+              Helper.setLocalValue(Constants.KEY_USERNAME, username);
+              Helper.setLocalValue(Constants.KEY_PASSWORD, password);
+              Helper.setLocalValue(
+                Constants.KEY_USER,
+                JSON.stringify(global.me),
+              );
+              Helper.callFunc(global.onSetUnreadCount);
+              Global.registerPushToken();
+              if (type === 'init') {
+                this.props.navigation.navigate('home');
               }
             }
           }

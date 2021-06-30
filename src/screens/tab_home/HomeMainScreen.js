@@ -53,6 +53,7 @@ class HomeMainScreen extends React.Component {
     RestAPI.get_product_categories(params, (json, error) => {
       this.setState({ isFetching: false });
       showForcePageLoader(false);
+      setIsInitLoading(false);
 
       if (error !== null) {
         Helper.alertNetworkError(error?.message);
