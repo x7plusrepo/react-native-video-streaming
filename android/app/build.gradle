@@ -152,7 +152,7 @@ android {
         applicationId "com.stars.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 16
+        versionCode 20
         versionName "2.0.4"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'

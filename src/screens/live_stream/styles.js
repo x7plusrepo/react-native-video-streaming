@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width,
     height,
-    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    backgroundColor: 'black',
     zIndex: 9999,
   },
   topicInput: {

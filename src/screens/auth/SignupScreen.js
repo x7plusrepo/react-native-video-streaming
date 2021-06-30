@@ -298,7 +298,7 @@ class SignupScreen extends React.Component {
           autoCapitalize="none"
           autoCorrect={false}
           enablesReturnKeyAutomatically={true}
-          clearTextOnFocus={true}
+          //clearTextOnFocus={true}
           onFocus={this.onFocus}
           onChangeText={this.onChangeText}
           onSubmitEditing={this.onSubmitPassword}
@@ -317,7 +317,7 @@ class SignupScreen extends React.Component {
           autoCapitalize="none"
           autoCorrect={false}
           enablesReturnKeyAutomatically={true}
-          clearTextOnFocus={true}
+          //clearTextOnFocus={true}
           onFocus={this.onFocus}
           onChangeText={this.onChangeText}
           onSubmitEditing={this.onSubmitConfirmPassword}

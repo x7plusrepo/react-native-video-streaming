@@ -1,9 +1,10 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, View} from 'react-native';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
 import LiveStreamRoom from './LiveStreamRoom';
 
-import {Constants, Helper, RestAPI} from '../../utils/Global';
+import { Constants, Helper, RestAPI } from '../../utils/Global';
 import styles from './styles';
 
 class LiveStreamRooms extends React.Component {
@@ -16,18 +17,24 @@ class LiveStreamRooms extends React.Component {
   }
 
   componentDidMount() {
-    this.onRefresh('init');
+    this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
+      this.onRefresh('init');
+    });
   }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.keyword) {
-      if (prevProps.keyword !== this.props.keyword) {
-        this.setState({ keyword: this.props.keyword }, () => {
-          this.onRefresh('init');
-        });
-      }
-    }
+  componentWillUnmount() {
+    this.unsubscribeFocus && this.unsubscribeFocus();
   }
+  //
+  // componentDidUpdate(prevProps, prevState) {
+  //   if (prevProps.keyword) {
+  //     if (prevProps.keyword !== this.props.keyword) {
+  //       this.setState({ keyword: this.props.keyword }, () => {
+  //         this.onRefresh('init');
+  //       });
+  //     }
+  //   }
+  // }
 
   init = () => {
     this.state = {
@@ -153,4 +160,8 @@ class LiveStreamRooms extends React.Component {
   };
 }
 
-export default LiveStreamRooms;
+export default function (props) {
+  let navigation = useNavigation();
+  let route = useRoute();
+  return <LiveStreamRooms {...props} navigation={navigation} route={route} />;
+}

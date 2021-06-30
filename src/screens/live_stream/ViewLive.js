@@ -1,8 +1,15 @@
-import React, {Component} from 'react';
-import {Image, SafeAreaView, StatusBar, TouchableOpacity, View,} from 'react-native';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import {
+  Alert,
+  Image,
+  SafeAreaView,
+  StatusBar,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { connect } from 'react-redux';
 import get from 'lodash/get';
-import {NodePlayerView} from 'react-native-nodemediaclient';
+import { NodePlayerView } from 'react-native-nodemediaclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
@@ -13,12 +20,12 @@ import Header from '../../components/LiveStream/Header';
 import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
 
-import {setGifts} from '../../redux/liveStream/actions';
-import {LIVE_STATUS} from '../../utils/LiveStream/Constants';
-import {Constants, Global, RestAPI} from '../../utils/Global';
+import { setGifts } from '../../redux/liveStream/actions';
+import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
+import { Constants, Global, RestAPI } from '../../utils/Global';
 import styles from './styles';
 import ic_audio from '../../assets/images/Icons/ic_audio_on.png';
-import {setMyUserAction} from '../../redux/me/actions';
+import { setMyUserAction } from '../../redux/me/actions';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -101,6 +108,9 @@ class ViewLive extends Component {
           liveStatus: LIVE_STATUS.FINISH,
         },
       }));
+      Alert.alert('', 'Thanks for viewing. Live Streaming is over.', [
+        { text: 'OK', onPress: this.props.navigation.goBack },
+      ]);
     });
     this.onPressJoin();
     // if (liveStatus === LIVE_STATUS.FINISH) {
