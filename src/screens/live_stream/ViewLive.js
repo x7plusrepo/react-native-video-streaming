@@ -229,10 +229,6 @@ class ViewLive extends Component {
     this.giftBottomSheet?.current?.open();
   };
 
-  onPressMessageAction = () => {
-    this.messageBottomSheet?.current?.open();
-  };
-
   onPressShareAction = async () => {
     const { room } = this.state;
     const { user } = this.props;
@@ -376,7 +372,7 @@ class ViewLive extends Component {
                 onExit={this.onLeave}
                 onPressSendHeart={this.onPressSendHeart}
                 onPressGiftAction={this.onPressGiftAction}
-                onPressMessageAction={this.onPressMessageAction}
+                onPressSendMessage={this.onPressSendMessage}
                 onPressShareAction={this.onPressShareAction}
                 onPressProfileAction={this.onPressProfileAction}
                 isJoined={isJoined}
@@ -414,19 +410,6 @@ class ViewLive extends Component {
           }}
         >
           <Gifts gifts={gifts} onPressSendGift={this.onPressSendGift} />
-        </RBSheet>
-        <RBSheet
-          ref={this.messageBottomSheet}
-          closeOnDragDown
-          openDuration={250}
-          height={60}
-          customStyles={{
-            container: styles.sheetCommonContainer,
-            wrapper: styles.sheetWrapper,
-            draggableIcon: styles.sheetDragIcon,
-          }}
-        >
-          <MessageBox onPressSendMessage={this.onPressSendMessage} />
         </RBSheet>
         <FloatingHearts count={countHeart} />
       </SafeAreaView>

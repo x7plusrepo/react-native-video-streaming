@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {View} from 'react-native';
-import {GStyles} from '../../../utils/Global/Styles';
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import { GStyles } from '../../../utils/Global/Styles';
 import GradientBackgroundIconButton from './GradientBackgroundIconButton';
 import MessagesList from '../MessagesList';
 
@@ -9,6 +9,8 @@ import ic_menu_messages from '../../../assets/images/Icons/ic_menu_messages.png'
 import ic_share from '../../../assets/images/Icons/ic_share.png';
 import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import heart from '../../../assets/images/gifts/heart.png';
+import MessageBox from './MessageBox';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 const ic_audio_on = require('../../../assets/images/Icons/ic_audio_on.png');
 const ic_audio_off = require('../../../assets/images/Icons/ic_audio_off.png');
@@ -31,11 +33,6 @@ export default class BottomActionsGroup extends Component {
     onPressGiftAction && onPressGiftAction();
   };
 
-  onPressMessageAction = () => {
-    const { onPressMessageAction } = this.props;
-    onPressMessageAction && onPressMessageAction();
-  };
-
   onPressShareAction = () => {
     const { onPressShareAction } = this.props;
     onPressShareAction && onPressShareAction();
@@ -52,8 +49,7 @@ export default class BottomActionsGroup extends Component {
   };
 
   renderContent() {
-    const { mode, isMuted, messages } =
-      this.props;
+    const { mode, method, onPressSendMessage, messages } = this.props;
 
     return (
       <>
@@ -63,53 +59,52 @@ export default class BottomActionsGroup extends Component {
             { alignItems: 'flex-end', marginBottom: 24 },
           ]}
         >
-          <MessagesList messages={messages} onPressProfileAction={this.props.onPressProfileAction} />
-          {mode === 'streamer' && (
-            <View>
+          <MessagesList
+            messages={messages}
+            onPressProfileAction={this.props.onPressProfileAction}
+          />
+          <View>
+            {(mode === 'streamer' && method === 0) && (
               <GradientBackgroundIconButton
                 onPress={this.onPressSwitchCamera}
                 icon={ic_switch_camera}
                 iconStyle={{ tintColor: 'white' }}
                 containerStyle={{ marginRight: 0, marginBottom: 8 }}
               />
-              {/*<GradientBackgroundIconButton*/}
-              {/*  onPress={this.onPressSwitchAudio}*/}
-              {/*  icon={isMuted ? ic_audio_off : ic_audio_on}*/}
-              {/*  iconStyle={{ tintColor: 'white' }}*/}
-              {/*  containerStyle={{ marginRight: 0 }}*/}
-              {/*/>*/}
-            </View>
-          )}
-        </View>
-        <View style={GStyles.rowBetweenContainer}>
-          <View style={GStyles.rowBetweenContainer}>
-            <GradientBackgroundIconButton
-              onPress={this.onPressMessageAction}
-              icon={ic_menu_messages}
-            />
+            )}
 
+            {mode === 'viewer' && (
+              <GradientBackgroundIconButton
+                icon={ic_share}
+                onPress={this.onPressShareAction}
+              />
+            )}
+          </View>
+        </View>
+        <View style={GStyles.rowContainer}>
+          <MessageBox onPressSendMessage={onPressSendMessage} />
+          {mode === 'streamer' && (
             <GradientBackgroundIconButton
               icon={ic_share}
               onPress={this.onPressShareAction}
+              containerStyle={{ marginLeft: 8 }}
             />
-          </View>
+          )}
 
-          <View style={GStyles.rowBetweenContainer}>
-            {mode === 'viewer' && (
-              <GradientBackgroundIconButton
-                icon={heart}
-                onPress={this.onPressSendHeart}
-                containerStyle={{ marginLeft: 8, marginRight: 0 }}
-              />
-            )}
-            {mode === 'viewer' && (
-              <GradientBackgroundIconButton
-                icon={ic_gift}
-                onPress={this.onPressGiftAction}
-                containerStyle={{ marginLeft: 8, marginRight: 0 }}
-              />
-            )}
-          </View>
+          {mode === 'viewer' && (
+            <GradientBackgroundIconButton
+              icon={heart}
+              onPress={this.onPressSendHeart}
+              containerStyle={{ marginLeft: 8 }}
+            />
+          )}
+          {mode === 'viewer' && (
+            <GradientBackgroundIconButton
+              icon={ic_gift}
+              onPress={this.onPressGiftAction}
+              containerStyle={{ marginLeft: 8 }}
+            />
+          )}
         </View>
       </>
     );

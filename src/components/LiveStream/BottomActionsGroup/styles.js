@@ -10,6 +10,7 @@ const styles = StyleSheet.create({
     height: 44,
     paddingHorizontal: 15,
     borderRadius: 32,
+    flex: 1,
   },
   textInput: {
     flex: 1,
@@ -23,9 +24,6 @@ const styles = StyleSheet.create({
   iconSend: {
     width: 24,
     height: 24,
-  },
-  actionWrapper: {
-    marginRight: 8,
   },
   gradient: {
     justifyContent: 'center',

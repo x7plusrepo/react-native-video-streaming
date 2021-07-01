@@ -15,7 +15,6 @@ import StartPanel from './StartPanel';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Header from '../../components/LiveStream/Header';
-import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
@@ -41,14 +40,13 @@ class GoLive extends React.Component {
       },
       videoConfig: {
         preset: 1,
-        bitrate: 500000,
+        bitrate: 150000,
         profile: 1,
         fps: 15,
         videoFrontMirror: false,
       },
-      lastPress: 0,
+      preparing: true,
     };
-    this.messageBottomSheet = React.createRef();
     this.profileSheet = React.createRef();
   }
 
@@ -73,6 +71,7 @@ class GoLive extends React.Component {
           room: {
             ...room,
             user: this.props.user || {},
+            liveStatus: room?.liveStatus || 0,
             countHeart: 0,
           },
         });
@@ -87,6 +86,7 @@ class GoLive extends React.Component {
             liveStatus: room?.liveStatus || 1,
             mode: room?.mode || 0,
           },
+          preparing: false,
         }));
       }
     });
@@ -102,6 +102,13 @@ class GoLive extends React.Component {
     });
     SocketManager.instance.listenSendHeart((data) => {
       const room = data?.room;
+      if (
+        room?.liveStatus !== LIVE_STATUS.ON_LIVE ||
+        this.state.room?.liveStatus !== LIVE_STATUS.ON_LIVE ||
+        this.state.preparing
+      ) {
+        return;
+      }
       if (room) {
         this.setState((prevState) => ({
           room,
@@ -111,6 +118,13 @@ class GoLive extends React.Component {
     });
     SocketManager.instance.listenSendMessage((data) => {
       const { message, room } = data;
+      if (
+        room?.liveStatus !== LIVE_STATUS.ON_LIVE ||
+        this.state.room?.liveStatus !== LIVE_STATUS.ON_LIVE ||
+        this.state.preparing
+      ) {
+        return;
+      }
       if (message && message?.sender?.id !== this.props.user?.id) {
         const messages = this.state.messages || [];
         this.setState({ messages: [message].concat(messages) });
@@ -121,6 +135,13 @@ class GoLive extends React.Component {
     });
     SocketManager.instance.listenSendGift((data) => {
       const { gift, room, senderName } = data;
+      if (
+        room?.liveStatus !== LIVE_STATUS.ON_LIVE ||
+        this.state.room?.liveStatus !== LIVE_STATUS.ON_LIVE ||
+        this.state.preparing
+      ) {
+        return;
+      }
       if (gift) {
         const message = {
           message: `Sent a ${gift.name}`,
@@ -151,23 +172,19 @@ class GoLive extends React.Component {
     const user = this.props.user || {};
     const { id: streamerId } = user;
     if (this.nodeCameraViewRef) this.nodeCameraViewRef.stop();
+    SocketManager.instance.emitFinishLiveStream({ streamerId });
     SocketManager.instance.removePrepareLiveStream();
     SocketManager.instance.removeBeginLiveStream();
     SocketManager.instance.removeFinishLiveStream();
     SocketManager.instance.removeSendHeart();
     SocketManager.instance.removeSendMessage();
     SocketManager.instance.removeSendGift();
-    SocketManager.instance.emitFinishLiveStream({ streamerId });
     SocketManager.instance.emitLeaveRoom({
       userId: streamerId,
       streamerId,
     });
     BackHandler.removeEventListener('hardwareBackPress', this.onPressClose);
   }
-
-  onPressMessageAction = () => {
-    this.messageBottomSheet?.current?.open();
-  };
 
   onPressShareAction = async () => {
     const { room } = this.state;
@@ -200,11 +217,6 @@ class GoLive extends React.Component {
     if (!message) return;
     const user = this.props.user || {};
     const { id: streamerId } = user;
-    SocketManager.instance.emitSendMessage({
-      streamerId,
-      message,
-      userId: streamerId,
-    });
     const messages = this.state.messages || [];
     this.setState({
       messages: [
@@ -215,7 +227,11 @@ class GoLive extends React.Component {
         },
       ].concat(messages),
     });
-    this.messageBottomSheet?.current?.close();
+    SocketManager.instance.emitSendMessage({
+      streamerId,
+      message,
+      userId: streamerId,
+    });
   };
 
   onCloseProfileSheet = () => {
@@ -312,7 +328,8 @@ class GoLive extends React.Component {
   };
 
   render() {
-    const { messages, audioConfig, videoConfig, isMuted, room } = this.state;
+    const { messages, audioConfig, videoConfig, isMuted, room, preparing } =
+      this.state;
     const user = this.props.user || {};
     const countHeart = room?.countHeart || 0;
     const liveStatus = room?.liveStatus || 0;
@@ -330,7 +347,15 @@ class GoLive extends React.Component {
           outputUrl={outputUrl}
           camera={{ cameraId: 0, cameraFrontMirror: true }}
           audio={audioConfig}
-          video={videoConfig}
+          video={{
+            ...videoConfig,
+            ...(mode === 1 && {
+              preset: 1,
+              bitrate: 0,
+              profile: 1,
+              fps: 15,
+            }),
+          }}
           scaleMode={'ScaleAspectFit'}
           smoothSkinLevel={3}
           autopreview={false}
@@ -341,7 +366,7 @@ class GoLive extends React.Component {
           </View>
         )}
 
-        {(liveStatus === LIVE_STATUS.PREPARE || liveStatus === -1) && (
+        {preparing && (
           <StartPanel
             liveStatus={liveStatus}
             onPressStart={this.onPressStart}
@@ -362,28 +387,16 @@ class GoLive extends React.Component {
             <BottomActionsGroup
               onPressSwitchCamera={this.onPressSwitchCamera}
               onPressSwitchAudio={this.onPressSwitchAudio}
-              onPressMessageAction={this.onPressMessageAction}
               onPressShareAction={this.onPressShareAction}
               onPressProfileAction={this.onPressProfileAction}
+              onPressSendMessage={this.onPressSendMessage}
               mode="streamer"
+              method={mode}
               isMuted={isMuted}
               messages={messages}
             />
           </View>
         </View>
-        <RBSheet
-          ref={this.messageBottomSheet}
-          closeOnDragDown
-          openDuration={250}
-          height={60}
-          customStyles={{
-            container: styles.sheetCommonContainer,
-            wrapper: styles.sheetWrapper,
-            draggableIcon: styles.sheetDragIcon,
-          }}
-        >
-          <MessageBox onPressSendMessage={this.onPressSendMessage} />
-        </RBSheet>
         <RBSheet
           ref={this.profileSheet}
           closeOnDragDown

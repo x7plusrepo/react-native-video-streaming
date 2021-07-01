@@ -253,13 +253,13 @@ const GStyles = StyleSheet.create({
   },
   liveStreamChatText: {
     fontFamily: 'GothamPro',
-    color: '#FDFFA5',
+    color: 'white',
     fontSize: 12,
     fontWeight: '500',
   },
   liveStreamChatSender: {
     fontFamily: 'GothamPro',
-    color: 'white',
+    color: GStyle.activeColor,
     fontSize: 12,
     fontWeight: '700',
   },

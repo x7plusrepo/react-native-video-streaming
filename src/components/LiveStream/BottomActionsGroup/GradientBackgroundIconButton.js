@@ -7,7 +7,7 @@ import {GStyles} from '../../../utils/Global/Styles';
 const GradientBackgroundIconButton = (props) => {
   const { icon, onPress, containerStyle, iconStyle } = props;
   return (
-    <TouchableOpacity activeOpacity={0.6} style={[styles.actionWrapper, containerStyle]} onPress={onPress}>
+    <TouchableOpacity activeOpacity={0.6} style={containerStyle} onPress={onPress}>
       <LinearGradient
         colors={[
           'rgba(200, 58, 132, 0.71)',
