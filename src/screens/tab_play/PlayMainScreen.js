@@ -46,7 +46,6 @@ class PlayMainScreen extends Component {
     this.onRefresh('init');
 
     this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('play'));
       Helper.setDarkStatusBar();
       this.checkSignin();
       this.setState({ isVideoPause: false });
@@ -165,14 +164,14 @@ class PlayMainScreen extends Component {
               );
               Helper.callFunc(global.onSetUnreadCount);
               Global.registerPushToken();
-              if (type === 'init') {
-                this.props.navigation.navigate('home');
-              }
             }
           }
         } else {
           Helper.alertServerDataError();
         }
+      }
+      if (type === 'init') {
+        this.props.navigation.jumpTo('home');
       }
     });
   };
@@ -219,7 +218,7 @@ class PlayMainScreen extends Component {
     const user = item?.user || {};
     if (global.me) {
       if (user.id === global.me?.id) {
-        this.props.navigation.navigate('profile');
+        this.props.navigation.jumpTo('profile');
       } else {
         global._opponentUser = user;
         this.props.navigation.navigate('profile_other');

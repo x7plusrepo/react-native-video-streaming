@@ -23,7 +23,6 @@ class SavedProductsScreen extends React.Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('profile'));
     });
     this.onRefresh('init');
   }

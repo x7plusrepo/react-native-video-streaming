@@ -22,7 +22,6 @@ class HomeMainScreen extends React.Component {
   componentDidMount() {
 
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('home'));
       Helper.setLightStatusBar();
     });
     this.refreshCategories();

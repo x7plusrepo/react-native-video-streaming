@@ -20,7 +20,6 @@ class CameraPreviewScreen extends Component {
   }
 
   componentDidMount() {
-    Helper.callFunc(global.setBottomTabName('camera'));
     Helper.setDarkStatusBar();
     this.onRefresh();
   }

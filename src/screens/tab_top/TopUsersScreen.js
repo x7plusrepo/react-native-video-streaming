@@ -32,7 +32,6 @@ class TopUsersScreen extends React.Component {
   componentDidMount() {
 
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('top'));
       Helper.setLightStatusBar();
     });
     this.onRefresh('init');
@@ -110,7 +109,7 @@ class TopUsersScreen extends React.Component {
   onPressUser = (item) => {
     if (global.me) {
       if (item.id === global.me?.id) {
-        this.props.navigation.navigate('profile');
+        this.props.navigation.jumpTo('profile');
       } else {
         global._opponentUser = item;
         global._prevScreen = 'top_users';

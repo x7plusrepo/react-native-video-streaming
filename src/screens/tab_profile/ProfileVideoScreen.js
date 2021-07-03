@@ -1,16 +1,30 @@
-import React, {Component} from 'react';
-import {Dimensions, FlatList, Image, Platform, StatusBar, TouchableOpacity, View,} from 'react-native';
+import React, { Component } from 'react';
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  Platform,
+  StatusBar,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import {useNavigation, useRoute,} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import RNFetchBlob from 'rn-fetch-blob';
 import RNFS from 'react-native-fs';
 import CameraRoll from '@react-native-community/cameraroll';
 
-import {RNFFmpeg} from 'react-native-ffmpeg';
+import { RNFFmpeg } from 'react-native-ffmpeg';
 
 import ProgressModal from '../../components/ProgressModal';
 
-import {Constants, Global, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import {
+  Constants,
+  Global,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global';
 import RenderProducts from '../../components/products/RenderProduct';
 import get from 'lodash/get';
 
@@ -88,22 +102,22 @@ class ProfileVideoScreen extends Component {
 
       this.setState({ item });
       global._opponentUser = item.user;
+      if (global.me?.id) {
+        let params = {
+          video_id: item?.id,
+          owner_id: item.user?.id,
+          viewer_id: global.me ? global.me?.id : 0,
+          device_type: Platform.OS === 'ios' ? '1' : '0',
+          device_identifier: global._deviceId,
+        };
 
-      let params = {
-        video_id: item?.id,
-        owner_id: item.user?.id,
-        viewer_id: global.me ? global.me?.id : 0,
-        device_type: Platform.OS === 'ios' ? '1' : '0',
-        device_identifier: global._deviceId,
-      };
-
-      RestAPI.update_video_view(params, (json, err) => {});
+        RestAPI.update_video_view(params, (json, err) => {});
+      }
     }
   };
 
   onPressAvatar = (item) => {
     const user = item?.user || {};
-
     if (global.me) {
       if (user.id === global.me?.id) {
         this.props.navigation.navigate('profile');

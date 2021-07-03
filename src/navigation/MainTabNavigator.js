@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { useEffect } from 'react';
 import { Image, StyleSheet } from 'react-native';
 
 import { GStyle, Helper, RestAPI } from '../utils/Global';
@@ -14,6 +14,7 @@ import { setUnreadCount } from '../redux/message/actions';
 import avatars from '../assets/avatars';
 import { setMyUserAction } from '../redux/me/actions';
 import PlayMainScreen from '../screens/tab_play/PlayMainScreen';
+import BottomTab from "./BottomTab";
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/Icons/ic_gift.png');
@@ -24,29 +25,30 @@ const Tab = createBottomTabNavigator();
 
 let BOTTOM_TAB_HEIGHT = 50 + Helper.getBottomBarHeight();
 
-class MainTabNavigator extends Component {
-  constructor(props) {
-    super(props);
+const TabBarVisibilityOptions = ({ route }) => {
+  const isNestedRoute: boolean = route.state?.index > 0;
 
+  return { tabBarVisible: !isNestedRoute };
+};
+
+const MainTabNavigator = (props) => {
+
+  const user = props.user;
+  const unreadCount = props.unreadCount || 0;
+
+  useEffect(() => {
     console.log('MainTabNavigator start');
+    init();
+  }, []);
 
-    this.init();
-  }
 
-  init = () => {
-    this.state = {
-      curTabName: 'play',
-    };
+  const init = () => {
 
-    global.onSetUnreadCount = this.onSetUnreadCount;
-    global.onGotoMessage = this.onGotoMessage;
-
-    global.setBottomTabName = (curTabName) => {
-      this.setState({ curTabName });
-    };
+    global.onSetUnreadCount = onSetUnreadCount;
+    global.onGotoMessage = onGotoMessage;
   };
 
-  onSetUnreadCount = () => {
+  const onSetUnreadCount = () => {
     let params = {
       user_id: global.me?.id,
     };
@@ -55,124 +57,118 @@ class MainTabNavigator extends Component {
       showForcePageLoader(false);
 
       if (json.status === 200) {
-        this.props.setUnreadCount(json.data?.unreadCount || 0);
+        props.setUnreadCount(json.data?.unreadCount || 0);
       }
     });
   };
 
-  onGotoMessage = async () => {
+  const onGotoMessage = async () => {
     await Helper.setDeviceId();
     await Helper.hasPermissions();
 
     showForcePageLoader(true);
-    this.props.navigation.navigate('message');
+    props.navigation.navigate('message');
   };
 
-  render() {
-    const { curTabName } = this.state;
-    const user = this.props.user;
-    const unreadCount = this.props.unreadCount || 0;
-
-    return (
-      <Tab.Navigator
-        initialRouteName="play"
-        tabBarOptions={{
-          activeTintColor: curTabName === 'play' ? 'white' : GStyle.blackColor,
-          inactiveTintColor: curTabName === 'play' ? 'white' : GStyle.grayColor,
-          style: {
-            height: BOTTOM_TAB_HEIGHT,
-            backgroundColor: curTabName === 'play' ? 'transparent' : 'white',
-            position:
-              curTabName === 'play' || curTabName === 'profile_other'
-                ? 'absolute'
-                : 'relative',
-            elevation: 0,
-          },
-          showLabel: false,
+  return (
+    <Tab.Navigator
+      initialRouteName="play"
+      tabBarOptions={{
+        // activeTintColor: curTabName === 'play' ? 'white' : GStyle.blackColor,
+        // inactiveTintColor: curTabName === 'play' ? 'white' : GStyle.grayColor,
+        style: {
+          height: BOTTOM_TAB_HEIGHT,
+          backgroundColor: 'white',
+          position:'absolute',
+            // curTabName === 'play' || curTabName === 'profile_other'
+            //   ?
+            //   : 'relative',
+          elevation: 0,
+        },
+        showLabel: false,
+      }}
+      //tabBar={props => <BottomTab {...props} />}
+    >
+      <Tab.Screen
+        name="top"
+        component={TopUsersScreen}
+        options={{
+          tabBarLabel: 'Top',
+          tabBarIcon: ({ color, size }) => (
+            <Image source={ic_tab_top} style={styles.tabIconImage} />
+          ),
         }}
-      >
-        <Tab.Screen
-          name="top"
-          component={TopUsersScreen}
-          options={{
-            tabBarLabel: 'Top',
-            tabBarIcon: ({ color, size }) => (
-              <Image source={ic_tab_top} style={styles.tabIconImage} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="play"
-          component={PlayMainScreen}
-          options={{
-            tabBarLabel: 'Play',
-            tabBarIcon: ({ color, size }) => (
-              <Image source={ic_tab_play} style={[styles.tabIconImage]} />
-            ),
-            tabBarVisible: curTabName !== 'profile_other',
-          }}
-        />
-        <Tab.Screen
-          name="home"
-          component={HomeMainScreen}
-          options={{
-            tabBarLabel: 'Home',
-            tabBarIcon: ({ color, size }) => (
-              <Image source={ic_tab_home} style={styles.tabIconImage} />
-            ),
-          }}
-        />
-        <Tab.Screen
-          name="live_stream"
-          component={BrowseRooms}
-          options={{
-            tabBarLabel: 'LiveStream',
-            tabBarIcon: ({ color, size }) => (
-              <Image source={ic_tab_liveStream} style={styles.tabIconImage} />
-            ),
-            tabBarBadgeStyle: { backgroundColor: 'red' },
-          }}
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              if (!user) {
-                e.preventDefault();
-                this.props.navigation.navigate('signin');
-              }
-            },
-          })}
-        />
-        <Tab.Screen
-          name="profile"
-          component={ProfileMainScreen}
-          options={{
-            tabBarLabel: 'Me',
-            tabBarIcon: ({ color, size }) => {
-              const randomNumber = Math.floor(Math.random() * avatars.length);
-              const randomImageUrl = avatars[randomNumber];
+      />
+      <Tab.Screen
+        name="play"
+        component={PlayMainScreen}
+        options={{
+          tabBarLabel: 'Play',
+          tabBarIcon: ({ color, size }) => (
+            <Image source={ic_tab_play} style={[styles.tabIconImage]} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="home"
+        component={HomeMainScreen}
+        options={{
+          tabBarLabel: 'Home',
+          tabBarIcon: ({ color, size }) => (
+            <Image source={ic_tab_home} style={styles.tabIconImage} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="live_stream"
+        component={BrowseRooms}
+        options={{
+          tabBarLabel: 'LiveStream',
+          tabBarIcon: ({ color, size }) => (
+            <Image source={ic_tab_liveStream} style={styles.tabIconImage} />
+          ),
+          tabBarBadgeStyle: { backgroundColor: 'red' },
+        }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            if (!user) {
+              e.preventDefault();
+              this.props.navigation.navigate('signin');
+            }
+          },
+        })}
+      />
+      <Tab.Screen
+        name="profile"
+        component={ProfileMainScreen}
+        options={{
+          tabBarLabel: 'Me',
+          tabBarIcon: ({ color, size }) => {
+            const randomNumber = Math.floor(Math.random() * avatars.length);
+            const randomImageUrl = avatars[randomNumber];
 
-              const avatarImage = { uri: user?.photo ?? randomImageUrl };
-              return (
-                <Image
-                  source={avatarImage}
-                  style={[styles.tabIconImage, styles.profileIcon]}
-                />
-              );
-            },
-            ...(unreadCount > 0 && { tabBarBadge: unreadCount }),
-            tabBarBadgeStyle: { backgroundColor: 'red', fontSize: 12 },
-          }}
-          listeners={({ navigation, route }) => ({
-            tabPress: (e) => {
-              if (!user) {
-                e.preventDefault();
-                this.props.navigation.navigate('signin');
-              }
-            },
-          })}
-        />
-      </Tab.Navigator>
-    );
-  }
+            const avatarImage = { uri: user?.photo ?? randomImageUrl };
+            return (
+              <Image
+                source={avatarImage}
+                style={[styles.tabIconImage, styles.profileIcon]}
+              />
+            );
+          },
+          ...(unreadCount > 0 && { tabBarBadge: unreadCount }),
+          tabBarBadgeStyle: { backgroundColor: 'red', fontSize: 12 },
+        }}
+        listeners={({ navigation, route }) => ({
+          tabPress: (e) => {
+            if (!user) {
+              e.preventDefault();
+              this.props.navigation.navigate('signin');
+            }
+          },
+        })}
+      />
+    </Tab.Navigator>
+  );
 }
 
 export default connect(

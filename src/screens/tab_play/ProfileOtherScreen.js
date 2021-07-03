@@ -32,7 +32,6 @@ class ProfileOtherScreen extends React.Component {
   }
 
   componentDidMount() {
-    Helper.callFunc(global.setBottomTabName('profile_other'));
     this.onRefresh();
   }
 

@@ -70,6 +70,7 @@ export default function App() {
           gestureResponseDistance: { horizontal: WINDOW_HEIGHT },
           cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
         }}
+        initialRouteName="main_tab_navigator"
       >
         {/* --- start --- */}
         <Stack.Screen name="main_tab_navigator" component={MainTabNavigator} />
@@ -93,12 +94,12 @@ export default function App() {
 
         {/* --- profile tab --- */}
         <Stack.Screen name="profile_edit" component={ProfileEditScreen} />
-        <Stack.Screen name="profile_video" component={ProfileVideoScreen} />
         <Stack.Screen name="profile_other" component={ProfileOtherScreen} />
         <Stack.Screen name="fans_screen" component={FansScreen} />
         <Stack.Screen name="following_users" component={FollowingUsersScreen} />
         <Stack.Screen name="saved_products" component={SavedProductsScreen} />
         <Stack.Screen name="my_products" component={MyVideoScreen} />
+        <Stack.Screen name="profile_video" component={ProfileVideoScreen} />
         <Stack.Screen name="go_live" component={GoLive} />
         <Stack.Screen name="view_live" component={ViewLive} />
       </Stack.Navigator>

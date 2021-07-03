@@ -114,7 +114,7 @@ const getMenuItems = (navigation, setMyUserAction) => {
             await Helper.removeLocalValue(Constants.KEY_USER);
 
             global._prevScreen = 'profile_edit';
-            navigation.navigate('play');
+            navigation.jumpTo('play');
           },
         },
   );
@@ -136,7 +136,6 @@ class ProfileMainScreen extends React.Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('profile'));
       Helper.setLightStatusBar();
       this.onRefresh();
     });
@@ -211,7 +210,7 @@ class ProfileMainScreen extends React.Component {
         opacity,
       },
       styles.topContainer,
-      user?.userType === 0 && { height: 250 },
+      user?.userType === 0 && { height: 280 },
     ];
 
     return (
@@ -319,7 +318,7 @@ const styles = StyleSheet.create({
   topContainer: {
     width: '100%',
     position: 'absolute',
-    height: 280,
+    height: 300,
     justifyContent: 'space-around',
     alignItems: 'center',
     zIndex: 10,
@@ -338,7 +337,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-evenly',
   },
   scrollViewContainer: {
-    paddingTop: 300,
+    paddingTop: 320,
     paddingBottom: 120,
   },
   menuContainer: {

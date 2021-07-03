@@ -10,6 +10,7 @@ import {
 import { NodeCameraView } from 'react-native-nodemediaclient';
 import { connect } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import KeepAwake from 'react-native-keep-awake';
 
 import StartPanel from './StartPanel';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
@@ -53,6 +54,7 @@ class GoLive extends React.Component {
   componentDidMount() {
     this.init();
     BackHandler.addEventListener('hardwareBackPress', this.onPressClose);
+    KeepAwake.activate();
   }
 
   init = () => {
@@ -184,6 +186,7 @@ class GoLive extends React.Component {
       streamerId,
     });
     BackHandler.removeEventListener('hardwareBackPress', this.onPressClose);
+    KeepAwake.deactivate();
   }
 
   onPressShareAction = async () => {

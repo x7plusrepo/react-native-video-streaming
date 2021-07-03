@@ -36,19 +36,19 @@ const Helper = {
   },
 
   setDarkStatusBar: function () {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('black');
-    }
-    StatusBar.setBarStyle('light-content');
-    changeNavigationBarColor('black', false);
+    // if (Platform.OS === 'android') {
+    //   StatusBar.setBackgroundColor('black');
+    // }
+    // StatusBar.setBarStyle('light-content');
+    // changeNavigationBarColor('black', false);
   },
 
   setLightStatusBar: function () {
-    if (Platform.OS === 'android') {
-      StatusBar.setBackgroundColor('white');
-    }
-    StatusBar.setBarStyle('dark-content');
-    changeNavigationBarColor('white', true);
+    // if (Platform.OS === 'android') {
+    //   StatusBar.setBackgroundColor('white');
+    // }
+    // StatusBar.setBarStyle('dark-content');
+    // changeNavigationBarColor('white', true);
   },
 
   alertNetworkError: function (message = 'Network error.') {

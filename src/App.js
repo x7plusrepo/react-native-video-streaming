@@ -1,27 +1,48 @@
-import React, {useEffect, useState} from 'react';
-import {Image, Platform, StatusBar, StyleSheet, View} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { Image, Platform, StatusBar, StyleSheet, View } from 'react-native';
 import branch from 'react-native-branch';
 
-import {Provider} from 'react-redux';
-import {store} from './redux/store';
+import { Provider } from 'react-redux';
+import { store } from './redux/store';
 // import RestAPI from './DB/RestAPI';
 // import Constants from './DB/Constants';
-import {Constants, Helper} from './utils/Global';
+import { Constants, Helper } from './utils/Global';
 
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 import AppNavigator from './navigation/AppNavigator';
-import {Provider as PaperProvider} from 'react-native-paper';
+import { Provider as PaperProvider } from 'react-native-paper';
 import * as RootNavigation from './utils/Global/RootNavigation';
 
-import FlashMessage, {showMessage} from 'react-native-flash-message';
+import FlashMessage, { showMessage } from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
 import LiveStreamSocketManager from './utils/LiveStream/SocketManager';
 import ChatStreamSocketManager from './utils/Message/SocketManager';
 import GStyle from './utils/Global/Styles';
+import { isReadyRef, navigationRef } from './utils/Global/RootNavigation';
+
+const handleDeepLink = (product, roomId) => {
+  if (product) {
+    try {
+      global._selIndex = 0;
+
+      if (typeof product === 'string') {
+        global._invitedProduct = [JSON.parse(product)];
+      } else {
+        global._invitedProduct = [product];
+      }
+    } catch (error) {}
+
+    RootNavigation.navigate('profile_video', { isDeepLinking: true });
+  }
+
+  if (roomId) {
+    RootNavigation.navigate('view_live', { roomId });
+  }
+};
 
 const subscribeDeepLink = () => {
-  branch.subscribe(({ error, params, uri }) => {
+  return branch.subscribe(({ error, params, uri }) => {
     if (error) {
       console.error('Error from Branch: ' + error);
       return;
@@ -49,22 +70,12 @@ const subscribeDeepLink = () => {
     // const image = params.$og_image_url;
     // const inviterId = params.inviterId;
     const { roomId, product } = params;
-    if (product) {
-      try {
-        global._selIndex = 0;
-
-        if (typeof product === 'string') {
-          global._invitedProduct = [JSON.parse(product)];
-        } else {
-          global._invitedProduct = [product];
-        }
-      } catch (error) {}
-
-      RootNavigation.navigate('profile_video', { isDeepLinking: true });
-    }
-
-    if (roomId) {
-      RootNavigation.navigate('view_live', { roomId });
+    if (isReadyRef.current && navigationRef.current) {
+      handleDeepLink(product, roomId);
+    } else {
+      setTimeout(() => {
+        handleDeepLink(product, roomId);
+      }, 15000);
     }
   });
 };
@@ -88,7 +99,7 @@ function App() {
       OneSignal.promptForPushNotificationsWithUserResponse(myiOSPromptCallback);
     }
     getDeviceState();
-    subscribeDeepLink();
+    const branchUnsubscribe = subscribeDeepLink();
     LiveStreamSocketManager.instance.connect();
     ChatStreamSocketManager.instance.connect();
     ChatStreamSocketManager.instance.listenReceiveMessages();
@@ -97,6 +108,7 @@ function App() {
       LiveStreamSocketManager.instance.disconnect();
       ChatStreamSocketManager.instance.disconnect();
       ChatStreamSocketManager.instance.removeReceiveMessages();
+      branchUnsubscribe();
     };
   }, []);
 

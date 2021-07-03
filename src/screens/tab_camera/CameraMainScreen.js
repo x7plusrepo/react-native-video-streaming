@@ -44,7 +44,6 @@ class CameraMainScreen extends Component {
 
   componentDidMount() {
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
-      Helper.callFunc(global.setBottomTabName('camera'));
       Helper.setDarkStatusBar();
     });
     this.requestCameraPermission();

@@ -115,7 +115,6 @@ class SigninScreen extends React.Component {
   };
 
   onBack = () => {
-    // this.props.navigation.navigate('play');
     this.props.navigation.goBack();
   };
 

@@ -26,17 +26,17 @@ const PanelLive = (props) => {
   const [thumbnail, setThumbnail] = useState(null);
   const onChangeText = (text) => setTopic(text);
   const onStart = async () => {
-    //showForcePageLoader(true);
-    // const uploadedUrl = await Global.uploadToCloudinary(
-    //   thumbnail,
-    //   'temporary/liveStreamImages',
-    // );
-    // showForcePageLoader(false);
-    // if (!uploadedUrl) {
-    //   alert('Thumbnail required.');
-    //   return;
-    // }
-    onPressStart && onPressStart(topic, 'uploadedUrl', mode);
+    showForcePageLoader(true);
+    const uploadedUrl = await Global.uploadToCloudinary(
+      thumbnail,
+      'temporary/liveStreamImages',
+    );
+    showForcePageLoader(false);
+    if (!uploadedUrl) {
+      alert('Thumbnail required.');
+      return;
+    }
+    onPressStart && onPressStart(topic, uploadedUrl, mode);
   };
   const onPressClose = () => {
     const { onPressClose } = props;

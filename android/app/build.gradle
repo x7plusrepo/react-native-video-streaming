@@ -152,7 +152,7 @@ android {
         applicationId "com.stars.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 22
+        versionCode 24
         versionName "2.0.4"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
@@ -240,7 +240,6 @@ dependencies {
     } else {
         implementation jscFlavor
     }
-    implementation project(':react-native-splash-screen')
 }
 
 // Run this once to be able to run the application with BUCK

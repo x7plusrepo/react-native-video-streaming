@@ -11,13 +11,13 @@ import { connect } from 'react-redux';
 import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import KeepAwake from 'react-native-keep-awake';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Gifts from '../../components/LiveStream/Gifts';
 import Header from '../../components/LiveStream/Header';
-import MessageBox from '../../components/LiveStream/BottomActionsGroup/MessageBox';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
 
 import { setGifts } from '../../redux/liveStream/actions';
@@ -47,6 +47,7 @@ class ViewLive extends Component {
   }
 
   componentDidMount() {
+
     const { route } = this.props;
     const roomId = get(route, 'params.roomId');
 
@@ -70,49 +71,59 @@ class ViewLive extends Component {
         this.props.setGifts(json.data.gifts || []);
       }
     });
+
+    KeepAwake.activate();
+
   }
 
   init = () => {
     const { user } = this.props;
     const { room } = this.state;
-    const userId = user?.id;
-    const streamerId = room?.user?.id;
-
-    SocketManager.instance.emitJoinRoom({
-      streamerId,
-      userId,
-    });
-    SocketManager.instance.listenBeginLiveStream((newRoom) => {
-      if (newRoom?.id === room?.id)
-        this.setState((prevState) => ({
-          room: {
-            ...prevState?.room,
-            liveStatus: newRoom?.liveStatus || 1,
-          },
-        }));
-    });
-    SocketManager.instance.listenPrepareLiveStream((newRoom) => {
-      if (newRoom?.d === room?.id) {
-        this.setState((prevState) => ({
-          room: {
-            ...prevState?.room,
-            liveStatus: newRoom?.liveStatus || 0,
-          },
-        }));
-      }
-    });
-    SocketManager.instance.listenFinishLiveStream(() => {
-      this.setState((prevState) => ({
-        room: {
-          ...prevState?.room,
-          liveStatus: LIVE_STATUS.FINISH,
-        },
-      }));
-      Alert.alert('', 'Thanks for viewing. Live Streaming is over.', [
+    if (room?.liveStatus !== LIVE_STATUS.ON_LIVE) {
+      Alert.alert('', 'Live Streaming is over.', [
         { text: 'OK', onPress: this.props.navigation.goBack },
       ]);
-    });
-    this.onPressJoin();
+    } else {
+      const userId = user?.id;
+      const streamerId = room?.user?.id;
+
+      SocketManager.instance.emitJoinRoom({
+        streamerId,
+        userId,
+      });
+      SocketManager.instance.listenBeginLiveStream((newRoom) => {
+        if (newRoom?.id === room?.id)
+          this.setState((prevState) => ({
+            room: {
+              ...prevState?.room,
+              liveStatus: newRoom?.liveStatus || 1,
+            },
+          }));
+      });
+      SocketManager.instance.listenPrepareLiveStream((newRoom) => {
+        if (newRoom?.d === room?.id) {
+          this.setState((prevState) => ({
+            room: {
+              ...prevState?.room,
+              liveStatus: newRoom?.liveStatus || 0,
+            },
+          }));
+        }
+      });
+      SocketManager.instance.listenFinishLiveStream(() => {
+        this.setState((prevState) => ({
+          room: {
+            ...prevState?.room,
+            liveStatus: LIVE_STATUS.FINISH,
+          },
+        }));
+        Alert.alert('', 'Thanks for viewing. Live Streaming is over.', [
+          { text: 'OK', onPress: this.props.navigation.goBack },
+        ]);
+      });
+      this.onPressJoin();
+    }
+
     // if (liveStatus === LIVE_STATUS.FINISH) {
     //   SocketManager.instance.emitReplay({
     //     userId,
@@ -223,6 +234,7 @@ class ViewLive extends Component {
   componentWillUnmount() {
     this.onLeave();
     this.removeListenersForExit();
+    KeepAwake.deactivate();
   }
 
   onPressGiftAction = () => {
