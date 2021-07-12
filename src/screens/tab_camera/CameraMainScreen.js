@@ -76,9 +76,6 @@ class CameraMainScreen extends Component {
   init = () => {
     const { route } = this.props;
     const maxDuration = get(route, 'params.maxDuration');
-    // const mode = get(route, 'params.mode');
-    // const routeName = mode === 1 ? 'product_upload' : 'post_upload';
-    // this.props.navigation.navigate(routeName);
     this.state = {
       flash: 'off',
       mute: false,
