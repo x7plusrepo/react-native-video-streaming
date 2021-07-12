@@ -1,7 +1,18 @@
 import React from 'react';
-import {Image, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
-import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
+import {
+  StackActions,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -9,7 +20,7 @@ import Avatar from '../../../components/elements/Avatar';
 import Achievements from '../../profile/Achievements';
 import PlaceHolder from '../../profile/PlaceHolder';
 
-import {GStyle, GStyles, Helper, RestAPI} from '../../../utils/Global';
+import { GStyle, GStyles, Helper, RestAPI } from '../../../utils/Global';
 import avatars from '../../../assets/avatars';
 
 const ic_plus_1 = require('../../../assets/images/Icons/ic_plus_1.png');
@@ -36,17 +47,14 @@ class ProfileBottom extends React.Component {
 
   init = () => {
     this.state = {
-      itemDatas: [],
+      products: [],
+      posts: [],
       opponentUser: null,
       isLoading: false,
     };
   };
 
-  onRefresh = () => {
-    if (!global._opponentUser?.id) {
-      return;
-    }
-
+  loadProducts = () => {
     let params = {
       me_id: global.me ? global.me?.id : 0,
       user_id: global._opponentUser?.id,
@@ -58,33 +66,71 @@ class ProfileBottom extends React.Component {
       this.setState({ isLoading: false });
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
-      } else {
-        if (json.status === 200 && json?.data) {
-          if (json?.data?.videoList) {
-            this.setState({
-              itemDatas: json.data.videoList || [],
-            });
-          }
-
-          if (json?.data?.user) {
-            this.setState({
-              opponentUser: json.data.user,
-            });
-          }
-        } else {
-          Helper.alertServerDataError();
+      } else if (json.status === 200 && json?.data) {
+        if (json?.data?.videoList) {
+          this.setState({
+            products: json.data.videoList || [],
+          });
         }
+
+        if (json?.data?.user) {
+          this.setState({
+            opponentUser: json.data.user,
+          });
+        }
+      } else {
+        Helper.alertServerDataError();
       }
     });
   };
 
+  loadPosts = () => {
+    let params = {
+      me_id: global.me ? global.me?.id : 0,
+      user_id: global._opponentUser?.id,
+      page_number: 1,
+      count_per_page: 20,
+    };
+    this.setState({ isLoading: true });
+    RestAPI.get_user_post_list(params, (json, err) => {
+      this.setState({ isLoading: false });
+      if (err !== null) {
+        Helper.alertNetworkError(err?.message);
+      } else if (json.status === 200 && json?.data?.postList) {
+        this.setState({
+          posts: json.data.postList || [],
+        });
+      } else {
+        Helper.alertServerDataError();
+      }
+    });
+  };
+
+  onRefresh = () => {
+    if (!global._opponentUser?.id) {
+      return;
+    }
+    this.loadProducts();
+    this.loadPosts();
+  };
+
   onPressVideo = (value) => {
-    const { itemDatas } = this.state;
-    global._selIndex = itemDatas.findIndex((obj) => obj.id === value);
-    global._profileOtherVideoDatas = itemDatas;
+    const { products } = this.state;
+    global._selIndex = products.findIndex((obj) => obj.id === value);
+    global._productsList = products;
     global._prevScreen = 'profile_other';
     this.props.onCloseProfileSheet && this.props.onCloseProfileSheet();
     const pushAction = StackActions.push('profile_video', null);
+    this.props.navigation.dispatch(pushAction);
+  };
+
+  onPressPost = (value) => {
+    const { posts } = this.state;
+    global._selIndex = posts.findIndex((obj) => obj.id === value);
+    global._postsList = posts;
+    global._prevScreen = 'profile_other';
+    this.props.onCloseProfileSheet && this.props.onCloseProfileSheet();
+    const pushAction = StackActions.push('post_detail', null);
     this.props.navigation.dispatch(pushAction);
   };
 
@@ -130,6 +176,7 @@ class ProfileBottom extends React.Component {
             <>
               {this._renderDetail()}
               {this._renderVideo()}
+              {this._renderPosts()}
               {this._renderBottom()}
             </>
           ) : (
@@ -231,42 +278,88 @@ class ProfileBottom extends React.Component {
   };
 
   _renderVideo = () => {
-    const { itemDatas } = this.state;
+    const { products } = this.state;
 
     return (
-      <ScrollView style={styles.videosWrapper} horizontal>
-        {itemDatas?.map((item, i) => {
-          return (
-            <View
-              key={i}
-              style={{
-                alignItems: 'center',
-                borderRadius: 4,
-                marginRight: 12,
-                overflow: 'hidden',
-              }}
-            >
-              <TouchableOpacity
-                onPress={() => {
-                  this.onPressVideo(item.id);
+      <View style={styles.listContainer}>
+        <Text style={[GStyles.regularText, GStyles.boldText]}>Products</Text>
+        <ScrollView style={styles.videosWrapper} horizontal>
+          {products?.map((item, i) => {
+            return (
+              <View
+                key={i}
+                style={{
+                  alignItems: 'center',
+                  borderRadius: 4,
+                  marginRight: 12,
+                  overflow: 'hidden',
                 }}
               >
-                <FastImage
-                  source={{
-                    uri: item.thumb || '',
-                    priority: FastImage.priority.normal,
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressVideo(item.id);
                   }}
-                  resizeMode={FastImage.resizeMode.cover}
-                  style={{
-                    width: CELL_WIDTH,
-                    height: 120,
+                >
+                  <FastImage
+                    source={{
+                      uri: item.thumb || '',
+                      priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                    style={{
+                      width: CELL_WIDTH,
+                      height: 120,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </ScrollView>
+      </View>
+    );
+  };
+
+  _renderPosts = () => {
+    const { posts } = this.state;
+
+    return (
+      <View style={styles.listContainer}>
+        <Text style={[GStyles.regularText, GStyles.boldText]}>Posts</Text>
+        <ScrollView style={styles.videosWrapper} horizontal>
+          {posts?.map((item, i) => {
+            return (
+              <View
+                key={i}
+                style={{
+                  alignItems: 'center',
+                  borderRadius: 4,
+                  marginRight: 12,
+                  overflow: 'hidden',
+                }}
+              >
+                <TouchableOpacity
+                  onPress={() => {
+                    this.onPressPost(item.id);
                   }}
-                />
-              </TouchableOpacity>
-            </View>
-          );
-        })}
-      </ScrollView>
+                >
+                  <FastImage
+                    source={{
+                      uri: item.thumb || '',
+                      priority: FastImage.priority.normal,
+                    }}
+                    resizeMode={FastImage.resizeMode.cover}
+                    style={{
+                      width: CELL_WIDTH,
+                      height: 120,
+                    }}
+                  />
+                </TouchableOpacity>
+              </View>
+            );
+          })}
+        </ScrollView>
+      </View>
     );
   };
 }
@@ -305,12 +398,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     flex: 1,
   },
+  listContainer: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingBottom: 24,
+    marginTop: 16,
+  },
   videosWrapper: {
     flex: 1,
     flexWrap: 'wrap',
-    paddingHorizontal: 16,
     marginTop: 16,
-    paddingBottom: 24,
   },
   followButtonWrapper: {
     ...GStyles.rowCenterContainer,

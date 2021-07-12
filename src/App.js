@@ -21,22 +21,33 @@ import ChatStreamSocketManager from './utils/Message/SocketManager';
 import GStyle from './utils/Global/Styles';
 import { isReadyRef, navigationRef } from './utils/Global/RootNavigation';
 
-const handleDeepLink = (product, roomId) => {
+const handleDeepLink = ({ product, roomId, post }) => {
+  global._prevScreen = 'deep_link';
   if (product) {
     try {
       global._selIndex = 0;
 
       if (typeof product === 'string') {
-        global._invitedProduct = [JSON.parse(product)];
+        global._productsList = [JSON.parse(product)];
       } else {
-        global._invitedProduct = [product];
+        global._productsList = [product];
       }
     } catch (error) {}
 
     RootNavigation.navigate('profile_video', { isDeepLinking: true });
-  }
+  } else if (post) {
+    try {
+      global._selIndex = 0;
 
-  if (roomId) {
+      if (typeof post === 'string') {
+        global._postsList = [JSON.parse(post)];
+      } else {
+        global._postsList = [post];
+      }
+    } catch (error) {}
+
+    RootNavigation.navigate('post_detail', { isDeepLinking: true });
+  } else if (roomId) {
     RootNavigation.navigate('view_live', { roomId });
   }
 };
@@ -69,12 +80,12 @@ const subscribeDeepLink = () => {
     // const url = params.$canonical_url;
     // const image = params.$og_image_url;
     // const inviterId = params.inviterId;
-    const { roomId, product } = params;
+    const { roomId, product, post } = params;
     if (isReadyRef.current && navigationRef.current) {
-      handleDeepLink(product, roomId);
+      handleDeepLink({ product, roomId, post });
     } else {
       setTimeout(() => {
-        handleDeepLink(product, roomId);
+        handleDeepLink({ product, roomId, post });
       }, 15000);
     }
   });

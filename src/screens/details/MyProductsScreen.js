@@ -4,7 +4,6 @@ import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View,} fro
 import {NavigationContext, StackActions, useNavigation, useRoute,} from '@react-navigation/native';
 
 import {connect} from 'react-redux';
-import {setMyPostCount} from '../../redux/me/actions';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
 import {Constants, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
@@ -25,9 +24,6 @@ class MyProductsScreen extends React.Component {
   componentDidMount() {
 
     this.onRefresh('init');
-  }
-
-  componentWillUnmount() {
   }
 
   init = () => {
@@ -101,7 +97,7 @@ class MyProductsScreen extends React.Component {
   onPressVideo = (item) => {
     const { itemDatas } = this.state;
     global._selIndex = itemDatas.findIndex((obj) => obj.id === item.id);
-    global._profileMyVideoDatas = itemDatas;
+    global._productsList = itemDatas;
     global._prevScreen = 'profile_my_video';
     const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);
@@ -124,7 +120,7 @@ class MyProductsScreen extends React.Component {
 
   onPressNewProduct = () => {
     global._prevScreen = 'my_products';
-    this.props.navigation.navigate('camera_main');
+    this.props.navigation.navigate('camera_main', { maxDuration: 30, mode: 1 });
   };
 
   updateVideoSticker = () => {
@@ -245,12 +241,8 @@ const styles = StyleSheet.create({
   },
 });
 
-const TProfileMyVideoScreen = (props) => {
+export default (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return <MyProductsScreen {...props} navigation={navigation} route={route} />;
 };
-
-export default connect((state) => ({}), { setMyPostCount })(
-  TProfileMyVideoScreen,
-);

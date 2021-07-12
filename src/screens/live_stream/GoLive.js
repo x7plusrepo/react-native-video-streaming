@@ -402,7 +402,6 @@ class GoLive extends React.Component {
         </View>
         <RBSheet
           ref={this.profileSheet}
-          closeOnDragDown
           openDuration={250}
           customStyles={{
             container: {

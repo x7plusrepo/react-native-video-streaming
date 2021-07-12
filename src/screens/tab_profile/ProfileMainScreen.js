@@ -43,6 +43,14 @@ const getMenuItems = (navigation, setMyUserAction) => {
       },
     },
     {
+      icon: ic_my_products,
+      title: 'My Posts',
+      hideGuest: true,
+      onPress: () => {
+        navigation.navigate('my_posts');
+      },
+    },
+    {
       icon: ic_menu_saved_products,
       title: 'Liked Products',
       onPress: () => {
@@ -247,7 +255,7 @@ class ProfileMainScreen extends React.Component {
           <Animated.ScrollView
             contentContainerStyle={[
               styles.scrollViewContainer,
-              user?.userType === 0 && { paddingTop: 270 },
+              user?.userType === 0 && { paddingTop: 280 },
             ]}
             scrollEventThrottle={16}
             onScroll={Animated.event(

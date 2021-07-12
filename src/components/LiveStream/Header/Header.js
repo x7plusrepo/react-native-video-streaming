@@ -73,7 +73,7 @@ class Component extends React.Component {
     const { randomProduct } = this.state;
     const { products } = this.props;
     global._selIndex = products.findIndex((obj) => obj.id === randomProduct.id);
-    global._randomProducts = products;
+    global._productsList = products;
     global._prevScreen = 'stream_header';
     const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);
@@ -226,7 +226,7 @@ const Header = (props) => {
 
 export default connect(
   (state) => ({
-    products: state.products.products,
+    products: state.products?.products || [],
   }),
   {},
 )(Header);

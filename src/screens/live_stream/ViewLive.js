@@ -397,7 +397,6 @@ class ViewLive extends Component {
         </TouchableOpacity>
         <RBSheet
           ref={this.profileSheet}
-          closeOnDragDown
           openDuration={250}
           customStyles={{
             container: {
@@ -413,7 +412,6 @@ class ViewLive extends Component {
         </RBSheet>
         <RBSheet
           ref={this.giftBottomSheet}
-          closeOnDragDown={false}
           openDuration={250}
           customStyles={{
             container: styles.sheetGiftContainer,

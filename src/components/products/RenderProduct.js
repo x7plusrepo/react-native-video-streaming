@@ -1,5 +1,12 @@
 import React from 'react';
-import { Dimensions, Image, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Dimensions,
+  Image,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Video from 'react-native-video';
 import convertToProxyURL from 'react-native-video-cache';
 import { Constants, GStyle, GStyles } from '../../utils/Global';
@@ -29,14 +36,7 @@ const RenderProducts = (props) => {
   const subCategoryName = item?.subCategory?.title || '';
 
   return (
-    <View
-      style={{
-        flex: 1,
-        width: '100%',
-        height: VIDEO_HEIGHT,
-        backgroundColor: 'black',
-      }}
-    >
+    <View style={styles.container}>
       {Math.abs(state.curIndex - index) < 3 && (
         <>
           <Video
@@ -54,130 +54,112 @@ const RenderProducts = (props) => {
               bufferForPlaybackMs: 5000,
               bufferForPlaybackAfterRebufferMs: 5000,
             }}
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
+            style={styles.video}
           />
           <View style={[GStyles.playInfoWrapper, detailStyle]}>
-            <View style={GStyles.rowEndContainer}>
-              <View
-                style={{
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  marginBottom: 16,
+            <View style={styles.actionsContainer}>
+              {item.sticker > 0 && (
+                <View style={GStyles.stickerContainer}>
+                  <Text style={GStyles.stickerText}>
+                    {Constants.STICKER_NAME_LIST[item.sticker]}
+                  </Text>
+                </View>
+              )}
+              <TouchableOpacity
+                onPress={() => {
+                  actions.onPressLike(!isLike, item);
                 }}
+                style={[GStyles.videoActionButton]}
               >
-                {item.sticker > 0 && (
-                  <View style={GStyles.stickerContainer}>
-                    <Text style={GStyles.stickerText}>
-                      {Constants.STICKER_NAME_LIST[item.sticker]}
-                    </Text>
-                  </View>
-                )}
-                <TouchableOpacity
-                  onPress={() => {
-                    actions.onPressLike(!isLike, item);
+                <Image
+                  source={heart}
+                  style={{
+                    ...GStyles.actionIcons,
+                    tintColor: isLike ? GStyle.primaryColor : 'white',
                   }}
-                  style={[GStyles.videoActionButton]}
-                >
-                  <Image
-                    source={heart}
-                    style={{
-                      ...GStyles.actionIcons,
-                      tintColor: isLike ? GStyle.primaryColor : 'white',
-                    }}
-                  />
-                </TouchableOpacity>
+                />
+              </TouchableOpacity>
 
-                {user.id !== global.me?.id && (
-                  <TouchableOpacity
-                    onPress={() => {
-                      actions.onPressMessage(item);
-                    }}
-                    style={GStyles.videoActionButton}
-                  >
-                    <Image
-                      source={ic_menu_messages}
-                      style={GStyles.actionIcons}
-                    />
-                  </TouchableOpacity>
-                )}
-
+              {user.id !== global.me?.id && (
                 <TouchableOpacity
                   onPress={() => {
-                    actions.onPressShare(item);
+                    actions.onPressMessage(item);
                   }}
                   style={GStyles.videoActionButton}
                 >
-                  <Image source={ic_share} style={GStyles.actionIcons} />
+                  <Image
+                    source={ic_menu_messages}
+                    style={GStyles.actionIcons}
+                  />
                 </TouchableOpacity>
+              )}
+
+              <TouchableOpacity
+                onPress={() => {
+                  actions.onPressShare(item);
+                }}
+                style={GStyles.videoActionButton}
+              >
+                <Image source={ic_share} style={GStyles.actionIcons} />
+              </TouchableOpacity>
+            </View>
+            <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
+              <View style={GStyles.rowContainer}>
+                <View style={GStyles.playInfoTextWrapper}>
+                  <Text style={GStyles.playInfoText}>৳{item.price}</Text>
+                </View>
+                <View style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}>
+                  <Image
+                    source={ic_support}
+                    style={{ width: 12, height: 12, marginRight: 4 }}
+                  />
+                  <Text style={GStyles.playInfoText}>01913379598 </Text>
+                </View>
+                <View style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}>
+                  <Image
+                    source={ic_diamond}
+                    style={{ width: 12, height: 12, marginRight: 4 }}
+                  />
+                  <Text style={GStyles.playInfoText}>{item.price / 10}</Text>
+                </View>
               </View>
             </View>
-
-            <View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                <View style={GStyles.rowContainer}>
-                  <View style={GStyles.playInfoTextWrapper}>
-                    <Text style={GStyles.playInfoText}>৳{item.price}</Text>
-                  </View>
-                  <View
-                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
-                  >
-                    <Image
-                      source={ic_support}
-                      style={{ width: 12, height: 12, marginRight: 4 }}
-                    />
-                    <Text style={GStyles.playInfoText}>01913379598 </Text>
-                  </View>
-                  <View
-                    style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}
-                  >
-                    <Image
-                      source={ic_diamond}
-                      style={{ width: 12, height: 12, marginRight: 4 }}
-                    />
-                    <Text style={GStyles.playInfoText}>{item.price / 10}</Text>
-                  </View>
-                </View>
+            <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
+              <View style={GStyles.playInfoTextWrapper}>
+                <Text numberOfLines={3} style={GStyles.playInfoText}>
+                  {`${
+                    !!!categoryName && !!!subCategoryName ? newTagList : ''
+                  } ${categoryName} ${subCategoryName}`}
+                </Text>
               </View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
+
+              <View style={GStyles.playInfoTextWrapper}>
+                <Text style={GStyles.playInfoText}>#{item.number}</Text>
+              </View>
+            </View>
+            <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
+              {!!item?.description ? (
                 <View style={GStyles.playInfoTextWrapper}>
-                  <Text numberOfLines={3} style={GStyles.playInfoText}>
-                    {`${
-                      !!!categoryName && !!!subCategoryName ? newTagList : ''
-                    } ${categoryName} ${subCategoryName}`}
+                  <Text numberOfLines={5} style={GStyles.playInfoText}>
+                    {item.description}
                   </Text>
                 </View>
+              ) : (
+                <View />
+              )}
 
-                <View style={GStyles.playInfoTextWrapper}>
-                  <Text style={GStyles.playInfoText}>#{item.number}</Text>
-                </View>
-              </View>
-              <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-                {!!item?.description ? (
-                  <View style={GStyles.playInfoTextWrapper}>
-                    <Text numberOfLines={5} style={GStyles.playInfoText}>
-                      {item.description}
-                    </Text>
-                  </View>
-                ) : (
-                  <View />
-                )}
-
-                <View style={GStyles.centerAlign}>
-                  <Avatar
-                    image={{
-                      uri: user.photo ? user.photo : randomImageUrl,
-                    }}
-                    size={48}
-                    onPress={() => {
-                      actions.onPressAvatar(item);
-                    }}
-                    containerStyle={{ marginBottom: 4 }}
-                  />
-                  <Text style={GStyles.textSmall}>{displayName}</Text>
-                </View>
+              <View style={GStyles.centerAlign}>
+                <Avatar
+                  image={{
+                    uri: user.photo ? user.photo : randomImageUrl,
+                  }}
+                  size={48}
+                  onPress={() => {
+                    actions.onPressAvatar(item);
+                  }}
+                  containerStyle={{ marginBottom: 4 }}
+                />
+                <Text style={GStyles.textSmall}>{displayName}</Text>
               </View>
             </View>
           </View>
@@ -186,5 +168,23 @@ const RenderProducts = (props) => {
     </View>
   );
 };
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    width: '100%',
+    height: VIDEO_HEIGHT,
+    backgroundColor: 'black',
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+  },
+  actionsContainer: {
+    justifyContent: 'center',
+    alignItems: 'flex-end',
+    marginBottom: 16,
+  },
+});
 
 export default RenderProducts;

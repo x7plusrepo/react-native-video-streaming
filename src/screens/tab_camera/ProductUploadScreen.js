@@ -32,10 +32,10 @@ const inputProps = {
   },
 };
 
-class CameraUploadScreen extends React.Component {
+class ProductUploadScreen extends React.Component {
   constructor(props) {
     super(props);
-    console.log('CameraUploadScreen start');
+    console.log('ProductUploadScreen start');
 
     this.init();
     this.setOpenCategoryDropdown = this.setOpenCategoryDropdown.bind(this);
@@ -629,6 +629,7 @@ class CameraUploadScreen extends React.Component {
           keyboardType="number-pad"
           autoCapitalize="none"
           autoCorrect={false}
+          autoFocus={false}
           enablesReturnKeyAutomatically={true}
           onFocus={this.onFocus}
           onChangeText={this.onChangeText}
@@ -644,6 +645,7 @@ class CameraUploadScreen extends React.Component {
           autoCapitalize="none"
           autoCorrect={false}
           onFocus={this.onFocus}
+          autoFocus={false}
           onChangeText={this.onChangeText}
           returnKeyType="next"
           label="Description"
@@ -806,11 +808,11 @@ const styles = {
   },
 };
 
-const TCameraUploadScreen = (props) => {
+const TProductUploadScreen = (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
-    <CameraUploadScreen {...props} navigation={navigation} route={route} />
+    <ProductUploadScreen {...props} navigation={navigation} route={route} />
   );
 };
 
@@ -819,4 +821,4 @@ export default connect(
     categories: state.categories?.categories,
   }),
   { setCategories },
-)(TCameraUploadScreen);
+)(TProductUploadScreen);

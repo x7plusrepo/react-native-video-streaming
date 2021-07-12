@@ -79,7 +79,7 @@ const HomeVideoScreen = (props) => {
     global._curPage = curPage;
     global._totalCount = totalCount;
     global._selIndex = selIndex;
-    global._exploreMainVideoDatas = products;
+    global._productsList = products;
     global._prevScreen = 'home_main_video';
     const pushAction = StackActions.push('profile_video', null);
     navigation.dispatch(pushAction);

@@ -3,8 +3,6 @@ import {SafeAreaView, StyleSheet, View} from 'react-native';
 
 import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
 
-import {connect} from 'react-redux';
-import {setSavedCount} from '../../redux/me/actions';
 import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
@@ -97,7 +95,7 @@ class SavedProductsScreen extends React.Component {
   onPressVideo = (item) => {
     const { itemDatas } = this.state;
     global._selIndex = itemDatas.findIndex((obj) => obj.id === item.id);
-    global._profileLikedVideoDatas = itemDatas;
+    global._productsList = itemDatas;
     global._prevScreen = 'profile_liked_video';
     const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);
@@ -146,14 +144,10 @@ class SavedProductsScreen extends React.Component {
 
 const styles = StyleSheet.create({});
 
-const TProfileLikedVideoScreen = (props) => {
+export default (props) => {
   let navigation = useNavigation();
   let route = useRoute();
   return (
     <SavedProductsScreen {...props} navigation={navigation} route={route} />
   );
 };
-
-export default connect((state) => ({}), { setSavedCount })(
-  TProfileLikedVideoScreen,
-);

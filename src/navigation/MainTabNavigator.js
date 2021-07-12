@@ -87,7 +87,6 @@ const MainTabNavigator = (props) => {
         },
         showLabel: false,
       }}
-      //tabBar={props => <BottomTab {...props} />}
     >
       <Tab.Screen
         name="top"

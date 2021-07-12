@@ -133,139 +133,11 @@ class TopUsersScreen extends React.Component {
         <SafeAreaView style={GStyles.container}>
           {this._renderHeader()}
           {this._renderTab()}
-          {/*{this._renderStatistics()}*/}
-          {/*{this._renderAboutRule()}*/}
           {this._renderUserList()}
         </SafeAreaView>
       </>
     );
   }
-
-  _renderAboutRule = () => {
-    return (
-      <TouchableOpacity style={[{ marginTop: 16 }, GStyles.rowCenterContainer]}>
-        <Text
-          style={[
-            GStyles.regularText,
-            GStyles.boldText,
-            { color: GStyle.grayColor },
-          ]}
-        >
-          About rules
-        </Text>
-        <Image
-          source={ic_chevron_right}
-          style={{ width: 12, height: 12 }}
-          resizeMode="contain"
-        />
-      </TouchableOpacity>
-    );
-  };
-
-  _renderStatistics = () => {
-    return (
-      <View
-        style={[
-          GStyles.rowBetweenContainer,
-          { width: '100%', paddingHorizontal: 16 },
-        ]}
-      >
-        <View style={styles.statisticsWrapper}>
-          <Text
-            style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
-          >
-            Today
-          </Text>
-          <View style={styles.statisticsItem}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={[
-                  GStyles.regularText,
-                  GStyles.boldText,
-                  { color: 'white' },
-                ]}
-              >
-                X2
-              </Text>
-            </View>
-          </View>
-          <Text
-            style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
-          >
-            NO.1
-          </Text>
-        </View>
-        <View style={styles.statisticsWrapper}>
-          <Text
-            style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
-          >
-            Today
-          </Text>
-          <View style={styles.statisticsItem}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={[
-                  GStyles.regularText,
-                  GStyles.boldText,
-                  { color: 'white' },
-                ]}
-              >
-                X2
-              </Text>
-            </View>
-          </View>
-          <Text
-            style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
-          >
-            NO.2
-          </Text>
-        </View>
-        <View style={styles.statisticsWrapper}>
-          <Text
-            style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
-          >
-            Today
-          </Text>
-          <View style={styles.statisticsItem}>
-            <View
-              style={{
-                flex: 1,
-                justifyContent: 'flex-end',
-                alignItems: 'center',
-              }}
-            >
-              <Text
-                style={[
-                  GStyles.regularText,
-                  GStyles.boldText,
-                  { color: 'white' },
-                ]}
-              >
-                X2
-              </Text>
-            </View>
-          </View>
-          <Text
-            style={[GStyles.regularText, GStyles.boldText, { color: 'black' }]}
-          >
-            NO.3
-          </Text>
-        </View>
-      </View>
-    );
-  };
 
   _renderHeader = () => {
     return (
@@ -273,11 +145,6 @@ class TopUsersScreen extends React.Component {
         headerTitle="Top Rank"
         leftType="logo"
         onPressLeftButton={this.onLogo}
-        // rightAvatar={
-        //   <TouchableOpacity>
-        //     <Text style={[GStyles.regularText, GStyles.boldText]}>Global</Text>
-        //   </TouchableOpacity>
-        // }
       />
     );
   };
@@ -287,99 +154,31 @@ class TopUsersScreen extends React.Component {
 
     return (
       <View style={styles.listWrapper}>
-        {/*<View*/}
-        {/*  style={[*/}
-        {/*    GStyles.rowBetweenContainer,*/}
-        {/*    {*/}
-        {/*      borderBottomWidth: 0.5,*/}
-        {/*      borderBottomColor: GStyle.grayColor,*/}
-        {/*      paddingVertical: 8,*/}
-        {/*      paddingHorizontal: 16,*/}
-        {/*    },*/}
-        {/*  ]}*/}
-        {/*>*/}
-        {/*  <View style={GStyles.rowCenterContainer}>*/}
-        {/*    <Text*/}
-        {/*      style={[*/}
-        {/*        GStyles.textSmall,*/}
-        {/*        GStyles.boldText,*/}
-        {/*        { color: GStyle.grayColor },*/}
-        {/*      ]}*/}
-        {/*    >*/}
-        {/*      Total:*/}
-        {/*    </Text>*/}
-        {/*    <Text*/}
-        {/*      style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}*/}
-        {/*    >*/}
-        {/*      {' '}*/}
-        {/*      {itemDatas.length}*/}
-        {/*    </Text>*/}
-        {/*  </View>*/}
-        {/*  <View style={GStyles.rowCenterContainer}>*/}
-        {/*    <Text*/}
-        {/*      style={[*/}
-        {/*        GStyles.textSmall,*/}
-        {/*        GStyles.boldText,*/}
-        {/*        { color: GStyle.grayColor },*/}
-        {/*      ]}*/}
-        {/*    >*/}
-        {/*      You:{' '}*/}
-        {/*    </Text>*/}
-        {/*    <Image*/}
-        {/*      source={ic_bean}*/}
-        {/*      style={{ width: 12, height: 12 }}*/}
-        {/*      resizeMode="contain"*/}
-        {/*    />*/}
-        {/*  </View>*/}
-        {/*  <View style={GStyles.rowCenterContainer}>*/}
-        {/*    <Text*/}
-        {/*      style={[*/}
-        {/*        GStyles.textSmall,*/}
-        {/*        GStyles.boldText,*/}
-        {/*        { color: GStyle.grayColor },*/}
-        {/*      ]}*/}
-        {/*    >*/}
-        {/*      Rank:*/}
-        {/*    </Text>*/}
-        {/*    <Text*/}
-        {/*      style={[GStyles.textSmall, GStyles.boldText, { color: 'black' }]}*/}
-        {/*    >*/}
-        {/*      {' '}*/}
-        {/*      100+*/}
-        {/*    </Text>*/}
-        {/*  </View>*/}
-        {/*</View>*/}
-
-        {itemDatas?.length ? (
-          <FlatList
-            ref={(ref) => {
-              this.flatListRef = ref;
-            }}
-            showsVerticalScrollIndicator={false}
-            onRefresh={() => {
-              this.onRefresh('pull');
-            }}
-            refreshing={isFetching}
-            ListFooterComponent={this._renderFooter}
-            onMomentumScrollBegin={() => {
-              this.setState({ onEndReachedDuringMomentum: false });
-            }}
-            onEndReachedThreshold={0.4}
-            onEndReached={() => {
-              if (!this.state.onEndReachedDuringMomentum) {
-                this.setState({ onEndReachedDuringMomentum: true });
-                this.onRefresh('more');
-              }
-            }}
-            data={itemDatas}
-            renderItem={this._renderItem}
-            keyExtractor={(item, index) => item.id + index}
-          />
-        ) : (
-          <View style={{ flex: 1, ...GStyles.centerAlign }}>
-            <Text style={GStyles.notifyDescription}>Not found.</Text>
-          </View>
-        )}
+        <FlatList
+          ref={(ref) => {
+            this.flatListRef = ref;
+          }}
+          showsVerticalScrollIndicator={false}
+          onRefresh={() => {
+            this.onRefresh('pull');
+          }}
+          refreshing={isFetching}
+          ListFooterComponent={this._renderFooter}
+          onMomentumScrollBegin={() => {
+            this.setState({ onEndReachedDuringMomentum: false });
+          }}
+          onEndReachedThreshold={0.4}
+          onEndReached={() => {
+            if (!this.state.onEndReachedDuringMomentum) {
+              this.setState({ onEndReachedDuringMomentum: true });
+              this.onRefresh('more');
+            }
+          }}
+          data={itemDatas}
+          renderItem={this._renderItem}
+          keyExtractor={(item, index) => item.id + index}
+          contentContainerStyle={{ paddingBottom: 120 }}
+        />
       </View>
     );
   };

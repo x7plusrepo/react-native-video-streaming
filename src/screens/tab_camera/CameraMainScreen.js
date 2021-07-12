@@ -18,6 +18,7 @@ import { RNCamera } from 'react-native-camera';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import { Constants, Global, GStyles, Helper } from '../../utils/Global';
+import get from 'lodash/get';
 
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 const ic_camera_flip = require('../../assets/images/Icons/ic_camera_flip.png');
@@ -73,6 +74,11 @@ class CameraMainScreen extends Component {
   }
 
   init = () => {
+    const { route } = this.props;
+    const maxDuration = get(route, 'params.maxDuration');
+    // const mode = get(route, 'params.mode');
+    // const routeName = mode === 1 ? 'product_upload' : 'post_upload';
+    // this.props.navigation.navigate(routeName);
     this.state = {
       flash: 'off',
       mute: false,
@@ -89,7 +95,7 @@ class CameraMainScreen extends Component {
       type: 'back',
       whiteBalance: 'auto',
       ratio: '16:9',
-      maxDuration: 30,
+      maxDuration: maxDuration,
       quality: RNCamera.Constants.VideoQuality['1080p'],
       isRecording: false,
       canDetectFaces: false,
@@ -108,14 +114,19 @@ class CameraMainScreen extends Component {
     this.props.navigation.goBack();
   };
 
-  onTick = () => {
-    const { timerProgress } = this.state;
+  onTick = async () => {
+    const { timerProgress, maxDuration } = this.state;
+
+    if (timerProgress >= maxDuration * 5) {
+      this.onPressStopRecord()
+      return;
+    }
 
     this.setState({
       timerProgress: timerProgress + 1,
     });
 
-    // console.log('test', this.state.timerProgress);
+    console.log('test', this.state.timerProgress);
   };
 
   onTakeVideo = (value) => {
@@ -127,7 +138,10 @@ class CameraMainScreen extends Component {
 
     global._videoUri = value;
     global._prevScreen = 'camera_main';
-    this.props.navigation.navigate('camera_upload');
+    const { route } = this.props;
+    const mode = get(route, 'params.mode');
+    const routeName = mode === 1 ? 'product_upload' : 'post_upload';
+    this.props.navigation.navigate(routeName);
   };
 
   toggleFacing = () => {
@@ -148,7 +162,7 @@ class CameraMainScreen extends Component {
   };
 
   toggleMute = () => {
-    const { isRecording, mute } = this.state;
+    const {isRecording, mute} = this.state;
     if (isRecording) {
       return;
     }
@@ -156,34 +170,31 @@ class CameraMainScreen extends Component {
     this.setState({
       mute: !mute,
     });
-  };
-
-  toggleFocus() {
-    this.setState({
-      autoFocus: this.state.autoFocus === 'on' ? 'off' : 'on',
-    });
   }
 
   onPressStartRecord = async () => {
     const { isRecording, maxDuration, mute, quality } = this.state;
     const recordOptions = {
-      maxDuration: maxDuration,
+      maxDuration: maxDuration * 1000,
       mute: mute,
       quality: quality,
     };
+
+    console.log(recordOptions);
 
     if (this.camera && !isRecording) {
       try {
         const promise = this.camera.recordAsync(recordOptions);
 
         if (promise) {
-          this.setState({ isRecording: true, timerProgress: 0 });
+          this.setState({ isRecording: true });
+          clearInterval(this.timer);
           this.timer = setInterval(this.onTick, 200);
           const data = await promise;
           this.setState({ isRecording: false });
           clearInterval(this.timer);
           this.onTakeVideo(data.uri);
-          console.warn('recoredVideo', data);
+          console.log('recoredVideo', data);
         }
       } catch (e) {
         console.error(e);
@@ -193,6 +204,7 @@ class CameraMainScreen extends Component {
 
   onPressStopRecord = async () => {
     await this.camera.stopRecording();
+    clearInterval(this.timer);
     this.setState({ isRecording: false });
   };
 
@@ -208,10 +220,6 @@ class CameraMainScreen extends Component {
   }
 
   _renderCamera() {
-    const drawFocusRingPosition = {
-      top: this.state.autoFocusPoint.drawRectPosition.y - 32,
-      left: this.state.autoFocusPoint.drawRectPosition.x - 32,
-    };
     return (
       <RNCamera
         ref={(ref) => {

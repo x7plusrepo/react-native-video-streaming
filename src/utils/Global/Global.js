@@ -152,12 +152,46 @@ const Global = {
     );
 
     const shareOptions = {
-      messageHeader: 'Come to chat with me',
-      messageBody: `${user?.username} invited you to channel ${newTagList}!`,
+      messageHeader: 'Come to view product',
+      messageBody: `${user?.username} invited you to a product ${newTagList}!`,
     };
     const linkProperties = { feature: 'share', channel: 'facebook' };
     let controlParams = {
       product: JSON.stringify(product),
+      inviterId: userId,
+    };
+
+    await branchUniversalObject.showShareSheet(
+      shareOptions,
+      linkProperties,
+      controlParams,
+    );
+  },
+  sharePost: async (post, user) => {
+    const userId = user?.id;
+    if (!post) {
+      return;
+    }
+    const title = post?.title;
+    const image = post?.thumb;
+
+    const branchUniversalObject = await branch.createBranchUniversalObject(
+      'canonicalIdentifier',
+      {
+        locallyIndex: true,
+        title: 'View Post',
+        contentImageUrl: image,
+        contentDescription: '',
+      },
+    );
+
+    const shareOptions = {
+      messageHeader: 'Come to view post',
+      messageBody: `${user?.username} invited you to a post ${title}!`,
+    };
+    const linkProperties = { feature: 'share', channel: 'facebook' };
+    let controlParams = {
+      post: JSON.stringify(post),
       inviterId: userId,
     };
 

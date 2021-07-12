@@ -11,16 +11,12 @@ import {
 
 import SplashScreen from 'react-native-splash-screen';
 import { connect } from 'react-redux';
-import RNFetchBlob from 'rn-fetch-blob';
-import RNFS from 'react-native-fs';
-import CameraRoll from '@react-native-community/cameraroll';
 
-import { RNFFmpeg } from 'react-native-ffmpeg';
-
-import { setMyUserAction } from '../../redux/me/actions';
-import { setProducts, updateProduct } from '../../redux/products/actions';
-
+import RenderPosts from "../../components/posts/RenderPosts";
 import ProgressModal from '../../components/ProgressModal';
+
+import ChatStreamSocketManager from './../../utils/Message/SocketManager';
+import { setMyUserAction } from '../../redux/me/actions';
 
 import {
   Constants,
@@ -29,8 +25,6 @@ import {
   Helper,
   RestAPI,
 } from '../../utils/Global';
-import ChatStreamSocketManager from './../../utils/Message/SocketManager';
-import RenderProducts from '../../components/products/RenderProduct';
 
 class PlayMainScreen extends Component {
   constructor(props) {
@@ -67,7 +61,7 @@ class PlayMainScreen extends Component {
     this.state = {
       isVideoLoading: false,
       isVideoPause: false,
-
+      posts: [],
       isVisibleProgress: false,
       percent: 0,
 
@@ -84,9 +78,7 @@ class PlayMainScreen extends Component {
   };
 
   onRefresh = async (type) => {
-    let { isFetching, totalCount, curPage } = this.state;
-
-    const { products } = this.props;
+    let { posts, isFetching, totalCount, curPage } = this.state;
 
     if (isFetching) {
       return;
@@ -125,7 +117,7 @@ class PlayMainScreen extends Component {
       password,
     };
 
-    RestAPI.get_all_video_list(params, async (json, err) => {
+    RestAPI.get_all_post_list(params, async (json, err) => {
       if (type === 'init') {
         showForcePageLoader(false);
       } else {
@@ -134,41 +126,41 @@ class PlayMainScreen extends Component {
 
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
-      } else {
-        if (json.status === 200) {
-          this.setState({ totalCount: json.data.totalCounts });
-          if (type === 'more') {
-            let data = products.concat(json.data.videoList || []);
-            this.props.setProducts(data);
-          } else {
-            this.props.setProducts(json.data.videoList || []);
-            if (json.data?.loginResult?.user) {
-              ChatStreamSocketManager.instance.emitLeaveRoom({
-                roomId: global.me?.id,
-                userId: global.me?.id,
-              });
+      } else if (json?.status === 200) {
+        const postList = json?.data?.postList || [];
 
-              global.me = json.data?.loginResult?.user || {};
-
-              ChatStreamSocketManager.instance.emitJoinRoom({
-                roomId: global.me?.id,
-                userId: global.me?.id,
-              });
-
-              this.props.setMyUserAction(global.me);
-              Helper.setLocalValue(Constants.KEY_USERNAME, username);
-              Helper.setLocalValue(Constants.KEY_PASSWORD, password);
-              Helper.setLocalValue(
-                Constants.KEY_USER,
-                JSON.stringify(global.me),
-              );
-              Helper.callFunc(global.onSetUnreadCount);
-              Global.registerPushToken();
-            }
-          }
+        this.setState({ totalCount: json.data?.totalCounts || 0});
+        if (type === 'more') {
+          let data = posts.concat(postList);
+          this.setState({ posts: data })
         } else {
-          Helper.alertServerDataError();
+          this.setState({ posts: postList });
+          if (json.data?.loginResult?.user) {
+            ChatStreamSocketManager.instance.emitLeaveRoom({
+              roomId: global.me?.id,
+              userId: global.me?.id,
+            });
+
+            global.me = json.data?.loginResult?.user || {};
+
+            ChatStreamSocketManager.instance.emitJoinRoom({
+              roomId: global.me?.id,
+              userId: global.me?.id,
+            });
+
+            this.props.setMyUserAction(global.me);
+            Helper.setLocalValue(Constants.KEY_USERNAME, username);
+            Helper.setLocalValue(Constants.KEY_PASSWORD, password);
+            Helper.setLocalValue(
+              Constants.KEY_USER,
+              JSON.stringify(global.me),
+            );
+            Helper.callFunc(global.onSetUnreadCount);
+            Global.registerPushToken();
+          }
         }
+      } else {
+        Helper.alertServerDataError();
       }
       if (type === 'init') {
         this.props.navigation.jumpTo('home');
@@ -204,13 +196,13 @@ class PlayMainScreen extends Component {
       this.setState({ item });
       global._opponentUser = item.user;
       let params = {
-        video_id: item.id,
-        owner_id: item.user?.id,
-        viewer_id: global.me ? global.me.id : 0,
-        device_type: Platform.OS === 'ios' ? '1' : '0',
-        device_identifier: global._deviceId,
+        postId: item.id,
+        ownerId: item.user?.id,
+        viewerId: global.me ? global.me.id : 0,
+        deviceType: Platform.OS === 'ios' ? '1' : '0',
+        deviceIdentifier: global._deviceId,
       };
-      RestAPI.update_video_view(params, (json, err) => {});
+      RestAPI.update_post_view(params, (json, err) => {});
     }
   };
 
@@ -230,23 +222,22 @@ class PlayMainScreen extends Component {
 
   onPressLike = (isChecked, item) => {
     if (global.me) {
+      const { posts } = this.state;
+      item.likeCount++;
       const params = {
-        user_id: global.me?.id,
-        video_id: item.id,
-        is_like: isChecked,
+        userId: global.me?.id,
+        postId: item.id,
+        isLiked: isChecked,
       };
-      RestAPI.update_like_video(params, (json, err) => {
+      RestAPI.update_like_post(params, (json, err) => {
         showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 200) {
-            this.props.updateProduct(item?.id, {
-              ...item,
-              likeCount: item.likeCount + 1,
-              isLiked: isChecked,
-            });
+            item.isLiked = isChecked;
+            this.setState({ posts });
           } else {
             Helper.alertServerDataError();
           }
@@ -273,83 +264,10 @@ class PlayMainScreen extends Component {
 
   onPressShare = (item) => {
     if (global.me) {
-      Global.shareProduct(item, global.me);
+      Global.sharePost(item, global.me);
     } else {
       this.props.navigation.navigate('signin');
     }
-  };
-
-  onDownloadVideo = async () => {
-    const item = this.state.item || {};
-    const user = item?.user || {};
-
-    if (!global.me) {
-      return;
-    }
-
-    Helper.hasPermissions();
-
-    this.setState({ percent: 0, isVisibleProgress: true });
-
-    RNFetchBlob.config({
-      fileCache: true,
-      appendExt: 'mp4',
-    })
-      .fetch('GET', item.url, {})
-      .uploadProgress((written, total) => {
-        console.log('uploaded', written / total);
-      })
-      .progress((received, total) => {
-        const percent = Math.round((received * 100) / total);
-        this.setState({ percent });
-      })
-      .then((resp) => {
-        this.setState({ isVisibleProgress: false });
-        success(Constants.SUCCESS_TITLE, 'Success to download');
-        const originPath = resp.path();
-        const newPath = originPath + '.mp4';
-        const watermarkText =
-          '@' +
-          user.username +
-          '\n#' +
-          item.number +
-          '\n' +
-          item.price +
-          '\n' +
-          item.description;
-        const fontPath =
-          Platform.OS === 'android'
-            ? '/system/fonts/Roboto-Bold.ttf'
-            : RNFS.DocumentDirectoryPath + '/watermark.ttf';
-        const watermark = RNFS.DocumentDirectoryPath + '/watermark.png';
-        const parameter =
-          '-y -i ' +
-          originPath +
-          ' -i ' +
-          watermark +
-          ' -filter_complex "[1]scale=iw*0.15:-1[wm];[0][wm]overlay=x=20:y=20,drawtext=text=\'' +
-          watermarkText +
-          "':x=10:y=70:fontfile=" +
-          fontPath +
-          ':fontsize=16:fontcolor=white" ' +
-          newPath;
-
-        showForcePageLoader(true);
-        RNFFmpeg.execute(parameter).then((result) => {
-          CameraRoll.save(newPath, 'video')
-            .then((gallery) => {
-              resp.flush();
-              showForcePageLoader(false);
-            })
-            .catch((err) => {
-              showForcePageLoader(false);
-            });
-        });
-      })
-      .catch((err) => {
-        showForcePageLoader(false);
-        error(Constants.ERROR_TITLE, 'Failed to download');
-      });
   };
 
   checkSignin = () => {
@@ -369,8 +287,7 @@ class PlayMainScreen extends Component {
   }
 
   _renderVideo = () => {
-    const { isFetching } = this.state;
-    const { products } = this.props;
+    const { isFetching, posts } = this.state;
 
     return (
       <FlatList
@@ -392,7 +309,7 @@ class PlayMainScreen extends Component {
             this.onRefresh('more');
           }
         }}
-        data={products}
+        data={posts}
         renderItem={this._renderItem}
         onViewableItemsChanged={this.onViewableItemsChanged}
         viewabilityConfig={{
@@ -419,7 +336,7 @@ class PlayMainScreen extends Component {
       onPressAvatar: this.onPressAvatar,
     };
     return (
-      <RenderProducts
+      <RenderPosts
         item={item}
         state={this.state}
         index={index}
@@ -442,7 +359,6 @@ class PlayMainScreen extends Component {
 export default connect(
   (state) => ({
     user: state.me?.user || {},
-    products: state.products?.products || [],
   }),
-  { setMyUserAction, setProducts, updateProduct },
+  { setMyUserAction },
 )(PlayMainScreen);

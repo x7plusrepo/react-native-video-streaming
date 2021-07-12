@@ -4,6 +4,7 @@ import ExploreVideoItem from './ExploreVideoItem';
 
 const ProductsList = forwardRef((props, ref) => {
   const {
+    renderItem,
     products = [],
     isFetching = false,
     onRefresh,
@@ -53,8 +54,8 @@ const ProductsList = forwardRef((props, ref) => {
         }
       }}
       data={products}
-      renderItem={_renderItem}
-      contentContainerStyle={{ paddingBottom: 64 }}
+      renderItem={renderItem || _renderItem}
+      contentContainerStyle={{ paddingBottom: 120 }}
       keyExtractor={(item, index) => index.toString()}
     />
   );

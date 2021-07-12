@@ -115,7 +115,7 @@ class HomeVideoSearch extends React.Component {
     global._totalCount = totalCount;
     global._keyword = keyword;
     global._selIndex = selIndex;
-    global._exploreMainVideoDatas = itemDatas;
+    global._productsList = itemDatas;
     global._prevScreen = 'home_main_video';
     const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);

@@ -10,23 +10,11 @@ import {
 } from 'react-native';
 
 import { useNavigation, useRoute } from '@react-navigation/native';
-import RNFetchBlob from 'rn-fetch-blob';
-import RNFS from 'react-native-fs';
-import CameraRoll from '@react-native-community/cameraroll';
-
-import { RNFFmpeg } from 'react-native-ffmpeg';
 
 import ProgressModal from '../../components/ProgressModal';
 
-import {
-  Constants,
-  Global,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import { Global, GStyles, Helper, RestAPI } from '../../utils/Global';
 import RenderProducts from '../../components/products/RenderProduct';
-import get from 'lodash/get';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -42,28 +30,7 @@ class ProfileVideoScreen extends Component {
   }
 
   componentDidMount() {
-    let itemDatas = [];
-    if (global._prevScreen === 'home_main_video') {
-      itemDatas = global._exploreMainVideoDatas;
-    } else if (global._prevScreen === 'profile_my_video') {
-      itemDatas = global._profileMyVideoDatas;
-    } else if (global._prevScreen === 'profile_liked_video') {
-      itemDatas = global._profileLikedVideoDatas;
-    } else if (global._prevScreen === 'profile_other') {
-      itemDatas = global._profileOtherVideoDatas;
-    } else if (global._prevScreen === 'stream_header') {
-      itemDatas = global._randomProducts;
-    } else if (global._prevScreen === 'deep_link') {
-      itemDatas = global._invitedProduct;
-    } else {
-      itemDatas = [];
-    }
-    const { route } = this.props;
-    const isDeepLinking = get(route, 'params.isDeepLinking');
-    if (isDeepLinking) {
-      itemDatas = global._invitedProduct;
-    }
-
+    let itemDatas = global._productsList || [];
     this.setState({ itemDatas: itemDatas });
     Helper.setDarkStatusBar();
   }
@@ -123,7 +90,7 @@ class ProfileVideoScreen extends Component {
         this.props.navigation.navigate('profile');
       } else {
         global._opponentUser = user;
-        global._prevScreen = 'profile_video';
+        global._prevScreen = 'post_detail';
         this.props.navigation.navigate('profile_other');
       }
     } else {
@@ -178,81 +145,6 @@ class ProfileVideoScreen extends Component {
     } else {
       this.props.navigation.navigate('signin');
     }
-  };
-
-  onDownloadVideo = async () => {
-    const item = this.state.item || {};
-    const user = item?.userId || {};
-
-    if (!global.me) {
-      return;
-    }
-
-    Helper.hasPermissions();
-
-    this.setState({ percent: 0, isVisibleProgress: true });
-
-    RNFetchBlob.config({
-      fileCache: true,
-      appendExt: 'mp4',
-    })
-      .fetch('GET', item.url, {})
-      .uploadProgress((written, total) => {
-        console.log('uploaded', written / total);
-      })
-      .progress((received, total) => {
-        const percent = Math.round((received * 100) / total);
-        console.log('progress', percent);
-        this.setState({ percent });
-      })
-      .then((resp) => {
-        this.setState({ isVisibleProgress: false });
-        success(Constants.SUCCESS_TITLE, 'Success to download');
-        const originPath = resp.path();
-        const newPath = originPath + '.mp4';
-        const watermarkText =
-          '@' +
-          user.username +
-          '\n#' +
-          item.number +
-          '\n' +
-          item.price +
-          '\n' +
-          item.description;
-        const fontPath =
-          Platform.OS === 'android'
-            ? '/system/fonts/Roboto-Bold.ttf'
-            : RNFS.DocumentDirectoryPath + '/watermark.ttf';
-        const watermark = RNFS.DocumentDirectoryPath + '/watermark.png';
-        const parameter =
-          '-y -i ' +
-          originPath +
-          ' -i ' +
-          watermark +
-          ' -filter_complex "[1]scale=iw*0.15:-1[wm];[0][wm]overlay=x=20:y=20,drawtext=text=\'' +
-          watermarkText +
-          "':x=10:y=70:fontfile=" +
-          fontPath +
-          ':fontsize=16:fontcolor=white" ' +
-          newPath;
-
-        showForcePageLoader(true);
-        RNFFmpeg.execute(parameter).then((result) => {
-          console.log(`FFmpeg process exited with rc=${result}.`);
-          CameraRoll.save(newPath, 'video')
-            .then((gallery) => {
-              resp.flush();
-              showForcePageLoader(false);
-            })
-            .catch((err) => {
-              showForcePageLoader(false);
-            });
-        });
-      })
-      .catch((err) => {
-        showForcePageLoader(false);
-        error(Constants.ERROR_TITLE, 'Failed to download');
-      });
   };
 
   render() {
@@ -328,7 +220,7 @@ class ProfileVideoScreen extends Component {
         state={{ ...this.state }}
         index={index}
         actions={actions}
-        detailStyle={{ bottom: 36 }}
+        detailStyle={{ bottom: 36 + Helper.getBottomBarHeight() }}
       />
     );
   };

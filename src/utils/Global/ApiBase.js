@@ -43,6 +43,8 @@ const futch = async (url, opts = {}, onProgress) => {
     apiCall = api.put;
   } else if (opts.method === 'patch') {
     apiCall = api.patch;
+  } else if (opts.method === 'delete') {
+    apiCall = api.delete;
   }
 
   let response;
@@ -51,6 +53,8 @@ const futch = async (url, opts = {}, onProgress) => {
       params: opts.body,
       headers: opts.headers,
     });
+  } else if(opts.method === 'delete') {
+    response = await apiCall(url, { headers: opts.headers, data: opts.body });
   } else {
     response = await apiCall(url, opts.body, { headers: opts.headers });
   }
@@ -68,6 +72,7 @@ const futch = async (url, opts = {}, onProgress) => {
 };
 
 const formDataCall = (subUrl, body, headers, callBack, method = 'post') => {
+  console.log(body)
   futch(
     subUrl,
     {

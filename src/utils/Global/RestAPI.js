@@ -78,6 +78,17 @@ const RestAPI = {
     formDataCall('api/video', data, {}, callBack, 'post');
   },
 
+  add_post: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      url: params.url,
+      title: params.title,
+      description: params.description,
+      thumb: params.thumb,
+    };
+    formDataCall('api/post', data, {}, callBack, 'post');
+  },
+
   get_user_video_list: (params, callBack) => {
     const data = {
       meId: params.me_id,
@@ -87,6 +98,17 @@ const RestAPI = {
     };
 
     formDataCall('api/video/userVideo', data, {}, callBack, 'get');
+  },
+
+  get_user_post_list: (params, callBack) => {
+    const data = {
+      meId: params.me_id,
+      userId: params.user_id,
+      page: params.page_number,
+      amount: params.count_per_page,
+    };
+
+    formDataCall('api/post/userPost', data, {}, callBack, 'get');
   },
 
   get_liked_video_list: (params, callBack) => {
@@ -109,6 +131,18 @@ const RestAPI = {
     };
 
     formDataCall('api/video/allVideo', data, {}, callBack, 'get');
+  },
+
+  get_all_post_list: (params, callBack) => {
+    const data = {
+      userId: params.user_id,
+      page: params.page_number,
+      amount: params.count_per_page,
+      username: params.username,
+      password: params.password,
+    };
+
+    formDataCall('api/post/allPost', data, {}, callBack, 'get');
   },
 
   get_searched_video_list: (params, callBack) => {
@@ -220,6 +254,16 @@ const RestAPI = {
     formDataCall('api/video/like', data, {}, callBack, 'put');
   },
 
+  update_like_post: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      postId: params.postId,
+      isLiked: params.isLiked,
+    };
+
+    formDataCall('api/post/like', data, {}, callBack, 'put');
+  },
+
   get_filtered_user_list: (params, callBack) => {
     const data = {
       userId: params.user_id,
@@ -269,6 +313,18 @@ const RestAPI = {
     formDataCall('api/video/view', data, {}, callBack, 'put');
   },
 
+  update_post_view: (params, callBack) => {
+    const data = {
+      postId: params.postId,
+      ownerId: params.ownerId,
+      viewerId: params.viewerId,
+      deviceType: params.deviceType,
+      deviceIdentifier: params.deviceIdentifier,
+    };
+
+    formDataCall('api/post/view', data, {}, callBack, 'put');
+  },
+
   update_video_sticker: (params, callBack) => {
     const data = {
       videoId: params.video_id,
@@ -277,7 +333,9 @@ const RestAPI = {
 
     formDataCall('api/video', data, {}, callBack, 'put');
   },
-
+  delete_post: (params, callBack) => {
+    formDataCall('api/post', params, {}, callBack, 'delete');
+  },
   get_user_profile: (params, callBack) => {
     const data = {
       userId: params.user_id,
