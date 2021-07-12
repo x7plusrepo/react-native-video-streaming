@@ -223,7 +223,7 @@ class PlayMainScreen extends Component {
   onPressLike = (isChecked, item) => {
     if (global.me) {
       const { posts } = this.state;
-      item.likeCount++;
+      isChecked ? item.likeCount++ : item.likeCount--;
       const params = {
         userId: global.me?.id,
         postId: item.id,

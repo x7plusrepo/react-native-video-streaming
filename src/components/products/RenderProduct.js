@@ -58,50 +58,54 @@ const RenderProducts = (props) => {
           />
           <View style={[GStyles.playInfoWrapper, detailStyle]}>
             <View style={styles.actionsContainer}>
-              {item.sticker > 0 && (
-                <View style={GStyles.stickerContainer}>
-                  <Text style={GStyles.stickerText}>
-                    {Constants.STICKER_NAME_LIST[item.sticker]}
-                  </Text>
-                </View>
-              )}
-              <TouchableOpacity
-                onPress={() => {
-                  actions.onPressLike(!isLike, item);
-                }}
-                style={[GStyles.videoActionButton]}
-              >
-                <Image
-                  source={heart}
-                  style={{
-                    ...GStyles.actionIcons,
-                    tintColor: isLike ? GStyle.primaryColor : 'white',
-                  }}
-                />
-              </TouchableOpacity>
-
-              {user.id !== global.me?.id && (
+              <View style={{ justifyContent: 'center', alignItems: 'center' }}>
+                {item.sticker > 0 && (
+                  <View style={GStyles.stickerContainer}>
+                    <Text style={GStyles.stickerText}>
+                      {Constants.STICKER_NAME_LIST[item.sticker]}
+                    </Text>
+                  </View>
+                )}
                 <TouchableOpacity
                   onPress={() => {
-                    actions.onPressMessage(item);
+                    actions.onPressLike(!isLike, item);
+                  }}
+                  style={[GStyles.videoActionButton]}
+                >
+                  <Image
+                    source={heart}
+                    style={{
+                      ...GStyles.actionIcons,
+                      tintColor: isLike ? GStyle.primaryColor : 'white',
+                    }}
+                  />
+                </TouchableOpacity>
+                <Text style={GStyles.textSmall}>{item.likeCount || 0}</Text>
+
+                {user.id !== global.me?.id && (
+                  <TouchableOpacity
+                    onPress={() => {
+                      actions.onPressMessage(item);
+                    }}
+                    style={GStyles.videoActionButton}
+                  >
+                    <Image
+                      source={ic_menu_messages}
+                      style={GStyles.actionIcons}
+                    />
+                  </TouchableOpacity>
+                )}
+
+                <TouchableOpacity
+                  onPress={() => {
+                    actions.onPressShare(item);
                   }}
                   style={GStyles.videoActionButton}
                 >
-                  <Image
-                    source={ic_menu_messages}
-                    style={GStyles.actionIcons}
-                  />
+                  <Image source={ic_share} style={GStyles.actionIcons} />
                 </TouchableOpacity>
-              )}
+              </View>
 
-              <TouchableOpacity
-                onPress={() => {
-                  actions.onPressShare(item);
-                }}
-                style={GStyles.videoActionButton}
-              >
-                <Image source={ic_share} style={GStyles.actionIcons} />
-              </TouchableOpacity>
             </View>
             <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
               <View style={GStyles.rowContainer}>

@@ -102,7 +102,7 @@ class ProfileVideoScreen extends Component {
     let { itemDatas } = this.state;
 
     if (global.me) {
-      item.likeCount++;
+      isChecked ? item.likeCount++ : item.likeCount--;
       const params = {
         user_id: global.me?.id,
         video_id: item.id,
