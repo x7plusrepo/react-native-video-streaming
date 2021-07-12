@@ -125,8 +125,6 @@ class CameraMainScreen extends Component {
     this.setState({
       timerProgress: timerProgress + 1,
     });
-
-    console.log('test', this.state.timerProgress);
   };
 
   onTakeVideo = (value) => {
