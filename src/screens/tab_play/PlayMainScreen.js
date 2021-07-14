@@ -11,6 +11,7 @@ import {
 
 import SplashScreen from 'react-native-splash-screen';
 import { connect } from 'react-redux';
+import RBSheet from "./../../components/react-native-raw-bottom-sheet";
 
 import RenderPosts from "../../components/posts/RenderPosts";
 import ProgressModal from '../../components/ProgressModal';
@@ -25,6 +26,9 @@ import {
   Helper,
   RestAPI,
 } from '../../utils/Global';
+import CommentsScreen from "../details/CommentsScreen";
+
+const SHEET_HEIGHT = Helper.getWindowHeight() * 0.75;
 
 class PlayMainScreen extends Component {
   constructor(props) {
@@ -34,6 +38,7 @@ class PlayMainScreen extends Component {
 
     SplashScreen.hide();
     this.init();
+    this.profileSheet = React.createRef();
   }
 
   componentDidMount() {
@@ -270,6 +275,14 @@ class PlayMainScreen extends Component {
     }
   };
 
+  onOpenProfileSheet = () => {
+    this.profileSheet?.current?.open();
+  };
+
+  onCloseComments = () => {
+    this.profileSheet?.current?.close();
+  };
+
   checkSignin = () => {
     if (!global.me && global._prevScreen === 'profile_edit') {
       this.onRefresh();
@@ -282,6 +295,22 @@ class PlayMainScreen extends Component {
         {this.___renderStatusBar()}
         {this._renderVideo()}
         {this._renderProgress()}
+        <RBSheet
+          ref={this.profileSheet}
+          openDuration={250}
+          height={SHEET_HEIGHT}
+          keyboardAvoidingViewEnabled={true}
+          customStyles={{
+            draggableIcon: {
+              width: 0,
+              height: 0,
+              padding: 0,
+              margin: 0,
+            },
+          }}
+        >
+          <CommentsScreen post={this.state.item} onCloseComments={this.onCloseComments} />
+        </RBSheet>
       </View>
     );
   }
@@ -341,6 +370,7 @@ class PlayMainScreen extends Component {
         state={this.state}
         index={index}
         actions={actions}
+        onOpenProfileSheet={this.onOpenProfileSheet}
       />
     );
   };

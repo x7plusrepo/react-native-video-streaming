@@ -29,6 +29,7 @@
     "@reduxjs/toolkit": "^1.5.0",
     "axios": "^0.21.1",
     "create-react-class": "^15.6.3",
+    "javascript-time-ago": "^2.3.8",
     "lodash": "^4.17.21",
     "lodash.findindex": "^4.6.0",
     "lodash.map": "^4.6.0",

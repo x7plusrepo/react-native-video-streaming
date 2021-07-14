@@ -15,6 +15,8 @@ import ProgressModal from '../../components/ProgressModal';
 import RenderPosts from '../../components/posts/RenderPosts';
 
 import { Global, GStyles, Helper, RestAPI } from '../../utils/Global';
+import CommentsScreen from "./CommentsScreen";
+import RBSheet from "react-native-raw-bottom-sheet";
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -25,6 +27,7 @@ class PostsScreen extends Component {
     super(props);
 
     console.log('PostsScreen start');
+    this.profileSheet = React.createRef();
 
     this.init();
   }
@@ -143,6 +146,14 @@ class PostsScreen extends Component {
     }
   };
 
+  onOpenProfileSheet = () => {
+    this.profileSheet?.current?.open();
+  };
+
+  onCloseComments = () => {
+    this.profileSheet?.current?.close();
+  };
+
   render() {
     return (
       <View style={GStyles.container}>
@@ -150,6 +161,21 @@ class PostsScreen extends Component {
         {this._renderVideo()}
         {this._renderProgress()}
         {this._renderBack()}
+        <RBSheet
+          ref={this.profileSheet}
+          openDuration={250}
+          height={VIDEO_HEIGHT * 0.75}
+          customStyles={{
+            draggableIcon: {
+              width: 0,
+              height: 0,
+              padding: 0,
+              margin: 0,
+            },
+          }}
+        >
+          <CommentsScreen post={this.state.item} onCloseComments={this.onCloseComments} />
+        </RBSheet>
       </View>
     );
   }
@@ -212,6 +238,7 @@ class PostsScreen extends Component {
         index={index}
         actions={actions}
         detailStyle={{ bottom: 36 + Helper.getBottomBarHeight() }}
+        onOpenProfileSheet={this.onOpenProfileSheet}
       />
     );
   };

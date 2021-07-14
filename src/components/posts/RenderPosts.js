@@ -9,7 +9,7 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import convertToProxyURL from 'react-native-video-cache';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 import { GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
@@ -28,7 +28,7 @@ const RenderPosts = (props) => {
   const [showTexts, setShowTexts] = useState(false);
   const navigation = useNavigation();
 
-  const { item, state, index, actions, detailStyle } = props;
+  const { item, state, index, actions, detailStyle, onOpenProfileSheet } = props;
   const { isVideoPause } = state;
   const paused = isVideoPause || state.curIndex !== index;
   const user = item.user || {};
@@ -40,7 +40,7 @@ const RenderPosts = (props) => {
   };
 
   const onPressComments = () => {
-    navigation.navigate('post_comments');
+    onOpenProfileSheet && onOpenProfileSheet(item);
   };
 
   return (
@@ -112,7 +112,7 @@ const RenderPosts = (props) => {
                   }}
                 />
               </TouchableOpacity>
-              <Text style={GStyles.textSmall}>{item.likeCount || 0}</Text>
+              {/*<Text style={GStyles.textSmall}>{item.likeCount || 0}</Text>*/}
               <TouchableOpacity
                 onPress={onPressComments}
                 style={GStyles.videoActionButton}
@@ -126,9 +126,9 @@ const RenderPosts = (props) => {
                   tintColor={'white'}
                 />
               </TouchableOpacity>
-              <Text style={GStyles.textSmall}>
+              {/*<Text style={GStyles.textSmall}>
                 {item.comments?.length || 0}
-              </Text>
+              </Text>*/}
 
               <TouchableOpacity
                 onPress={() => {
@@ -136,7 +136,14 @@ const RenderPosts = (props) => {
                 }}
                 style={GStyles.videoActionButton}
               >
-                <Image source={ic_share} style={GStyles.actionIcons} />
+                <Image
+                  source={ic_share}
+                  style={{
+                    ...GStyles.actionIcons,
+                    tintColor: 'white',
+                  }}
+                  tintColor={'white'}
+                />
               </TouchableOpacity>
               <View style={[GStyles.centerAlign, { marginTop: 16 }]}>
                 <Avatar

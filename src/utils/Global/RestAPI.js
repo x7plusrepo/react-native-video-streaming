@@ -145,6 +145,21 @@ const RestAPI = {
     formDataCall('api/post/allPost', data, {}, callBack, 'get');
   },
 
+  get_all_comment_list: (params, callBack) => {
+    const data = {
+      postId: params.postId,
+      userId: params.user_id,
+      page: params.page_number,
+      amount: params.count_per_page,
+    };
+
+    formDataCall('api/post/comments', data, {}, callBack, 'get');
+  },
+
+  add_comment: (params, callBack) => {
+    formDataCall('api/post/addComment', params, {}, callBack, 'post');
+  },
+
   get_searched_video_list: (params, callBack) => {
     let data = {
       userId: params.user_id,
