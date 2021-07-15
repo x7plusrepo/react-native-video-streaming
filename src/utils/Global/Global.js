@@ -70,7 +70,6 @@ const Global = {
   },
   uploadToCloudinary: async (source, folder = 'unknown') => {
     if (Platform.OS === 'ios') {
-      console.log(source);
       source.uri = source?.uri?.replace('file://', '/');
     }
     return new Promise((resolve, reject) => {
@@ -237,7 +236,7 @@ const Global = {
       return false;
     }
   },
-  checkPermissionsForProfile: async () => {
+  checkPermissionsForStorage: async () => {
     try {
       const permissions =
         Platform.OS === 'ios'

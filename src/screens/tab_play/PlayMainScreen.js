@@ -11,9 +11,9 @@ import {
 
 import SplashScreen from 'react-native-splash-screen';
 import { connect } from 'react-redux';
-import RBSheet from "./../../components/react-native-raw-bottom-sheet";
+import RBSheet from './../../components/react-native-raw-bottom-sheet';
 
-import RenderPosts from "../../components/posts/RenderPosts";
+import RenderPosts from '../../components/posts/RenderPosts';
 import ProgressModal from '../../components/ProgressModal';
 
 import ChatStreamSocketManager from './../../utils/Message/SocketManager';
@@ -26,7 +26,7 @@ import {
   Helper,
   RestAPI,
 } from '../../utils/Global';
-import CommentsScreen from "../details/CommentsScreen";
+import CommentsScreen from '../details/CommentsScreen';
 
 const SHEET_HEIGHT = Helper.getWindowHeight() * 0.75;
 
@@ -134,10 +134,10 @@ class PlayMainScreen extends Component {
       } else if (json?.status === 200) {
         const postList = json?.data?.postList || [];
 
-        this.setState({ totalCount: json.data?.totalCounts || 0});
+        this.setState({ totalCount: json.data?.totalCounts || 0 });
         if (type === 'more') {
           let data = posts.concat(postList);
-          this.setState({ posts: data })
+          this.setState({ posts: data });
         } else {
           this.setState({ posts: postList });
           if (json.data?.loginResult?.user) {
@@ -156,10 +156,7 @@ class PlayMainScreen extends Component {
             this.props.setMyUserAction(global.me);
             Helper.setLocalValue(Constants.KEY_USERNAME, username);
             Helper.setLocalValue(Constants.KEY_PASSWORD, password);
-            Helper.setLocalValue(
-              Constants.KEY_USER,
-              JSON.stringify(global.me),
-            );
+            Helper.setLocalValue(Constants.KEY_USER, JSON.stringify(global.me));
             Helper.callFunc(global.onSetUnreadCount);
             Global.registerPushToken();
           }
@@ -242,6 +239,7 @@ class PlayMainScreen extends Component {
         } else {
           if (json.status === 200) {
             item.isLiked = isChecked;
+
             this.setState({ posts });
           } else {
             Helper.alertServerDataError();
@@ -265,6 +263,14 @@ class PlayMainScreen extends Component {
     } else {
       this.props.navigation.navigate('signin');
     }
+  };
+
+  onAddComment = (post) => {
+    const { posts } = this.state;
+    const newPosts = [...posts];
+    const item = newPosts.find((p) => p.id === post?.id);
+    if (item) item.comments = post?.comments;
+    this.setState({ posts: newPosts })
   };
 
   onPressShare = (item) => {
@@ -309,7 +315,11 @@ class PlayMainScreen extends Component {
             },
           }}
         >
-          <CommentsScreen post={this.state.item} onCloseComments={this.onCloseComments} />
+          <CommentsScreen
+            post={this.state.item}
+            onCloseComments={this.onCloseComments}
+            onAddComment={this.onAddComment}
+          />
         </RBSheet>
       </View>
     );

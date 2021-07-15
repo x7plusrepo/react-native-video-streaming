@@ -1,6 +1,7 @@
 import React from 'react';
 import {
   BackHandler,
+  Image,
   SafeAreaView,
   StyleSheet,
   Text,
@@ -10,6 +11,8 @@ import {
 
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
+import { launchImageLibrary } from 'react-native-image-picker';
+
 import ProgressBar from '../../lib/Progress/Bar';
 import { Button, Dialog, Paragraph, Portal } from 'react-native-paper';
 import { createThumbnail } from 'react-native-create-thumbnail';
@@ -27,6 +30,10 @@ import {
   RestAPI,
 } from '../../utils/Global';
 
+import upload_icon from './../../assets/images/Icons/ic_upload_video.png';
+import convertToProxyURL from 'react-native-video-cache';
+import Video from 'react-native-video';
+
 const WINDOW_WIDTH = Helper.getWindowWidth();
 
 class PostUploadScreen extends React.Component {
@@ -38,8 +45,6 @@ class PostUploadScreen extends React.Component {
   }
 
   componentDidMount() {
-    this.onRefresh();
-
     this.backHandler = BackHandler.addEventListener(
       'hardwareBackPress',
       this.onBack,
@@ -57,23 +62,31 @@ class PostUploadScreen extends React.Component {
       percent: 0,
       text: '',
       description: '',
+      videoUri: '',
+      thumbUri: '',
+      fileName: '',
+      duration: 0,
+      loading: false,
     };
 
     this.initRef();
   };
 
   onRefresh = () => {
-    if (global._prevScreen !== 'camera_preview') {
+    const { videoUri } = this.state;
+    if (videoUri) {
       showForcePageLoader(true);
-      createThumbnail({ url: global._videoUri })
+      createThumbnail({ url: videoUri })
         .then((response) => {
+          this.setState({ thumbUri: response.path });
           global._thumbUri = response.path;
           showForcePageLoader(false);
         })
         .catch((err) => {
           console.log({ err });
           showForcePageLoader(false);
-          global._thumbUri = null;
+          global._thumbUri = '';
+          this.setState({ thumbUri: '' });
           error(Constants.ERROR_TITLE, 'Failed to create thumbnail');
         });
     }
@@ -86,6 +99,46 @@ class PostUploadScreen extends React.Component {
     this.descriptionRef = (ref) => {
       this.description = ref;
     };
+  };
+
+  onPressImport = async () => {
+    const granted = await Global.checkPermissionsForStorage();
+    if (granted) {
+      launchImageLibrary(
+        {
+          height: 300,
+          width: 300,
+          mediaType: 'video',
+        },
+        async (response) => {
+          if (response?.didCancel) {
+            console.log('User cancelled image picker');
+          } else if (response?.errorMessage) {
+            console.log('ImagePicker Error: ', response?.error);
+          } else {
+            try {
+              console.log(response);
+              const uri = response?.uri;
+              global._videoUri = uri;
+              this.setState(
+                {
+                  videoUri: uri,
+                  fileName: response?.fileName,
+                },
+                () => {
+                  this.onRefresh();
+                },
+              );
+            } catch (error) {
+              console.log(error);
+              global.warning('Warning', 'Error while importing video.');
+            }
+          }
+        },
+      );
+    } else {
+      global.warning('Warning', 'Permission is denied.');
+    }
   };
 
   uploadPostToBackend = () => {
@@ -122,25 +175,14 @@ class PostUploadScreen extends React.Component {
   };
 
   deleteVideo = async () => {
-    RNFS.unlink(global._videoUri);
-    RNFS.unlink(global._thumbUri);
-
-    global._videoUri = '';
-    global._thumbUri = '';
-  };
-
-  onFocus = () => {
-    let { errors = {} } = this.state;
-
-    for (let name in errors) {
-      let ref = this[name];
-
-      if (ref && ref.isFocused()) {
-        delete errors[name];
-      }
+    try {
+      const { thumbUri, videoUri } = this.state;
+      RNFS.unlink(thumbUri);
+      RNFS.unlink(videoUri);
+    } catch (error) {
+      console.log(error);
     }
-
-    this.setState({ errors });
+    this.setState({ thumbUri: '', videoUri: '' });
   };
 
   onChangeText = (text) => {
@@ -157,22 +199,32 @@ class PostUploadScreen extends React.Component {
     this.description.focus();
   };
 
-  onPressPreview = () => {
-    global._prevScreen = 'camera_upload';
-    this.props.navigation.navigate('camera_preview');
-  };
-
   onPressUploadPost = async () => {
     this.setState({ isVisibleDialog: false });
-    let imageName = Helper.getFile4Path(global._thumbUri);
+    const { thumbUri, videoUri, duration } = this.state;
+    if (!videoUri || !thumbUri) {
+      global.warning('Warning', 'Empty source.');
+      return;
+    }
+
+    if (duration === 0) {
+      global.warning('Warning', 'Invalid video.');
+      return;
+    }
+    if (duration > 15 ) {
+      global.warning('Warning', 'Sorry the video is too long, max duration is 15sec.');
+      return;
+    }
+    this.setState({ isVisibleDialog: false });
+    let imageName = Helper.getFile4Path(thumbUri);
     const imageSource = {
-      uri: global._thumbUri,
+      uri: thumbUri,
       name: imageName,
       type: 'image/jpeg',
     };
-    const videoName = Helper.getFile4Path(global._videoUri);
+    const videoName = Helper.getFile4Path(videoUri);
     const videoSource = {
-      uri: global._videoUri,
+      uri: videoUri,
       name: videoName,
       type: 'video/mp4',
     };
@@ -230,14 +282,18 @@ class PostUploadScreen extends React.Component {
   render() {
     return (
       <>
-        <SafeAreaView style={[GStyles.container, { paddingBottom: 36 }]}>
+        <SafeAreaView style={styles.container}>
           {this._renderHeader()}
           <KeyboardAwareScrollView
             showsVerticalScrollIndicator={false}
-            style={GStyles.elementContainer}
+            keyboardShouldPersistTaps="always"
           >
-            {this._renderMainInputs()}
-            {this._renderButtons()}
+            {this._renderUpload()}
+            {this._renderVideo()}
+            <View style={{ paddingHorizontal: 16 }}>
+              {this._renderMainInputs()}
+              {this._renderButtons()}
+            </View>
           </KeyboardAwareScrollView>
           {this._renderProgress()}
           {this._renderDialog()}
@@ -245,6 +301,78 @@ class PostUploadScreen extends React.Component {
       </>
     );
   }
+
+  onLoad = (data) => {
+    const duration = data?.duration || 0;
+    this.setState({ loading: false, duration });
+    if (duration > 15 ) {
+      global.warning('Warning', 'Sorry the video is too long, max duration is 15sec.');
+    }
+  };
+
+  onLoadStart = () => {
+    this.setState({ loading: true, duration: 0 });
+  };
+
+  onVideoError = () => {
+    this.setState({ loading: false, duration: 0 });
+    alert(0);
+  };
+
+  _renderVideo = () => {
+    const { videoUri, thumbUri, fileName } = this.state;
+    return (
+      <View style={styles.videoContainer}>
+        <View style={styles.videoSubContainer}>
+          { !!videoUri &&
+          <Video
+            source={{ uri: videoUri }}
+            repeat
+            poster={thumbUri}
+            resizeMode="contain"
+            posterResizeMode="contain"
+            // bufferConfig={{
+            //   minBufferMs: 15000,
+            //   maxBufferMs: 30000,
+            //   bufferForPlaybackMs: 5000,
+            //   bufferForPlaybackAfterRebufferMs: 5000,
+            // }}
+            style={styles.video}
+            onLoad={this.onLoad}
+            onLoadStart={this.onLoadStart}
+            onError={this.onVideoError}
+          />
+          }
+
+        </View>
+      </View>
+    );
+  };
+
+  _renderUpload = () => {
+    const { videoUri, thumbUri, fileName } = this.state;
+    const videoName = Helper.getFile4Path(videoUri);
+
+    return (
+      <TouchableOpacity
+        style={styles.uploadContainer}
+        onPress={this.onPressImport}
+      >
+        <View style={styles.uploadSub}>
+          {!!videoUri && !!thumbUri ? (
+            <View style={styles.thumbContainer}>
+              <Image source={{ uri: thumbUri }} style={styles.thumb} />
+              <Text style={styles.fileName}>{videoName}</Text>
+            </View>
+          ) : (
+            <View>
+              <Image source={upload_icon} style={styles.thumb} />
+            </View>
+          )}
+        </View>
+      </TouchableOpacity>
+    );
+  };
 
   _renderHeader = () => {
     return (
@@ -257,68 +385,54 @@ class PostUploadScreen extends React.Component {
   };
 
   _renderMainInputs = () => {
-    const { errors = {}, price, description, isPermanent } = this.state;
+    const { errors = {}, price, description } = this.state;
 
     return (
-      <View>
-        <View style={styles.textInput}>
-          <TextField
-            ref={this.titleRef}
-            autoCapitalize="none"
-            autoCorrect={false}
-            autoFocus={false}
-            enablesReturnKeyAutomatically={true}
-            onFocus={this.onFocus}
-            onChangeText={this.onChangeText}
-            onSubmitEditing={this.onSubmitTitle}
-            returnKeyType="done"
-            label="Title"
-            value={price}
-            error={errors.title}
-          />
-        </View>
-        <View>
-          <TextField
-            ref={this.descriptionRef}
-            autoCapitalize="none"
-            autoCorrect={false}
-            onFocus={this.onFocus}
-            autoFocus={false}
-            onChangeText={this.onChangeText}
-            returnKeyType="next"
-            label="Description"
-            value={description}
-            multiline={true}
-            characterRestriction={120}
-            error={errors.description}
-          />
-        </View>
-      </View>
+      <>
+        <TextField
+          ref={this.titleRef}
+          //autoCapitalize="none"
+          // autoCorrect={false}
+          // autoFocus={false}
+          enablesReturnKeyAutomatically={true}
+          onChangeText={this.onChangeText}
+          onSubmitEditing={this.onSubmitTitle}
+          returnKeyType="next"
+          label="Title"
+          value={price}
+        />
+        <TextField
+          ref={this.descriptionRef}
+          //autoCapitalize="none"
+          // autoCorrect={false}
+          // autoFocus={false}
+          onChangeText={this.onChangeText}
+          returnKeyType="done"
+          label="Description"
+          value={description}
+          multiline={true}
+          characterRestriction={120}
+        />
+      </>
     );
   };
 
   _renderButtons = () => {
+    const { videoUri, loading } = this.state;
+    const disabled = loading || !!!videoUri;
+
     return (
-      <View style={{ zIndex: -1 }}>
-        <View style={{ marginTop: 50 }}>
-          <TouchableOpacity onPress={this.onPressPreview}>
-            <View style={GStyles.buttonFill}>
-              <Text style={GStyles.textFill}>Preview</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={{ marginTop: 20 }}>
-          <TouchableOpacity onPress={this.onSubmit}>
-            <View
-              style={{
-                ...GStyles.buttonFill,
-                backgroundColor: GStyle.redColor,
-              }}
-            >
-              <Text style={GStyles.textFill}>Upload</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+      <View style={{ marginTop: 20 }}>
+        <TouchableOpacity onPress={this.onSubmit} disabled={disabled}>
+          <View
+            style={{
+              ...GStyles.buttonFill,
+              backgroundColor: GStyle.redColor,
+            }}
+          >
+            <Text style={GStyles.textFill}>Upload</Text>
+          </View>
+        </TouchableOpacity>
       </View>
     );
   };
@@ -415,11 +529,76 @@ class PostUploadScreen extends React.Component {
 }
 
 const styles = StyleSheet.create({
-  textInput: {
-    borderBottomColor: '#ccc',
-    borderBottomWidth: 0.8,
+  uploadContainer: {
+    marginVertical: 24,
+    width: '100%',
+    flexDirection: 'row',
+    backgroundColor: 'white',
+  },
+  uploadSub: {
+    paddingVertical: 24,
+    marginHorizontal: 16,
+    flex: 1,
+    backgroundColor: 'white',
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderStyle: 'dashed',
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 32,
+    shadowOffset: {
+      width: 32,
+      height: 32,
+    },
+    shadowOpacity: 0.2,
+  },
+  container: {
+    paddingBottom: 36,
+    backgroundColor: 'white',
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  thumb: {
+    width: 105,
+    height: 105,
+  },
+  fileName: {
+    ...GStyles.textMedium,
+    marginLeft: 16,
+  },
+  thumbContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  videoSubContainer: {
+    elevation: 32,
+    shadowOffset: {
+      width: 32,
+      height: 32,
+    },
+    shadowOpacity: 0.2,
+    backgroundColor: 'black',
+    borderRadius: 8,
+    justifyContent: 'center',
+    alignItems: 'center',
+    flex: 1,
+    height: 250,
+  },
+  videoContainer: {
+    marginBottom: 24,
+    paddingHorizontal: 16,
+    flexDirection: 'row',
+  },
+  video: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 8,
   },
 });
+
 export default (props) => {
   let navigation = useNavigation();
   let route = useRoute();

@@ -14,7 +14,6 @@ import { setUnreadCount } from '../redux/message/actions';
 import avatars from '../assets/avatars';
 import { setMyUserAction } from '../redux/me/actions';
 import PlayMainScreen from '../screens/tab_play/PlayMainScreen';
-import BottomTab from "./BottomTab";
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/Icons/ic_gift.png');

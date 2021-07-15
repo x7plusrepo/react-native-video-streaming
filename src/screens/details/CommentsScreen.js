@@ -16,7 +16,7 @@ import CommentItem from '../../components/posts/CommentItem';
 import WriteComment from '../../components/posts/WriteComment';
 import ic_close from "../../assets/images/Icons/ic_close.png";
 
-const CommentsScreen = ({ post, onCloseComments }) => {
+const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   const [comments, setComments] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
@@ -56,7 +56,7 @@ const CommentsScreen = ({ post, onCloseComments }) => {
     let params = {
       postId: post?.id,
       user_id: global.me ? global.me?.id : '',
-      page_number: type === 'more' ? curPage : '1',
+      page_number: type === 'more' ? tempPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
     RestAPI.get_all_comment_list(params, (json, err) => {
@@ -94,8 +94,11 @@ const CommentsScreen = ({ post, onCloseComments }) => {
         Helper.alertNetworkError(err?.message);
       } else if (json?.status === 201) {
         const comment = json?.data?.comment || [];
-        let data = comments.concat([comment]);
+        let data = [comment].concat(comments);
         setComments(data);
+        if (json?.data?.post) {
+          onAddComment(json?.data?.post);
+        }
       } else {
         Helper.alertServerDataError();
       }
@@ -115,7 +118,7 @@ const CommentsScreen = ({ post, onCloseComments }) => {
             { alignSelf: 'center', fontWeight: '700' },
           ]}
         >
-          {comments.length} comments
+          {totalCount} comments
         </Text>
         <TouchableOpacity
           onPress={onCloseComments}
@@ -135,7 +138,7 @@ const CommentsScreen = ({ post, onCloseComments }) => {
           onRefresh('pull');
         }}
         refreshing={isFetching}
-        onEndReachedThreshold={0.4}
+        onEndReachedThreshold={0.2}
         onMomentumScrollBegin={() => {
           setOnEndReachedDuringMomentum(false);
         }}
@@ -149,6 +152,7 @@ const CommentsScreen = ({ post, onCloseComments }) => {
         renderItem={_renderItem}
         keyExtractor={(item) => item.id}
         style={{ flex: 1, width: '100%' }}
+        contentContainerStyle={{ paddingBottom: 64 }}
       />
       <KeyboardAvoidingView
         behavior={'position'}

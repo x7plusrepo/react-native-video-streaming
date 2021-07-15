@@ -14,9 +14,11 @@ import { useNavigation } from '@react-navigation/native';
 import { GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
+import Helper from "../../utils/Global/Util";
 
 const heart = require('../../assets/images/gifts/heart.png');
-const ic_menu_messages = require('../../assets/images/Icons/ic_menu_messages.png');
+const eye = require('../../assets/images/Icons/ic_eye.png');
+const ic_comment = require('../../assets/images/Icons/ic_comment.png');
 const ic_share = require('../../assets/images/Icons/ic_share.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
@@ -26,7 +28,6 @@ const VIDEO_HEIGHT = Dimensions.get('window').height;
 
 const RenderPosts = (props) => {
   const [showTexts, setShowTexts] = useState(false);
-  const navigation = useNavigation();
 
   const { item, state, index, actions, detailStyle, onOpenProfileSheet } = props;
   const { isVideoPause } = state;
@@ -60,12 +61,12 @@ const RenderPosts = (props) => {
             poster={item.thumb}
             resizeMode="contain"
             posterResizeMode="contain"
-            bufferConfig={{
+            /*bufferConfig={{
               minBufferMs: 15000,
               maxBufferMs: 30000,
               bufferForPlaybackMs: 5000,
               bufferForPlaybackAfterRebufferMs: 5000,
-            }}
+            }}*/
             style={styles.video}
           />
           <View
@@ -110,25 +111,23 @@ const RenderPosts = (props) => {
                     ...GStyles.actionIcons,
                     tintColor: isLike ? GStyle.primaryColor : 'white',
                   }}
+                  tintColor='white'
                 />
               </TouchableOpacity>
-              {/*<Text style={GStyles.textSmall}>{item.likeCount || 0}</Text>*/}
+              <Text style={GStyles.textSmall}>{item.likeCount || 0}</Text>
               <TouchableOpacity
                 onPress={onPressComments}
                 style={GStyles.videoActionButton}
               >
                 <Image
-                  source={ic_menu_messages}
-                  style={{
-                    ...GStyles.actionIcons,
-                    tintColor: 'white',
-                  }}
+                  source={ic_comment}
+                  style={GStyles.actionIcons}
                   tintColor={'white'}
                 />
               </TouchableOpacity>
-              {/*<Text style={GStyles.textSmall}>
+              <Text style={GStyles.textSmall}>
                 {item.comments?.length || 0}
-              </Text>*/}
+              </Text>
 
               <TouchableOpacity
                 onPress={() => {
@@ -138,10 +137,7 @@ const RenderPosts = (props) => {
               >
                 <Image
                   source={ic_share}
-                  style={{
-                    ...GStyles.actionIcons,
-                    tintColor: 'white',
-                  }}
+                  style={GStyles.actionIcons}
                   tintColor={'white'}
                 />
               </TouchableOpacity>
@@ -159,6 +155,14 @@ const RenderPosts = (props) => {
                 <Text style={GStyles.textSmall}>{displayName}</Text>
               </View>
             </View>
+          </View>
+          <View style={styles.viewCount}>
+            <Image
+              source={eye}
+              style={styles.viewCountIcon}
+              tintColor='white'
+            />
+            <Text style={GStyles.textSmall}>{item.viewCount || 0}</Text>
           </View>
         </>
       )}
@@ -202,6 +206,23 @@ const styles = StyleSheet.create({
     marginRight: 12,
     justifyContent: 'flex-end',
   },
+  viewCount: {
+    position: 'absolute',
+    flexDirection: 'row',
+    ...GStyles.centerContainer,
+    right: 16,
+    top: 32 + Helper.getStatusBarHeight(),
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 6
+  },
+  viewCountIcon: {
+    width: 16,
+    height: 16,
+    tintColor: 'white',
+    marginRight: 6,
+  }
 });
 
 export default RenderPosts;

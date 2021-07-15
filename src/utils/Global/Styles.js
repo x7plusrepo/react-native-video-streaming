@@ -300,6 +300,7 @@ const GStyles = StyleSheet.create({
   actionIcons: {
     width: 16,
     height: 16,
+    tintColor: 'white',
   },
   playInfoWrapper: {
     position: 'absolute',

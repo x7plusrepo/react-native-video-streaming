@@ -15,8 +15,8 @@ import ProgressModal from '../../components/ProgressModal';
 import RenderPosts from '../../components/posts/RenderPosts';
 
 import { Global, GStyles, Helper, RestAPI } from '../../utils/Global';
-import CommentsScreen from "./CommentsScreen";
-import RBSheet from "react-native-raw-bottom-sheet";
+import CommentsScreen from './CommentsScreen';
+import RBSheet from 'react-native-raw-bottom-sheet';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -154,6 +154,10 @@ class PostsScreen extends Component {
     this.profileSheet?.current?.close();
   };
 
+  onAddComment = (post) => {
+    console.log(post);
+  };
+
   render() {
     return (
       <View style={GStyles.container}>
@@ -174,7 +178,11 @@ class PostsScreen extends Component {
             },
           }}
         >
-          <CommentsScreen post={this.state.item} onCloseComments={this.onCloseComments} />
+          <CommentsScreen
+            post={this.state.item}
+            onCloseComments={this.onCloseComments}
+            onAddComment={this.onAddComment}
+          />
         </RBSheet>
       </View>
     );

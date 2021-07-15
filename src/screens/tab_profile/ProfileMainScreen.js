@@ -19,6 +19,7 @@ import ic_menu_drafts from '../../assets/images/Icons/ic_menu_drafts.png';
 import ic_stars from '../../assets/images/Icons/ic_stars.png';
 import ic_menu_saved_products from '../../assets/images/Icons/ic_menu_saved_products.png';
 import ic_my_products from '../../assets/images/Icons/ic_my_products.png';
+import ic_my_videos from '../../assets/images/Icons/ic_tab_play.png';
 import ic_support from '../../assets/images/Icons/ic_support.png';
 import ic_sign from '../../assets/images/Icons/ic_vip.png';
 import ChatStreamSocketManager from '../../utils/Message/SocketManager';
@@ -43,8 +44,8 @@ const getMenuItems = (navigation, setMyUserAction) => {
       },
     },
     {
-      icon: ic_my_products,
-      title: 'My Posts',
+      icon: ic_my_videos,
+      title: 'My Videos',
       hideGuest: true,
       onPress: () => {
         navigation.navigate('my_posts');

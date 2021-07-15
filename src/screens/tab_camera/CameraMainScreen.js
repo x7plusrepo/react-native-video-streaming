@@ -74,8 +74,6 @@ class CameraMainScreen extends Component {
   }
 
   init = () => {
-    const { route } = this.props;
-    const maxDuration = get(route, 'params.maxDuration');
     this.state = {
       flash: 'off',
       mute: false,
@@ -92,7 +90,7 @@ class CameraMainScreen extends Component {
       type: 'back',
       whiteBalance: 'auto',
       ratio: '16:9',
-      maxDuration: maxDuration,
+      maxDuration: 30,
       quality: RNCamera.Constants.VideoQuality['1080p'],
       isRecording: false,
       canDetectFaces: false,
@@ -115,7 +113,7 @@ class CameraMainScreen extends Component {
     const { timerProgress, maxDuration } = this.state;
 
     if (timerProgress >= maxDuration * 5) {
-      this.onPressStopRecord()
+      this.onPressStopRecord();
       return;
     }
 
@@ -133,10 +131,7 @@ class CameraMainScreen extends Component {
 
     global._videoUri = value;
     global._prevScreen = 'camera_main';
-    const { route } = this.props;
-    const mode = get(route, 'params.mode');
-    const routeName = mode === 1 ? 'product_upload' : 'post_upload';
-    this.props.navigation.navigate(routeName);
+    this.props.navigation.navigate('product_upload');
   };
 
   toggleFacing = () => {

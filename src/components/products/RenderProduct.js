@@ -12,8 +12,10 @@ import convertToProxyURL from 'react-native-video-cache';
 import { Constants, GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
+import Helper from "../../utils/Global/Util";
 
 const heart = require('../../assets/images/gifts/heart.png');
+const eye = require('../../assets/images/Icons/ic_eye.png');
 const ic_menu_messages = require('../../assets/images/Icons/ic_menu_messages.png');
 const ic_share = require('../../assets/images/Icons/ic_share.png');
 const ic_support = require('../../assets/images/Icons/ic_support.png');
@@ -48,12 +50,12 @@ const RenderProducts = (props) => {
             poster={item.thumb}
             resizeMode="contain"
             posterResizeMode="contain"
-            bufferConfig={{
-              minBufferMs: 15000,
-              maxBufferMs: 30000,
-              bufferForPlaybackMs: 5000,
-              bufferForPlaybackAfterRebufferMs: 5000,
-            }}
+            // bufferConfig={{
+            //   minBufferMs: 15000,
+            //   maxBufferMs: 30000,
+            //   bufferForPlaybackMs: 5000,
+            //   bufferForPlaybackAfterRebufferMs: 5000,
+            // }}
             style={styles.video}
           />
           <View style={[GStyles.playInfoWrapper, detailStyle]}>
@@ -167,6 +169,14 @@ const RenderProducts = (props) => {
               </View>
             </View>
           </View>
+          <View style={styles.viewCount}>
+            <Image
+              source={eye}
+              style={styles.viewCountIcon}
+              tintColor='white'
+            />
+            <Text style={GStyles.textSmall}>{item.viewCount || 0}</Text>
+          </View>
         </>
       )}
     </View>
@@ -189,6 +199,23 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     marginBottom: 16,
   },
+  viewCount: {
+    position: 'absolute',
+    flexDirection: 'row',
+    ...GStyles.centerContainer,
+    right: 16,
+    top: 32 + Helper.getStatusBarHeight(),
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    paddingVertical: 4,
+    paddingHorizontal: 12,
+    borderRadius: 6
+  },
+  viewCountIcon: {
+    width: 16,
+    height: 16,
+    tintColor: 'white',
+    marginRight: 6,
+  }
 });
 
 export default RenderProducts;

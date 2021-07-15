@@ -133,8 +133,7 @@ class MyPostsScreen extends React.Component {
   };
 
   onPressNewProduct = () => {
-    global._prevScreen = 'my_posts';
-    this.props.navigation.navigate('camera_main', { maxDuration: 15, mode: 2 });
+    this.props.navigation.navigate('post_upload');
   };
 
   deletePost = () => {
@@ -198,7 +197,7 @@ class MyPostsScreen extends React.Component {
     return (
       <SafeAreaView style={GStyles.container}>
         <GHeaderBar
-          headerTitle="My Posts"
+          headerTitle="My Videos"
           leftType="back"
           navigation={navigation}
           rightAvatar={
@@ -210,7 +209,7 @@ class MyPostsScreen extends React.Component {
                   { color: 'black' },
                 ]}
               >
-                New Post
+                Add Video
               </Text>
             </TouchableOpacity>
           }

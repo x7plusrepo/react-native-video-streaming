@@ -44,7 +44,7 @@ const PanelLive = (props) => {
   };
 
   const onPressThumbnail = async () => {
-    const granted = await Global.checkPermissionsForProfile();
+    const granted = await Global.checkPermissionsForStorage();
     if (granted) {
       launchImageLibrary(
         {

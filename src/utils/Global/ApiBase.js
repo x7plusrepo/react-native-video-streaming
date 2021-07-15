@@ -72,7 +72,6 @@ const futch = async (url, opts = {}, onProgress) => {
 };
 
 const formDataCall = (subUrl, body, headers, callBack, method = 'post') => {
-  console.log(body)
   futch(
     subUrl,
     {

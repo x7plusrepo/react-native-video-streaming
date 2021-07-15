@@ -200,14 +200,13 @@ class ProfileEditScreen extends React.Component {
   };
 
   onPressProfilePhoto = async () => {
-    const granted = await Global.checkPermissionsForProfile();
+    const granted = await Global.checkPermissionsForStorage();
     if (granted) {
       launchImageLibrary(
         {
           height: 300,
           width: 300,
           mediaType: 'photo',
-          cameraType: 'front',
         },
         (response) => {
           if (response.didCancel) {
