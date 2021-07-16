@@ -121,18 +121,6 @@ const RestAPI = {
     formDataCall('api/video/likedVideos', data, {}, callBack, 'get');
   },
 
-  get_all_video_list: (params, callBack) => {
-    const data = {
-      userId: params.user_id,
-      page: params.page_number,
-      amount: params.count_per_page,
-      username: params.username,
-      password: params.password,
-    };
-
-    formDataCall('api/video/allVideo', data, {}, callBack, 'get');
-  },
-
   get_all_post_list: (params, callBack) => {
     const data = {
       userId: params.user_id,
