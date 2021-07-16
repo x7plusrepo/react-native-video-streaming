@@ -152,8 +152,8 @@ android {
         applicationId "com.stars.android"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 26
-        versionName "2.0.4"
+        versionCode 30
+        versionName "2.0.5"
         multiDexEnabled true
         missingDimensionStrategy 'react-native-camera', 'general'
         vectorDrawables.useSupportLibrary = true
