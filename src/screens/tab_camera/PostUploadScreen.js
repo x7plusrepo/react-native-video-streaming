@@ -548,9 +548,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     elevation: 32,
     shadowOffset: {
-      width: 32,
-      height: 32,
+      width: 2,
+      height: 8,
     },
+    shadowRadius: 12,
     shadowOpacity: 0.2,
   },
   container: {
@@ -576,9 +577,10 @@ const styles = StyleSheet.create({
   videoSubContainer: {
     elevation: 32,
     shadowOffset: {
-      width: 32,
-      height: 32,
+      width: 2,
+      height: 8,
     },
+    shadowRadius: 12,
     shadowOpacity: 0.2,
     backgroundColor: 'black',
     borderRadius: 8,

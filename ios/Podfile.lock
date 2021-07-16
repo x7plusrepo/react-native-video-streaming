@@ -353,6 +353,8 @@ PODS:
     - React
   - react-native-image-picker (3.3.2):
     - React-Core
+  - react-native-keep-awake (4.0.0):
+    - React
   - react-native-nodemediaclient (0.2.15):
     - NodeMediaClient (= 2.9.4)
     - React
@@ -560,6 +562,7 @@ DEPENDENCIES:
   - react-native-ffmpeg (from `../node_modules/react-native-ffmpeg`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-image-picker (from `../node_modules/react-native-image-picker`)
+  - react-native-keep-awake (from `../node_modules/react-native-keep-awake`)
   - react-native-nodemediaclient (from `../node_modules/react-native-nodemediaclient`)
   - react-native-onesignal (from `../node_modules/react-native-onesignal`)
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
@@ -718,6 +721,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-image-picker:
     :path: "../node_modules/react-native-image-picker"
+  react-native-keep-awake:
+    :path: "../node_modules/react-native-keep-awake"
   react-native-nodemediaclient:
     :path: "../node_modules/react-native-nodemediaclient"
   react-native-onesignal:
@@ -861,6 +866,7 @@ SPEC CHECKSUMS:
   react-native-ffmpeg: 9fbe53d5afd6f35978804756f58238cf9340d1d8
   react-native-geolocation: c956aeb136625c23e0dce0467664af2c437888c9
   react-native-image-picker: b42940647478bf106ad3c491d6f5d9d40916d865
+  react-native-keep-awake: afad8a51dfef9fe9655a6344771be32c8596d774
   react-native-nodemediaclient: 6edfb967a99ae8229c96f02316a3ab91b50267ec
   react-native-onesignal: 2a7c3a5f2aa1c599d94cda6cc583205e1548828d
   react-native-safe-area-context: f0906bf8bc9835ac9a9d3f97e8bde2a997d8da79
