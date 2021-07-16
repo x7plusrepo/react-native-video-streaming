@@ -270,7 +270,7 @@ class PlayMainScreen extends Component {
     const newPosts = [...posts];
     const item = newPosts.find((p) => p.id === post?.id);
     if (item) item.comments = post?.comments;
-    this.setState({ posts: newPosts })
+    this.setState({ posts: newPosts });
   };
 
   onPressShare = (item) => {
@@ -312,6 +312,9 @@ class PlayMainScreen extends Component {
               height: 0,
               padding: 0,
               margin: 0,
+            },
+            container: {
+              padding: 16,
             },
           }}
         >

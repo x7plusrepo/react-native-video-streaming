@@ -110,7 +110,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   );
 
   return (
-    <SafeAreaView style={[{ flex: 1, padding: 16, backgroundColor: 'white' }]}>
+    <SafeAreaView style={[{ flex: 1, backgroundColor: 'white' }]}>
       <View>
         <Text
           style={[

@@ -176,6 +176,9 @@ class PostsScreen extends Component {
               padding: 0,
               margin: 0,
             },
+            container: {
+              padding: 16,
+            },
           }}
         >
           <CommentsScreen

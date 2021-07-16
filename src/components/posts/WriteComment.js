@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.2)',
     paddingHorizontal: 12,
     borderRadius: 24,
-    marginHorizontal: 12,
+    marginRight: 12,
   },
   iconSend: {
     width: 24,
