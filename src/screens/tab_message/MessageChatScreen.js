@@ -265,6 +265,7 @@ class MessageChatScreen extends Component {
         }}
       >
         <GiftedChat
+          keyboardShouldPersistTaps={'never '}
           messages={messages}
           onSend={this.onSend}
           loadEarlier={isLoadEarlier}

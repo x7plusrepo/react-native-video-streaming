@@ -398,7 +398,7 @@ class ProductUploadScreen extends React.Component {
   };
 
   onPressPreview = () => {
-    global._prevScreen = 'camera_upload';
+    global._prevScreen = 'product_upload';
     this.props.navigation.navigate('camera_preview');
   };
 

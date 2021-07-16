@@ -61,7 +61,7 @@ class CameraPreviewScreen extends Component {
     global._videoUri = global._draftVideoUri;
     global._thumbUri = global._draftThumbUri;
     global._prevScreen = 'camera_preview';
-    this.props.navigation.navigate('camera_upload');
+    this.props.navigation.navigate('product_upload');
   };
 
   onPressDelete = () => {

@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
-import {Animated, Platform, StyleSheet, Text, TextInput, View, ViewPropTypes,} from 'react-native';
+import {Animated, Keyboard, Platform, StyleSheet, Text, TextInput, View, ViewPropTypes,} from 'react-native';
 
 import Line from '../line';
 import Label from '../label';
@@ -364,6 +364,9 @@ export default class TextField extends PureComponent {
 
     this.startFocusAnimation();
     this.startLabelAnimation();
+    setTimeout(() => {
+      Keyboard.dismiss();
+    }, 1500);
   }
 
   onChange(event) {
