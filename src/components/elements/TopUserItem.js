@@ -33,7 +33,7 @@ const numberMark = (index) => {
 const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
   const icon = sortBy === 'elixir' ? ic_elixir : ic_diamond;
   const iconText =
-    sortBy === 'elixir' ? item?.elixir || 0 : item?.diamondSpent || 0;
+    sortBy === 'elixir' ? item?.elixirFlame || 0 : item?.diamondSpent || 0;
   const displayName = item?.userType === 0 ? item?.displayName : item?.username;
 
   return (

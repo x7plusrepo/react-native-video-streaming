@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Dimensions,
   Image,
@@ -12,7 +12,7 @@ import convertToProxyURL from 'react-native-video-cache';
 import { Constants, GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
-import Helper from "../../utils/Global/Util";
+import Helper from '../../utils/Global/Util';
 
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
@@ -27,6 +27,8 @@ const randomImageUrl = avatars[randomNumber];
 const VIDEO_HEIGHT = Dimensions.get('window').height;
 
 const RenderProducts = (props) => {
+  const [lastPress, setLastPress] = useState(0);
+
   const { item, state, index, actions, detailStyle } = props;
   const { isVideoPause } = state;
   const paused = isVideoPause || state.curIndex !== index;
@@ -37,8 +39,23 @@ const RenderProducts = (props) => {
   const categoryName = item?.category?.title || '';
   const subCategoryName = item?.subCategory?.title || '';
 
+  const onPress = () => {
+    const delta = new Date().getTime() - lastPress;
+
+    if (delta < 200) {
+      actions.onPressLike(!isLike, item);
+      setLastPress(0);
+    } else {
+      setLastPress(new Date().getTime());
+    }
+  };
+
   return (
-    <View style={styles.container}>
+    <TouchableOpacity
+      style={styles.container}
+      activeOpacity={1}
+      onPress={onPress}
+    >
       {Math.abs(state.curIndex - index) < 3 && (
         <>
           <Video
@@ -82,7 +99,9 @@ const RenderProducts = (props) => {
                     }}
                   />
                 </TouchableOpacity>
-                <Text style={GStyles.textSmall}>{item.likeCount || 0}</Text>
+                <Text style={GStyles.textSmall}>
+                  {typeof item.likeCount === 'number' ? item.likeCount : 0}
+                </Text>
 
                 {user.id !== global.me?.id && (
                   <TouchableOpacity
@@ -107,7 +126,6 @@ const RenderProducts = (props) => {
                   <Image source={ic_share} style={GStyles.actionIcons} />
                 </TouchableOpacity>
               </View>
-
             </View>
             <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
               <View style={GStyles.rowContainer}>
@@ -173,13 +191,13 @@ const RenderProducts = (props) => {
             <Image
               source={eye}
               style={styles.viewCountIcon}
-              tintColor='white'
+              tintColor="white"
             />
             <Text style={GStyles.textSmall}>{item.viewCount || 0}</Text>
           </View>
         </>
       )}
-    </View>
+    </TouchableOpacity>
   );
 };
 
@@ -208,14 +226,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     paddingVertical: 4,
     paddingHorizontal: 12,
-    borderRadius: 6
+    borderRadius: 6,
   },
   viewCountIcon: {
     width: 16,
     height: 16,
     tintColor: 'white',
     marginRight: 6,
-  }
+  },
 });
 
 export default RenderProducts;

@@ -67,6 +67,7 @@ class SavedProductsScreen extends React.Component {
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
+    console.log(params)
     RestAPI.get_liked_video_list(params, (json, err) => {
       if (type === 'init') {
         global.showForcePageLoader(false);

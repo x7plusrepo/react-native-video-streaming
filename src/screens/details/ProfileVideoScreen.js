@@ -44,6 +44,7 @@ class ProfileVideoScreen extends Component {
       percent: 0,
 
       isFetching: false,
+      isLiking: false,
       totalCount: global._totalCount,
       curPage: global._curPage ? global._curPage : '1',
       keyword: global._keyword ? global._keyword : '',
@@ -70,15 +71,16 @@ class ProfileVideoScreen extends Component {
       this.setState({ item });
       global._opponentUser = item.user;
       if (global.me?.id) {
-        let params = {
-          video_id: item?.id,
-          owner_id: item.user?.id,
-          viewer_id: global.me ? global.me?.id : 0,
-          device_type: Platform.OS === 'ios' ? '1' : '0',
-          device_identifier: global._deviceId,
-        };
+        if (!item.isViewed) {
+          let params = {
+            video_id: item?.id,
+            viewer_id: global.me ? global.me?.id : 0,
+            device_type: Platform.OS === 'ios' ? '1' : '0',
+            device_identifier: global._deviceId,
+          };
 
-        RestAPI.update_video_view(params, (json, err) => {});
+          RestAPI.update_video_view(params, (json, err) => {});
+        }
       }
     }
   };
@@ -99,15 +101,22 @@ class ProfileVideoScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
+    if (this.state.isLiking) {
+      return;
+    }
+
     let { itemDatas } = this.state;
 
     if (global.me) {
-      isChecked ? item.likeCount++ : item.likeCount--;
+      item.likeCount = (item.likeCount || 0) + (isChecked ? 1 : -1);
+      item.isLiked = isChecked;
       const params = {
         user_id: global.me?.id,
         video_id: item.id,
         is_like: isChecked,
       };
+      this.setState({ isLiking: true });
+
       RestAPI.update_like_video(params, (json, err) => {
         global.showForcePageLoader(false);
 
@@ -115,12 +124,12 @@ class ProfileVideoScreen extends Component {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 200) {
-            item.isLiked = isChecked;
             this.setState({ itemDatas });
           } else {
             Helper.alertServerDataError();
           }
         }
+        this.setState({ isLiking: false });
       });
     } else {
       this.props.navigation.navigate('signin');

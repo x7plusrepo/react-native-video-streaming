@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   Dimensions,
   Image,
@@ -9,12 +9,11 @@ import {
 } from 'react-native';
 import Video from 'react-native-video';
 import convertToProxyURL from 'react-native-video-cache';
-import { useNavigation } from '@react-navigation/native';
 
 import { GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
-import Helper from "../../utils/Global/Util";
+import Helper from '../../utils/Global/Util';
 
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
@@ -28,16 +27,32 @@ const VIDEO_HEIGHT = Dimensions.get('window').height;
 
 const RenderPosts = (props) => {
   const [showTexts, setShowTexts] = useState(false);
+  const [lastPress, setLastPress] = useState(0);
 
-  const { item, state, index, actions, detailStyle, onOpenProfileSheet } = props;
+  const {
+    item,
+    state,
+    index,
+    actions,
+    detailStyle,
+    onOpenProfileSheet,
+  } = props;
   const { isVideoPause } = state;
   const paused = isVideoPause || state.curIndex !== index;
   const user = item.user || {};
   const displayName = user?.userType === 0 ? user?.displayName : user?.username;
   const isLike = !!item.isLiked;
 
-  const toggleText = () => {
-    setShowTexts(!showTexts);
+  const onPress = () => {
+    const delta = new Date().getTime() - lastPress;
+
+    if (delta < 200) {
+      actions.onPressLike(!isLike, item);
+      setLastPress(0);
+    } else {
+      setLastPress(new Date().getTime());
+      setShowTexts(!showTexts);
+    }
   };
 
   const onPressComments = () => {
@@ -48,7 +63,7 @@ const RenderPosts = (props) => {
     <TouchableOpacity
       style={styles.container}
       activeOpacity={1}
-      onPress={toggleText}
+      onPress={onPress}
     >
       {Math.abs(state.curIndex - index) < 3 && (
         <>
@@ -111,10 +126,12 @@ const RenderPosts = (props) => {
                     ...GStyles.actionIcons,
                     tintColor: isLike ? GStyle.primaryColor : 'white',
                   }}
-                  tintColor='white'
+                  tintColor="white"
                 />
               </TouchableOpacity>
-              <Text style={GStyles.textSmall}>{item.likeCount || 0}</Text>
+              <Text style={GStyles.textSmall}>
+                {typeof item.likeCount === 'number' ? item.likeCount : 0}
+              </Text>
               <TouchableOpacity
                 onPress={onPressComments}
                 style={GStyles.videoActionButton}
@@ -125,9 +142,7 @@ const RenderPosts = (props) => {
                   tintColor={'white'}
                 />
               </TouchableOpacity>
-              <Text style={GStyles.textSmall}>
-                {item.comments?.length || 0}
-              </Text>
+              <Text style={GStyles.textSmall}>{item.commentsCount || 0}</Text>
 
               <TouchableOpacity
                 onPress={() => {
@@ -160,7 +175,7 @@ const RenderPosts = (props) => {
             <Image
               source={eye}
               style={styles.viewCountIcon}
-              tintColor='white'
+              tintColor="white"
             />
             <Text style={GStyles.textSmall}>{item.viewCount || 0}</Text>
           </View>
@@ -215,14 +230,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
     paddingVertical: 4,
     paddingHorizontal: 12,
-    borderRadius: 6
+    borderRadius: 6,
   },
   viewCountIcon: {
     width: 16,
     height: 16,
     tintColor: 'white',
     marginRight: 6,
-  }
+  },
 });
 
 export default RenderPosts;

@@ -296,11 +296,12 @@ class ViewLive extends Component {
 
     if (delta < 300) {
       this.onPressSendHeart();
+      this.setState({ lastPress: 0 });
+    } else {
+      this.setState({
+        lastPress: new Date().getTime(),
+      });
     }
-
-    this.setState({
-      lastPress: new Date().getTime(),
-    });
   };
 
   onPressSendMessage = (message) => {

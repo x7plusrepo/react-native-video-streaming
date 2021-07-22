@@ -71,6 +71,7 @@ class PlayMainScreen extends Component {
       percent: 0,
 
       isFetching: false,
+      isLiking: false,
       totalCount: 0,
       curPage: 1,
       item: {},
@@ -134,7 +135,7 @@ class PlayMainScreen extends Component {
       } else if (json?.status === 200) {
         const postList = json?.data?.postList || [];
 
-        this.setState({ totalCount: json.data?.totalCounts || 0 });
+        this.setState({ totalCount: json.data?.totalCount || 0 });
         if (type === 'more') {
           let data = posts.concat(postList);
           this.setState({ posts: data });
@@ -197,14 +198,15 @@ class PlayMainScreen extends Component {
 
       this.setState({ item });
       global._opponentUser = item.user;
-      let params = {
-        postId: item.id,
-        ownerId: item.user?.id,
-        viewerId: global.me ? global.me.id : 0,
-        deviceType: Platform.OS === 'ios' ? '1' : '0',
-        deviceIdentifier: global._deviceId,
-      };
-      RestAPI.update_post_view(params, (json, err) => {});
+      if (!item.isViewed) {
+        let params = {
+          postId: item.id,
+          viewerId: global.me ? global.me.id : 0,
+          deviceType: Platform.OS === 'ios' ? '1' : '0',
+          deviceIdentifier: global._deviceId,
+        };
+        RestAPI.update_post_view(params, (json, err) => {});
+      }
     }
   };
 
@@ -223,14 +225,21 @@ class PlayMainScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
+    if (this.state.isLiking) {
+      return;
+    }
     if (global.me) {
       const { posts } = this.state;
-      isChecked ? item.likeCount++ : item.likeCount--;
+      item.likeCount = (item.likeCount || 0) + (isChecked ? 1 : -1);
+      item.isLiked = isChecked;
       const params = {
         userId: global.me?.id,
         postId: item.id,
         isLiked: isChecked,
       };
+
+      this.setState({ isLiking: true });
+
       RestAPI.update_like_post(params, (json, err) => {
         global.showForcePageLoader(false);
 
@@ -238,13 +247,12 @@ class PlayMainScreen extends Component {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 200) {
-            item.isLiked = isChecked;
-
             this.setState({ posts });
           } else {
             Helper.alertServerDataError();
           }
         }
+        this.setState({ isLiking: false });
       });
     } else {
       this.props.navigation.navigate('signin');
@@ -265,11 +273,13 @@ class PlayMainScreen extends Component {
     }
   };
 
-  onAddComment = (post) => {
+  onAddComment = (postId, commentsCount) => {
     const { posts } = this.state;
     const newPosts = [...posts];
-    const item = newPosts.find((p) => p.id === post?.id);
-    if (item) item.comments = post?.comments;
+    const item = newPosts.find((p) => p.id === postId);
+    if (item) {
+      item.commentsCount = commentsCount;
+    }
     this.setState({ posts: newPosts });
   };
 
@@ -343,7 +353,7 @@ class PlayMainScreen extends Component {
         ListFooterComponent={this._renderFooter}
         onEndReachedThreshold={0.4}
         onMomentumScrollBegin={() => {
-          this.setState({ onEndReachedDuringMomentuam: false });
+          this.setState({ onEndReachedDuringMomentum: false });
         }}
         onEndReached={() => {
           if (!this.state.onEndReachedDuringMomentum) {

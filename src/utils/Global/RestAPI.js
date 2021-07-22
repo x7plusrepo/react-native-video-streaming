@@ -307,7 +307,6 @@ const RestAPI = {
   update_video_view: (params, callBack) => {
     const data = {
       videoId: params.video_id,
-      ownerId: params.owner_id,
       viewerId: params.viewer_id,
       deviceType: params.device_type,
       deviceIdentifier: params.device_identifier,
@@ -319,7 +318,6 @@ const RestAPI = {
   update_post_view: (params, callBack) => {
     const data = {
       postId: params.postId,
-      ownerId: params.ownerId,
       viewerId: params.viewerId,
       deviceType: params.deviceType,
       deviceIdentifier: params.deviceIdentifier,

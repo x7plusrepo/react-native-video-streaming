@@ -8,20 +8,22 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity, Image,
+  TouchableOpacity,
+  Image,
 } from 'react-native';
 
 import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import CommentItem from '../../components/posts/CommentItem';
 import WriteComment from '../../components/posts/WriteComment';
-import ic_close from "../../assets/images/Icons/ic_close.png";
+import ic_close from '../../assets/images/Icons/ic_close.png';
 
 const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   const [comments, setComments] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-  const [onEndReachedDuringMomentum, setOnEndReachedDuringMomentum] =
-    useState(true);
+  const [onEndReachedDuringMomentum, setOnEndReachedDuringMomentum] = useState(
+    true,
+  );
   const [curPage, setCurPage] = useState(0);
 
   useEffect(() => {
@@ -93,11 +95,15 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
       if (err !== null) {
         Helper.alertNetworkError(err?.message);
       } else if (json?.status === 201) {
-        const comment = json?.data?.comment || [];
-        let data = [comment].concat(comments);
-        setComments(data);
-        if (json?.data?.post) {
-          onAddComment(json?.data?.post);
+        const data = json?.data || {};
+        const comment = data?.comment || {};
+        let newComments = [comment].concat(comments);
+        setComments(newComments);
+        if (data?.commentsCount) {
+          onAddComment(post?.id, data?.commentsCount);
+        }
+        if (data?.totalCount) {
+          setTotalCount(data?.totalCount);
         }
       } else {
         Helper.alertServerDataError();
@@ -105,9 +111,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
     });
   };
 
-  const _renderItem = ({ item, index }) => (
-    <CommentItem comment={item} post={post} />
-  );
+  const _renderItem = ({ item }) => <CommentItem comment={item} />;
 
   return (
     <SafeAreaView style={[{ flex: 1, backgroundColor: 'white' }]}>
@@ -124,11 +128,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
           onPress={onCloseComments}
           style={{ position: 'absolute', right: 0 }}
         >
-          <Image
-            style={styles.icoClose}
-            source={ic_close}
-            tintColor="black"
-          />
+          <Image style={styles.icoClose} source={ic_close} tintColor="black" />
         </TouchableOpacity>
       </View>
 
@@ -154,9 +154,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
         style={{ flex: 1, width: '100%' }}
         contentContainerStyle={{ paddingBottom: 64 }}
       />
-      <KeyboardAvoidingView
-        behavior={'position'}
-      >
+      <KeyboardAvoidingView behavior={'position'}>
         <WriteComment post={post} onPressComment={onPressComment} />
       </KeyboardAvoidingView>
     </SafeAreaView>

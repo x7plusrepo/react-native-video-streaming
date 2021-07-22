@@ -19,7 +19,7 @@ import Header from '../../components/LiveStream/Header';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
-import { Constants, Global, Logger, RestAPI } from '../../utils/Global';
+import { Constants, Global, RestAPI } from '../../utils/Global';
 import { setGifts } from '../../redux/liveStream/actions';
 import styles from './styles';
 import ic_audio from './../../assets/images/Icons/ic_audio_on.png';

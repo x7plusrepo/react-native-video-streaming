@@ -10,7 +10,7 @@ const timeAgo = new TimeAgo('en-US');
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
-function CommentItem({ comment, post }) {
+function CommentItem({ comment }) {
   const createdAt = comment?.createdAt
     ? new Date(comment.createdAt)
     : new Date();

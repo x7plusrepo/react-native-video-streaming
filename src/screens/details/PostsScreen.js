@@ -48,6 +48,7 @@ class PostsScreen extends Component {
       percent: 0,
 
       isFetching: false,
+      isLiking: false,
       totalCount: global._totalCount,
       curPage: global._curPage ? global._curPage : '1',
       keyword: global._keyword ? global._keyword : '',
@@ -72,14 +73,15 @@ class PostsScreen extends Component {
 
       this.setState({ item });
       global._opponentUser = item.user;
-      let params = {
-        postId: item.id,
-        ownerId: item.user?.id,
-        viewerId: global.me ? global.me.id : 0,
-        deviceType: Platform.OS === 'ios' ? '1' : '0',
-        deviceIdentifier: global._deviceId,
-      };
-      RestAPI.update_post_view(params, (json, err) => {});
+      if (!item.isViewed) {
+        let params = {
+          postId: item.id,
+          viewerId: global.me ? global.me.id : 0,
+          deviceType: Platform.OS === 'ios' ? '1' : '0',
+          deviceIdentifier: global._deviceId,
+        };
+        RestAPI.update_post_view(params, (json, err) => {});
+      }
     }
   };
 
@@ -99,14 +101,19 @@ class PostsScreen extends Component {
   };
 
   onPressLike = (isChecked, item) => {
+    if (this.state.isLiking) {
+      return;
+    }
     if (global.me) {
       const { posts } = this.state;
-      item.likeCount++;
+      item.likeCount = (item.likeCount || 0) + (isChecked ? 1 : -1);
+      item.isLiked = isChecked;
       const params = {
         userId: global.me?.id,
         postId: item.id,
         isLiked: isChecked,
       };
+      this.setState({ isLiking: true });
       RestAPI.update_like_post(params, (json, err) => {
         global.showForcePageLoader(false);
 
@@ -114,12 +121,12 @@ class PostsScreen extends Component {
           Helper.alertNetworkError(err?.message);
         } else {
           if (json.status === 200) {
-            item.isLiked = isChecked;
             this.setState({ posts });
           } else {
             Helper.alertServerDataError();
           }
         }
+        this.setState({ isLiking: false });
       });
     } else {
       this.props.navigation.navigate('signin');
@@ -154,8 +161,14 @@ class PostsScreen extends Component {
     this.profileSheet?.current?.close();
   };
 
-  onAddComment = (post) => {
-    console.log(post);
+  onAddComment = (postId, commentsCount) => {
+    const { posts } = this.state;
+    const newPosts = [...posts];
+    const item = newPosts.find((p) => p.id === postId);
+    if (item) {
+      item.commentsCount = commentsCount;
+    }
+    this.setState({ posts: newPosts });
   };
 
   render() {
