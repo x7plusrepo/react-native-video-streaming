@@ -152,7 +152,7 @@ class ProfileEditScreen extends React.Component {
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       let uploadedUrl;
       if (profilePhotoSelSource) {
         try {
@@ -176,7 +176,7 @@ class ProfileEditScreen extends React.Component {
       };
 
       RestAPI.update_profile_with_image(params, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           error(Constants.ERROR_TITLE, 'Failed to update your profile');

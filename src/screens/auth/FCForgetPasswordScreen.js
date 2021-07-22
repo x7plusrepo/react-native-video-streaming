@@ -82,9 +82,9 @@ class FCForgetPasswordScreen extends React.Component {
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       RestAPI.forget_password(email, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           Alert.alert(

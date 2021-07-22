@@ -39,7 +39,7 @@ const HomeVideoScreen = (props) => {
     setCurPage(newPage);
 
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
       setIsFetching(true);
     } else {
       setIsFetching(true);
@@ -52,7 +52,7 @@ const HomeVideoScreen = (props) => {
       subCategory: currentSubCategory?.id,
     };
     RestAPI.get_category_video_list(params, (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
       setIsFetching(false);
 
       if (err !== null) {

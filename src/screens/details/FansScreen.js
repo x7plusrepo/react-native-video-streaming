@@ -49,7 +49,7 @@ class FansScreen extends React.Component {
     this.setState({ curPage });
 
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -60,7 +60,7 @@ class FansScreen extends React.Component {
     };
     RestAPI.get_fans_list(params, (json, err) => {
       if (type === 'init') {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
       }

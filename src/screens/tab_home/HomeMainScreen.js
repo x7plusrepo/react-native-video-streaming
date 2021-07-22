@@ -48,10 +48,10 @@ class HomeMainScreen extends React.Component {
     let params = {
       user_id: global.me ? global.me?.id : '',
     };
-    //showForcePageLoader(true);
+    //global.showForcePageLoader(true);
     RestAPI.get_product_categories(params, (json, error) => {
       this.setState({ isFetching: false });
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
       setIsInitLoading(false);
 
       if (error !== null) {

@@ -62,7 +62,6 @@ const subscribeDeepLink = () => {
     // params will never be null if error is null
 
     if (params['+non_branch_link']) {
-      const nonBranchUrl = params['+non_branch_link'];
       // Route non-Branch URL if appropriate.
       return;
     }
@@ -86,7 +85,7 @@ const subscribeDeepLink = () => {
     } else {
       setTimeout(() => {
         handleDeepLink({ product, roomId, post });
-      }, 15000);
+      }, 5000);
     }
   });
 };
@@ -133,11 +132,24 @@ function App() {
     if (!global.me) {
       try {
         const userString = await Helper.getLocalValue(Constants.KEY_USER);
-        if (userString) global.me = JSON.parse(userString);
+        if (userString) {
+          global.me = JSON.parse(userString);
+        }
       } catch (error) {}
     }
 
-    Helper.callFunc(global.onGotoMessage);
+    await Helper.setDeviceId();
+    await Helper.hasPermissions();
+
+    setIsShowPageLoader(true);
+
+    if (isReadyRef.current && navigationRef.current) {
+      RootNavigation.navigate('message');
+    } else {
+      setTimeout(() => {
+        RootNavigation.navigate('message');
+      }, 5000);
+    }
   };
 
   global.success = (title, text) => {
@@ -176,23 +188,22 @@ function App() {
   };
 
   return (
-    <Provider store={store}>
-      <View style={styles.container}>
+    <View style={styles.container}>
+      <Provider store={store}>
         <PaperProvider>
           <AppNavigator />
+          <FlashMessage position="top" />
+          <PageLoaderIndicator isPageLoader={isShowPageLoader} />
+          {initLoading && (
+            <View style={styles.splashContainer}>
+              <StatusBar hidden={true} />
+              <Image source={ic_logo_01} style={styles.logo} />
+            </View>
+          )}
         </PaperProvider>
-        <FlashMessage position="top" />
-        <PageLoaderIndicator isPageLoader={isShowPageLoader} />
-        {initLoading && (
-          <View style={styles.splashContainer}>
-            <StatusBar hidden={true} />
-            <Image source={ic_logo_01} style={styles.logo} />
-          </View>
-        )}
-      </View>
-    </Provider>
+      </Provider>
+    </View>
   );
-  return <></>;
 }
 
 function myiOSPromptCallback(permission) {

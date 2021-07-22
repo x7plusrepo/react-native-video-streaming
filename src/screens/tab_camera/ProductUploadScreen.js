@@ -70,10 +70,10 @@ class ProductUploadScreen extends React.Component {
     let params = {
       user_id: global.me ? global.me?.id : '',
     };
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     RestAPI.get_product_categories(params, (json, error) => {
       this.setState({ isFetching: false });
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
 
       if (error !== null) {
         Helper.alertNetworkError(error?.message);
@@ -180,17 +180,17 @@ class ProductUploadScreen extends React.Component {
 
   onRefresh = () => {
     if (global._prevScreen !== 'camera_preview') {
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       createThumbnail({ url: global._videoUri })
         .then((response) => {
           global._thumbUri = response.path;
-          showForcePageLoader(false);
+          global.showForcePageLoader(false);
 
           this.saveDraft();
         })
         .catch((err) => {
           console.log({ err });
-          showForcePageLoader(false);
+          global.showForcePageLoader(false);
           global._thumbUri = null;
           error(Constants.ERROR_TITLE, 'Failed to create thumbnail');
         });
@@ -256,7 +256,7 @@ class ProductUploadScreen extends React.Component {
       alert('Resource not found.');
     }
 
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     const tagSet = tags.join(',');
     const params = {
       userId: global.me?.id,
@@ -271,7 +271,7 @@ class ProductUploadScreen extends React.Component {
       isPermanent,
     };
     RestAPI.add_video(params, async (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
       if (err !== null) {
         error(Constants.ERROR_TITLE, 'Failed to upload video1');
         if (global._prevScreen === 'camera_main') {
@@ -426,7 +426,7 @@ class ProductUploadScreen extends React.Component {
       name: videoName,
       type: 'video/mp4',
     };
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     const uploadedThumbUrl = await Global.uploadToCloudinary(
       imageSource,
       'temporary/productImages',
@@ -446,7 +446,7 @@ class ProductUploadScreen extends React.Component {
         );
       }
     }
-    showForcePageLoader(false);
+    global.showForcePageLoader(false);
   };
 
   onPressCancelUpload = () => {

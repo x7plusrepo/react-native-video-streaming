@@ -1,4 +1,4 @@
-import React, {forwardRef} from 'react';
+import React, { forwardRef } from 'react';
 import {
   ActivityIndicator,
   FlatList,
@@ -9,13 +9,20 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-import {Constants, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import {
+  Constants,
+  GStyle,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import TopUserItem from '../../components/elements/TopUserItem';
-import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
-import ScrollableTabView, {DefaultTabBar,} from 'react-native-scrollable-tab-view';
+import ScrollableTabView, {
+  DefaultTabBar,
+} from 'react-native-scrollable-tab-view';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 32) / 3.0;
@@ -30,7 +37,6 @@ class TopUsersScreen extends React.Component {
   }
 
   componentDidMount() {
-
     this.unsubscribe = this.props.navigation.addListener('focus', () => {
       Helper.setLightStatusBar();
     });
@@ -72,7 +78,7 @@ class TopUsersScreen extends React.Component {
     this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -83,7 +89,7 @@ class TopUsersScreen extends React.Component {
     };
     RestAPI.get_top_user_list(params, (json, err) => {
       if (type === 'init') {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
       }

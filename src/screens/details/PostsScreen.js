@@ -108,7 +108,7 @@ class PostsScreen extends Component {
         isLiked: isChecked,
       };
       RestAPI.update_like_post(params, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);

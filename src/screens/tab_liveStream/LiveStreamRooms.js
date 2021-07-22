@@ -71,7 +71,7 @@ class LiveStreamRooms extends React.Component {
     this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -83,7 +83,7 @@ class LiveStreamRooms extends React.Component {
     };
     RestAPI.get_liveStream_list(params, (json, err) => {
       if (type === 'init') {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
       }

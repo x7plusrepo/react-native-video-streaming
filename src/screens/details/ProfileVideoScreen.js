@@ -109,7 +109,7 @@ class ProfileVideoScreen extends Component {
         is_like: isChecked,
       };
       RestAPI.update_like_video(params, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);

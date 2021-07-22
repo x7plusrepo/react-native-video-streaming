@@ -60,7 +60,7 @@ class HomeUsersScreen extends React.Component {
     this.setState({ curPage });
 
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
       this.setState({ isFetching: true });
     } else {
       this.setState({ isFetching: true });
@@ -73,7 +73,7 @@ class HomeUsersScreen extends React.Component {
     };
     RestAPI.get_filtered_user_list(params, (json, err) => {
       this.setState({ isFetching: false });
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
 
       if (err !== null) {
         Helper.alertNetworkError();

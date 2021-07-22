@@ -55,9 +55,9 @@ const Global = {
       device_id: global._deviceId,
       device_type: Platform.OS === 'ios' ? '1' : '0',
     };
-    //showForcePageLoader(true);
+    //global.showForcePageLoader(true);
     RestAPI.register_push_token(params, (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
 
       if (err !== null) {
         Helper.alertNetworkError();
@@ -269,6 +269,7 @@ const Global = {
       return '';
     }
   },
+
 };
 
 export default Global;

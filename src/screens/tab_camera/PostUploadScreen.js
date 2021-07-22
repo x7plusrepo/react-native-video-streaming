@@ -75,16 +75,16 @@ class PostUploadScreen extends React.Component {
   onRefresh = () => {
     const { videoUri } = this.state;
     if (videoUri) {
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       createThumbnail({ url: videoUri })
         .then((response) => {
           this.setState({ thumbUri: response.path });
           global._thumbUri = response.path;
-          showForcePageLoader(false);
+          global.showForcePageLoader(false);
         })
         .catch((err) => {
           console.log({ err });
-          showForcePageLoader(false);
+          global.showForcePageLoader(false);
           global._thumbUri = '';
           this.setState({ thumbUri: '' });
           error(Constants.ERROR_TITLE, 'Failed to create thumbnail');
@@ -149,7 +149,7 @@ class PostUploadScreen extends React.Component {
       alert('Resource not found.');
     }
 
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     const params = {
       userId: global.me?.id,
       url: uploadedVideoUrl,
@@ -159,7 +159,7 @@ class PostUploadScreen extends React.Component {
     };
 
     RestAPI.add_post(params, async (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
       if (err !== null) {
         error(Constants.ERROR_TITLE, 'Failed to post');
       } else {
@@ -228,7 +228,7 @@ class PostUploadScreen extends React.Component {
       name: videoName,
       type: 'video/mp4',
     };
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     const uploadedThumbUrl = await Global.uploadToCloudinary(
       imageSource,
       'temporary/postImages',
@@ -248,7 +248,7 @@ class PostUploadScreen extends React.Component {
         );
       }
     }
-    showForcePageLoader(false);
+    global.showForcePageLoader(false);
   };
 
   onPressCancelUpload = () => {

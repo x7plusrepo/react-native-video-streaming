@@ -55,10 +55,10 @@ class ViewLive extends Component {
       roomId,
       userId: this.props.user?.id,
     };
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
 
     RestAPI.get_liveStream(params, (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
       if (err || json?.status !== 200 || !json?.data) {
         alert('Error while loading the stream.');
       } else if (json?.status === 200) {

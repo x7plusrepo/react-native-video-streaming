@@ -26,12 +26,12 @@ const PanelLive = (props) => {
   const [thumbnail, setThumbnail] = useState(null);
   const onChangeText = (text) => setTopic(text);
   const onStart = async () => {
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     const uploadedUrl = await Global.uploadToCloudinary(
       thumbnail,
       'temporary/liveStreamImages',
     );
-    showForcePageLoader(false);
+    global.showForcePageLoader(false);
     if (!uploadedUrl) {
       alert('Thumbnail required.');
       return;

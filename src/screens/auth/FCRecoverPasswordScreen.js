@@ -109,14 +109,14 @@ class FCRecoverPasswordScreen extends React.Component {
     if (errorCount < 1) {
       const { code, newPassword, confirmPassword } = this.state;
 
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       // TODO - hooks up recover password endpoint
       RestAPI.recover_password(
         global.forgetPasswordEmail,
         code,
         newPassword,
         (json, err) => {
-          showForcePageLoader(false);
+          global.showForcePageLoader(false);
 
           if (err !== null) {
             Alert.alert(

@@ -82,7 +82,7 @@ class CameraDraftScreen extends React.Component {
   };
 
   clearVideo = async () => {
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
 
     const itemDatas = [];
     await Helper.setLocalValue(
@@ -94,7 +94,7 @@ class CameraDraftScreen extends React.Component {
 
     this.setState({ itemDatas });
 
-    showForcePageLoader(false);
+    global.showForcePageLoader(false);
   };
 
   render() {

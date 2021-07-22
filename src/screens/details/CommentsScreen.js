@@ -48,7 +48,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
 
     setOnEndReachedDuringMomentum(true);
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
     } else {
       setIsFetching(true);
     }
@@ -61,7 +61,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
     };
     RestAPI.get_all_comment_list(params, (json, err) => {
       if (type === 'init') {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
       } else {
         setIsFetching(false);
       }

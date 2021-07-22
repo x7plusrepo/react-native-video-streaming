@@ -124,7 +124,7 @@ class PlayMainScreen extends Component {
 
     RestAPI.get_all_post_list(params, async (json, err) => {
       if (type === 'init') {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
       }
@@ -232,7 +232,7 @@ class PlayMainScreen extends Component {
         isLiked: isChecked,
       };
       RestAPI.update_like_post(params, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);

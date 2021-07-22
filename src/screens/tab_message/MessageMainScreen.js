@@ -56,7 +56,7 @@ class MessageMainScreen extends React.Component {
     this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init' || type === 'update') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -67,7 +67,7 @@ class MessageMainScreen extends React.Component {
     };
     RestAPI.get_room_list(params, (json, err) => {
       if (type === 'init') {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
       }

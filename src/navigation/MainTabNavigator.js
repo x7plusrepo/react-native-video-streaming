@@ -12,7 +12,6 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { connect } from 'react-redux';
 import { setUnreadCount } from '../redux/message/actions';
 import avatars from '../assets/avatars';
-import { setMyUserAction } from '../redux/me/actions';
 import PlayMainScreen from '../screens/tab_play/PlayMainScreen';
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
@@ -24,36 +23,24 @@ const Tab = createBottomTabNavigator();
 
 let BOTTOM_TAB_HEIGHT = 50 + Helper.getBottomBarHeight();
 
-const TabBarVisibilityOptions = ({ route }) => {
-  const isNestedRoute: boolean = route.state?.index > 0;
-
-  return { tabBarVisible: !isNestedRoute };
-};
-
 const MainTabNavigator = (props) => {
-
-  const user = props.user;
   const unreadCount = props.unreadCount || 0;
-
   useEffect(() => {
     console.log('MainTabNavigator start');
     init();
   }, []);
 
-
   const init = () => {
-
     global.onSetUnreadCount = onSetUnreadCount;
-    global.onGotoMessage = onGotoMessage;
   };
 
   const onSetUnreadCount = () => {
     let params = {
       user_id: global.me?.id,
     };
-    //showForcePageLoader(true);
+    //global.showForcePageLoader(true);
     RestAPI.get_unread_count(params, (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
 
       if (json.status === 200) {
         props.setUnreadCount(json.data?.unreadCount || 0);
@@ -61,27 +48,14 @@ const MainTabNavigator = (props) => {
     });
   };
 
-  const onGotoMessage = async () => {
-    await Helper.setDeviceId();
-    await Helper.hasPermissions();
-
-    showForcePageLoader(true);
-    props.navigation.navigate('message');
-  };
-
   return (
     <Tab.Navigator
       initialRouteName="play"
       tabBarOptions={{
-        // activeTintColor: curTabName === 'play' ? 'white' : GStyle.blackColor,
-        // inactiveTintColor: curTabName === 'play' ? 'white' : GStyle.grayColor,
         style: {
           height: BOTTOM_TAB_HEIGHT,
           backgroundColor: 'white',
-          position:'absolute',
-            // curTabName === 'play' || curTabName === 'profile_other'
-            //   ?
-            //   : 'relative',
+          position: 'absolute',
           elevation: 0,
         },
         showLabel: false,
@@ -127,11 +101,11 @@ const MainTabNavigator = (props) => {
           ),
           tabBarBadgeStyle: { backgroundColor: 'red' },
         }}
-        listeners={({ navigation, route }) => ({
+        listeners={({ navigation }) => ({
           tabPress: (e) => {
-            if (!user) {
+            if (!global.me) {
               e.preventDefault();
-              this.props.navigation.navigate('signin');
+              navigation.navigate('signin');
             }
           },
         })}
@@ -145,7 +119,7 @@ const MainTabNavigator = (props) => {
             const randomNumber = Math.floor(Math.random() * avatars.length);
             const randomImageUrl = avatars[randomNumber];
 
-            const avatarImage = { uri: user?.photo ?? randomImageUrl };
+            const avatarImage = { uri: global.me?.photo ?? randomImageUrl };
             return (
               <Image
                 source={avatarImage}
@@ -156,27 +130,25 @@ const MainTabNavigator = (props) => {
           ...(unreadCount > 0 && { tabBarBadge: unreadCount }),
           tabBarBadgeStyle: { backgroundColor: 'red', fontSize: 12 },
         }}
-        listeners={({ navigation, route }) => ({
+        listeners={({ navigation }) => ({
           tabPress: (e) => {
-            if (!user) {
+            if (!global.me) {
               e.preventDefault();
-              this.props.navigation.navigate('signin');
+              navigation.navigate('signin');
             }
           },
         })}
       />
     </Tab.Navigator>
   );
-}
+};
 
 export default connect(
   (state) => ({
-    user: state.me?.user,
     unreadCount: state.message?.unreadCount || 0,
   }),
   {
     setUnreadCount,
-    setMyUserAction,
   },
 )(MainTabNavigator);
 

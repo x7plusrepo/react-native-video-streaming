@@ -57,7 +57,7 @@ class MyProductsScreen extends React.Component {
 
     this.setState({ curPage });
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }
@@ -68,10 +68,10 @@ class MyProductsScreen extends React.Component {
       page_number: type === 'more' ? curPage : '1',
       count_per_page: Constants.COUNT_PER_PAGE,
     };
-    //showForcePageLoader(true);
+    //global.showForcePageLoader(true);
     RestAPI.get_user_video_list(params, (json, err) => {
       if (type === 'init') {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
       } else {
         this.setState({ isFetching: false });
       }

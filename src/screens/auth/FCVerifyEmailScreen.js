@@ -63,9 +63,9 @@ class FCVerifyEmailScreen extends React.Component {
   };
 
   onSendAgain = () => {
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     RestAPI.resend_email_verification((json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
 
       if (err !== null) {
         Alert.alert(Constants.ERROR_TITLE, 'Failed to resend verify email.');
@@ -84,9 +84,9 @@ class FCVerifyEmailScreen extends React.Component {
   onVerify = () => {
     const { code } = this.state;
 
-    showForcePageLoader(true);
+    global.showForcePageLoader(true);
     RestAPI.verify_email(code, (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
 
       if (err !== null) {
         Alert.alert(
@@ -124,9 +124,9 @@ class FCVerifyEmailScreen extends React.Component {
 
     const errorCount = Object.keys(errors).length;
     if (errorCount < 1) {
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       RestAPI.forget_password(code, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           Alert.alert(

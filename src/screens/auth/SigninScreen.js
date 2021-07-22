@@ -148,9 +148,9 @@ class SigninScreen extends React.Component {
         phone: phoneNumber,
         password: password,
       };
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       RestAPI.login(params, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);

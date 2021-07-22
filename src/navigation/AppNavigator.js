@@ -58,6 +58,7 @@ const config = {
 };
 
 export default function App() {
+
   return (
     <NavigationContainer
       theme={{ colors: { background: 'black' } }}

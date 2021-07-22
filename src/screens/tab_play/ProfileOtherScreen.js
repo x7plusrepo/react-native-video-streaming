@@ -297,7 +297,7 @@ class ProfileOtherScreen extends React.Component {
             return (
               <View
                 key={i}
-                style={[styles.listItem, { marginLeft: i % 3 === 0 ? 0 : 10 }]}
+                style={[styles.listItem, { marginLeft: i % 3 === 0 ? 0 : 5 }]}
               >
                 <TouchableOpacity
                   onPress={() => {
@@ -335,7 +335,7 @@ class ProfileOtherScreen extends React.Component {
             return (
               <View
                 key={i}
-                style={[styles.listItem, { marginLeft: i % 3 === 0 ? 0 : 10 }]}
+                style={[styles.listItem, { marginLeft: i % 3 === 0 ? 0 : 5 }]}
               >
                 <TouchableOpacity
                   onPress={() => {

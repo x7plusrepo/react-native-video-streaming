@@ -164,9 +164,9 @@ class ProfileMainScreen extends React.Component {
     let params = {
       user_id: global.me?.id,
     };
-    //showForcePageLoader(true);
+    //global.showForcePageLoader(true);
     RestAPI.get_user_profile(params, (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
       if (err !== null) {
         Helper.alertNetworkError();
       } else {

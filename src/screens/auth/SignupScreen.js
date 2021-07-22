@@ -160,9 +160,9 @@ class SignupScreen extends React.Component {
         password: password,
         userType: 1,
       };
-      showForcePageLoader(true);
+      global.showForcePageLoader(true);
       RestAPI.signup(params, (json, err) => {
-        showForcePageLoader(false);
+        global.showForcePageLoader(false);
 
         if (err !== null) {
           Helper.alertNetworkError(err?.message);

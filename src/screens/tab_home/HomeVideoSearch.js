@@ -64,7 +64,7 @@ class HomeVideoSearch extends React.Component {
     this.setState({ curPage });
 
     if (type === 'init') {
-      //showForcePageLoader(true);
+      //global.showForcePageLoader(true);
       this.setState({ isFetching: true });
     } else {
       this.setState({ isFetching: true });
@@ -76,7 +76,7 @@ class HomeVideoSearch extends React.Component {
       keyword,
     };
     RestAPI.get_searched_video_list(params, (json, err) => {
-      showForcePageLoader(false);
+      global.showForcePageLoader(false);
 
       this.setState({ isFetching: false });
 
