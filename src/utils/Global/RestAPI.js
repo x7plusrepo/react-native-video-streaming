@@ -260,6 +260,7 @@ const RestAPI = {
   update_like_post: (params, callBack) => {
     const data = {
       userId: params.userId,
+      ownerId: params.ownerId,
       postId: params.postId,
       isLiked: params.isLiked,
     };

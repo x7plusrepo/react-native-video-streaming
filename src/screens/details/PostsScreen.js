@@ -110,6 +110,7 @@ class PostsScreen extends Component {
       item.isLiked = isChecked;
       const params = {
         userId: global.me?.id,
+        ownerId: item?.user?.id,
         postId: item.id,
         isLiked: isChecked,
       };

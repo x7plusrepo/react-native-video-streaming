@@ -234,7 +234,8 @@ class PlayMainScreen extends Component {
       item.isLiked = isChecked;
       const params = {
         userId: global.me?.id,
-        postId: item.id,
+        ownerId: item?.user?.id,
+        postId: item?.id,
         isLiked: isChecked,
       };
 
