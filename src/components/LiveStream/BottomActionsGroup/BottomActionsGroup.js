@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Platform, KeyboardAvoidingView } from 'react-native';
+import { View } from 'react-native';
 import { GStyles } from '../../../utils/Global/Styles';
 import GradientBackgroundIconButton from './GradientBackgroundIconButton';
 import MessagesList from '../MessagesList';
@@ -11,6 +11,7 @@ import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import heart from '../../../assets/images/gifts/heart.png';
 import MessageBox from './MessageBox';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 
 const ic_audio_on = require('../../../assets/images/Icons/ic_audio_on.png');
 const ic_audio_off = require('../../../assets/images/Icons/ic_audio_off.png');
@@ -82,12 +83,11 @@ export default class BottomActionsGroup extends Component {
           </View>
         </View>
         <View style={GStyles.rowContainer}>
-          <KeyboardAvoidingView
-            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-            style={{ flex: 1 }}
+          <KeyboardAwareScrollView
+            showsVerticalScrollIndicator={false}
           >
             <MessageBox onPressSendMessage={onPressSendMessage} />
-          </KeyboardAvoidingView>
+          </KeyboardAwareScrollView>
           {mode === 'streamer' && (
             <GradientBackgroundIconButton
               icon={ic_share}
