@@ -179,7 +179,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 16,
+    margin: 16,
     justifyContent: 'center',
   },
   contentContainerStyle: {
