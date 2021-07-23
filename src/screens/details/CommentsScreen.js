@@ -170,9 +170,7 @@ const CommentsScreen = ({
         </>
       )}
 
-      <KeyboardAvoidingView behavior={'height'}>
-        <WriteComment post={post} onPressComment={onPressComment} />
-      </KeyboardAvoidingView>
+      <WriteComment post={post} onPressComment={onPressComment} />
     </SafeAreaView>
   );
 };
