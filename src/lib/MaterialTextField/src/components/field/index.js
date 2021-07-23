@@ -1,6 +1,15 @@
 import PropTypes from 'prop-types';
-import React, {PureComponent} from 'react';
-import {Animated, Keyboard, Platform, StyleSheet, Text, TextInput, View, ViewPropTypes,} from 'react-native';
+import React, { PureComponent } from 'react';
+import {
+  Animated,
+  Keyboard,
+  Platform,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  ViewPropTypes,
+} from 'react-native';
 
 import Line from '../line';
 import Label from '../label';
@@ -9,21 +18,21 @@ import Helper from '../helper';
 import Counter from '../counter';
 
 import styles from './styles';
-import {GStyle} from '../../../../../utils/Global';
+import { GStyle } from '../../../../../utils/Global';
 
 function startAnimation(animation, options, callback) {
   Animated.timing(animation, options).start(callback);
 }
 
 function labelStateFromProps(props, state) {
-  let {placeholder, defaultValue} = props;
-  let {text, receivedFocus} = state;
+  let { placeholder, defaultValue } = props;
+  let { text, receivedFocus } = state;
 
   return !!(placeholder || text || (!receivedFocus && defaultValue));
 }
 
 function errorStateFromProps(props, state) {
-  let {error} = props;
+  let { error } = props;
 
   return !!error;
 }
@@ -130,10 +139,10 @@ export default class TextField extends PureComponent {
     y1: 0,
   };
 
-  static getDerivedStateFromProps({error}, state) {
+  static getDerivedStateFromProps({ error }, state) {
     /* Keep last received error in state */
     if (error && error !== state.error) {
-      return {error};
+      return { error };
     }
 
     return null;
@@ -157,9 +166,9 @@ export default class TextField extends PureComponent {
     this.mounted = false;
     this.focused = false;
 
-    let {value: text, error, fontSize} = this.props;
+    let { value: text, error, fontSize } = this.props;
 
-    let labelState = labelStateFromProps(this.props, {text}) ? 1 : 0;
+    let labelState = labelStateFromProps(this.props, { text }) ? 1 : 0;
     let focusState = errorStateFromProps(this.props) ? -1 : 0;
 
     this.state = {
@@ -177,10 +186,10 @@ export default class TextField extends PureComponent {
 
   createGetter(name) {
     this[name] = () => {
-      let {[name]: value} = this.props;
-      let {[name]: defaultValue} = this.constructor;
+      let { [name]: value } = this.props;
+      let { [name]: defaultValue } = this.constructor;
 
-      return {...defaultValue, ...value};
+      return { ...defaultValue, ...value };
     };
   }
 
@@ -209,8 +218,8 @@ export default class TextField extends PureComponent {
   }
 
   startFocusAnimation() {
-    let {focusAnimation} = this.state;
-    let {animationDuration: duration} = this.props;
+    let { focusAnimation } = this.state;
+    let { animationDuration: duration } = this.props;
 
     let options = {
       toValue: this.focusState(),
@@ -222,8 +231,8 @@ export default class TextField extends PureComponent {
   }
 
   startLabelAnimation() {
-    let {labelAnimation} = this.state;
-    let {animationDuration: duration} = this.props;
+    let { labelAnimation } = this.state;
+    let { animationDuration: duration } = this.props;
 
     let options = {
       toValue: this.labelState(),
@@ -235,7 +244,7 @@ export default class TextField extends PureComponent {
   }
 
   setNativeProps(props) {
-    let {current: input} = this.inputRef;
+    let { current: input } = this.inputRef;
 
     input.setNativeProps(props);
   }
@@ -257,8 +266,8 @@ export default class TextField extends PureComponent {
   }
 
   focus() {
-    let {disabled, editable} = this.props;
-    let {current: input} = this.inputRef;
+    let { disabled, editable } = this.props;
+    let { current: input } = this.inputRef;
 
     if (!disabled && editable) {
       input.focus();
@@ -266,13 +275,13 @@ export default class TextField extends PureComponent {
   }
 
   blur() {
-    let {current: input} = this.inputRef;
+    let { current: input } = this.inputRef;
 
     input.blur();
   }
 
   clear() {
-    let {current: input} = this.inputRef;
+    let { current: input } = this.inputRef;
 
     input.clear();
 
@@ -281,8 +290,8 @@ export default class TextField extends PureComponent {
   }
 
   value() {
-    let {text} = this.state;
-    let {defaultValue} = this.props;
+    let { text } = this.state;
+    let { defaultValue } = this.props;
 
     let value = this.isDefaultVisible() ? defaultValue : text;
 
@@ -294,18 +303,18 @@ export default class TextField extends PureComponent {
   }
 
   setValue(text) {
-    this.setState({text});
+    this.setState({ text });
   }
 
   isFocused() {
-    let {current: input} = this.inputRef;
+    let { current: input } = this.inputRef;
 
     return input.isFocused();
   }
 
   isRestricted() {
-    let {characterRestriction: limit} = this.props;
-    let {length: count} = this.value();
+    let { characterRestriction: limit } = this.props;
+    let { length: count } = this.value();
 
     return limit < count;
   }
@@ -315,14 +324,14 @@ export default class TextField extends PureComponent {
   }
 
   isDefaultVisible() {
-    let {text, receivedFocus} = this.state;
-    let {defaultValue} = this.props;
+    let { text, receivedFocus } = this.state;
+    let { defaultValue } = this.props;
 
     return !receivedFocus && null == text && null != defaultValue;
   }
 
   isPlaceholderVisible() {
-    let {placeholder} = this.props;
+    let { placeholder } = this.props;
 
     return placeholder && !this.focused && !this.value();
   }
@@ -332,8 +341,8 @@ export default class TextField extends PureComponent {
   }
 
   onFocus(event) {
-    let {onFocus, clearTextOnFocus} = this.props;
-    let {receivedFocus} = this.state;
+    let { onFocus, clearTextOnFocus } = this.props;
+    let { receivedFocus } = this.state;
 
     if ('function' === typeof onFocus) {
       onFocus(event);
@@ -349,12 +358,12 @@ export default class TextField extends PureComponent {
     this.startLabelAnimation();
 
     if (!receivedFocus) {
-      this.setState({receivedFocus: true, text: this.value()});
+      this.setState({ receivedFocus: true, text: this.value() });
     }
   }
 
   onBlur(event) {
-    let {onBlur} = this.props;
+    let { onBlur } = this.props;
 
     if ('function' === typeof onBlur) {
       onBlur(event);
@@ -370,7 +379,7 @@ export default class TextField extends PureComponent {
   }
 
   onChange(event) {
-    let {onChange} = this.props;
+    let { onChange } = this.props;
 
     if ('function' === typeof onChange) {
       onChange(event);
@@ -378,13 +387,13 @@ export default class TextField extends PureComponent {
   }
 
   onChangeText(text) {
-    let {onChangeText, formatText} = this.props;
+    let { onChangeText, formatText } = this.props;
 
     if ('function' === typeof formatText) {
       text = formatText(text);
     }
 
-    this.setState({text});
+    this.setState({ text });
 
     if ('function' === typeof onChangeText) {
       onChangeText(text);
@@ -392,8 +401,8 @@ export default class TextField extends PureComponent {
   }
 
   onContentSizeChange(event) {
-    let {onContentSizeChange, fontSize} = this.props;
-    let {height} = event.nativeEvent.contentSize;
+    let { onContentSizeChange, fontSize } = this.props;
+    let { height } = event.nativeEvent.contentSize;
 
     if ('function' === typeof onContentSizeChange) {
       onContentSizeChange(event);
@@ -402,29 +411,29 @@ export default class TextField extends PureComponent {
     this.setState({
       height: Math.max(
         fontSize * 2.0,
-        Math.ceil(height) + Platform.select({ios: 4, android: 1}),
+        Math.ceil(height) + Platform.select({ ios: 4, android: 1 }),
       ),
     });
   }
 
   onFocusAnimationEnd() {
-    let {error} = this.props;
-    let {error: retainedError} = this.state;
+    let { error } = this.props;
+    let { error: retainedError } = this.state;
 
     if (this.mounted && !error && retainedError) {
-      this.setState({error: null});
+      this.setState({ error: null });
     }
   }
 
   inputHeight() {
-    let {height: computedHeight} = this.state;
-    let {multiline, fontSize, height = computedHeight} = this.props;
+    let { height: computedHeight } = this.state;
+    let { multiline, fontSize, height = computedHeight } = this.props;
 
     return multiline ? height : fontSize * 2.0;
   }
 
   inputContainerHeight() {
-    let {labelFontSize, multiline} = this.props;
+    let { labelFontSize, multiline } = this.props;
     let contentInset = this.contentInset();
 
     if ('web' === Platform.OS && multiline) {
@@ -457,7 +466,7 @@ export default class TextField extends PureComponent {
   }
 
   inputStyle() {
-    let {fontSize, baseColor, textColor, disabled, multiline} = this.props;
+    let { fontSize, baseColor, textColor, disabled, multiline } = this.props;
 
     let color = disabled || this.isDefaultVisible() ? baseColor : textColor;
 
@@ -486,7 +495,7 @@ export default class TextField extends PureComponent {
   renderLabel(props) {
     let offset = this.labelOffset();
 
-    let {label, fontSize, labelFontSize, labelTextStyle} = this.props;
+    let { label, fontSize, labelFontSize, labelTextStyle } = this.props;
 
     return (
       <Label
@@ -495,7 +504,7 @@ export default class TextField extends PureComponent {
         activeFontSize={labelFontSize}
         offset={offset}
         label={label}
-        style={[{fontFamily: 'GothamPro-Medium'}, labelTextStyle]}
+        style={[{ fontFamily: 'GothamPro-Medium' }, labelTextStyle]}
       />
     );
   }
@@ -505,13 +514,13 @@ export default class TextField extends PureComponent {
   }
 
   renderAccessory(prop) {
-    let {[prop]: renderAccessory} = this.props;
+    let { [prop]: renderAccessory } = this.props;
 
     return 'function' === typeof renderAccessory ? renderAccessory() : null;
   }
 
   renderAffix(type) {
-    let {labelAnimation} = this.state;
+    let { labelAnimation } = this.state;
     let {
       [type]: affix,
       fontSize,
@@ -535,7 +544,7 @@ export default class TextField extends PureComponent {
   }
 
   renderHelper() {
-    let {focusAnimation, error} = this.state;
+    let { focusAnimation, error } = this.state;
 
     let {
       title,
@@ -546,7 +555,7 @@ export default class TextField extends PureComponent {
       characterRestriction: limit,
     } = this.props;
 
-    let {length: count} = this.value();
+    let { length: count } = this.value();
     let contentInset = this.contentInset();
 
     let containerStyle = {
@@ -599,7 +608,7 @@ export default class TextField extends PureComponent {
         selectionColor={tintColor}
         {...props}
         style={[
-          {fontFamily: 'GothamPro-Medium', lineHeight: 18},
+          { fontFamily: 'GothamPro-Medium', lineHeight: 18 },
           styles.input,
           inputStyle,
           inputStyleOverrides,
@@ -617,7 +626,7 @@ export default class TextField extends PureComponent {
   }
 
   render() {
-    let {labelAnimation, focusAnimation} = this.state;
+    let { labelAnimation, focusAnimation } = this.state;
     let {
       editable,
       disabled,

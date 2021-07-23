@@ -3,6 +3,7 @@ package com.stars.android;
 import android.app.Application;
 import android.content.Context;
 
+import com.brentvatne.react.ReactVideoPackage;
 import com.cloudinary.android.MediaManager;
 import com.facebook.react.PackageList;
 import com.facebook.react.ReactApplication;
@@ -36,6 +37,7 @@ public class MainApplication extends Application implements ReactApplication {
                     // Packages that cannot be autolinked yet can be added manually here, for example:
                     // packages.add(new MyReactNativePackage());
                     packages.add(new VideoUploadPackage()); // <-- Add this line with your package name.
+                    packages.add(new ReactVideoPackage()); // <-- Add this line with your package name.
                     return packages;
                 }
 

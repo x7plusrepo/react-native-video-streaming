@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import {
   FlatList,
   KeyboardAvoidingView,
-  RefreshControl,
+  Keyboard,
   SafeAreaView,
   Platform,
   StyleSheet,
@@ -17,13 +17,17 @@ import CommentItem from '../../components/posts/CommentItem';
 import WriteComment from '../../components/posts/WriteComment';
 import ic_close from '../../assets/images/Icons/ic_close.png';
 
-const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
+const CommentsScreen = ({
+  post,
+  onCloseComments,
+  onAddComment,
+  isKeyboardShowing,
+}) => {
   const [comments, setComments] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
-  const [onEndReachedDuringMomentum, setOnEndReachedDuringMomentum] = useState(
-    true,
-  );
+  const [onEndReachedDuringMomentum, setOnEndReachedDuringMomentum] =
+    useState(true);
   const [curPage, setCurPage] = useState(0);
 
   useEffect(() => {
@@ -86,6 +90,9 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   };
 
   const onPressComment = (text) => {
+    if (!text) {
+      return;
+    }
     let params = {
       userId: global.me ? global.me?.id : '',
       postId: post?.id,
@@ -114,47 +121,56 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   const _renderItem = ({ item }) => <CommentItem comment={item} />;
 
   return (
-    <SafeAreaView style={[{ flex: 1, backgroundColor: 'white' }]}>
-      <View>
-        <Text
-          style={[
-            GStyles.regularText,
-            { alignSelf: 'center', fontWeight: '700' },
-          ]}
-        >
-          {totalCount} comments
-        </Text>
-        <TouchableOpacity
-          onPress={onCloseComments}
-          style={{ position: 'absolute', right: 0 }}
-        >
-          <Image style={styles.icoClose} source={ic_close} tintColor="black" />
-        </TouchableOpacity>
-      </View>
+    <SafeAreaView style={styles.container}>
+      {!isKeyboardShowing && (
+        <>
+          <View>
+            <Text
+              style={[
+                GStyles.regularText,
+                { alignSelf: 'center', fontWeight: '700' },
+              ]}
+            >
+              {totalCount} comments
+            </Text>
+            <TouchableOpacity
+              onPress={onCloseComments}
+              style={{ position: 'absolute', right: 0 }}
+            >
+              <Image
+                style={styles.icoClose}
+                source={ic_close}
+                tintColor="black"
+              />
+            </TouchableOpacity>
+          </View>
 
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        onRefresh={() => {
-          onRefresh('pull');
-        }}
-        refreshing={isFetching}
-        onEndReachedThreshold={0.2}
-        onMomentumScrollBegin={() => {
-          setOnEndReachedDuringMomentum(false);
-        }}
-        onEndReached={() => {
-          if (!onEndReachedDuringMomentum) {
-            setOnEndReachedDuringMomentum(true);
-            onRefresh('more');
-          }
-        }}
-        data={comments}
-        renderItem={_renderItem}
-        keyExtractor={(item) => item.id}
-        style={{ flex: 1, width: '100%' }}
-        contentContainerStyle={{ paddingBottom: 64 }}
-      />
-      <KeyboardAvoidingView behavior={'position'}>
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            onRefresh={() => {
+              onRefresh('pull');
+            }}
+            refreshing={isFetching}
+            onEndReachedThreshold={0.2}
+            onMomentumScrollBegin={() => {
+              setOnEndReachedDuringMomentum(false);
+            }}
+            onEndReached={() => {
+              if (!onEndReachedDuringMomentum) {
+                setOnEndReachedDuringMomentum(true);
+                onRefresh('more');
+              }
+            }}
+            data={comments}
+            renderItem={_renderItem}
+            keyExtractor={(item) => item.id}
+            style={{ flex: 1, width: '100%' }}
+            contentContainerStyle={{ paddingBottom: 64 }}
+          />
+        </>
+      )}
+
+      <KeyboardAvoidingView behavior={'height'}>
         <WriteComment post={post} onPressComment={onPressComment} />
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -162,6 +178,12 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: 'white',
+    padding: 16,
+    justifyContent: 'center',
+  },
   contentContainerStyle: {
     paddingTop: 16,
     paddingBottom: 80,

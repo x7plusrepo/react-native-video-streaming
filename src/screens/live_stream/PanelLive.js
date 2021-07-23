@@ -26,19 +26,19 @@ const PanelLive = (props) => {
   const [thumbnail, setThumbnail] = useState(null);
   const onChangeText = (text) => setTopic(text);
   const onStart = async () => {
-    global.showForcePageLoader(true);
-    const uploadedUrl = await Global.uploadToCloudinary(
-      thumbnail,
-      'temporary/liveStreamImages',
-    );
-    global.showForcePageLoader(false);
-    if (!uploadedUrl) {
-      alert('Thumbnail required.');
-      return;
-    }
-    onPressStart && onPressStart(topic, uploadedUrl, mode);
+    //global.showForcePageLoader(true);
+    // const uploadedUrl = await Global.uploadToCloudinary(
+    //   thumbnail,
+    //   'temporary/liveStreamImages',
+    // );
+    // global.showForcePageLoader(false);
+    // if (!uploadedUrl) {
+    //   alert('Thumbnail required.');
+    //   return;
+    // }
+    onPressStart && onPressStart(topic, 'uploadedUrl', mode);
   };
-  const onPressClose = () => {
+  const onPressCloseAction = () => {
     const { onPressClose } = props;
     onPressClose && onPressClose();
   };
@@ -79,7 +79,7 @@ const PanelLive = (props) => {
     <View style={style.container}>
       <View>
         <View style={[GStyles.rowEndContainer, { paddingHorizontal: 16 }]}>
-          <TouchableOpacity onPress={onPressClose}>
+          <TouchableOpacity onPress={onPressCloseAction}>
             <Image
               style={[[GStyles.actionIcons, { tintColor: 'white' }]]}
               source={ic_close}

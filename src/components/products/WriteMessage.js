@@ -10,11 +10,11 @@ import TextField from '../TextField';
 
 import { GStyles } from '../../utils/Global/Styles';
 
-const WriteSomething = ({ onPressComment }) => {
+const WriteMessage = ({ onPressSend }) => {
   const [comment, setComment] = useState('');
 
-  const onPressSend = () => {
-    onPressComment && onPressComment(comment);
+  const onPress = () => {
+    onPressSend && onPressSend(comment);
     setComment('');
     Keyboard.dismiss();
   };
@@ -25,7 +25,7 @@ const WriteSomething = ({ onPressComment }) => {
     <View style={styles.container}>
       <TextField
         style={styles.textInput}
-        placeholder="Write a comment"
+        placeholder="Write a message"
         underlineColorAndroid="transparent"
         onChangeText={onChangeMessageText}
         value={comment}
@@ -36,7 +36,7 @@ const WriteSomething = ({ onPressComment }) => {
       />
       <TouchableOpacity
         style={styles.wrapIconSend}
-        onPress={onPressSend}
+        onPress={onPress}
         activeOpacity={0.6}
       >
         <Image
@@ -57,9 +57,7 @@ const styles = StyleSheet.create({
     flex: 1,
     height: 42,
     color: 'black',
-    backgroundColor: 'rgba(0, 0, 0, 0.2)',
     paddingHorizontal: 12,
-    borderRadius: 24,
     marginRight: 12,
   },
   iconSend: {
@@ -68,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default WriteSomething;
+export default WriteMessage;

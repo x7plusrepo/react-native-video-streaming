@@ -1,18 +1,35 @@
-import React, {Component} from 'react';
-import {Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import React, { Component } from 'react';
+import {
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 
 import Video from 'react-native-video';
-import {IconButton} from 'react-native-paper';
-import {Bubble, GiftedChat, Send} from 'react-native-gifted-chat';
+import { IconButton } from 'react-native-paper';
+import { Bubble, GiftedChat, Send } from 'react-native-gifted-chat';
 import Sound from 'react-native-sound';
 
 import GHeaderBar from '../../components/GHeaderBar';
 import CustomActions from '../../components/elements/MessageActions';
 import CustomView from '../../components/elements/MessageView';
 
-import {Constants, Global, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import {
+  Constants,
+  Global,
+  GStyle,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global';
 import SocketManager from './../../utils/Message/SocketManager';
 import get from 'lodash/get';
+import TextField from '../../components/TextField';
+import WriteSomething from '../../components/posts/WriteComment';
+import WriteMessage from '../../components/products/WriteMessage';
 
 const ic_send = require('../../assets/images/Icons/ic_send.png');
 
@@ -249,6 +266,10 @@ class MessageChatScreen extends Component {
     );
   };
 
+  _renderInput = () => {
+    return <WriteMessage onPressSend={this.onSend} />;
+  };
+
   _renderChat = () => {
     const { messages, isFetching, totalCount } = this.state;
 
@@ -258,7 +279,7 @@ class MessageChatScreen extends Component {
     }
 
     return (
-      <View
+      <SafeAreaView
         style={{
           flex: 1,
           width: '95%',
@@ -267,7 +288,7 @@ class MessageChatScreen extends Component {
         <GiftedChat
           keyboardShouldPersistTaps={'never '}
           messages={messages}
-          onSend={this.onSend}
+          renderInputToolbar={this._renderInput}
           loadEarlier={isLoadEarlier}
           onLoadEarlier={() => {
             this.onRefresh('more');
@@ -293,7 +314,7 @@ class MessageChatScreen extends Component {
           renderMessageAudio={this._renderMessageAudio}
           renderFooter={this._renderFooter}
         />
-      </View>
+      </SafeAreaView>
     );
   };
 
@@ -310,7 +331,7 @@ class MessageChatScreen extends Component {
             backgroundColor: GStyle.grayBackColor,
           },
           right: {
-            backgroundColor: GStyle.orangeColor,
+            backgroundColor: GStyle.blueColor,
           },
         }}
       />

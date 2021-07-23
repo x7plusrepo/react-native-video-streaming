@@ -1,7 +1,10 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Image, Keyboard, View, Platform, TextInput, TouchableOpacity,} from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+} from 'react-native';
 
 import styles from './styles';
+import TextField from '../../TextField';
 
 const MessageBox = (props) => {
   const [message, setMessage] = useState('');
@@ -15,10 +18,8 @@ const MessageBox = (props) => {
   const onChangeMessageText = (text) => setMessage(text);
 
   return (
-    <View
-      style={styles.messageInput}
-    >
-      <TextInput
+    <View style={styles.messageInput}>
+      <TextField
         style={styles.textInput}
         placeholder="Write a comment"
         underlineColorAndroid="transparent"
@@ -30,16 +31,6 @@ const MessageBox = (props) => {
         autoFocus={false}
         placeholderTextColor="white"
       />
-      {/*<TouchableOpacity
-        style={styles.wrapIconSend}
-        onPress={onPressSend}
-        activeOpacity={0.6}
-      >
-        <Image
-          source={require('../../../assets/images/Icons/ico_send.png')}
-          style={styles.iconSend}
-        />
-      </TouchableOpacity>*/}
     </View>
   );
 };

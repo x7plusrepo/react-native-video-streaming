@@ -64,7 +64,7 @@ export default class BottomActionsGroup extends Component {
             onPressProfileAction={this.props.onPressProfileAction}
           />
           <View>
-            {(mode === 'streamer' && method === 0) && (
+            {mode === 'streamer' && method === 0 && (
               <GradientBackgroundIconButton
                 onPress={this.onPressSwitchCamera}
                 icon={ic_switch_camera}

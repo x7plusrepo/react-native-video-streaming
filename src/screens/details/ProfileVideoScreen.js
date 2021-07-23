@@ -29,12 +29,6 @@ class ProfileVideoScreen extends Component {
     this.init();
   }
 
-  componentDidMount() {
-    let itemDatas = global._productsList || [];
-    this.setState({ itemDatas: itemDatas });
-    Helper.setDarkStatusBar();
-  }
-
   init = () => {
     this.state = {
       isVideoLoading: false,
@@ -48,7 +42,7 @@ class ProfileVideoScreen extends Component {
       totalCount: global._totalCount,
       curPage: global._curPage ? global._curPage : '1',
       keyword: global._keyword ? global._keyword : '',
-      itemDatas: [],
+      itemDatas: global._productsList || [],
       curIndex: -1,
       item: {},
     };

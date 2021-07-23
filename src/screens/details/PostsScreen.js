@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
 import {
+  BackHandler,
   Dimensions,
   FlatList,
   Image,
+  Keyboard,
   Platform,
   StatusBar,
   TouchableOpacity,
@@ -28,15 +30,32 @@ class PostsScreen extends Component {
 
     console.log('PostsScreen start');
     this.profileSheet = React.createRef();
-
+    this._keyboardDidShow = this._keyboardDidShow.bind(this);
+    this._keyboardDidHide = this._keyboardDidHide.bind(this);
     this.init();
   }
 
   componentDidMount() {
-    let posts;
-    posts = global._postsList || [];
-    this.setState({ posts });
-    Helper.setDarkStatusBar();
+    this.unsubscribeFocus = this.props.navigation.addListener('focus', () => {
+      this.keyboardDidShowListener = Keyboard.addListener(
+        'keyboardDidShow',
+        this._keyboardDidShow,
+      );
+      this.keyboardDidHideListener = Keyboard.addListener(
+        'keyboardDidHide',
+        this._keyboardDidHide,
+      );
+    });
+    this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
+      global._prevScreen = 'play_main';
+      this.keyboardDidShowListener && this.keyboardDidShowListener.remove();
+      this.keyboardDidHideListener && this.keyboardDidHideListener.remove();
+    });
+  }
+
+  componentWillUnmount() {
+    this.unsubscribeFocus && this.unsubscribeFocus();
+    this.unsubscribeBlur && this.unsubscribeBlur();
   }
 
   init = () => {
@@ -52,11 +71,19 @@ class PostsScreen extends Component {
       totalCount: global._totalCount,
       curPage: global._curPage ? global._curPage : '1',
       keyword: global._keyword ? global._keyword : '',
-      posts: [],
+      posts: global._postsList || [],
       curIndex: -1,
       item: {},
     };
   };
+
+  _keyboardDidShow() {
+    this.setState({ isKeyboardShowing: true });
+  }
+
+  _keyboardDidHide() {
+    this.setState({ isKeyboardShowing: false });
+  }
 
   onBack = () => {
     this.props.navigation.goBack();
@@ -173,6 +200,9 @@ class PostsScreen extends Component {
   };
 
   render() {
+    const { isKeyboardShowing } = this.state;
+    const sheetHeight = isKeyboardShowing ? 150 : VIDEO_HEIGHT * 0.75;
+
     return (
       <View style={GStyles.container}>
         {this.___renderStatusBar()}
@@ -182,7 +212,7 @@ class PostsScreen extends Component {
         <RBSheet
           ref={this.profileSheet}
           openDuration={250}
-          height={VIDEO_HEIGHT * 0.75}
+          keyboardAvoidingViewEnabled={true}
           customStyles={{
             draggableIcon: {
               width: 0,
@@ -191,7 +221,7 @@ class PostsScreen extends Component {
               margin: 0,
             },
             container: {
-              padding: 16,
+              height: sheetHeight,
             },
           }}
         >
@@ -199,6 +229,7 @@ class PostsScreen extends Component {
             post={this.state.item}
             onCloseComments={this.onCloseComments}
             onAddComment={this.onAddComment}
+            isKeyboardShowing={isKeyboardShowing}
           />
         </RBSheet>
       </View>

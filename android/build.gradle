@@ -4,8 +4,8 @@ buildscript {
     ext {
         buildToolsVersion = "29.0.2"
         minSdkVersion = 21
-        compileSdkVersion = 29
-        targetSdkVersion = 29
+        compileSdkVersion = 30
+        targetSdkVersion = 30
         reactNativeFFmpegPackage = "full-gpl-lts"
     }
     repositories {
@@ -14,7 +14,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath('com.android.tools.build:gradle:3.6.0')
+        classpath('com.android.tools.build:gradle:4.1.0')
         classpath 'com.google.gms:google-services:4.3.3'
     }
 }
