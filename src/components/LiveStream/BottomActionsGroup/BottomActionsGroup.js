@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Platform, KeyboardAvoidingView } from 'react-native';
 import { GStyles } from '../../../utils/Global/Styles';
 import GradientBackgroundIconButton from './GradientBackgroundIconButton';
 import MessagesList from '../MessagesList';
@@ -82,7 +82,12 @@ export default class BottomActionsGroup extends Component {
           </View>
         </View>
         <View style={GStyles.rowContainer}>
-          <MessageBox onPressSendMessage={onPressSendMessage} />
+          <KeyboardAvoidingView
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            style={{ flex: 1 }}
+          >
+            <MessageBox onPressSendMessage={onPressSendMessage} />
+          </KeyboardAvoidingView>
           {mode === 'streamer' && (
             <GradientBackgroundIconButton
               icon={ic_share}
