@@ -7,6 +7,7 @@ import {
   View,
   TouchableOpacity,
   Image,
+  KeyboardAvoidingView,
 } from 'react-native';
 import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
@@ -120,7 +121,7 @@ const CommentsScreen = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingScrollView>
+      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
         {!isKeyboardShowing && (
           <>
             <View>
@@ -170,7 +171,7 @@ const CommentsScreen = ({
         )}
 
         <WriteComment post={post} onPressComment={onPressComment} />
-      </KeyboardAvoidingScrollView>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
@@ -178,8 +179,8 @@ const CommentsScreen = ({
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
     margin: 16,
+    backgroundColor: 'white',
     justifyContent: 'center',
   },
   contentContainerStyle: {

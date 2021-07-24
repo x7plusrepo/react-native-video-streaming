@@ -1,20 +1,16 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
-import { GStyles } from '../../../utils/Global/Styles';
+import { KeyboardAvoidingView, View } from 'react-native';
+
 import GradientBackgroundIconButton from './GradientBackgroundIconButton';
 import MessagesList from '../MessagesList';
+import MessageBox from './MessageBox';
 
 import ic_switch_camera from '../../../assets/images/Icons/ic_switch_camera.png';
-import ic_menu_messages from '../../../assets/images/Icons/ic_menu_messages.png';
 import ic_share from '../../../assets/images/Icons/ic_share.png';
 import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import heart from '../../../assets/images/gifts/heart.png';
-import MessageBox from './MessageBox';
-import RBSheet from 'react-native-raw-bottom-sheet';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 
-const ic_audio_on = require('../../../assets/images/Icons/ic_audio_on.png');
-const ic_audio_off = require('../../../assets/images/Icons/ic_audio_off.png');
+import { GStyles } from '../../../utils/Global/Styles';
 
 export default class BottomActionsGroup extends Component {
   constructor(props) {
@@ -82,33 +78,37 @@ export default class BottomActionsGroup extends Component {
             )}
           </View>
         </View>
-        <View style={GStyles.rowContainer}>
-          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
+        <KeyboardAvoidingView
+          showsVerticalScrollIndicator={false}
+          style={{ flex: 1 }}
+        >
+          <View style={GStyles.rowContainer}>
             <MessageBox onPressSendMessage={onPressSendMessage} />
-          </KeyboardAwareScrollView>
-          {mode === 'streamer' && (
-            <GradientBackgroundIconButton
-              icon={ic_share}
-              onPress={this.onPressShareAction}
-              containerStyle={{ marginLeft: 8 }}
-            />
-          )}
 
-          {mode === 'viewer' && (
-            <GradientBackgroundIconButton
-              icon={heart}
-              onPress={this.onPressSendHeart}
-              containerStyle={{ marginLeft: 8 }}
-            />
-          )}
-          {mode === 'viewer' && (
-            <GradientBackgroundIconButton
-              icon={ic_gift}
-              onPress={this.onPressGiftAction}
-              containerStyle={{ marginLeft: 8 }}
-            />
-          )}
-        </View>
+            {mode === 'streamer' && (
+              <GradientBackgroundIconButton
+                icon={ic_share}
+                onPress={this.onPressShareAction}
+                containerStyle={{ marginLeft: 8 }}
+              />
+            )}
+
+            {mode === 'viewer' && (
+              <GradientBackgroundIconButton
+                icon={heart}
+                onPress={this.onPressSendHeart}
+                containerStyle={{ marginLeft: 8 }}
+              />
+            )}
+            {mode === 'viewer' && (
+              <GradientBackgroundIconButton
+                icon={ic_gift}
+                onPress={this.onPressGiftAction}
+                containerStyle={{ marginLeft: 8 }}
+              />
+            )}
+          </View>
+        </KeyboardAvoidingView>
       </>
     );
   }
