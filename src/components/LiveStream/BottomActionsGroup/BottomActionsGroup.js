@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { KeyboardAvoidingView, View } from 'react-native';
+import { View } from 'react-native';
 
 import GradientBackgroundIconButton from './GradientBackgroundIconButton';
 import MessagesList from '../MessagesList';
@@ -78,37 +78,32 @@ export default class BottomActionsGroup extends Component {
             )}
           </View>
         </View>
-        <KeyboardAvoidingView
-          showsVerticalScrollIndicator={false}
-          style={{ flex: 1 }}
-        >
-          <View style={GStyles.rowContainer}>
-            <MessageBox onPressSendMessage={onPressSendMessage} />
+        <View style={GStyles.rowContainer}>
+          <MessageBox onPressSendMessage={onPressSendMessage} />
 
-            {mode === 'streamer' && (
-              <GradientBackgroundIconButton
-                icon={ic_share}
-                onPress={this.onPressShareAction}
-                containerStyle={{ marginLeft: 8 }}
-              />
-            )}
+          {mode === 'streamer' && (
+            <GradientBackgroundIconButton
+              icon={ic_share}
+              onPress={this.onPressShareAction}
+              containerStyle={{ marginLeft: 8 }}
+            />
+          )}
 
-            {mode === 'viewer' && (
-              <GradientBackgroundIconButton
-                icon={heart}
-                onPress={this.onPressSendHeart}
-                containerStyle={{ marginLeft: 8 }}
-              />
-            )}
-            {mode === 'viewer' && (
-              <GradientBackgroundIconButton
-                icon={ic_gift}
-                onPress={this.onPressGiftAction}
-                containerStyle={{ marginLeft: 8 }}
-              />
-            )}
-          </View>
-        </KeyboardAvoidingView>
+          {mode === 'viewer' && (
+            <GradientBackgroundIconButton
+              icon={heart}
+              onPress={this.onPressSendHeart}
+              containerStyle={{ marginLeft: 8 }}
+            />
+          )}
+          {mode === 'viewer' && (
+            <GradientBackgroundIconButton
+              icon={ic_gift}
+              onPress={this.onPressGiftAction}
+              containerStyle={{ marginLeft: 8 }}
+            />
+          )}
+        </View>
       </>
     );
   }

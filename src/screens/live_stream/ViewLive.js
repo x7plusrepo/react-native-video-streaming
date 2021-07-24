@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {
   Alert,
   Image,
+  KeyboardAvoidingView,
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
@@ -12,6 +13,7 @@ import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import KeepAwake from 'react-native-keep-awake';
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
 import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
@@ -47,7 +49,6 @@ class ViewLive extends Component {
   }
 
   componentDidMount() {
-
     const { route } = this.props;
     const roomId = get(route, 'params.roomId');
 
@@ -73,7 +74,6 @@ class ViewLive extends Component {
     });
 
     KeepAwake.activate();
-
   }
 
   init = () => {
@@ -371,7 +371,7 @@ class ViewLive extends Component {
               <Image source={ic_audio} style={{ width: 24, height: 24 }} />
             </View>
           )}
-          <View style={styles.contentWrapper}>
+          <KeyboardAvoidingView style={styles.contentWrapper}>
             <View style={styles.header}>
               <Header
                 room={room}
@@ -379,6 +379,7 @@ class ViewLive extends Component {
                 onPressProfileAction={this.onPressProfileAction}
               />
             </View>
+            <View style={{ flex: 1 }} />
             <View style={styles.footer}>
               <BottomActionsGroup
                 onPressJoin={this.onPressJoin}
@@ -394,7 +395,7 @@ class ViewLive extends Component {
                 messages={messages}
               />
             </View>
-          </View>
+          </KeyboardAvoidingView>
         </TouchableOpacity>
         <RBSheet
           ref={this.profileSheet}
