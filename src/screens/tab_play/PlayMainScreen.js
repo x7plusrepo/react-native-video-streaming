@@ -329,7 +329,7 @@ class PlayMainScreen extends Component {
 
   render() {
     const { isKeyboardShowing } = this.state;
-    const sheetHeight = isKeyboardShowing ? 150 : SHEET_HEIGHT;
+    const sheetHeight = isKeyboardShowing ? SHEET_HEIGHT : SHEET_HEIGHT;
 
     return (
       <View style={GStyles.container}>

@@ -121,57 +121,47 @@ const CommentsScreen = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      <KeyboardAvoidingView style={{ flex: 1 }} behavior="padding">
-        {!isKeyboardShowing && (
-          <>
-            <View>
-              <Text
-                style={[
-                  GStyles.regularText,
-                  { alignSelf: 'center', fontWeight: '700' },
-                ]}
-              >
-                {totalCount} comments
-              </Text>
-              <TouchableOpacity
-                onPress={onCloseComments}
-                style={{ position: 'absolute', right: 0 }}
-              >
-                <Image
-                  style={styles.icoClose}
-                  source={ic_close}
-                  tintColor="black"
-                />
-              </TouchableOpacity>
-            </View>
+      <View>
+        <Text
+          style={[
+            GStyles.regularText,
+            { alignSelf: 'center', fontWeight: '700' },
+          ]}
+        >
+          {totalCount} comments
+        </Text>
+        <TouchableOpacity
+          onPress={onCloseComments}
+          style={{ position: 'absolute', right: 0 }}
+        >
+          <Image style={styles.icoClose} source={ic_close} tintColor="black" />
+        </TouchableOpacity>
+      </View>
 
-            <FlatList
-              showsVerticalScrollIndicator={false}
-              onRefresh={() => {
-                onRefresh('pull');
-              }}
-              refreshing={isFetching}
-              onEndReachedThreshold={0.2}
-              onMomentumScrollBegin={() => {
-                setOnEndReachedDuringMomentum(false);
-              }}
-              onEndReached={() => {
-                if (!onEndReachedDuringMomentum) {
-                  setOnEndReachedDuringMomentum(true);
-                  onRefresh('more');
-                }
-              }}
-              data={comments}
-              renderItem={_renderItem}
-              keyExtractor={(item) => item.id}
-              style={{ flex: 1, width: '100%' }}
-              contentContainerStyle={{ paddingBottom: 64 }}
-            />
-          </>
-        )}
+      <FlatList
+        showsVerticalScrollIndicator={false}
+        onRefresh={() => {
+          onRefresh('pull');
+        }}
+        refreshing={isFetching}
+        onEndReachedThreshold={0.2}
+        onMomentumScrollBegin={() => {
+          setOnEndReachedDuringMomentum(false);
+        }}
+        onEndReached={() => {
+          if (!onEndReachedDuringMomentum) {
+            setOnEndReachedDuringMomentum(true);
+            onRefresh('more');
+          }
+        }}
+        data={comments}
+        renderItem={_renderItem}
+        keyExtractor={(item) => item.id}
+        style={{ flex: 1, width: '100%' }}
+        contentContainerStyle={{ paddingBottom: 64 }}
+      />
 
-        <WriteComment post={post} onPressComment={onPressComment} />
-      </KeyboardAvoidingView>
+      <WriteComment post={post} onPressComment={onPressComment} />
     </SafeAreaView>
   );
 };
@@ -181,7 +171,8 @@ const styles = StyleSheet.create({
     flex: 1,
     margin: 16,
     backgroundColor: 'white',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
+    paddingBottom: 300,
   },
   contentContainerStyle: {
     paddingTop: 16,
