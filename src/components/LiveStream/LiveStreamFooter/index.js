@@ -50,7 +50,7 @@ class LiveStreamFooter extends Component {
   render() {
     const { mode, method, onPressSendMessage, messages, keyboardHeight } =
       this.props;
-    const bottom = Platform.OS === 'ios' ? keyboardHeight + 16 : 16;
+    const bottom = Platform.OS === 'ios' ? keyboardHeight : 16;
 
     return (
       <View style={[styles.container, { bottom }]}>
