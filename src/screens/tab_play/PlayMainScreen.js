@@ -4,7 +4,6 @@ import {
   Alert,
   BackHandler,
   FlatList,
-  Keyboard,
   Platform,
   StatusBar,
   View,
@@ -37,8 +36,6 @@ class PlayMainScreen extends Component {
 
     console.log('PlayMainScreen start');
     this.profileSheet = React.createRef();
-    this._keyboardDidShow = this._keyboardDidShow.bind(this);
-    this._keyboardDidHide = this._keyboardDidHide.bind(this);
     this.init();
     SplashScreen.hide();
   }
@@ -50,20 +47,11 @@ class PlayMainScreen extends Component {
       Helper.setDarkStatusBar();
       this.checkSignin();
       this.setState({ isVideoPause: false });
-      this.keyboardDidShowListener = Keyboard.addListener(
-        'keyboardDidShow',
-        this._keyboardDidShow,
-      );
-      this.keyboardDidHideListener = Keyboard.addListener(
-        'keyboardDidHide',
-        this._keyboardDidHide,
-      );
+
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
       this.setState({ isVideoPause: true });
       global._prevScreen = 'play_main';
-      this.keyboardDidShowListener && this.keyboardDidShowListener.remove();
-      this.keyboardDidHideListener && this.keyboardDidHideListener.remove();
     });
     BackHandler.addEventListener('hardwareBackPress', this.onBack);
   }
@@ -89,20 +77,11 @@ class PlayMainScreen extends Component {
       item: {},
       onEndReachedDuringMomentum: true,
       curIndex: null,
-      isKeyboardShowing: false,
     };
 
     await Helper.setDeviceId();
     Helper.hasPermissions();
   };
-
-  _keyboardDidShow() {
-    this.setState({ isKeyboardShowing: true });
-  }
-
-  _keyboardDidHide() {
-    this.setState({ isKeyboardShowing: false });
-  }
 
   onRefresh = async (type) => {
     let { posts, isFetching, totalCount, curPage } = this.state;
@@ -328,9 +307,6 @@ class PlayMainScreen extends Component {
   };
 
   render() {
-    const { isKeyboardShowing } = this.state;
-    const sheetHeight = isKeyboardShowing ? SHEET_HEIGHT : SHEET_HEIGHT;
-
     return (
       <View style={GStyles.container}>
         {this.___renderStatusBar()}
@@ -348,7 +324,7 @@ class PlayMainScreen extends Component {
               margin: 0,
             },
             container: {
-              height: sheetHeight,
+              height: SHEET_HEIGHT,
             },
           }}
         >
@@ -356,7 +332,6 @@ class PlayMainScreen extends Component {
             post={this.state.item}
             onCloseComments={this.onCloseComments}
             onAddComment={this.onAddComment}
-            isKeyboardShowing={isKeyboardShowing}
           />
         </RBSheet>
       </View>

@@ -1,37 +1,56 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   FlatList,
+  KeyboardAvoidingView,
   SafeAreaView,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
+  Keyboard,
   Image,
-  KeyboardAvoidingView,
+  Dimensions,
 } from 'react-native';
-import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import CommentItem from '../../components/posts/CommentItem';
 import WriteComment from '../../components/posts/WriteComment';
 import ic_close from '../../assets/images/Icons/ic_close.png';
 
-const CommentsScreen = ({
-  post,
-  onCloseComments,
-  onAddComment,
-  isKeyboardShowing,
-}) => {
+const VIDEO_HEIGHT = Dimensions.get('window').height;
+
+const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   const [comments, setComments] = useState([]);
   const [isFetching, setIsFetching] = useState(false);
   const [totalCount, setTotalCount] = useState(0);
   const [onEndReachedDuringMomentum, setOnEndReachedDuringMomentum] =
     useState(true);
   const [curPage, setCurPage] = useState(0);
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
 
   useEffect(() => {
     onRefresh('init');
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
+    );
+    return () => {
+      keyboardDidShowListener && keyboardDidShowListener.remove();
+      keyboardDidHideListener && keyboardDidHideListener.remove();
+    };
   }, []);
+
+  const _keyboardDidShow = (e) => {
+    setKeyboardHeight(e.endCoordinates.height);
+  };
+
+  const _keyboardDidHide = () => {
+    setKeyboardHeight(0);
+  };
 
   const onRefresh = (type) => {
     if (isFetching) {
@@ -118,53 +137,58 @@ const CommentsScreen = ({
   };
 
   const _renderItem = ({ item }) => <CommentItem comment={item} />;
+  const marginBottom = Math.max(0, keyboardHeight - 0.25 * VIDEO_HEIGHT + 24);
 
   return (
     <SafeAreaView style={styles.container}>
-      <View>
-        <Text
-          style={[
-            GStyles.regularText,
-            { alignSelf: 'center', fontWeight: '700' },
-          ]}
-        >
-          {totalCount} comments
-        </Text>
-        <TouchableOpacity
-          onPress={onCloseComments}
-          style={{ position: 'absolute', right: 0 }}
-        >
-          <Image style={styles.icoClose} source={ic_close} tintColor="black" />
-        </TouchableOpacity>
-      </View>
+      <KeyboardAvoidingView enabled={false} style={{ flex: 1 }}>
+        <View>
+          <Text
+            style={[
+              GStyles.regularText,
+              { alignSelf: 'center', fontWeight: '700' },
+            ]}
+          >
+            {totalCount} comments
+          </Text>
+          <TouchableOpacity
+            onPress={onCloseComments}
+            style={{ position: 'absolute', right: 0 }}
+          >
+            <Image
+              style={styles.icoClose}
+              source={ic_close}
+              tintColor="black"
+            />
+          </TouchableOpacity>
+        </View>
 
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        onRefresh={() => {
-          onRefresh('pull');
-        }}
-        refreshing={isFetching}
-        onEndReachedThreshold={0.2}
-        onMomentumScrollBegin={() => {
-          setOnEndReachedDuringMomentum(false);
-        }}
-        onEndReached={() => {
-          if (!onEndReachedDuringMomentum) {
-            setOnEndReachedDuringMomentum(true);
-            onRefresh('more');
-          }
-        }}
-        data={comments}
-        renderItem={_renderItem}
-        keyExtractor={(item) => item.id}
-        style={{ flex: 1, width: '100%' }}
-        contentContainerStyle={{ paddingBottom: 64 }}
-      />
-
-      <View style={{ marginBottom: 300 }}>
-        <WriteComment post={post} onPressComment={onPressComment} />
-      </View>
-
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          onRefresh={() => {
+            onRefresh('pull');
+          }}
+          refreshing={isFetching}
+          onEndReachedThreshold={0.2}
+          onMomentumScrollBegin={() => {
+            setOnEndReachedDuringMomentum(false);
+          }}
+          onEndReached={() => {
+            if (!onEndReachedDuringMomentum) {
+              setOnEndReachedDuringMomentum(true);
+              onRefresh('more');
+            }
+          }}
+          data={comments}
+          renderItem={_renderItem}
+          keyExtractor={(item) => item.id}
+          style={{ flex: 1, width: '100%' }}
+          contentContainerStyle={{ paddingBottom: 64 }}
+        />
+        <View style={{ marginBottom: marginBottom }}>
+          <WriteComment post={post} onPressComment={onPressComment} />
+        </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 };
