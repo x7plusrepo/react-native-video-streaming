@@ -13,7 +13,7 @@ import RBSheet from 'react-native-raw-bottom-sheet';
 import KeepAwake from 'react-native-keep-awake';
 
 import StartPanel from './StartPanel';
-import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
+import LiveStreamFooter from '../../components/LiveStream/LiveStreamFooter';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Header from '../../components/LiveStream/Header';
 
@@ -386,19 +386,17 @@ class GoLive extends React.Component {
               onPressProfileAction={this.onPressProfileAction}
             />
           </View>
-          <View style={styles.footer}>
-            <BottomActionsGroup
-              onPressSwitchCamera={this.onPressSwitchCamera}
-              onPressSwitchAudio={this.onPressSwitchAudio}
-              onPressShareAction={this.onPressShareAction}
-              onPressProfileAction={this.onPressProfileAction}
-              onPressSendMessage={this.onPressSendMessage}
-              mode="streamer"
-              method={mode}
-              isMuted={isMuted}
-              messages={messages}
-            />
-          </View>
+          <LiveStreamFooter
+            onPressSwitchCamera={this.onPressSwitchCamera}
+            onPressSwitchAudio={this.onPressSwitchAudio}
+            onPressShareAction={this.onPressShareAction}
+            onPressProfileAction={this.onPressProfileAction}
+            onPressSendMessage={this.onPressSendMessage}
+            mode="streamer"
+            method={mode}
+            isMuted={isMuted}
+            messages={messages}
+          />
         </View>
         <RBSheet
           ref={this.profileSheet}

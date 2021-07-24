@@ -18,12 +18,6 @@ const styles = StyleSheet.create({
     marginTop: 24,
     zIndex: 999,
   },
-  footer: {
-    position: 'absolute',
-    bottom: 16,
-    zIndex: 9,
-    width: '100%',
-  },
   playerView: {
     position: 'absolute',
     top: 0,

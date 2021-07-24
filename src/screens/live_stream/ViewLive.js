@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import {
   Alert,
   Image,
-  KeyboardAvoidingView,
   SafeAreaView,
   StatusBar,
   TouchableOpacity,
@@ -13,10 +12,9 @@ import get from 'lodash/get';
 import { NodePlayerView } from 'react-native-nodemediaclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import KeepAwake from 'react-native-keep-awake';
-import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
-import BottomActionsGroup from '../../components/LiveStream/BottomActionsGroup';
+import Index from '../../components/LiveStream/LiveStreamFooter';
 import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Gifts from '../../components/LiveStream/Gifts';
 import Header from '../../components/LiveStream/Header';
@@ -371,10 +369,7 @@ class ViewLive extends Component {
               <Image source={ic_audio} style={{ width: 24, height: 24 }} />
             </View>
           )}
-          <KeyboardAvoidingView
-            style={styles.contentWrapper}
-            behavior={'padding'}
-          >
+          <View style={styles.contentWrapper}>
             <View style={styles.header}>
               <Header
                 room={room}
@@ -382,22 +377,20 @@ class ViewLive extends Component {
                 onPressProfileAction={this.onPressProfileAction}
               />
             </View>
-            <View style={styles.footer}>
-              <BottomActionsGroup
-                onPressJoin={this.onPressJoin}
-                onExit={this.onLeave}
-                onPressSendHeart={this.onPressSendHeart}
-                onPressGiftAction={this.onPressGiftAction}
-                onPressSendMessage={this.onPressSendMessage}
-                onPressShareAction={this.onPressShareAction}
-                onPressProfileAction={this.onPressProfileAction}
-                isJoined={isJoined}
-                liveStatus={liveStatus}
-                mode="viewer"
-                messages={messages}
-              />
-            </View>
-          </KeyboardAvoidingView>
+            <Index
+              onPressJoin={this.onPressJoin}
+              onExit={this.onLeave}
+              onPressSendHeart={this.onPressSendHeart}
+              onPressGiftAction={this.onPressGiftAction}
+              onPressSendMessage={this.onPressSendMessage}
+              onPressShareAction={this.onPressShareAction}
+              onPressProfileAction={this.onPressProfileAction}
+              isJoined={isJoined}
+              liveStatus={liveStatus}
+              mode="viewer"
+              messages={messages}
+            />
+          </View>
         </TouchableOpacity>
         <RBSheet
           ref={this.profileSheet}

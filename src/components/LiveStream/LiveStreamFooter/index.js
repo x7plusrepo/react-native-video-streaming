@@ -1,7 +1,8 @@
-import React, { Component } from 'react';
-import { View } from 'react-native';
+import React, { useEffect, useState, Component } from 'react';
+import { Keyboard, Platform, View } from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-import GradientBackgroundIconButton from './GradientBackgroundIconButton';
+import GradientIconButton from './GradientIconButton';
 import MessagesList from '../MessagesList';
 import MessageBox from './MessageBox';
 
@@ -11,8 +12,9 @@ import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import heart from '../../../assets/images/gifts/heart.png';
 
 import { GStyles } from '../../../utils/Global/Styles';
+import styles from './styles';
 
-export default class BottomActionsGroup extends Component {
+class LiveStreamFooter extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -45,11 +47,13 @@ export default class BottomActionsGroup extends Component {
     onPressSwitchAudio && onPressSwitchAudio();
   };
 
-  renderContent() {
-    const { mode, method, onPressSendMessage, messages } = this.props;
+  render() {
+    const { mode, method, onPressSendMessage, messages, keyboardHeight } =
+      this.props;
+    const bottom = Platform.OS === 'ios' ? keyboardHeight + 16 : 16;
 
     return (
-      <>
+      <View style={[styles.container, { bottom }]}>
         <View
           style={[
             GStyles.rowContainer,
@@ -62,7 +66,7 @@ export default class BottomActionsGroup extends Component {
           />
           <View>
             {mode === 'streamer' && method === 0 && (
-              <GradientBackgroundIconButton
+              <GradientIconButton
                 onPress={this.onPressSwitchCamera}
                 icon={ic_switch_camera}
                 iconStyle={{ tintColor: 'white' }}
@@ -71,7 +75,7 @@ export default class BottomActionsGroup extends Component {
             )}
 
             {mode === 'viewer' && (
-              <GradientBackgroundIconButton
+              <GradientIconButton
                 icon={ic_share}
                 onPress={this.onPressShareAction}
               />
@@ -82,7 +86,7 @@ export default class BottomActionsGroup extends Component {
           <MessageBox onPressSendMessage={onPressSendMessage} />
 
           {mode === 'streamer' && (
-            <GradientBackgroundIconButton
+            <GradientIconButton
               icon={ic_share}
               onPress={this.onPressShareAction}
               containerStyle={{ marginLeft: 8 }}
@@ -90,27 +94,59 @@ export default class BottomActionsGroup extends Component {
           )}
 
           {mode === 'viewer' && (
-            <GradientBackgroundIconButton
+            <GradientIconButton
               icon={heart}
               onPress={this.onPressSendHeart}
               containerStyle={{ marginLeft: 8 }}
             />
           )}
           {mode === 'viewer' && (
-            <GradientBackgroundIconButton
+            <GradientIconButton
               icon={ic_gift}
               onPress={this.onPressGiftAction}
               containerStyle={{ marginLeft: 8 }}
             />
           )}
         </View>
-      </>
+      </View>
     );
   }
+}
 
-  render() {
-    return (
-      <View style={{ paddingHorizontal: 16 }}>{this.renderContent()}</View>
+export default function (props) {
+  let navigation = useNavigation();
+  let route = useRoute();
+  const [keyboardHeight, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      'keyboardDidShow',
+      _keyboardDidShow,
     );
-  }
+    const keyboardDidHideListener = Keyboard.addListener(
+      'keyboardDidHide',
+      _keyboardDidHide,
+    );
+    return () => {
+      keyboardDidShowListener && keyboardDidShowListener.remove();
+      keyboardDidHideListener && keyboardDidHideListener.remove();
+    };
+  }, []);
+
+  const _keyboardDidShow = (e) => {
+    setKeyboardHeight(e.endCoordinates.height);
+  };
+
+  const _keyboardDidHide = () => {
+    setKeyboardHeight(0);
+  };
+
+  return (
+    <LiveStreamFooter
+      {...props}
+      navigation={navigation}
+      route={route}
+      keyboardHeight={keyboardHeight}
+    />
+  );
 }

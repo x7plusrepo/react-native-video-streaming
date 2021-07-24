@@ -4,7 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
 import {GStyles} from '../../../utils/Global/Styles';
 
-const GradientBackgroundIconButton = (props) => {
+const GradientIconButton = (props) => {
   const { icon, onPress, containerStyle, iconStyle } = props;
   return (
     <TouchableOpacity activeOpacity={0.6} style={containerStyle} onPress={onPress}>
@@ -22,4 +22,4 @@ const GradientBackgroundIconButton = (props) => {
   );
 };
 
-export default GradientBackgroundIconButton;
+export default GradientIconButton;

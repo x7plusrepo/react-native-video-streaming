@@ -44,6 +44,13 @@ const styles = StyleSheet.create({
     color: GStyle.whiteColor,
     ...GStyles.semiBoldText,
   },
+  container: {
+    position: 'absolute',
+    bottom: 16,
+    zIndex: 9,
+    width: '100%',
+    paddingHorizontal: 16,
+  },
 });
 
 export default styles;
