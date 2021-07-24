@@ -116,21 +116,21 @@ class MessageChatScreen extends Component {
     this.props.navigation.goBack();
   };
 
-  onSend = (messages = []) => {
-    if (messages.length > 0) {
+  onSend = (message) => {
+    if (message) {
       SocketManager.instance.emitSendMessage({
         senderId: global.me?.id,
         receiverId: this.state?.opponentUser?.id,
         messageType: Constants.MESSAGE_TYPE_TEXT,
         roomType: 0,
-        message: messages[0]?.text,
+        message: message,
         createdAt: new Date(),
       });
 
       const newMessages = [
         {
           _id: Global.makeId(10),
-          text: messages[0]?.text,
+          text: message,
           createdAt: new Date(),
           user: {
             _id: global.me?.id,

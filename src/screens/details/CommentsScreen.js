@@ -1,16 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import {
   FlatList,
-  KeyboardAvoidingView,
-  Keyboard,
   SafeAreaView,
-  Platform,
   StyleSheet,
   Text,
   View,
   TouchableOpacity,
   Image,
 } from 'react-native';
+import { KeyboardAvoidingScrollView } from 'react-native-keyboard-avoiding-scroll-view';
 
 import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import CommentItem from '../../components/posts/CommentItem';
@@ -122,55 +120,57 @@ const CommentsScreen = ({
 
   return (
     <SafeAreaView style={styles.container}>
-      {!isKeyboardShowing && (
-        <>
-          <View>
-            <Text
-              style={[
-                GStyles.regularText,
-                { alignSelf: 'center', fontWeight: '700' },
-              ]}
-            >
-              {totalCount} comments
-            </Text>
-            <TouchableOpacity
-              onPress={onCloseComments}
-              style={{ position: 'absolute', right: 0 }}
-            >
-              <Image
-                style={styles.icoClose}
-                source={ic_close}
-                tintColor="black"
-              />
-            </TouchableOpacity>
-          </View>
+      <KeyboardAvoidingScrollView>
+        {!isKeyboardShowing && (
+          <>
+            <View>
+              <Text
+                style={[
+                  GStyles.regularText,
+                  { alignSelf: 'center', fontWeight: '700' },
+                ]}
+              >
+                {totalCount} comments
+              </Text>
+              <TouchableOpacity
+                onPress={onCloseComments}
+                style={{ position: 'absolute', right: 0 }}
+              >
+                <Image
+                  style={styles.icoClose}
+                  source={ic_close}
+                  tintColor="black"
+                />
+              </TouchableOpacity>
+            </View>
 
-          <FlatList
-            showsVerticalScrollIndicator={false}
-            onRefresh={() => {
-              onRefresh('pull');
-            }}
-            refreshing={isFetching}
-            onEndReachedThreshold={0.2}
-            onMomentumScrollBegin={() => {
-              setOnEndReachedDuringMomentum(false);
-            }}
-            onEndReached={() => {
-              if (!onEndReachedDuringMomentum) {
-                setOnEndReachedDuringMomentum(true);
-                onRefresh('more');
-              }
-            }}
-            data={comments}
-            renderItem={_renderItem}
-            keyExtractor={(item) => item.id}
-            style={{ flex: 1, width: '100%' }}
-            contentContainerStyle={{ paddingBottom: 64 }}
-          />
-        </>
-      )}
+            <FlatList
+              showsVerticalScrollIndicator={false}
+              onRefresh={() => {
+                onRefresh('pull');
+              }}
+              refreshing={isFetching}
+              onEndReachedThreshold={0.2}
+              onMomentumScrollBegin={() => {
+                setOnEndReachedDuringMomentum(false);
+              }}
+              onEndReached={() => {
+                if (!onEndReachedDuringMomentum) {
+                  setOnEndReachedDuringMomentum(true);
+                  onRefresh('more');
+                }
+              }}
+              data={comments}
+              renderItem={_renderItem}
+              keyExtractor={(item) => item.id}
+              style={{ flex: 1, width: '100%' }}
+              contentContainerStyle={{ paddingBottom: 64 }}
+            />
+          </>
+        )}
 
-      <WriteComment post={post} onPressComment={onPressComment} />
+        <WriteComment post={post} onPressComment={onPressComment} />
+      </KeyboardAvoidingScrollView>
     </SafeAreaView>
   );
 };

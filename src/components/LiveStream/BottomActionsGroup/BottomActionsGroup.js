@@ -83,9 +83,7 @@ export default class BottomActionsGroup extends Component {
           </View>
         </View>
         <View style={GStyles.rowContainer}>
-          <KeyboardAwareScrollView
-            showsVerticalScrollIndicator={false}
-          >
+          <KeyboardAwareScrollView showsVerticalScrollIndicator={false}>
             <MessageBox onPressSendMessage={onPressSendMessage} />
           </KeyboardAwareScrollView>
           {mode === 'streamer' && (
