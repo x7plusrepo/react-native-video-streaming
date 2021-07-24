@@ -140,7 +140,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   const _renderItem = ({ item }) => <CommentItem comment={item} />;
   const marginBottom =
     Platform.OS === 'ios'
-      ? keyboardHeight + 24
+      ? keyboardHeight
       : Math.max(0, keyboardHeight - 0.25 * VIDEO_HEIGHT + 24);
 
   return (
