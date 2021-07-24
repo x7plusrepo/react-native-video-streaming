@@ -371,7 +371,10 @@ class ViewLive extends Component {
               <Image source={ic_audio} style={{ width: 24, height: 24 }} />
             </View>
           )}
-          <KeyboardAvoidingView style={styles.contentWrapper}>
+          <KeyboardAvoidingView
+            style={styles.contentWrapper}
+            behavior={'padding'}
+          >
             <View style={styles.header}>
               <Header
                 room={room}
@@ -379,7 +382,6 @@ class ViewLive extends Component {
                 onPressProfileAction={this.onPressProfileAction}
               />
             </View>
-            <View style={{ flex: 1 }} />
             <View style={styles.footer}>
               <BottomActionsGroup
                 onPressJoin={this.onPressJoin}

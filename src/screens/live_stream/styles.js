@@ -19,8 +19,8 @@ const styles = StyleSheet.create({
     zIndex: 999,
   },
   footer: {
-    //position: 'absolute',
-    marginBottom: 16,
+    position: 'absolute',
+    bottom: 16,
     zIndex: 9,
     width: '100%',
   },
