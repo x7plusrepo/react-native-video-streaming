@@ -137,7 +137,10 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
   };
 
   const _renderItem = ({ item }) => <CommentItem comment={item} />;
-  const marginBottom = Math.max(0, keyboardHeight - 0.25 * VIDEO_HEIGHT + 24);
+  const marginBottom =
+    Platform.OS === 'ios'
+      ? keyboardHeight + 24
+      : Math.max(0, keyboardHeight - 0.25 * VIDEO_HEIGHT + 24);
 
   return (
     <SafeAreaView style={styles.container}>
