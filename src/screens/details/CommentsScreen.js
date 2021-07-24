@@ -1,15 +1,16 @@
 import React, { useEffect, useState } from 'react';
 import {
+  Dimensions,
   FlatList,
   KeyboardAvoidingView,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
   TouchableOpacity,
   Keyboard,
   Image,
-  Dimensions,
+  Platform,
+  Text,
+  View,
+  SafeAreaView,
+  StyleSheet,
 } from 'react-native';
 
 import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
