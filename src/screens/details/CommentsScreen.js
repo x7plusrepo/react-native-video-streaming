@@ -161,7 +161,10 @@ const CommentsScreen = ({
         contentContainerStyle={{ paddingBottom: 64 }}
       />
 
-      <WriteComment post={post} onPressComment={onPressComment} />
+      <View style={{ marginBottom: 300 }}>
+        <WriteComment post={post} onPressComment={onPressComment} />
+      </View>
+
     </SafeAreaView>
   );
 };
@@ -172,7 +175,6 @@ const styles = StyleSheet.create({
     margin: 16,
     backgroundColor: 'white',
     justifyContent: 'flex-end',
-    paddingBottom: 300,
   },
   contentContainerStyle: {
     paddingTop: 16,
