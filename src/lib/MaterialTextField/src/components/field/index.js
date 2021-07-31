@@ -1,15 +1,6 @@
 import PropTypes from 'prop-types';
-import React, { PureComponent } from 'react';
-import {
-  Animated,
-  Keyboard,
-  Platform,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  ViewPropTypes,
-} from 'react-native';
+import React, {PureComponent} from 'react';
+import {Animated, Keyboard, Platform, StyleSheet, Text, TextInput, View, ViewPropTypes} from 'react-native';
 
 import Line from '../line';
 import Label from '../label';
@@ -18,7 +9,7 @@ import Helper from '../helper';
 import Counter from '../counter';
 
 import styles from './styles';
-import { GStyle } from '../../../../../utils/Global';
+import {GStyle} from '../../../../../utils/Global';
 
 function startAnimation(animation, options, callback) {
   Animated.timing(animation, options).start(callback);

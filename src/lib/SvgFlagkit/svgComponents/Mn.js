@@ -1,5 +1,5 @@
-import React from 'react'
-import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg'
+import React from 'react';
+import Svg, {Defs, G, LinearGradient, Path, Stop} from 'react-native-svg';
 
 const SvgMn = props => (
     <Svg viewBox="0 0 21 15" width={21} height={15} {...props}>

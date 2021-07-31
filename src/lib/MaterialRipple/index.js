@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import React, {PureComponent} from 'react';
-import {Animated, Easing, I18nManager, Platform, TouchableWithoutFeedback, View,} from 'react-native';
+import {Animated, Easing, I18nManager, Platform, TouchableWithoutFeedback, View} from 'react-native';
 
 import {radius, styles} from './styles.js';
 

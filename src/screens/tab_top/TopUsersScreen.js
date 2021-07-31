@@ -1,28 +1,11 @@
-import React, { forwardRef } from 'react';
-import {
-  ActivityIndicator,
-  FlatList,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, {forwardRef} from 'react';
+import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
-import {
-  Constants,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import TopUserItem from '../../components/elements/TopUserItem';
-import ScrollableTabView, {
-  DefaultTabBar,
-} from 'react-native-scrollable-tab-view';
+import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const CELL_WIDTH = (WINDOW_WIDTH - 32 - 32) / 3.0;

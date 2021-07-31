@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
-import ScrollableTabView, {DefaultTabBar,} from 'react-native-scrollable-tab-view';
+import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 import LiveStreamRooms from './LiveStreamRooms';
 
 import {GStyle} from '../../utils/Global';

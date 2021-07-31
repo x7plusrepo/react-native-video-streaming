@@ -1,22 +1,22 @@
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 import {
-  Dimensions,
-  FlatList,
-  KeyboardAvoidingView,
-  TouchableOpacity,
-  Keyboard,
-  Image,
-  Platform,
-  Text,
-  View,
-  SafeAreaView,
-  StyleSheet,
+    Dimensions,
+    FlatList,
+    Keyboard,
+    KeyboardAvoidingView,
+    Platform,
+    SafeAreaView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 
-import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
 import CommentItem from '../../components/posts/CommentItem';
 import WriteComment from '../../components/posts/WriteComment';
 import ic_close from '../../assets/images/Icons/ic_close.png';
+import CachedImage from '../../components/CachedImage';
 
 const VIDEO_HEIGHT = Dimensions.get('window').height;
 
@@ -159,7 +159,7 @@ const CommentsScreen = ({ post, onCloseComments, onAddComment }) => {
             onPress={onCloseComments}
             style={{ position: 'absolute', right: 0 }}
           >
-            <Image
+            <CachedImage
               style={styles.icoClose}
               source={ic_close}
               tintColor="black"

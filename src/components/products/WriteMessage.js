@@ -1,14 +1,9 @@
-import React, { useState } from 'react';
-import {
-  Image,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Keyboard,
-} from 'react-native';
+import React, {useState} from 'react';
+import {Keyboard, StyleSheet, TouchableOpacity, View} from 'react-native';
 import TextField from '../TextField';
 
-import { GStyles } from '../../utils/Global/Styles';
+import {GStyles} from '../../utils/Global/Styles';
+import CachedImage from '../CachedImage';
 
 const WriteMessage = ({ onPressSend }) => {
   const [comment, setComment] = useState('');
@@ -39,7 +34,7 @@ const WriteMessage = ({ onPressSend }) => {
         onPress={onPress}
         activeOpacity={0.6}
       >
-        <Image
+        <CachedImage
           source={require('../../assets/images/Icons/ico_send.png')}
           style={styles.iconSend}
         />

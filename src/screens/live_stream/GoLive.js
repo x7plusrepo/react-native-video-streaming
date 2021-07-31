@@ -1,14 +1,7 @@
 import React from 'react';
-import {
-  Alert,
-  BackHandler,
-  Image,
-  SafeAreaView,
-  StatusBar,
-  View,
-} from 'react-native';
-import { NodeCameraView } from 'react-native-nodemediaclient';
-import { connect } from 'react-redux';
+import {Alert, BackHandler, SafeAreaView, StatusBar, View} from 'react-native';
+import {NodeCameraView} from 'react-native-nodemediaclient';
+import {connect} from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import KeepAwake from 'react-native-keep-awake';
 
@@ -18,12 +11,13 @@ import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Header from '../../components/LiveStream/Header';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
-import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
-import { Constants, Global, RestAPI } from '../../utils/Global';
-import { setGifts } from '../../redux/liveStream/actions';
+import {LIVE_STATUS} from '../../utils/LiveStream/Constants';
+import {Constants, Global, RestAPI} from '../../utils/Global';
+import {setGifts} from '../../redux/liveStream/actions';
 import styles from './styles';
 import ic_audio from './../../assets/images/Icons/ic_audio_on.png';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
+import CachedImage from '../../components/CachedImage';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -40,11 +34,11 @@ class GoLive extends React.Component {
         samplerate: 44100,
       },
       videoConfig: {
-        preset: 1,
         bitrate: 150000,
-        profile: 1,
+        preset: 0,
+        profile: 0,
         fps: 15,
-        videoFrontMirror: false,
+        videoFrontMirror: true,
       },
       preparing: true,
     };
@@ -331,8 +325,14 @@ class GoLive extends React.Component {
   };
 
   render() {
-    const { messages, audioConfig, videoConfig, isMuted, room, preparing } =
-      this.state;
+    const {
+      messages,
+      audioConfig,
+      videoConfig,
+      isMuted,
+      room,
+      preparing,
+    } = this.state;
     const user = this.props.user || {};
     const countHeart = room?.countHeart || 0;
     const liveStatus = room?.liveStatus || 0;
@@ -340,6 +340,7 @@ class GoLive extends React.Component {
 
     const { id: streamerId } = user;
     const outputUrl = `${RTMP_SERVER}/live/${streamerId}`;
+    console.log(outputUrl);
 
     return (
       <SafeAreaView style={styles.container}>
@@ -353,10 +354,7 @@ class GoLive extends React.Component {
           video={{
             ...videoConfig,
             ...(mode === 1 && {
-              preset: 1,
               bitrate: 0,
-              profile: 1,
-              fps: 15,
             }),
           }}
           scaleMode={'ScaleAspectFit'}
@@ -365,7 +363,7 @@ class GoLive extends React.Component {
         />
         {liveStatus === LIVE_STATUS.ON_LIVE && mode === 1 && (
           <View style={styles.audioLiveContainer}>
-            <Image source={ic_audio} style={{ width: 24, height: 24 }} />
+            <CachedImage source={ic_audio} style={{ width: 24, height: 24 }} />
           </View>
         )}
 

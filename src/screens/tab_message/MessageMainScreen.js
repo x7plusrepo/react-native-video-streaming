@@ -1,5 +1,5 @@
 import React from 'react';
-import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet,} from 'react-native';
+import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {connect} from 'react-redux';
 

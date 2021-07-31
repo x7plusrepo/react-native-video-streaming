@@ -1,21 +1,15 @@
-import {
-  Image,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import React, { useState } from 'react';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {StyleSheet, Text, TextInput, TouchableOpacity, View} from 'react-native';
+import React, {useState} from 'react';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 import Avatar from '../../components/elements/Avatar';
 import avatars from '../../assets/avatars';
-import { Global } from '../../utils/Global';
-import GStyle, { GStyles } from '../../utils/Global/Styles';
+import {Global} from '../../utils/Global';
+import GStyle, {GStyles} from '../../utils/Global/Styles';
 import styles from './styles';
 
 import ic_close from '../../assets/images/Icons/ic_close.png';
+import CachedImage from '../../components/CachedImage';
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
@@ -80,7 +74,7 @@ const PanelLive = (props) => {
       <View>
         <View style={[GStyles.rowEndContainer, { paddingHorizontal: 16 }]}>
           <TouchableOpacity onPress={onPressCloseAction}>
-            <Image
+            <CachedImage
               style={[[GStyles.actionIcons, { tintColor: 'white' }]]}
               source={ic_close}
               tintColor="white"

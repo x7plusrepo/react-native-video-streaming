@@ -349,7 +349,7 @@ const GStyles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
     borderRadius: 120,
     position: 'absolute',
-  }
+  },
 });
 export default GStyle;
 export { GStyles };

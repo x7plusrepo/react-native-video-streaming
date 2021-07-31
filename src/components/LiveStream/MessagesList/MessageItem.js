@@ -1,7 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
+import CachedImage from '../../CachedImage';
 
 const MessageItem = (props) => {
   const { message } = props;
@@ -21,7 +22,7 @@ const MessageItem = (props) => {
         <Text style={styles.content}>{message?.message}</Text>
       </View>
       {message?.giftIcon && (
-        <Image style={styles.giftIcon} source={{ uri: message.giftIcon }} />
+        <CachedImage style={styles.giftIcon} source={{ uri: message.giftIcon }} />
       )}
     </View>
   );

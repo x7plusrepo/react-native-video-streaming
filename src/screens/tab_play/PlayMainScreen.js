@@ -1,31 +1,17 @@
-import React, { Component } from 'react';
-import {
-  ActivityIndicator,
-  Alert,
-  BackHandler,
-  FlatList,
-  Platform,
-  StatusBar,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {ActivityIndicator, Alert, BackHandler, FlatList, Platform, StatusBar, View} from 'react-native';
 
 import SplashScreen from 'react-native-splash-screen';
-import { connect } from 'react-redux';
+import {connect} from 'react-redux';
 import RBSheet from './../../components/react-native-raw-bottom-sheet';
 
 import RenderPosts from '../../components/posts/RenderPosts';
 import ProgressModal from '../../components/ProgressModal';
 
 import ChatStreamSocketManager from './../../utils/Message/SocketManager';
-import { setMyUserAction } from '../../redux/me/actions';
+import {setMyUserAction} from '../../redux/me/actions';
 
-import {
-  Constants,
-  Global,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, Global, GStyles, Helper, RestAPI} from '../../utils/Global';
 import CommentsScreen from '../details/CommentsScreen';
 
 const SHEET_HEIGHT = Helper.getWindowHeight() * 0.75;

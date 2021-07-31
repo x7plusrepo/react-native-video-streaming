@@ -1,6 +1,6 @@
 import React, {PureComponent} from 'react';
 
-import {Animated, Easing, I18nManager, Image, PanResponder, StyleSheet, Text, View, ViewPropTypes,} from 'react-native';
+import {Animated, Easing, I18nManager, Image, PanResponder, StyleSheet, Text, View, ViewPropTypes} from 'react-native';
 
 import PropTypes from 'prop-types';
 import {GStyles} from '../../utils/Global';

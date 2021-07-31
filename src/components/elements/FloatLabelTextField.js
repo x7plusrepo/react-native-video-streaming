@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Animated, StyleSheet, Text, TextInput, View,} from 'react-native';
+import {Animated, StyleSheet, Text, TextInput, View} from 'react-native';
 
 import {GStyle} from '../../utils/Global';
 

@@ -1,24 +1,15 @@
-import React, { Component } from 'react';
-import {
-  Alert,
-  Dimensions,
-  Image,
-  Platform,
-  SafeAreaView,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Alert, Dimensions, Platform, SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import { RNCamera } from 'react-native-camera';
+import {RNCamera} from 'react-native-camera';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import { Constants, Global, GStyles, Helper } from '../../utils/Global';
-import get from 'lodash/get';
+import {Constants, Global, GStyles, Helper} from '../../utils/Global';
+import CachedImage from '../../components/CachedImage';
 
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 const ic_camera_flip = require('../../assets/images/Icons/ic_camera_flip.png');
@@ -152,7 +143,7 @@ class CameraMainScreen extends Component {
   };
 
   toggleMute = () => {
-    const {isRecording, mute} = this.state;
+    const { isRecording, mute } = this.state;
     if (isRecording) {
       return;
     }
@@ -160,7 +151,7 @@ class CameraMainScreen extends Component {
     this.setState({
       mute: !mute,
     });
-  }
+  };
 
   onPressStartRecord = async () => {
     const { isRecording, maxDuration, mute, quality } = this.state;
@@ -297,30 +288,34 @@ class CameraMainScreen extends Component {
           onPress={this.onBack}
           style={{ ...GStyles.centerAlign, width: 40, height: 40 }}
         >
-          <Image
+          <CachedImage
             source={ic_close}
             style={{ ...GStyles.image, width: 20, tintColor: 'white' }}
+            tintColor="white"
           />
         </TouchableOpacity>
         <View style={{ justifyContent: 'space-between', marginTop: 10 }}>
           <TouchableOpacity onPress={this.toggleFacing}>
-            <Image
+            <CachedImage
               source={ic_camera_flip}
               style={{ ...GStyles.image, width: 28 }}
+              resizeMode="contain"
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={this.toggleFlash}>
-            <Image
+            <CachedImage
               source={
                 flash === 'torch' ? ic_camera_flash_on : ic_camera_flash_off
               }
               style={{ ...GStyles.image, width: 32 }}
+              resizeMode="contain"
             />
           </TouchableOpacity>
           <TouchableOpacity onPress={this.toggleMute}>
-            <Image
+            <CachedImage
               source={mute ? ic_audio_off : ic_audio_on}
               style={{ ...GStyles.image, width: 32 }}
+              resizeMode="contain"
             />
           </TouchableOpacity>
         </View>

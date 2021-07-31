@@ -1,6 +1,6 @@
-import React, { useEffect, useState, Component } from 'react';
-import { Keyboard, Platform, View } from 'react-native';
-import { useNavigation, useRoute } from '@react-navigation/native';
+import React, {Component, useEffect, useState} from 'react';
+import {Keyboard, Platform, View} from 'react-native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import GradientIconButton from './GradientIconButton';
 import MessagesList from '../MessagesList';
@@ -11,7 +11,7 @@ import ic_share from '../../../assets/images/Icons/ic_share.png';
 import ic_gift from '../../../assets/images/Icons/ic_gift.png';
 import heart from '../../../assets/images/gifts/heart.png';
 
-import { GStyles } from '../../../utils/Global/Styles';
+import {GStyles} from '../../../utils/Global/Styles';
 import styles from './styles';
 
 class LiveStreamFooter extends Component {
@@ -48,8 +48,13 @@ class LiveStreamFooter extends Component {
   };
 
   render() {
-    const { mode, method, onPressSendMessage, messages, keyboardHeight } =
-      this.props;
+    const {
+      mode,
+      method,
+      onPressSendMessage,
+      messages,
+      keyboardHeight,
+    } = this.props;
     const bottom = Platform.OS === 'ios' ? keyboardHeight : 16;
 
     return (

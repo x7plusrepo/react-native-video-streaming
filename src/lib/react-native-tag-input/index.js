@@ -5,16 +5,16 @@ import type {StyleObj} from 'react-native/Libraries/StyleSheet/StyleSheetTypes';
 import * as React from 'react';
 import PropTypes from 'prop-types';
 import {
-  Dimensions,
-  Platform,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View,
-  ViewPropTypes,
+    Dimensions,
+    Platform,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+    ViewPropTypes,
 } from 'react-native';
 import invariant from 'invariant';
 

@@ -2,9 +2,9 @@
  * react-native-swiper
  * @author leecade<leecade@163.com>
  */
-import React, {Component} from 'react'
-import PropTypes from 'prop-types'
-import {ActivityIndicator, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View} from 'react-native'
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {ActivityIndicator, Dimensions, Platform, ScrollView, Text, TouchableOpacity, View} from 'react-native';
 
 /**
  * Default styles

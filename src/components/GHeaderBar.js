@@ -1,8 +1,9 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import {Image, ThemeProvider,} from 'react-native-elements';
+import {ThemeProvider} from 'react-native-elements';
 import {GStyle} from '../utils/Global';
+import CachedImage from './CachedImage';
 
 const HeaderBarHeight = 46;
 
@@ -118,7 +119,7 @@ class GHeaderBar extends React.Component {
           paddingLeft: 16,
         }}
       >
-        <Image
+        <CachedImage
           source={LEFT_TYPES[leftType].image}
           style={
             leftType === 'logo'
@@ -133,6 +134,7 @@ class GHeaderBar extends React.Component {
                   resizeMode: 'contain',
                 }
           }
+          resizeMode={'contain'}
         />
       </TouchableOpacity>
     );
@@ -160,7 +162,7 @@ class GHeaderBar extends React.Component {
               {RIGHT_TYPES[rightType].text}
             </Text>
           ) : (
-            <Image
+            <CachedImage
               source={RIGHT_TYPES[rightType].image}
               style={{
                 width: 20,

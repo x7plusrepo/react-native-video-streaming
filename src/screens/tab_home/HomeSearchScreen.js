@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Keyboard, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Keyboard, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 import ScrollableTabView, {DefaultTabBar} from 'rn-collapsing-tab-bar';
@@ -10,6 +10,7 @@ import {TouchableNativeFeedback} from 'react-native-gesture-handler';
 
 import HomeVideoSearch from './HomeVideoSearch';
 import HomeUsersScreen from './HomeUsersScreen';
+import CachedImage from '../../components/CachedImage';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -108,7 +109,7 @@ class HomeSearchScreen extends React.Component {
     return (
       <View style={{ flexDirection: 'row', padding: 16 }}>
         <TouchableOpacity onPress={this.onBack} style={GStyles.centerAlign}>
-          <Image
+          <CachedImage
             source={ic_back}
             style={{ width: 18, height: 18 }}
             resizeMode={'contain'}

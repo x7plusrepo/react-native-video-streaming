@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import {Animated, Easing, I18nManager, Image, PanResponder, Text, TouchableOpacity, View,} from 'react-native';
+import {Animated, Easing, I18nManager, Image, PanResponder, Text, TouchableOpacity, View} from 'react-native';
 
 const styles = {
   button: {

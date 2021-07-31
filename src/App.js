@@ -1,25 +1,26 @@
-import React, { useEffect, useState } from 'react';
-import { Image, Platform, StatusBar, StyleSheet, View } from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {Platform, StatusBar, StyleSheet, View} from 'react-native';
 import branch from 'react-native-branch';
 
-import { Provider } from 'react-redux';
-import { store } from './redux/store';
+import {Provider} from 'react-redux';
+import {store} from './redux/store';
 // import RestAPI from './DB/RestAPI';
 // import Constants from './DB/Constants';
-import { Constants, Helper } from './utils/Global';
+import {Constants, Helper} from './utils/Global';
 
 import OneSignal from 'react-native-onesignal'; // Import package from node modules
 import AppNavigator from './navigation/AppNavigator';
-import { Provider as PaperProvider } from 'react-native-paper';
+import {Provider as PaperProvider} from 'react-native-paper';
 import * as RootNavigation from './utils/Global/RootNavigation';
+import {isReadyRef, navigationRef} from './utils/Global/RootNavigation';
 
-import FlashMessage, { showMessage } from 'react-native-flash-message';
+import FlashMessage, {showMessage} from 'react-native-flash-message';
 import PageLoaderIndicator from '../src/components/PageLoaderIndicator';
 import ic_logo_01 from './assets/images/Icons/ic_logo_01.png';
 import LiveStreamSocketManager from './utils/LiveStream/SocketManager';
 import ChatStreamSocketManager from './utils/Message/SocketManager';
 import GStyle from './utils/Global/Styles';
-import { isReadyRef, navigationRef } from './utils/Global/RootNavigation';
+import CachedImage from './components/CachedImage';
 
 const handleDeepLink = ({ product, roomId, post }) => {
   global._prevScreen = 'deep_link';
@@ -197,7 +198,7 @@ function App() {
           {initLoading && (
             <View style={styles.splashContainer}>
               <StatusBar hidden={true} />
-              <Image source={ic_logo_01} style={styles.logo} />
+              <CachedImage source={ic_logo_01} style={styles.logo} />
             </View>
           )}
         </PaperProvider>

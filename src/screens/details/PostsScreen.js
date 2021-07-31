@@ -1,22 +1,15 @@
-import React, { Component } from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  Platform,
-  StatusBar,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Dimensions, FlatList, Platform, StatusBar, TouchableOpacity, View} from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import ProgressModal from '../../components/ProgressModal';
 import RenderPosts from '../../components/posts/RenderPosts';
 
-import { Global, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {Global, GStyles, Helper, RestAPI} from '../../utils/Global';
 import CommentsScreen from './CommentsScreen';
 import RBSheet from 'react-native-raw-bottom-sheet';
+import CachedImage from '../../components/CachedImage';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -204,7 +197,7 @@ class PostsScreen extends Component {
         style={GStyles.backButtonContainer}
         onPress={this.onBack}
       >
-        <Image
+        <CachedImage
           source={ic_back}
           style={{ width: 16, height: 16, tintColor: 'white' }}
           resizeMode={'contain'}

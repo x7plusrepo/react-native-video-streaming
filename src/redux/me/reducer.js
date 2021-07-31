@@ -1,5 +1,5 @@
-import { handleActions } from 'redux-actions';
-import { SET_USER } from './types';
+import {handleActions} from 'redux-actions';
+import {SET_USER} from './types';
 
 const INITIAL_STATE = {
   user: {},

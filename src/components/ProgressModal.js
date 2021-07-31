@@ -1,5 +1,5 @@
 import React from 'react';
-import {Text, View,} from 'react-native';
+import {Text, View} from 'react-native';
 
 import ProgressBar from '../lib/Progress/Bar';
 import {GStyle, GStyles, Helper} from '../utils/Global';

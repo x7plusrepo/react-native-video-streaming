@@ -1,8 +1,9 @@
 import React, {Component} from 'react';
-import {Image, StyleSheet,} from 'react-native';
+import {StyleSheet} from 'react-native';
 import {SearchBar} from 'react-native-elements';
 
-import {GStyles,} from '../../utils/Global';
+import {GStyles} from '../../utils/Global';
+import CachedImage from '../CachedImage';
 
 const ic_search = require('../../assets/images/Icons/ic_search.png');
 
@@ -23,7 +24,7 @@ export default class SearchBarItem extends Component {
   };
 
   searchImage = () => {
-    return <Image source={ic_search} style={{ width: 16, height: 16 }} />;
+    return <CachedImage source={ic_search} style={{ width: 16, height: 16 }} />;
   };
 
   render() {

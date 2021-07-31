@@ -1,4 +1,4 @@
-import Swiper from './src/'
+import Swiper from './src/';
 
 /**
  * Resolve ES6 and CommonJS compatibility issues

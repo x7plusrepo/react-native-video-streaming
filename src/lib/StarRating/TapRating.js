@@ -4,7 +4,7 @@ import React, {Component} from 'react';
 
 import {StyleSheet, Text, View} from 'react-native';
 
-import Star from './components/Star'
+import Star from './components/Star';
 
 export default class TapRating extends Component {
   static defaultProps = {

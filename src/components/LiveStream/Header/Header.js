@@ -1,12 +1,11 @@
 import React from 'react';
-import {Image, Text, TouchableOpacity, View} from 'react-native';
+import {Text, TouchableOpacity, View} from 'react-native';
 
-import {connect} from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
 import {StackActions, useNavigation} from '@react-navigation/native';
 
 import styles from './styles';
-import {GStyles} from '../../../utils/Global';
+import {GStyles, RestAPI} from '../../../utils/Global';
 import GStyle from '../../../utils/Global/Styles';
 
 import {LIVE_STATUS} from '../../../utils/LiveStream/Constants';
@@ -17,6 +16,7 @@ import ic_close from '../../../assets/images/Icons/ic_close.png';
 
 import avatars from '../../../assets/avatars';
 import Helper from '../../../utils/Global/Util';
+import CachedImage from '../../CachedImage';
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
@@ -33,7 +33,7 @@ class Component extends React.Component {
   }
 
   componentDidMount(): void {
-    this.interval = setInterval(this.onRandomProduct, 20000);
+    this.interval = setInterval(this.onRandomProduct, 30000);
   }
 
   componentWillUnmount(): void {
@@ -42,15 +42,23 @@ class Component extends React.Component {
   }
 
   onRandomProduct = () => {
-    const { products } = this.props;
-    const randomNumber = Math.floor(Math.random() * products.length);
-    const randomProduct = products[randomNumber];
-    this.setState({
-      showingRandomProduct: true,
-      randomProduct,
+    RestAPI.get_random_video({}, (json, err) => {
+      if (err !== null) {
+        Helper.alertNetworkError();
+      } else {
+        if (json.status === 200) {
+          const randomProduct = json?.data || {};
+          this.setState({
+            showingRandomProduct: true,
+            randomProduct,
+          });
+        } else {
+          Helper.alertServerDataError();
+        }
+      }
     });
 
-    this.timer = setTimeout(this.onHideProduct, 10000);
+    this.timer = setTimeout(this.onHideProduct, 15000);
   };
 
   onHideProduct = () => {
@@ -71,9 +79,7 @@ class Component extends React.Component {
 
   onPressVideo = () => {
     const { randomProduct } = this.state;
-    const { products } = this.props;
-    global._selIndex = products.findIndex((obj) => obj.id === randomProduct.id);
-    global._productsList = products;
+    global._productsList = [randomProduct];
     global._prevScreen = 'stream_header';
     const pushAction = StackActions.push('profile_video', null);
     this.props.navigation.dispatch(pushAction);
@@ -127,7 +133,7 @@ class Component extends React.Component {
                 style={styles.userAvatarImage}
                 onPress={this.onPressProfileAction}
               >
-                <Image
+                <CachedImage
                   source={avatarImage}
                   style={{ width: '100%', height: '100%' }}
                 />
@@ -135,18 +141,18 @@ class Component extends React.Component {
             </View>
             <View style={styles.streamInfoWrapper}>
               <View style={styles.infoLabelWrapper}>
-                <Image source={ic_love} style={styles.infoIcon} />
+                <CachedImage source={ic_love} style={styles.infoIcon} />
                 <Text style={styles.archiveText}>{room?.elixir || 0}</Text>
               </View>
               <View style={styles.progressWrapper}>
                 <View style={[styles.infoLabelWrapper, { marginRight: 0 }]}>
-                  <Image source={ic_star} style={styles.infoIcon} />
+                  <CachedImage source={ic_star} style={styles.infoIcon} />
                   <Text style={styles.infoText}>{level} Star</Text>
                 </View>
                 <View style={[styles.progress, { width: progress }]} />
               </View>
               <View style={styles.infoLabelWrapper}>
-                <Image source={ic_flame} style={styles.infoIcon} />
+                <CachedImage source={ic_flame} style={styles.infoIcon} />
                 <Text style={styles.infoText}>{room?.elixirFlame || 0}</Text>
               </View>
             </View>
@@ -156,7 +162,7 @@ class Component extends React.Component {
               style={styles.btnClose}
               onPress={this.onPressClose}
             >
-              <Image
+              <CachedImage
                 style={styles.icoClose}
                 source={ic_close}
                 tintColor="white"
@@ -189,7 +195,7 @@ class Component extends React.Component {
                 height: 120,
               }}
             >
-              <Image
+              <CachedImage
                 source={{ uri: randomProduct?.thumb }}
                 style={{ width: '100%', height: '100%' }}
               />
@@ -219,14 +225,7 @@ class Component extends React.Component {
   }
 }
 
-const Header = (props) => {
+export default (props) => {
   let navigation = useNavigation();
   return <Component {...props} navigation={navigation} />;
 };
-
-export default connect(
-  (state) => ({
-    products: state.products?.products || [],
-  }),
-  {},
-)(Header);

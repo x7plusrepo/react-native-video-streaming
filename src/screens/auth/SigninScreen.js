@@ -1,32 +1,17 @@
 import React from 'react';
-import {
-  Alert,
-  BackHandler,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {Alert, BackHandler, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import MaterialIcon from 'react-native-vector-icons/MaterialIcons';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
-import { TextField } from '../../lib/MaterialTextField/index';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import {TextField} from '../../lib/MaterialTextField/index';
 
-import {
-  Constants,
-  Global,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, Global, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 
 import GHeaderBar from '../../components/GHeaderBar';
-import { connect } from 'react-redux';
-import { setMyUserAction } from '../../redux/me/actions';
+import {connect} from 'react-redux';
+import {setMyUserAction} from '../../redux/me/actions';
 import ChatStreamSocketManager from '../../utils/Message/SocketManager';
+import CachedImage from '../../components/CachedImage';
 
 const image_logo = require('../../assets/images/Icons/ic_logo.png');
 const image_google = require('../../assets/images/Icons/ic_google.png');
@@ -236,9 +221,10 @@ class SigninScreen extends React.Component {
   _renderTitle = () => {
     return (
       <>
-        <Image
+        <CachedImage
           source={image_logo}
           style={[GStyles.image, { width: 54, marginTop: 40 }]}
+          resizeMode="contain"
         />
         <Text style={[GStyles.titleText, { fontSize: 30, lineHeight: 36 }]}>
           Welcome back!
@@ -322,9 +308,10 @@ class SigninScreen extends React.Component {
               Alert.alert('Google Login is clicked.');
             }}
           >
-            <Image
+            <CachedImage
               source={image_google}
               style={[GStyles.image, { width: 45 }]}
+              resizeMode="contain"
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -333,9 +320,10 @@ class SigninScreen extends React.Component {
               Alert.alert('Facebook Login is clicked.');
             }}
           >
-            <Image
+            <CachedImage
               source={image_facebook}
               style={[GStyles.image, { width: 45 }]}
+              resizeMode="contain"
             />
           </TouchableOpacity>
           <TouchableOpacity
@@ -344,9 +332,10 @@ class SigninScreen extends React.Component {
               Alert.alert('Twitter Login is clicked.');
             }}
           >
-            <Image
+            <CachedImage
               source={image_twitter}
               style={[GStyles.image, { width: 45 }]}
+              resizeMode="contain"
             />
           </TouchableOpacity>
         </View>

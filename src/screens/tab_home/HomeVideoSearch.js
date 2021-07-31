@@ -1,6 +1,6 @@
 import React, {forwardRef} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
+import {StackActions, useNavigation, useRoute} from '@react-navigation/native';
 
 import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
 import ProductsList from '../../components/elements/ProductsList';

@@ -1,5 +1,5 @@
 import React, {forwardRef} from 'react';
-import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, View,} from 'react-native';
+import {ActivityIndicator, FlatList, SafeAreaView, StyleSheet, Text, View} from 'react-native';
 import {useNavigation, useRoute} from '@react-navigation/native';
 
 import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';

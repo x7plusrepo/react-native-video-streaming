@@ -1,4 +1,3 @@
-/* eslint-disable */
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import {Animated, StyleSheet, View, ViewPropTypes} from 'react-native';
@@ -22,9 +21,9 @@ class FloatingHearts extends Component {
     this.setState({ hearts: this.state.hearts.filter((heart) => heart.id !== id) });
   }
 
-  componentWillUpdate(nextProps) {
-    const oldCount = this.props.count;
-    const newCount = nextProps.count;
+  componentDidUpdate (prevProps) {
+    const oldCount = prevProps.count;
+    const newCount = this.props.count;
     const numHearts = newCount - oldCount;
 
     if (numHearts <= 0) {
@@ -118,11 +117,11 @@ class AnimatedShape extends Component {
     return {
       transform: [
         { translateY: this.state.position },
-        { translateX: this.xAnimation },
-        { scale: this.scaleAnimation },
-        { rotate: this.rotateAnimation },
+        //{ translateX: this.xAnimation },
+        //{ scale: this.scaleAnimation },
+        //{ rotate: this.rotateAnimation },
       ],
-      opacity: this.opacityAnimation,
+      //opacity: this.opacityAnimation,
     };
   }
 
@@ -135,32 +134,32 @@ class AnimatedShape extends Component {
 
     const height = Math.ceil(this.props.height);
     const negativeHeight = height * -1;
-    const shapeHeight = e.nativeEvent.layout.height;
+    //const shapeHeight = e.nativeEvent.layout.height;
 
-    this.yAnimation = this.state.position.interpolate({
-      inputRange: [negativeHeight, 0],
-      outputRange: [height, 0],
-    });
+    // this.yAnimation = this.state.position.interpolate({
+    //   inputRange: [negativeHeight, 0],
+    //   outputRange: [height, 0],
+    // });
 
-    this.opacityAnimation = this.yAnimation.interpolate({
-      inputRange: [0, height - shapeHeight],
-      outputRange: [1, 0],
-    });
+    // this.opacityAnimation = this.yAnimation.interpolate({
+    //   inputRange: [0, height - shapeHeight],
+    //   outputRange: [1, 0],
+    // });
 
-    this.scaleAnimation = this.yAnimation.interpolate({
-      inputRange: [0, 15, 30, height],
-      outputRange: [0, 1.2, 1, 1],
-    });
+    // this.scaleAnimation = this.yAnimation.interpolate({
+    //   inputRange: [0, 15, 30, height],
+    //   outputRange: [0, 1.2, 1, 1],
+    // });
 
-    this.xAnimation = this.yAnimation.interpolate({
-      inputRange: [0, height / 2, height],
-      outputRange: [0, 15, 0],
-    });
+    // this.xAnimation = this.yAnimation.interpolate({
+    //   inputRange: [0, height / 2, height],
+    //   outputRange: [0, 15, 0],
+    // });
 
-    this.rotateAnimation = this.yAnimation.interpolate({
-      inputRange: [0, height / 4, height / 3, height / 2, height],
-      outputRange: ['0deg', '-2deg', '0deg', '2deg', '0deg'],
-    });
+    // this.rotateAnimation = this.yAnimation.interpolate({
+    //   inputRange: [0, height / 4, height / 3, height / 2, height],
+    //   outputRange: ['0deg', '-2deg', '0deg', '2deg', '0deg'],
+    // });
 
     setTimeout(() => this.setState({ animationsReady: true }), 16);
   };

@@ -1,12 +1,10 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import {NavigationContext, StackActions, useNavigation, useRoute,} from '@react-navigation/native';
-
-import {connect} from 'react-redux';
+import {NavigationContext, StackActions, useNavigation, useRoute} from '@react-navigation/native';
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import {Constants, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
 

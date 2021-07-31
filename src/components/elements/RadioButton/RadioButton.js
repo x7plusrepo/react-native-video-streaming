@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import Proptypes from 'prop-types';
-import {Image, StyleSheet, Text, TouchableWithoutFeedback, View,} from 'react-native';
+import {Image, StyleSheet, Text, TouchableWithoutFeedback, View} from 'react-native';
 import noop from 'lodash.noop';
 import {GStyle} from '../../../utils/Global';
 

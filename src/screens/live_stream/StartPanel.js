@@ -1,10 +1,8 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import styles from './styles';
-import { GStyle } from '../../utils/Global';
-import ScrollableTabView, {
-  DefaultTabBar,
-} from 'react-native-scrollable-tab-view';
+import {GStyle} from '../../utils/Global';
+import ScrollableTabView, {DefaultTabBar} from 'react-native-scrollable-tab-view';
 import PanelLive from './PanelLive';
 
 const StartPanel = ({ onPressStart, liveStatus, onPressClose }) => {

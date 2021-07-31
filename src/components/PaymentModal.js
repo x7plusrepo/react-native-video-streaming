@@ -1,15 +1,15 @@
 import React from 'react';
-import {TouchableOpacity,} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import PropTypes from 'prop-types';
 import {Icon} from 'react-native-elements';
-import Modal from "react-native-modal";
-import GStyle from "../assets/Styles";
-import PaymentScreen from "../screens/PaymentScreen";
+import Modal from 'react-native-modal';
+import GStyle from '../assets/Styles';
+import PaymentScreen from '../screens/PaymentScreen';
 
 export default class PaymentModal extends React.Component {
 
     static propTypes = {
-        
+
         request: PropTypes.object,
         modalVisible : PropTypes.bool,
         onPressBack: PropTypes.func.required,
@@ -37,12 +37,12 @@ export default class PaymentModal extends React.Component {
         </TouchableOpacity>)
 
     }
-    _cardModalViewRender=()=>{ 
-        
-        let post = this.props.request;        
+    _cardModalViewRender=()=>{
+
+        let post = this.props.request;
         if(post === null){
             return null;
-           
+
         }else{
             return <Modal
                 style={{ flex: 1, margin: 0, padding: 0, backgroundColor:GStyle.purpleColor1}}
@@ -72,7 +72,7 @@ export default class PaymentModal extends React.Component {
 
             </Modal>
         }
-        
+
     }
 
     render() {

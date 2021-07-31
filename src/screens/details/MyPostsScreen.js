@@ -1,31 +1,14 @@
 import React from 'react';
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {StackActions, useNavigation, useRoute} from '@react-navigation/native';
 
 import RBSheet from 'react-native-raw-bottom-sheet';
 
-import {
-  Constants,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 import ProductsList from '../../components/elements/ProductsList';
-import PostItem from "../../components/elements/PostItem";
+import PostItem from '../../components/elements/PostItem';
 
 class MyPostsScreen extends React.Component {
   constructor(props) {

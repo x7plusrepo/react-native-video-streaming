@@ -49,7 +49,7 @@ const futch = async (url, opts = {}, onProgress) => {
 
   let response;
   if (opts.method === 'get') {
-    response = await api.get(url, {
+    response = await apiCall(url, {
       params: opts.body,
       headers: opts.headers,
     });

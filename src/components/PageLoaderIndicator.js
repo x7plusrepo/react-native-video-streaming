@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,} from 'react-native';
+import {View} from 'react-native';
 import {BallIndicator} from 'react-native-indicators';
 import PropTypes from 'prop-types';
 

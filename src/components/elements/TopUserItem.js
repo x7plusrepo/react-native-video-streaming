@@ -1,10 +1,11 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {GStyles} from '../../utils/Global';
 import Avatar from './Avatar';
 import avatars from '../../assets/avatars';
 import GStyle from '../../utils/Global/Styles';
+import CachedImage from '../CachedImage';
 
 const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
 const ic_rank_first = require('../../assets/images/Icons/ic_rank_first.png');
@@ -22,7 +23,7 @@ const numberMark = (index) => {
   const icon =
     index === 0 ? ic_rank_first : index === 1 ? ic_rank_second : ic_rank_third;
   return (
-    <Image
+    <CachedImage
       source={icon}
       style={{ width: 36, height: 36 }}
       resizeMode="contain"
@@ -62,7 +63,7 @@ const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
             {displayName}
           </Text>
           <View style={[GStyles.rowContainer, { marginTop: 2 }]}>
-            <Image
+            <CachedImage
               source={icon}
               style={{ width: 16, height: 16, marginRight: 4 }}
               resizeMode="contain"

@@ -1,10 +1,7 @@
 import React from 'react';
 
-import { NavigationContainer } from '@react-navigation/native';
-import {
-  CardStyleInterpolators,
-  createStackNavigator,
-} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {CardStyleInterpolators, createStackNavigator} from '@react-navigation/stack';
 
 import MainTabNavigator from './MainTabNavigator';
 
@@ -28,15 +25,15 @@ import MessageMainScreen from '../screens/tab_message/MessageMainScreen';
 import SavedProductsScreen from '../screens/details/SavedProductsScreen';
 import MyVideoScreen from '../screens/details/MyProductsScreen';
 import MyPostsScreen from '../screens/details/MyPostsScreen';
-import PostsScreen from "../screens/details/PostsScreen";
-import CommentsScreen from "../screens/details/CommentsScreen";
+import PostsScreen from '../screens/details/PostsScreen';
+import CommentsScreen from '../screens/details/CommentsScreen';
 import FansScreen from '../screens/details/FansScreen';
 import FollowingUsersScreen from '../screens/details/FollowingUsersScreen';
 import GoLive from '../screens/live_stream/GoLive';
 import ViewLive from '../screens/live_stream/ViewLive';
 
-import { Helper } from '../utils/Global';
-import { isReadyRef, navigationRef } from './../utils/Global/RootNavigation';
+import {Helper} from '../utils/Global';
+import {isReadyRef, navigationRef} from './../utils/Global/RootNavigation';
 
 // import WorkScreen from '../screens/modal/CProfessionalsSendOfferModal';
 // import WorkScreen from '../screens/auth/FCAccountStep1Screen';

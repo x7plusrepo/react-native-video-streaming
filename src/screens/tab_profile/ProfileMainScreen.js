@@ -1,5 +1,5 @@
 import React from 'react';
-import {Animated, Image, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Animated, Linking, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {connect} from 'react-redux';
 import {useNavigation, useRoute} from '@react-navigation/native';
@@ -9,7 +9,7 @@ import avatars from '../../assets/avatars';
 
 import {setMyUserAction} from '../../redux/me/actions';
 
-import {Constants, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import {Constants, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 
 import ic_tab_liveStream from '../../assets/images/Icons/ic_tab_liveStream.png';
 import ic_chevron_right from '../../assets/images/Icons/ic_chevron_right.png';
@@ -24,6 +24,7 @@ import ic_support from '../../assets/images/Icons/ic_support.png';
 import ic_sign from '../../assets/images/Icons/ic_vip.png';
 import ChatStreamSocketManager from '../../utils/Message/SocketManager';
 import Achievements from '../../components/profile/Achievements';
+import CachedImage from '../../components/CachedImage';
 
 const getMenuItems = (navigation, setMyUserAction) => {
   let menu = [
@@ -251,7 +252,6 @@ class ProfileMainScreen extends React.Component {
               </View>
             </TouchableOpacity>
             <Achievements opponentUser={user} showDiamond={true} />
-
           </Animated.View>
           <Animated.ScrollView
             contentContainerStyle={[
@@ -281,7 +281,7 @@ class ProfileMainScreen extends React.Component {
                     onPress={menu.onPress}
                     key={index.toString()}
                   >
-                    <Image source={menu.icon} style={styles.menuIcon} />
+                    <CachedImage source={menu.icon} style={styles.menuIcon} />
                     <View style={styles.menuRight}>
                       <Text style={GStyles.regularText}>{menu.title}</Text>
                       {unreadCount > 0 && menu.key === 'messages' && (
@@ -296,7 +296,7 @@ class ProfileMainScreen extends React.Component {
                         </View>
                       )}
 
-                      <Image
+                      <CachedImage
                         source={ic_chevron_right}
                         style={styles.chevronRight}
                       />

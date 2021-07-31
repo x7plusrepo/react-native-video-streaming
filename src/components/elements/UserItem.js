@@ -1,10 +1,11 @@
 import React from 'react';
-import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {GStyle, GStyles, Helper} from '../../utils/Global';
 import CheckBox from '../../lib/Checkbox/index';
 import Avatar from './Avatar';
 import Flag from '../../lib/SvgFlagkit/Flag';
+import CachedImage from '../CachedImage';
 
 const ic_favorite_active = require('../../assets/images/Icons/ic_default_avatar.png');
 const ic_favorite_inactive = require('../../assets/images/Icons/ic_default_avatar.png');
@@ -73,7 +74,7 @@ const UserItem = ({ item, onPress, onFavorite }) => {
           </Text>
         </View>
       )}
-      <Image source={membershipImages[item.package]} style={styles.tagImage} />
+      <CachedImage source={membershipImages[item.package]} style={styles.tagImage} />
 
       <View style={[GStyles.shadow, { marginLeft: 16, marginTop: 16 }]}>
         <View style={styles.descriptionContainer}>
@@ -120,9 +121,10 @@ const UserItem = ({ item, onPress, onFavorite }) => {
             </Text>
           </View>
           <View style={[GStyles.rowContainer, { marginTop: 10 }]}>
-            <Image
+            <CachedImage
               source={ic_mini_star}
               style={[GStyles.image, { width: 16 }]}
+              resizeMode="contain"
             />
             <Text
               style={[
@@ -142,9 +144,10 @@ const UserItem = ({ item, onPress, onFavorite }) => {
             </Text>
           </View>
           <View style={[GStyles.rowContainer, { marginTop: 10 }]}>
-            <Image
+            <CachedImage
               source={ic_mini_hourly_rate}
               style={[GStyles.image, { width: 16 }]}
+              resizeMode="contain"
             />
             <Text style={[GStyles.mediumText, { fontSize: 13, marginLeft: 8 }]}>
               {item.hourly_rate}/hr

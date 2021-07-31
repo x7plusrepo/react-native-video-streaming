@@ -1,9 +1,10 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image, TouchableOpacity } from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import TimeAgo from 'javascript-time-ago';
 import en from 'javascript-time-ago/locale/en';
 import avatars from '../../assets/avatars';
-import Avatar from "../elements/Avatar";
+import Avatar from '../elements/Avatar';
+
 TimeAgo.addLocale(en);
 const timeAgo = new TimeAgo('en-US');
 

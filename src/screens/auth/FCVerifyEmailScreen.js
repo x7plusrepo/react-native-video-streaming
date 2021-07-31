@@ -1,5 +1,5 @@
 import React from 'react';
-import {Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Alert, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
 

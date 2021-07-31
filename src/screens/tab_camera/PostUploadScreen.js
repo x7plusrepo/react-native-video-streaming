@@ -1,38 +1,23 @@
 import React from 'react';
-import {
-  BackHandler,
-  Image,
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {BackHandler, SafeAreaView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
-import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
-import { launchImageLibrary } from 'react-native-image-picker';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import {launchImageLibrary} from 'react-native-image-picker';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import { Button, Dialog, Paragraph, Portal } from 'react-native-paper';
-import { createThumbnail } from 'react-native-create-thumbnail';
+import {Button, Dialog, Paragraph, Portal} from 'react-native-paper';
+import {createThumbnail} from 'react-native-create-thumbnail';
 import RNFS from 'react-native-fs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 import GHeaderBar from '../../components/GHeaderBar';
-import { TextField } from '../../lib/MaterialTextField/index';
-import {
-  Constants,
-  Global,
-  GStyle,
-  GStyles,
-  Helper,
-  RestAPI,
-} from '../../utils/Global';
+import {TextField} from '../../lib/MaterialTextField/index';
+import {Constants, Global, GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 
 import upload_icon from './../../assets/images/Icons/ic_upload_video.png';
-import convertToProxyURL from 'react-native-video-cache';
 import Video from 'react-native-video';
+import CachedImage from '../../components/CachedImage';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 
@@ -361,12 +346,12 @@ class PostUploadScreen extends React.Component {
         <View style={styles.uploadSub}>
           {!!videoUri && !!thumbUri ? (
             <View style={styles.thumbContainer}>
-              <Image source={{ uri: thumbUri }} style={styles.thumb} />
+              <CachedImage source={{ uri: thumbUri }} style={styles.thumb} />
               <Text style={styles.fileName}>{videoName}</Text>
             </View>
           ) : (
             <View>
-              <Image source={upload_icon} style={styles.thumb} />
+              <CachedImage source={upload_icon} style={styles.thumb} />
             </View>
           )}
         </View>

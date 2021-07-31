@@ -1,7 +1,7 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, View} from 'react-native';
 
-import {StackActions, useNavigation, useRoute,} from '@react-navigation/native';
+import {StackActions, useNavigation, useRoute} from '@react-navigation/native';
 
 import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';

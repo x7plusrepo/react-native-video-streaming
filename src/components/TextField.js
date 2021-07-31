@@ -1,6 +1,6 @@
-import React, { useRef } from 'react';
+import React, {useRef} from 'react';
 
-import { Keyboard, TextInput } from 'react-native';
+import {Keyboard, TextInput} from 'react-native';
 
 const TextField = (props) => {
   const inputRef = useRef(null);

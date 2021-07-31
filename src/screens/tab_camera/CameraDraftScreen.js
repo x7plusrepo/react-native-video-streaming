@@ -1,7 +1,7 @@
 import React from 'react';
 import {Alert, SafeAreaView, StyleSheet, View} from 'react-native';
 
-import {NavigationContext, useNavigation, useRoute,} from '@react-navigation/native';
+import {NavigationContext, useNavigation, useRoute} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
 
 import {Constants, GStyles, Helper} from '../../utils/Global';

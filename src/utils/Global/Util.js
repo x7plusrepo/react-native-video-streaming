@@ -1,9 +1,8 @@
-import {Alert, Dimensions, PermissionsAndroid, Platform, StatusBar,} from 'react-native';
+import {Alert, Dimensions, PermissionsAndroid, Platform} from 'react-native';
 
-import {PERMISSIONS, requestMultiple, RESULTS,} from 'react-native-permissions';
+import {PERMISSIONS, requestMultiple, RESULTS} from 'react-native-permissions';
 import AsyncStorage from '@react-native-community/async-storage';
 import Moment from 'moment';
-import changeNavigationBarColor from 'react-native-navigation-bar-color';
 import StaticSafeAreaInsets from 'react-native-static-safe-area-insets';
 import RNFS from 'react-native-fs';
 import DeviceInfo from 'react-native-device-info';
@@ -582,6 +581,12 @@ const Helper = {
     const current = elixir - lvlElixir;
     return target <= 0 ? '100%' : `${Math.min(100, (current * 100) / target)}%`;
   },
+  normalizeImageSource: (imageSource) => {
+    let source = imageSource || {};
+    let uri = source?.uri || '';
+    source.uri = uri === 'null' || uri === 'undefined' ? '' : uri;
+    return source;
+  }
 };
 
 export default Helper;

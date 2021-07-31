@@ -1,8 +1,9 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
-import { Constants, GStyle, GStyles, Helper } from '../../utils/Global';
+import {Constants, GStyles, Helper} from '../../utils/Global';
+import CachedImage from '../CachedImage';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;
@@ -18,7 +19,7 @@ const ExploreVideoItem = ({ item, index, onPress, onLongPress }) => {
       }}
       style={[styles.container, index % 2 === 0 && { marginRight: 0 }]}
     >
-      <FastImage
+      <CachedImage
         source={{
           uri: item?.thumb || '',
         }}
@@ -70,6 +71,7 @@ const styles = StyleSheet.create({
   image: {
     width: '100%',
     aspectRatio: 1,
+    backgroundColor: '#ccc',
   },
   icons: {
     width: 16,

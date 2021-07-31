@@ -1,18 +1,7 @@
 import React from 'react';
-import {
-  Image,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import {ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import {
-  StackActions,
-  useNavigation,
-  useRoute,
-} from '@react-navigation/native';
+import {StackActions, useNavigation, useRoute} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
 import LinearGradient from 'react-native-linear-gradient';
 
@@ -20,8 +9,9 @@ import Avatar from '../../../components/elements/Avatar';
 import Achievements from '../../profile/Achievements';
 import PlaceHolder from '../../profile/PlaceHolder';
 
-import { GStyle, GStyles, Helper, RestAPI } from '../../../utils/Global';
+import {GStyle, GStyles, Helper, RestAPI} from '../../../utils/Global';
 import avatars from '../../../assets/avatars';
+import CachedImage from '../../CachedImage';
 
 const ic_plus_1 = require('../../../assets/images/Icons/ic_plus_1.png');
 const ic_message = require('../../../assets/images/Icons/ic_menu_messages.png');
@@ -199,7 +189,7 @@ class ProfileBottom extends React.Component {
               style={styles.followButtonWrapper}
               onPress={this.onChangeLike}
             >
-              <Image
+              <CachedImage
                 source={ic_plus_1}
                 style={[styles.buttonIcons, { tintColor: 'white' }]}
                 tintColor="white"
@@ -212,7 +202,7 @@ class ProfileBottom extends React.Component {
               style={styles.chatButtonWrapper}
               onPress={this.onPressChat}
             >
-              <Image source={ic_message} style={styles.buttonIcons} />
+              <CachedImage source={ic_message} style={styles.buttonIcons} />
               <Text
                 style={[GStyles.regularText, { color: GStyle.activeColor }]}
               >

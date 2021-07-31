@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import {
   Dimensions,
-  Image,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -13,6 +12,7 @@ import { Constants, GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
 import Helper from '../../utils/Global/Util';
+import CachedImage from '../CachedImage';
 
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
@@ -91,12 +91,13 @@ const RenderProducts = (props) => {
                   }}
                   style={[GStyles.videoActionButton]}
                 >
-                  <Image
+                  <CachedImage
                     source={heart}
                     style={{
                       ...GStyles.actionIcons,
                       tintColor: isLike ? GStyle.primaryColor : 'white',
                     }}
+                    tintColor={isLike ? GStyle.primaryColor : 'white'}
                   />
                 </TouchableOpacity>
                 <Text style={GStyles.textSmall}>
@@ -110,7 +111,7 @@ const RenderProducts = (props) => {
                     }}
                     style={GStyles.videoActionButton}
                   >
-                    <Image
+                    <CachedImage
                       source={ic_menu_messages}
                       style={GStyles.actionIcons}
                     />
@@ -123,7 +124,7 @@ const RenderProducts = (props) => {
                   }}
                   style={GStyles.videoActionButton}
                 >
-                  <Image source={ic_share} style={GStyles.actionIcons} />
+                  <CachedImage source={ic_share} style={GStyles.actionIcons} />
                 </TouchableOpacity>
               </View>
             </View>
@@ -133,14 +134,14 @@ const RenderProducts = (props) => {
                   <Text style={GStyles.playInfoText}>৳{item.price}</Text>
                 </View>
                 <View style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}>
-                  <Image
+                  <CachedImage
                     source={ic_support}
                     style={{ width: 12, height: 12, marginRight: 4 }}
                   />
                   <Text style={GStyles.playInfoText}>01913379598 </Text>
                 </View>
                 <View style={[GStyles.playInfoTextWrapper, { marginLeft: 10 }]}>
-                  <Image
+                  <CachedImage
                     source={ic_diamond}
                     style={{ width: 12, height: 12, marginRight: 4 }}
                   />
@@ -188,7 +189,7 @@ const RenderProducts = (props) => {
             </View>
           </View>
           <View style={styles.viewCount}>
-            <Image
+            <CachedImage
               source={eye}
               style={styles.viewCountIcon}
               tintColor="white"

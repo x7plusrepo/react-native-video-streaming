@@ -1,15 +1,11 @@
 import React from 'react';
-import { Platform } from 'react-native';
+import {Platform} from 'react-native';
 import branch from 'react-native-branch';
-import {
-  RESULTS,
-  PERMISSIONS,
-  requestMultiple,
-  requestNotifications,
-} from 'react-native-permissions';
+import {PERMISSIONS, requestMultiple, requestNotifications, RESULTS} from 'react-native-permissions';
 import axios from 'axios';
 
-import { Helper, RestAPI } from './index';
+import Helper from './Util';
+import RestAPI from './RestAPI';
 
 const Global = {
   email: '',
@@ -269,7 +265,6 @@ const Global = {
       return '';
     }
   },
-
 };
 
 export default Global;

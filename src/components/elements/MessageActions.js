@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {StyleSheet, Text, TouchableOpacity, View, ViewPropTypes,} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View, ViewPropTypes} from 'react-native';
 
 import PropTypes from 'prop-types';
 //import Geolocation from '@react-native-community/geolocation';

@@ -1,7 +1,7 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
-import {GStyle, GStyles,} from '../../utils/Global';
+import {GStyle, GStyles} from '../../utils/Global';
 
 export default SectionHeader = ({title, count, onPress}) => (
   <View style={styles.titleContainer}>

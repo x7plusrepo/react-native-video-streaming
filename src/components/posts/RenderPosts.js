@@ -1,19 +1,13 @@
-import React, { useState, useRef } from 'react';
-import {
-  Dimensions,
-  Image,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {useState} from 'react';
+import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import Video from 'react-native-video';
 import convertToProxyURL from 'react-native-video-cache';
 
-import { GStyle, GStyles } from '../../utils/Global';
+import {GStyle, GStyles} from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
 import Helper from '../../utils/Global/Util';
+import CachedImage from '../CachedImage';
 
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
@@ -120,13 +114,13 @@ const RenderPosts = (props) => {
                 }}
                 style={[GStyles.videoActionButton]}
               >
-                <Image
+                <CachedImage
                   source={heart}
                   style={{
                     ...GStyles.actionIcons,
                     tintColor: isLike ? GStyle.primaryColor : 'white',
                   }}
-                  tintColor="white"
+                  tintColor={isLike ? GStyle.primaryColor : 'white'}
                 />
               </TouchableOpacity>
               <Text style={GStyles.textSmall}>
@@ -136,7 +130,7 @@ const RenderPosts = (props) => {
                 onPress={onPressComments}
                 style={GStyles.videoActionButton}
               >
-                <Image
+                <CachedImage
                   source={ic_comment}
                   style={GStyles.actionIcons}
                   tintColor={'white'}
@@ -150,7 +144,7 @@ const RenderPosts = (props) => {
                 }}
                 style={GStyles.videoActionButton}
               >
-                <Image
+                <CachedImage
                   source={ic_share}
                   style={GStyles.actionIcons}
                   tintColor={'white'}
@@ -172,7 +166,7 @@ const RenderPosts = (props) => {
             </View>
           </View>
           <View style={styles.viewCount}>
-            <Image
+            <CachedImage
               source={eye}
               style={styles.viewCountIcon}
               tintColor="white"

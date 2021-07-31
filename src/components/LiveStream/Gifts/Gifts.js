@@ -1,10 +1,11 @@
 import React, {Component} from 'react';
-import {FlatList, Image, Text, TouchableOpacity, View} from 'react-native';
+import {FlatList, Text, TouchableOpacity, View} from 'react-native';
 import styles from './styles';
 import {GStyle} from '../../../utils/Global';
 import {GStyles} from '../../../utils/Global/Styles';
 import diamond from './../../../assets/images/Icons/ic_diamond.png';
 import {connect} from 'react-redux';
+import CachedImage from '../../CachedImage';
 
 class Gifts extends Component {
   constructor(props) {
@@ -37,14 +38,14 @@ class Gifts extends Component {
         ]}
         onPress={() => this.setSelectedGift(item)}
       >
-        <Image source={{ uri: item.icon }} style={styles.giftIcon} />
+        <CachedImage source={{ uri: item.icon }} style={styles.giftIcon} />
         <Text
           style={[GStyles.textSmall, { marginVertical: 8, color: 'black' }]}
         >
           {item.name}
         </Text>
         <View style={GStyles.rowContainer}>
-          <Image source={diamond} style={styles.diamondIcon} />
+          <CachedImage source={diamond} style={styles.diamondIcon} />
           <Text style={[GStyles.textExtraSmall, { color: GStyle.redColor }]}>
             {item.diamond || 0}
           </Text>

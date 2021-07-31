@@ -1,6 +1,6 @@
-import React, {Component} from "react";
-import {Animated, StyleSheet, Text, TouchableWithoutFeedback} from "react-native";
-import PropTypes from "prop-types";
+import React, {Component} from 'react';
+import {Animated, StyleSheet, Text, TouchableWithoutFeedback} from 'react-native';
+import PropTypes from 'prop-types';
 
 export class Switch extends Component {
   static propTypes = {

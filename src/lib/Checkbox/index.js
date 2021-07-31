@@ -1,15 +1,15 @@
-import React, {PureComponent} from 'react'
-import PropTypes from 'prop-types'
+import React, {PureComponent} from 'react';
+import PropTypes from 'prop-types';
 import {
-  Image,
-  Platform,
-  StyleSheet,
-  Text,
-  TouchableNativeFeedback,
-  TouchableOpacity,
-  TouchableWithoutFeedback,
-  View
-} from 'react-native'
+    Image,
+    Platform,
+    StyleSheet,
+    Text,
+    TouchableNativeFeedback,
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View,
+} from 'react-native';
 
 class Checkbox extends PureComponent {
   state = {

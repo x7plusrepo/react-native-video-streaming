@@ -1,14 +1,22 @@
 import React from 'react';
-import {Image} from 'react-native';
+import MaterialIcon from 'react-native-vector-icons/FontAwesome';
 
 const HeartShape = () => {
+  // return (
+  //   <CachedImage
+  //     source={require('../../../assets/images/Icons/ico_heart.png')}
+  //     style={{
+  //       width: 40,
+  //       height: 40,
+  //     }}
+  //   />
+  // );
   return (
-    <Image
-      source={require('../../../assets/images/Icons/ico_heart.png')}
-      style={{
-        width: 40,
-        height: 40,
-      }}
+    <MaterialIcon
+      size={36}
+      name={'heart'}
+      color={'red'}
+      suppressHighlighting={true}
     />
   );
 };

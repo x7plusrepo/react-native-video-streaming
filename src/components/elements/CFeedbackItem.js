@@ -1,5 +1,5 @@
 import React from 'react';
-import {Image, Text, View,} from 'react-native';
+import {Image, Text, View} from 'react-native';
 
 import {GStyle, GStyles} from '../../utils/Global';
 import {AirbnbRating} from '../../lib/StarRating/index';

@@ -1,15 +1,7 @@
-import React, { Component } from "react";
-import PropTypes from "prop-types";
-import {
-  View,
-  KeyboardAvoidingView,
-  Modal,
-  TouchableOpacity,
-  Animated,
-  PanResponder,
-  Platform
-} from "react-native";
-import styles from "./style";
+import React, {Component} from 'react';
+import PropTypes from 'prop-types';
+import {Animated, Modal, PanResponder, Platform, TouchableOpacity, View} from 'react-native';
+import styles from './style';
 
 const SUPPORTED_ORIENTATIONS = [
   "portrait",

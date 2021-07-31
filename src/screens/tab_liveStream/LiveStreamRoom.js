@@ -10,6 +10,7 @@ import ic_eye from '../../assets/images/Icons/ic_eye.png';
 import ic_group from '../../assets/images/Icons/ic_group.png';
 import ico_play from '../../assets/images/Icons/ico_play.png';
 import ic_audio_on from '../../assets/images/Icons/ic_audio_on.png';
+import CachedImage from '../../components/CachedImage';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 const ITEM_WIDTH = (WINDOW_WIDTH - 24 - 12) / 2;
@@ -46,20 +47,25 @@ const LiveStreamRoom = (props) => {
       <View style={styles.infoWrapper}>
         <View style={styles.top}>
           <View style={[styles.row, styles.multiGuest]}>
-            <Image source={streamModeIcon} style={styles.icons} />
+            <CachedImage source={streamModeIcon} style={styles.icons} />
             <Text style={styles.viewersCount}>{streamMode}</Text>
           </View>
           <View style={styles.row}>
-            <Image
+            <CachedImage
               source={ic_eye}
-              style={[styles.icons, { tintColor: 'white' }]}
+              style={styles.icons}
+              tintColor="white"
             />
             <Text style={styles.viewersCount}>{viewerCount}</Text>
           </View>
         </View>
         <View style={styles.bottom}>
           <View style={styles.row}>
-            <Image source={ic_speaker} style={styles.icons} />
+            <CachedImage
+              source={ic_speaker}
+              style={styles.icons}
+              tintColor="white"
+            />
             <View style={{ flexShrink: 1 }}>
               <Text
                 style={GStyles.textSmall}
@@ -133,6 +139,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     marginRight: 4,
+    tintColor: 'white',
   },
   multiGuest: {
     paddingVertical: 4,

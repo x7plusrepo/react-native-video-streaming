@@ -1,5 +1,5 @@
 import React from 'react';
-import {View,} from 'react-native';
+import {View} from 'react-native';
 
 import {GStyle} from '../utils/Global';
 import {SkypeIndicator} from 'react-native-indicators';

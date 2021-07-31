@@ -1,18 +1,19 @@
-import React, { useEffect } from 'react';
-import { Image, StyleSheet } from 'react-native';
+import React, {useEffect} from 'react';
+import {StyleSheet} from 'react-native';
 
-import { GStyle, Helper, RestAPI } from '../utils/Global';
+import {Helper, RestAPI} from '../utils/Global';
 import TopUsersScreen from '../screens/tab_top/TopUsersScreen';
 import HomeMainScreen from '../screens/tab_home/HomeMainScreen';
 import BrowseRooms from '../screens/tab_liveStream/BrowseRooms';
 import ProfileMainScreen from '../screens/tab_profile/ProfileMainScreen';
 
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 
-import { connect } from 'react-redux';
-import { setUnreadCount } from '../redux/message/actions';
+import {connect} from 'react-redux';
+import {setUnreadCount} from '../redux/message/actions';
 import avatars from '../assets/avatars';
 import PlayMainScreen from '../screens/tab_play/PlayMainScreen';
+import CachedImage from '../components/CachedImage';
 
 const ic_tab_play = require('../assets/images/Icons/ic_tab_play.png');
 const ic_tab_home = require('../assets/images/Icons/ic_gift.png');
@@ -67,7 +68,7 @@ const MainTabNavigator = (props) => {
         options={{
           tabBarLabel: 'Top',
           tabBarIcon: ({ color, size }) => (
-            <Image source={ic_tab_top} style={styles.tabIconImage} />
+            <CachedImage source={ic_tab_top} style={styles.tabIconImage} />
           ),
         }}
       />
@@ -77,7 +78,7 @@ const MainTabNavigator = (props) => {
         options={{
           tabBarLabel: 'Play',
           tabBarIcon: ({ color, size }) => (
-            <Image source={ic_tab_play} style={[styles.tabIconImage]} />
+            <CachedImage source={ic_tab_play} style={[styles.tabIconImage]} />
           ),
         }}
       />
@@ -87,7 +88,7 @@ const MainTabNavigator = (props) => {
         options={{
           tabBarLabel: 'Home',
           tabBarIcon: ({ color, size }) => (
-            <Image source={ic_tab_home} style={styles.tabIconImage} />
+            <CachedImage source={ic_tab_home} style={styles.tabIconImage} />
           ),
         }}
       />
@@ -97,7 +98,10 @@ const MainTabNavigator = (props) => {
         options={{
           tabBarLabel: 'LiveStream',
           tabBarIcon: ({ color, size }) => (
-            <Image source={ic_tab_liveStream} style={styles.tabIconImage} />
+            <CachedImage
+              source={ic_tab_liveStream}
+              style={styles.tabIconImage}
+            />
           ),
           tabBarBadgeStyle: { backgroundColor: 'red' },
         }}
@@ -121,7 +125,7 @@ const MainTabNavigator = (props) => {
 
             const avatarImage = { uri: global.me?.photo ?? randomImageUrl };
             return (
-              <Image
+              <CachedImage
                 source={avatarImage}
                 style={[styles.tabIconImage, styles.profileIcon]}
               />

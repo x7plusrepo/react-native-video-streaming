@@ -1,20 +1,13 @@
-import React, { Component } from 'react';
-import {
-  Dimensions,
-  FlatList,
-  Image,
-  Platform,
-  StatusBar,
-  TouchableOpacity,
-  View,
-} from 'react-native';
+import React, {Component} from 'react';
+import {Dimensions, FlatList, Platform, StatusBar, TouchableOpacity, View} from 'react-native';
 
-import { useNavigation, useRoute } from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 
 import ProgressModal from '../../components/ProgressModal';
 
-import { Global, GStyles, Helper, RestAPI } from '../../utils/Global';
+import {Global, GStyles, Helper, RestAPI} from '../../utils/Global';
 import RenderProducts from '../../components/products/RenderProduct';
+import CachedImage from '../../components/CachedImage';
 
 const ic_back = require('../../assets/images/Icons/ic_back.png');
 
@@ -72,7 +65,6 @@ class ProfileVideoScreen extends Component {
             device_type: Platform.OS === 'ios' ? '1' : '0',
             device_identifier: global._deviceId,
           };
-
           RestAPI.update_video_view(params, (json, err) => {});
         }
       }
@@ -106,7 +98,7 @@ class ProfileVideoScreen extends Component {
       item.isLiked = isChecked;
       const params = {
         user_id: global.me?.id,
-        video_id: item.id,
+        video_id: item.id || item._id,
         is_like: isChecked,
       };
       this.setState({ isLiking: true });
@@ -167,7 +159,7 @@ class ProfileVideoScreen extends Component {
         style={GStyles.backButtonContainer}
         onPress={this.onBack}
       >
-        <Image
+        <CachedImage
           source={ic_back}
           style={{ width: 16, height: 16, tintColor: 'white' }}
           resizeMode={'contain'}

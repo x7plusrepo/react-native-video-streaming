@@ -1,15 +1,8 @@
-import React, { Component } from 'react';
-import {
-  Alert,
-  Image,
-  SafeAreaView,
-  StatusBar,
-  TouchableOpacity,
-  View,
-} from 'react-native';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {Alert, SafeAreaView, StatusBar, TouchableOpacity, View} from 'react-native';
+import {connect} from 'react-redux';
 import get from 'lodash/get';
-import { NodePlayerView } from 'react-native-nodemediaclient';
+import {NodePlayerView} from 'react-native-nodemediaclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import KeepAwake from 'react-native-keep-awake';
 
@@ -20,12 +13,13 @@ import Gifts from '../../components/LiveStream/Gifts';
 import Header from '../../components/LiveStream/Header';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
 
-import { setGifts } from '../../redux/liveStream/actions';
-import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
-import { Constants, Global, RestAPI } from '../../utils/Global';
+import {setGifts} from '../../redux/liveStream/actions';
+import {LIVE_STATUS} from '../../utils/LiveStream/Constants';
+import {Constants, Global, RestAPI} from '../../utils/Global';
 import styles from './styles';
 import ic_audio from '../../assets/images/Icons/ic_audio_on.png';
-import { setMyUserAction } from '../../redux/me/actions';
+import {setMyUserAction} from '../../redux/me/actions';
+import CachedImage from '../../components/CachedImage';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -65,6 +59,7 @@ class ViewLive extends Component {
         this.setState({ room }, this.init);
       }
     });
+
     RestAPI.get_gifts({ userId: this.props.user?.id }, (json, error) => {
       if (json?.status === 200 || json?.data) {
         this.props.setGifts(json.data.gifts || []);
@@ -366,7 +361,7 @@ class ViewLive extends Component {
           {this.renderNodePlayerView()}
           {mode === 1 && (
             <View style={styles.audioLiveContainer}>
-              <Image source={ic_audio} style={{ width: 24, height: 24 }} />
+              <CachedImage source={ic_audio} style={{ width: 24, height: 24 }} />
             </View>
           )}
           <View style={styles.contentWrapper}>

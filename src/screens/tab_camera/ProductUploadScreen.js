@@ -1,24 +1,39 @@
 import React from 'react';
-import {Alert, BackHandler, Platform, SafeAreaView, Text, TouchableOpacity, View } from 'react-native';
+import {
+  Alert,
+  BackHandler,
+  Platform,
+  SafeAreaView,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import CheckBox from 'react-native-check-box';
 
-import {useNavigation, useRoute} from '@react-navigation/native';
-import {KeyboardAwareScrollView} from '@codler/react-native-keyboard-aware-scroll-view';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { KeyboardAwareScrollView } from '@codler/react-native-keyboard-aware-scroll-view';
 import DropDownPicker from 'react-native-dropdown-picker';
 
 import ProgressBar from '../../lib/Progress/Bar';
-import {Button, Dialog, Paragraph, Portal} from 'react-native-paper';
-import {createThumbnail} from 'react-native-create-thumbnail';
+import { Button, Dialog, Paragraph, Portal } from 'react-native-paper';
+import { createThumbnail } from 'react-native-create-thumbnail';
 import TagInput from '../../lib/react-native-tag-input/index';
 import RNFS from 'react-native-fs';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
-import {TextField} from '../../lib/MaterialTextField/index';
-import {Constants, Global, GStyle, GStyles, Helper, RestAPI,} from '../../utils/Global';
+import { TextField } from '../../lib/MaterialTextField/index';
+import {
+  Constants,
+  Global,
+  GStyle,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global';
 import GHeaderBar from '../../components/GHeaderBar';
 
-import {connect} from 'react-redux';
-import {setCategories} from '../../redux/categories/actions';
+import { connect } from 'react-redux';
+import { setCategories } from '../../redux/categories/actions';
 
 const WINDOW_WIDTH = Helper.getWindowWidth();
 
@@ -39,8 +54,9 @@ class ProductUploadScreen extends React.Component {
 
     this.init();
     this.setOpenCategoryDropdown = this.setOpenCategoryDropdown.bind(this);
-    this.setOpenSubCategoryDropdown =
-      this.setOpenSubCategoryDropdown.bind(this);
+    this.setOpenSubCategoryDropdown = this.setOpenSubCategoryDropdown.bind(
+      this,
+    );
     this.setCategories = this.setCategories.bind(this);
     this.setCategory = this.setCategory.bind(this);
     this.setSubCategories = this.setSubCategories.bind(this);
@@ -48,7 +64,6 @@ class ProductUploadScreen extends React.Component {
   }
 
   componentDidMount() {
-
     this.onRefresh();
 
     this.backHandler = BackHandler.addEventListener(
@@ -95,7 +110,7 @@ class ProductUploadScreen extends React.Component {
   ): void {
     if (prevProps.categories !== this.props.categories) {
       const categories = this.props.categories
-        ?.filter((category) => !!!category.parent)
+        ?.filter((category) => !category.parent)
         ?.map((category) => ({
           label: category?.title,
           value: category?.id,
@@ -173,7 +188,6 @@ class ProductUploadScreen extends React.Component {
       openCategoryDropdown: false,
       openSubCategoryDropdown: false,
     };
-
 
     this.initRef();
   };
@@ -413,6 +427,8 @@ class ProductUploadScreen extends React.Component {
   };
 
   onPressUploadVideo = async () => {
+    const { isPermanent } = this.state;
+
     this.setState({ isVisibleDialog: false });
     let imageName = Helper.getFile4Path(global._thumbUri);
     const imageSource = {
@@ -429,12 +445,12 @@ class ProductUploadScreen extends React.Component {
     global.showForcePageLoader(true);
     const uploadedThumbUrl = await Global.uploadToCloudinary(
       imageSource,
-      'temporary/productImages',
+      isPermanent ? 'permanent/productImages' : 'temporary/productImages',
     );
     if (uploadedThumbUrl) {
       const uploadedVideoUrl = await Global.uploadToCloudinary(
         videoSource,
-        'temporary/products',
+        isPermanent ? 'permanent/products' : 'temporary/products',
       );
       if (uploadedVideoUrl) {
         this.setState(

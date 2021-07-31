@@ -1,8 +1,9 @@
 import React from 'react';
-import {Image, StyleSheet, TouchableOpacity, View} from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import FastImage from 'react-native-fast-image';
 import GStyle from '../../utils/Global/Styles';
+import CachedImage from '../CachedImage';
 
 const ic_mini_call = require('../../assets/images/Icons/ic_mini_call.png');
 const ic_mini_chat = require('../../assets/images/Icons/ic_mini_chat.png');
@@ -56,7 +57,7 @@ const Avatar = ({
         onPress={onPress ? onPress : defaults.onPress}
         disabled={!!!onPress}
       >
-        <FastImage
+        <CachedImage
           source={{
             uri: image?.uri?.toString() || '',
             priority: FastImage.priority.normal,
@@ -86,7 +87,7 @@ const Avatar = ({
           />
         )}
         {interviewType && (
-          <Image
+          <CachedImage
             source={interviewImage[interviewType]}
             style={{
               width: 24,

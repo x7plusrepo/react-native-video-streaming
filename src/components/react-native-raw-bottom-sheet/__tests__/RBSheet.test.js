@@ -1,8 +1,8 @@
-import React from "react";
-import { View, Text, Modal, TouchableOpacity, Animated } from "react-native";
-import Enzyme, { shallow } from "enzyme";
-import Adapter from "enzyme-adapter-react-16";
-import RBSheet from "../src";
+import React from 'react';
+import {Animated, Modal, Text, TouchableOpacity, View} from 'react-native';
+import Enzyme, {shallow} from 'enzyme';
+import Adapter from 'enzyme-adapter-react-16';
+import RBSheet from '../src';
 
 Enzyme.configure({ adapter: new Adapter() });
 

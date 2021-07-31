@@ -1,8 +1,9 @@
 import React from 'react';
-import {Image, TouchableOpacity} from 'react-native';
+import {TouchableOpacity} from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from './styles';
 import {GStyles} from '../../../utils/Global/Styles';
+import CachedImage from '../../CachedImage';
 
 const GradientIconButton = (props) => {
   const { icon, onPress, containerStyle, iconStyle } = props;
@@ -16,7 +17,7 @@ const GradientIconButton = (props) => {
         ]}
         style={styles.gradient}
       >
-        <Image source={icon} style={[GStyles.actionIcons, iconStyle]} />
+        <CachedImage source={icon} style={[GStyles.actionIcons, iconStyle]} />
       </LinearGradient>
     </TouchableOpacity>
   );

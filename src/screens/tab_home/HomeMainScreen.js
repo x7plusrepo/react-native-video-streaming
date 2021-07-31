@@ -1,14 +1,15 @@
 import React from 'react';
-import {Image, SafeAreaView, StyleSheet, TouchableOpacity, View,} from 'react-native';
+import {SafeAreaView, StyleSheet, TouchableOpacity, View} from 'react-native';
 
 import {connect} from 'react-redux';
 
 import {useNavigation, useRoute} from '@react-navigation/native';
-import ScrollableTabView, {ScrollableTabBar,} from 'react-native-scrollable-tab-view';
+import ScrollableTabView, {ScrollableTabBar} from 'react-native-scrollable-tab-view';
 
 import {GStyle, GStyles, Helper, RestAPI} from '../../utils/Global';
 import HomeVideoScreen from './HomeVideoScreen';
 import {setCategories} from '../../redux/categories/actions';
+import CachedImage from '../../components/CachedImage';
 
 const ic_search = require('../../assets/images/Icons/ic_search.png');
 
@@ -103,7 +104,7 @@ class HomeMainScreen extends React.Component {
               <View style={[GStyles.rowBetweenContainer, { paddingRight: 16 }]}>
                 <ScrollableTabBar {...props} style={styles.scrollBar} />
                 <TouchableOpacity onPress={this.onPressSearch}>
-                  <Image
+                  <CachedImage
                     source={ic_search}
                     style={{
                       ...GStyles.actionIcons,

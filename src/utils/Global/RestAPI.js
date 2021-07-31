@@ -177,6 +177,9 @@ const RestAPI = {
     formDataCall('api/video/categoryVideo', data, {}, callBack, 'get');
   },
 
+  get_random_video: (params, callBack) => {
+    formDataCall('api/video/random', {}, {}, callBack, 'get');
+  },
   get_room_list: (params, callBack) => {
     const data = {
       userId: params.user_id,

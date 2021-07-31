@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Alert, Image, StyleSheet, Text, TouchableOpacity, View,} from 'react-native';
+import {Alert, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {useNavigation, useRoute} from '@react-navigation/native';
 import RNFS from 'react-native-fs';
@@ -7,6 +7,7 @@ import RNFS from 'react-native-fs';
 import Video from 'react-native-video';
 
 import {Constants, GStyle, GStyles, Helper} from '../../utils/Global';
+import CachedImage from '../../components/CachedImage';
 
 const ic_close = require('../../assets/images/Icons/ic_close.png');
 
@@ -177,9 +178,10 @@ class CameraPreviewScreen extends Component {
             marginTop: 20,
           }}
         >
-          <Image
+          <CachedImage
             source={ic_close}
             style={{ ...GStyles.image, width: 20, tintColor: 'white' }}
+            resizeMode="contain"
           />
         </TouchableOpacity>
       </View>
