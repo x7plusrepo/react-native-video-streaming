@@ -35,6 +35,8 @@
     "lodash.map": "^4.6.0",
     "lodash.noop": "^3.0.1",
     "lodash.result": "^4.5.2",
+    "lottie-ios": "3.2.3",
+    "lottie-react-native": "^4.0.3",
     "moment": "^2.29.1",
     "native-base": "^2.13.14",
     "prettier": "^2.2.1",

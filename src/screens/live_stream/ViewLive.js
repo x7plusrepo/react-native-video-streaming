@@ -1,8 +1,14 @@
-import React, {Component} from 'react';
-import {Alert, SafeAreaView, StatusBar, TouchableOpacity, View} from 'react-native';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import {
+  Alert,
+  SafeAreaView,
+  StatusBar,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { connect } from 'react-redux';
 import get from 'lodash/get';
-import {NodePlayerView} from 'react-native-nodemediaclient';
+import { NodePlayerView } from 'react-native-nodemediaclient';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import KeepAwake from 'react-native-keep-awake';
 
@@ -13,13 +19,14 @@ import Gifts from '../../components/LiveStream/Gifts';
 import Header from '../../components/LiveStream/Header';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
 
-import {setGifts} from '../../redux/liveStream/actions';
-import {LIVE_STATUS} from '../../utils/LiveStream/Constants';
-import {Constants, Global, RestAPI} from '../../utils/Global';
+import { setGifts } from '../../redux/liveStream/actions';
+import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
+import { Constants, Global, RestAPI } from '../../utils/Global';
 import styles from './styles';
 import ic_audio from '../../assets/images/Icons/ic_audio_on.png';
-import {setMyUserAction} from '../../redux/me/actions';
+import { setMyUserAction } from '../../redux/me/actions';
 import CachedImage from '../../components/CachedImage';
+import StaticHeart from '../../components/LiveStream/FloatingHearts/StaticHeart';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -32,12 +39,14 @@ class ViewLive extends Component {
       inputUrl: null,
       room: {},
       countHeart: 0,
+      showHeart: false,
       isJoined: false,
       lastPress: 0,
     };
     this.giftBottomSheet = React.createRef();
     this.messageBottomSheet = React.createRef();
     this.profileSheet = React.createRef();
+    this.timeout = null;
   }
 
   componentDidMount() {
@@ -157,7 +166,14 @@ class ViewLive extends Component {
         this.setState((prevState) => ({
           room: newRoom,
           countHeart: prevState.countHeart + 1,
+          showHeart: true,
         }));
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          this.setState({
+            showHeart: false,
+          });
+        }, 1500);
       }
     });
 
@@ -344,7 +360,7 @@ class ViewLive extends Component {
   };
 
   render() {
-    const { messages, isJoined, countHeart } = this.state;
+    const { messages, isJoined, showHeart, countHeart } = this.state;
     const room = this.state.room || {};
     const liveStatus = room?.liveStatus || 0;
     const gifts = this.props.gifts || [];
@@ -361,7 +377,10 @@ class ViewLive extends Component {
           {this.renderNodePlayerView()}
           {mode === 1 && (
             <View style={styles.audioLiveContainer}>
-              <CachedImage source={ic_audio} style={{ width: 24, height: 24 }} />
+              <CachedImage
+                source={ic_audio}
+                style={{ width: 24, height: 24 }}
+              />
             </View>
           )}
           <View style={styles.contentWrapper}>
@@ -413,7 +432,8 @@ class ViewLive extends Component {
         >
           <Gifts gifts={gifts} onPressSendGift={this.onPressSendGift} />
         </RBSheet>
-        <FloatingHearts count={countHeart} />
+        {/*<FloatingHearts count={countHeart} />*/}
+        {showHeart && <StaticHeart />}
       </SafeAreaView>
     );
   }

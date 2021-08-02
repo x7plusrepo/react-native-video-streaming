@@ -1,7 +1,13 @@
 import React from 'react';
-import {Alert, BackHandler, SafeAreaView, StatusBar, View} from 'react-native';
-import {NodeCameraView} from 'react-native-nodemediaclient';
-import {connect} from 'react-redux';
+import {
+  Alert,
+  BackHandler,
+  SafeAreaView,
+  StatusBar,
+  View,
+} from 'react-native';
+import { NodeCameraView } from 'react-native-nodemediaclient';
+import { connect } from 'react-redux';
 import RBSheet from 'react-native-raw-bottom-sheet';
 import KeepAwake from 'react-native-keep-awake';
 
@@ -11,13 +17,14 @@ import FloatingHearts from '../../components/LiveStream/FloatingHearts';
 import Header from '../../components/LiveStream/Header';
 
 import SocketManager from '../../utils/LiveStream/SocketManager';
-import {LIVE_STATUS} from '../../utils/LiveStream/Constants';
-import {Constants, Global, RestAPI} from '../../utils/Global';
-import {setGifts} from '../../redux/liveStream/actions';
+import { LIVE_STATUS } from '../../utils/LiveStream/Constants';
+import { Constants, Global, RestAPI } from '../../utils/Global';
+import { setGifts } from '../../redux/liveStream/actions';
 import styles from './styles';
 import ic_audio from './../../assets/images/Icons/ic_audio_on.png';
 import ProfileBottom from '../../components/LiveStream/ProfileBottom/ProfileBottom';
 import CachedImage from '../../components/CachedImage';
+import StaticHeart from '../../components/LiveStream/FloatingHearts/StaticHeart';
 
 const RTMP_SERVER = Constants.RTMP_SERVER;
 
@@ -34,15 +41,18 @@ class GoLive extends React.Component {
         samplerate: 44100,
       },
       videoConfig: {
-        bitrate: 150000,
+        bitrate: 200000,
         preset: 0,
         profile: 0,
         fps: 15,
         videoFrontMirror: true,
       },
       preparing: true,
+      showHeart: false,
+      countHeart: 0,
     };
     this.profileSheet = React.createRef();
+    this.timeout = null;
   }
 
   componentDidMount() {
@@ -68,8 +78,9 @@ class GoLive extends React.Component {
             ...room,
             user: this.props.user || {},
             liveStatus: room?.liveStatus || 0,
-            countHeart: 0,
+            //countHeart: 0,
           },
+          countHeart: 0,
         });
       }
     });
@@ -108,8 +119,15 @@ class GoLive extends React.Component {
       if (room) {
         this.setState((prevState) => ({
           room,
-          countHeart: prevState.countHeart + 1,
+          //countHeart: prevState.countHeart + 1,
+          showHeart: true,
         }));
+        clearTimeout(this.timeout);
+        this.timeout = setTimeout(() => {
+          this.setState({
+            showHeart: false,
+          });
+        }, 1500);
       }
     });
     SocketManager.instance.listenSendMessage((data) => {
@@ -167,7 +185,9 @@ class GoLive extends React.Component {
   componentWillUnmount() {
     const user = this.props.user || {};
     const { id: streamerId } = user;
-    if (this.nodeCameraViewRef) this.nodeCameraViewRef.stop();
+    if (this.nodeCameraViewRef) {
+      this.nodeCameraViewRef.stop();
+    }
     SocketManager.instance.emitFinishLiveStream({ streamerId });
     SocketManager.instance.removePrepareLiveStream();
     SocketManager.instance.removeBeginLiveStream();
@@ -211,7 +231,9 @@ class GoLive extends React.Component {
   };
 
   onPressSendMessage = (message) => {
-    if (!message) return;
+    if (!message) {
+      return;
+    }
     const user = this.props.user || {};
     const { id: streamerId } = user;
     const messages = this.state.messages || [];
@@ -281,7 +303,9 @@ class GoLive extends React.Component {
       SocketManager.instance.emitFinishLiveStream({
         streamerId,
       });
-      if (this.nodeCameraViewRef) this.nodeCameraViewRef.stop();
+      if (this.nodeCameraViewRef) {
+        this.nodeCameraViewRef.stop();
+      }
       Alert.alert(
         'Alert ',
         'Thanks for your live stream',
@@ -332,9 +356,10 @@ class GoLive extends React.Component {
       isMuted,
       room,
       preparing,
+      showHeart,
     } = this.state;
     const user = this.props.user || {};
-    const countHeart = room?.countHeart || 0;
+    //const countHeart = room?.countHeart || 0;
     const liveStatus = room?.liveStatus || 0;
     const mode = room?.mode || 0;
 
@@ -411,7 +436,8 @@ class GoLive extends React.Component {
         >
           <ProfileBottom onCloseProfileSheet={this.onCloseProfileSheet} />
         </RBSheet>
-        <FloatingHearts count={countHeart} />
+        {showHeart && <StaticHeart />}
+        {/*<FloatingHearts count={countHeart} />*/}
       </SafeAreaView>
     );
   }

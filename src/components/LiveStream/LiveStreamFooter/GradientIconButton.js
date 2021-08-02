@@ -17,7 +17,7 @@ const GradientIconButton = (props) => {
         ]}
         style={styles.gradient}
       >
-        <CachedImage source={icon} style={[GStyles.actionIcons, iconStyle]} />
+        <CachedImage source={icon} style={[GStyles.actionIcons, iconStyle]} tintColor={'white'} />
       </LinearGradient>
     </TouchableOpacity>
   );

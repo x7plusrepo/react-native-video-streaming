@@ -1,5 +1,5 @@
 import React from 'react';
-import {SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {Image, SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 
 import {StackActions, useNavigation, useRoute} from '@react-navigation/native';
 import FastImage from 'react-native-fast-image';
@@ -296,12 +296,12 @@ class ProfileOtherScreen extends React.Component {
                   <FastImage
                     source={{
                       uri: item.thumb || '',
-                      priority: FastImage.priority.normal,
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                     style={{
                       width: CELL_WIDTH,
                       height: 120,
+                      backgroundColor: '#ccc',
                     }}
                   />
                 </TouchableOpacity>
@@ -315,7 +315,7 @@ class ProfileOtherScreen extends React.Component {
 
   _renderPosts = () => {
     const { posts } = this.state;
-
+    console.log(posts);
     return (
       <View style={styles.listContainer}>
         <Text style={[GStyles.regularText, GStyles.boldText]}>Posts</Text>
@@ -334,12 +334,12 @@ class ProfileOtherScreen extends React.Component {
                   <FastImage
                     source={{
                       uri: item.thumb || '',
-                      priority: FastImage.priority.normal,
                     }}
                     resizeMode={FastImage.resizeMode.cover}
                     style={{
                       width: CELL_WIDTH,
-                      height: 120,
+                      aspectRatio: 1,
+                      backgroundColor: '#ccc',
                     }}
                   />
                 </TouchableOpacity>

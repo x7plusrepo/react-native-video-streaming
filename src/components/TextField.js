@@ -6,6 +6,7 @@ const TextField = (props) => {
   const inputRef = useRef(null);
   const onBlur = () => {
     setTimeout(() => {
+      console.log(0);
       Keyboard.dismiss();
     }, 200);
   };

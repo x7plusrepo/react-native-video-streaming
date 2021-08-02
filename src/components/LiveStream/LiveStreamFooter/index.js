@@ -74,7 +74,6 @@ class LiveStreamFooter extends Component {
               <GradientIconButton
                 onPress={this.onPressSwitchCamera}
                 icon={ic_switch_camera}
-                iconStyle={{ tintColor: 'white' }}
                 containerStyle={{ marginRight: 0, marginBottom: 8 }}
               />
             )}

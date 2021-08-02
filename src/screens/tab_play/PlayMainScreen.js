@@ -1,17 +1,32 @@
-import React, {Component} from 'react';
-import {ActivityIndicator, Alert, BackHandler, FlatList, Platform, StatusBar, View} from 'react-native';
+import React, { Component } from 'react';
+import {
+  ActivityIndicator,
+  Alert,
+  BackHandler,
+  FlatList,
+  Platform,
+  StatusBar,
+  Text,
+  View,
+} from 'react-native';
 
 import SplashScreen from 'react-native-splash-screen';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 import RBSheet from './../../components/react-native-raw-bottom-sheet';
 
 import RenderPosts from '../../components/posts/RenderPosts';
 import ProgressModal from '../../components/ProgressModal';
 
 import ChatStreamSocketManager from './../../utils/Message/SocketManager';
-import {setMyUserAction} from '../../redux/me/actions';
+import { setMyUserAction } from '../../redux/me/actions';
 
-import {Constants, Global, GStyles, Helper, RestAPI} from '../../utils/Global';
+import {
+  Constants,
+  Global,
+  GStyles,
+  Helper,
+  RestAPI,
+} from '../../utils/Global';
 import CommentsScreen from '../details/CommentsScreen';
 
 const SHEET_HEIGHT = Helper.getWindowHeight() * 0.75;
@@ -33,7 +48,6 @@ class PlayMainScreen extends Component {
       Helper.setDarkStatusBar();
       this.checkSignin();
       this.setState({ isVideoPause: false });
-
     });
     this.unsubscribeBlur = this.props.navigation.addListener('blur', () => {
       this.setState({ isVideoPause: true });
@@ -293,10 +307,13 @@ class PlayMainScreen extends Component {
   };
 
   render() {
+    const { posts } = this.state;
+
     return (
       <View style={GStyles.container}>
         {this.___renderStatusBar()}
         {this._renderVideo()}
+        {posts?.length < 1 && this._renderNotFound()}
         {this._renderProgress()}
         <RBSheet
           ref={this.profileSheet}
@@ -328,41 +345,60 @@ class PlayMainScreen extends Component {
     const { isFetching, posts } = this.state;
 
     return (
-      <FlatList
-        showsVerticalScrollIndicator={false}
-        initialNumToRender={5}
-        pagingEnabled
-        onRefresh={() => {
-          this.onRefresh('pull');
+      <>
+        <FlatList
+          showsVerticalScrollIndicator={false}
+          initialNumToRender={5}
+          pagingEnabled
+          onRefresh={() => {
+            this.onRefresh('pull');
+          }}
+          refreshing={isFetching}
+          ListFooterComponent={this._renderFooter}
+          onEndReachedThreshold={0.4}
+          onMomentumScrollBegin={() => {
+            this.setState({ onEndReachedDuringMomentum: false });
+          }}
+          onEndReached={() => {
+            if (!this.state.onEndReachedDuringMomentum) {
+              this.setState({ onEndReachedDuringMomentum: true });
+              this.onRefresh('more');
+            }
+          }}
+          data={posts}
+          renderItem={this._renderItem}
+          onViewableItemsChanged={this.onViewableItemsChanged}
+          viewabilityConfig={{
+            itemVisiblePercentThreshold: 60,
+          }}
+          keyExtractor={(item, index) => index.toString()}
+          style={{ height: '100%', width: '100%' }}
+        />
+      </>
+    );
+  };
+
+  _renderNotFound = () => {
+    return (
+      <View
+        style={{
+          height: '100%',
+          width: '100%',
+          ...GStyles.centerAlign,
+          position: 'absolute',
         }}
-        refreshing={isFetching}
-        ListFooterComponent={this._renderFooter}
-        onEndReachedThreshold={0.4}
-        onMomentumScrollBegin={() => {
-          this.setState({ onEndReachedDuringMomentum: false });
-        }}
-        onEndReached={() => {
-          if (!this.state.onEndReachedDuringMomentum) {
-            this.setState({ onEndReachedDuringMomentum: true });
-            this.onRefresh('more');
-          }
-        }}
-        data={posts}
-        renderItem={this._renderItem}
-        onViewableItemsChanged={this.onViewableItemsChanged}
-        viewabilityConfig={{
-          itemVisiblePercentThreshold: 60,
-        }}
-        keyExtractor={(item, index) => index.toString()}
-        style={{ height: '100%', width: '100%' }}
-      />
+      >
+        <Text style={GStyles.notifyDescription}>You have watched all videos.</Text>
+      </View>
     );
   };
 
   _renderFooter = () => {
     const { isFetching } = this.state;
 
-    if (!isFetching) return null;
+    if (!isFetching) {
+      return null;
+    }
     return <ActivityIndicator style={{ color: '#000' }} />;
   };
 

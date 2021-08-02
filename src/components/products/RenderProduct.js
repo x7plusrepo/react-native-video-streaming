@@ -13,6 +13,8 @@ import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
 import Helper from '../../utils/Global/Util';
 import CachedImage from '../CachedImage';
+import LottieView from 'lottie-react-native';
+import Heart from '../../assets/lottie/heart';
 
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
@@ -25,9 +27,11 @@ const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
 
 const VIDEO_HEIGHT = Dimensions.get('window').height;
+const WIDTH = Dimensions.get('window').width;
 
 const RenderProducts = (props) => {
   const [lastPress, setLastPress] = useState(0);
+  const [showHeart, setShowHeart] = useState(false);
 
   const { item, state, index, actions, detailStyle } = props;
   const { isVideoPause } = state;
@@ -75,6 +79,12 @@ const RenderProducts = (props) => {
             // }}
             style={styles.video}
           />
+          {showHeart && (
+            <View style={styles.lottieContainer}>
+              <LottieView source={Heart} autoPlay loop style={styles.lottie} />
+            </View>
+          )}
+
           <View style={[GStyles.playInfoWrapper, detailStyle]}>
             <View style={styles.actionsContainer}>
               <View style={{ justifyContent: 'center', alignItems: 'center' }}>
@@ -87,6 +97,12 @@ const RenderProducts = (props) => {
                 )}
                 <TouchableOpacity
                   onPress={() => {
+                    if (!isLike) {
+                      setShowHeart(true);
+                      setTimeout(() => {
+                        setShowHeart(false);
+                      }, 1000);
+                    }
                     actions.onPressLike(!isLike, item);
                   }}
                   style={[GStyles.videoActionButton]}
@@ -153,7 +169,7 @@ const RenderProducts = (props) => {
               <View style={GStyles.playInfoTextWrapper}>
                 <Text numberOfLines={3} style={GStyles.playInfoText}>
                   {`${
-                    !!!categoryName && !!!subCategoryName ? newTagList : ''
+                    !categoryName && !subCategoryName ? newTagList : ''
                   } ${categoryName} ${subCategoryName}`}
                 </Text>
               </View>
@@ -163,7 +179,7 @@ const RenderProducts = (props) => {
               </View>
             </View>
             <View style={[GStyles.rowBetweenContainer, { marginBottom: 8 }]}>
-              {!!item?.description ? (
+              {item?.description ? (
                 <View style={GStyles.playInfoTextWrapper}>
                   <Text numberOfLines={5} style={GStyles.playInfoText}>
                     {item.description}
@@ -234,6 +250,19 @@ const styles = StyleSheet.create({
     height: 16,
     tintColor: 'white',
     marginRight: 6,
+  },
+  lottieContainer: {
+    flex: 1,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  lottie: {
+    height: 150,
+    alignSelf: 'center',
+    position: 'absolute',
   },
 });
 

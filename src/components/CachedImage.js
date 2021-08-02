@@ -6,5 +6,5 @@ import {Helper} from './../utils/Global';
 export default function CachedImage(props) {
   const source = Helper.normalizeImageSource(props.source);
 
-  return <Image {...props} source={source} />;
+  return <FastImage {...props} source={source} />;
 }

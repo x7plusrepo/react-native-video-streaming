@@ -1,13 +1,22 @@
-import React, {useState} from 'react';
-import {Dimensions, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import React, { useState } from 'react';
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import Video from 'react-native-video';
 import convertToProxyURL from 'react-native-video-cache';
 
-import {GStyle, GStyles} from '../../utils/Global';
+import { GStyle, GStyles } from '../../utils/Global';
 import Avatar from '../elements/Avatar';
 import avatars from '../../assets/avatars';
 import Helper from '../../utils/Global/Util';
 import CachedImage from '../CachedImage';
+import Loading from '../../assets/lottie/floating';
+import LottieView from 'lottie-react-native';
+import Heart from '../../assets/lottie/heart';
 
 const heart = require('../../assets/images/gifts/heart.png');
 const eye = require('../../assets/images/Icons/ic_eye.png');
@@ -22,6 +31,7 @@ const VIDEO_HEIGHT = Dimensions.get('window').height;
 const RenderPosts = (props) => {
   const [showTexts, setShowTexts] = useState(false);
   const [lastPress, setLastPress] = useState(0);
+  const [showHeart, setShowHeart] = useState(false);
 
   const {
     item,
@@ -78,6 +88,11 @@ const RenderPosts = (props) => {
             }}*/
             style={styles.video}
           />
+          {showHeart && (
+            <View style={styles.lottieContainer}>
+              <LottieView source={Heart} autoPlay loop style={styles.lottie} />
+            </View>
+          )}
           <View
             style={[GStyles.playInfoWrapper, detailStyle, styles.detailStyle]}
           >
@@ -110,6 +125,12 @@ const RenderPosts = (props) => {
             >
               <TouchableOpacity
                 onPress={() => {
+                  if (!isLike) {
+                    setShowHeart(true);
+                    setTimeout(() => {
+                      setShowHeart(false);
+                    }, 1000);
+                  }
                   actions.onPressLike(!isLike, item);
                 }}
                 style={[GStyles.videoActionButton]}
@@ -193,6 +214,19 @@ const styles = StyleSheet.create({
   detailStyle: {
     flexDirection: 'row',
     ...GStyles.rowBetweenContainer,
+  },
+  lottieContainer: {
+    flex: 1,
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  lottie: {
+    height: 150,
+    alignSelf: 'center',
+    position: 'absolute',
   },
   title: {
     ...GStyles.elementLabel,

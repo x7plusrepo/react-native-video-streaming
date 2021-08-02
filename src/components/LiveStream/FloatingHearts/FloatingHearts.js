@@ -102,11 +102,14 @@ class AnimatedShape extends Component {
   }
 
   componentDidMount() {
-    Animated.timing(this.state.position, {
-      duration: 3500,
-      useNativeDriver: true,
-      toValue: this.props.height * -1,
-    }).start(this.props.onComplete);
+    // Animated.timing(this.state.position, {
+    //   duration: 3500,
+    //   useNativeDriver: true,
+    //   toValue: this.props.height * -1,
+    // }).start(this.props.onComplete);
+    setTimeout(() => {
+      this.props.onComplete()
+    }, 1000);
   }
 
   getAnimationStyle() {
@@ -116,7 +119,7 @@ class AnimatedShape extends Component {
 
     return {
       transform: [
-        { translateY: this.state.position },
+        //{ translateY: this.state.position },
         //{ translateX: this.xAnimation },
         //{ scale: this.scaleAnimation },
         //{ rotate: this.rotateAnimation },

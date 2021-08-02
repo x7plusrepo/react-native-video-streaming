@@ -366,7 +366,7 @@ export default class TextField extends PureComponent {
     this.startLabelAnimation();
     setTimeout(() => {
       Keyboard.dismiss();
-    }, 1500);
+    }, 200);
   }
 
   onChange(event) {

@@ -69,7 +69,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.3,
   },
   image: {
-    width: '100%',
+    width: ITEM_WIDTH,
     aspectRatio: 1,
     backgroundColor: '#ccc',
   },
