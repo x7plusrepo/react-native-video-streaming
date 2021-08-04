@@ -1,8 +1,14 @@
-import React, {forwardRef} from 'react';
-import {ActivityIndicator, FlatList, StyleSheet, Text, View} from 'react-native';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import React, { forwardRef } from 'react';
+import {
+  ActivityIndicator,
+  FlatList,
+  StyleSheet,
+  Text,
+  View,
+} from 'react-native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 
-import {Constants, GStyles, Helper, RestAPI} from '../../utils/Global';
+import { Constants, GStyles, Helper, RestAPI } from '../../utils/Global';
 import ExploreUserItem from '../../components/elements/ExploreUserItem';
 
 class HomeUsersScreen extends React.Component {
@@ -15,7 +21,6 @@ class HomeUsersScreen extends React.Component {
   }
 
   componentDidMount() {
-
     this.setState({ keyword: this.props.keyword }, () => {
       this.onRefresh('init');
     });
@@ -37,6 +42,7 @@ class HomeUsersScreen extends React.Component {
 
       keyword: '',
       itemDatas: [],
+      onEndReachedDuringMomentum: true,
     };
   };
 
@@ -57,7 +63,7 @@ class HomeUsersScreen extends React.Component {
     } else {
       curPage = 1;
     }
-    this.setState({ curPage });
+    this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init') {
       //global.showForcePageLoader(true);
@@ -138,8 +144,14 @@ class HomeUsersScreen extends React.Component {
             refreshing={isFetching}
             ListFooterComponent={this._renderFooter}
             onEndReachedThreshold={0.4}
+            onMomentumScrollBegin={() => {
+              this.setState({ onEndReachedDuringMomentum: false });
+            }}
             onEndReached={() => {
-              this.onRefresh('more');
+              if (!this.state.onEndReachedDuringMomentum) {
+                this.setState({ onEndReachedDuringMomentum: true });
+                this.onRefresh('more');
+              }
             }}
             data={itemDatas}
             renderItem={this._renderItem}
@@ -160,7 +172,9 @@ class HomeUsersScreen extends React.Component {
   _renderFooter = () => {
     const { isFetching } = this.state;
 
-    if (!isFetching) return null;
+    if (!isFetching) {
+      return null;
+    }
     return <ActivityIndicator style={{ color: '#000' }} />;
   };
 

@@ -1,5 +1,6 @@
 import AsyncStorage from '@react-native-community/async-storage';
 import axios from 'axios';
+import Constants from './Constants';
 
 const host = 'http://107.180.73.164:3000';
 //const host = 'http://192.168.1.110:3000';
@@ -12,10 +13,11 @@ api.defaults.timeout = 50000; //TODO I  think we need to set timeout for api cal
 
 api.interceptors.request.use(
   async (config) => {
-    const token = await AsyncStorage.getItem('@token'); // This takes so short. 0.003 seconds
-    if (token) {
-      config.headers['Authorization'] = `Bearer ${token}`;
-    }
+    // const token = await AsyncStorage.getItem('@token'); // This takes so short. 0.003 seconds
+    // if (token) {
+    //   config.headers['Authorization'] = `Bearer ${token}`;
+    // }
+    config.headers.Authorization = Constants.JWT_SECRET;
     return config;
   },
   function (error) {
@@ -53,7 +55,7 @@ const futch = async (url, opts = {}, onProgress) => {
       params: opts.body,
       headers: opts.headers,
     });
-  } else if(opts.method === 'delete') {
+  } else if (opts.method === 'delete') {
     response = await apiCall(url, { headers: opts.headers, data: opts.body });
   } else {
     response = await apiCall(url, opts.body, { headers: opts.headers });

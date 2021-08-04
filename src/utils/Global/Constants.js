@@ -25,6 +25,7 @@ const Constants = {
   GOOGLE_PLAY_URL:
     'https://play.google.com/store/apps/details?id=com.stars.android',
   APPSTORE_URL: 'https://apps.apple.com/us/app/stars/id1543058540',
+  JWT_SECRET: '5wQsqz9FnhY8tKGSRTaVOBGsZLzUH28DDJtgYoXx8b9X7DhO_KYx1yu_9RqetpDMnOwUvMniIsZpJNbZgjYBMF0rcg1zUWFgWtVcp9X7B4FLvzoGNWiJkbPnI_4u7jkebpGsBtY-bVbS_fapv0gLt-zgMl9rwFOVTv0CZRZzgg8',
 
   //** socket */
   MESSAGE_TYPE_TEXT: 1,

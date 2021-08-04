@@ -56,7 +56,7 @@ class MessageMainScreen extends React.Component {
     this.setState({ curPage, onEndReachedDuringMomentum: true });
 
     if (type === 'init' || type === 'update') {
-      //global.showForcePageLoader(true);
+      global.showForcePageLoader(true);
     } else {
       this.setState({ isFetching: true });
     }

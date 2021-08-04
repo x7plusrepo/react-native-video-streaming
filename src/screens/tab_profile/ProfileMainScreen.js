@@ -91,6 +91,14 @@ const getMenuItems = (navigation, setMyUserAction) => {
       },
     },
     {
+      icon: ic_menu_drafts,
+      title: 'Teams',
+      hideGuest: false,
+      onPress: () => {
+        navigation.navigate('teams_screen');
+      },
+    },
+    {
       icon: ic_support,
       title: '01913379598',
       onPress: () => {

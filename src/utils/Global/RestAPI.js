@@ -367,6 +367,20 @@ const RestAPI = {
     };
     formDataCall('api/categories', data, {}, callBack, 'get');
   },
+  get_teams: (params, callBack) => {
+    const data = {
+      userId: params.user_id,
+    };
+    formDataCall('api/team/all', data, {}, callBack, 'get');
+  },
+  get_team_members: (params, callBack) => {
+    const data = {
+      userId: params.userId,
+      page: params.page,
+      amount: params.amount,
+    };
+    formDataCall(`api/team/${params?.teamId}/members`, data, {}, callBack, 'get');
+  }
 };
 
 export default RestAPI;

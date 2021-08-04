@@ -11,7 +11,7 @@ const ic_diamond = require('../../assets/images/Icons/ic_diamond.png');
 const ic_rank_first = require('../../assets/images/Icons/ic_rank_first.png');
 const ic_rank_second = require('../../assets/images/Icons/ic_rank_second.png');
 const ic_rank_third = require('../../assets/images/Icons/ic_rank_third.png');
-const ic_elixir = require('../../assets/images/Icons/ic_love-potion.png');
+const ic_flame = require('../../assets/images/Icons/ic_flame.png');
 
 const randomNumber = Math.floor(Math.random() * avatars.length);
 const randomImageUrl = avatars[randomNumber];
@@ -32,7 +32,7 @@ const numberMark = (index) => {
 };
 
 const TopUserItem = ({ index, item, onPress, sortBy = 'elixir' }) => {
-  const icon = sortBy === 'elixir' ? ic_elixir : ic_diamond;
+  const icon = sortBy === 'elixir' ? ic_flame : ic_diamond;
   const iconText =
     sortBy === 'elixir' ? item?.elixirFlame || 0 : item?.diamondSpent || 0;
   const displayName = item?.userType === 0 ? item?.displayName : item?.username;

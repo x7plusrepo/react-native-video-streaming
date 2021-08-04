@@ -26,6 +26,7 @@ import SavedProductsScreen from '../screens/details/SavedProductsScreen';
 import MyVideoScreen from '../screens/details/MyProductsScreen';
 import MyPostsScreen from '../screens/details/MyPostsScreen';
 import PostsScreen from '../screens/details/PostsScreen';
+import TeamsScreen from '../screens/teams/TeamsScreen';
 import CommentsScreen from '../screens/details/CommentsScreen';
 import FansScreen from '../screens/details/FansScreen';
 import FollowingUsersScreen from '../screens/details/FollowingUsersScreen';
@@ -108,6 +109,7 @@ export default function App() {
         <Stack.Screen name="post_detail" component={PostsScreen} />
         <Stack.Screen name="go_live" component={GoLive} />
         <Stack.Screen name="view_live" component={ViewLive} />
+        <Stack.Screen name="teams_screen" component={TeamsScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
